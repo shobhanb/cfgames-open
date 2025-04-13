@@ -1,0 +1,8 @@
+@if (auth.uiState() === 'signup') {
+<app-signup></app-signup>
+} @else if (auth.uiState() === 'newUserLogin' || auth.uiState() ===
+'existingUserLogin') {
+<app-login></app-login>
+} @else {
+<app-landing></app-landing>
+}

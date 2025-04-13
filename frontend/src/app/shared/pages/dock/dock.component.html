@@ -1,0 +1,24 @@
+<div class="dock">
+  <button routerLink="/home" routerLinkActive="dock-active">
+    <ng-icon name="heroHome" />
+    <span class="dock-label">Home</span>
+  </button>
+  <button routerLink="/leaderboard" routerLinkActive="dock-active">
+    <ng-icon name="heroTrophy" />
+    <span class="dock-label">Leaderboard</span>
+  </button>
+  <button routerLink="/team" routerLinkActive="dock-active">
+    <ng-icon name="heroUserGroup" />
+    <span class="dock-label">Teams</span>
+  </button>
+  <button routerLink="/scores" routerLinkActive="dock-active">
+    <ng-icon name="heroChartBar" />
+    <span class="dock-label">Scores</span>
+  </button>
+  <!-- @if ( auth.userName() ) { -->
+  <button routerLink="/scheduling" routerLinkActive="dock-active">
+    <ng-icon name="heroCalendarDays" />
+    <span class="dock-label">Scheduling</span>
+  </button>
+  <!-- } -->
+</div>

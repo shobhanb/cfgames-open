@@ -1,0 +1,22 @@
+<app-auth-wrapper>
+  <div class="text-center">
+    <h1 class="text-2xl font-bold">Login or Signup</h1>
+  </div>
+  <div class="card bg-base-100 w-full max-w-sm shadow-2xl">
+    <div class="card-body">
+      <fieldset class="fieldset gap-4">
+        <button class="btn btn-primary" (click)="onClickSignup()">
+          <span class="">Sign up as a new user</span>
+        </button>
+        <div class="divider">OR</div>
+        <button class="btn btn-primary" (click)="onClickLogin()">
+          <span class="">Login as an existing user</span>
+        </button>
+        <div class="divider">OR</div>
+        <button class="btn btn-neutral" (click)="onClickCancel()">
+          <span class="">Nah, keep browsing without Login</span>
+        </button>
+      </fieldset>
+    </div>
+  </div>
+</app-auth-wrapper>
