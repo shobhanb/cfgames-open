@@ -34,9 +34,37 @@ export const routes: Routes = [
     providers: [AuthGuard],
   },
   {
-    path: 'login',
+    path: 'auth',
     loadComponent: () =>
-      import('./pages/auth/auth.component').then((c) => c.AuthComponent),
+      import('./pages/auth/landing/landing.component').then(
+        (c) => c.LandingComponent
+      ),
+  },
+  {
+    path: 'auth/login',
+    loadComponent: () =>
+      import('./pages/auth/login/login.component').then(
+        (c) => c.LoginComponent
+      ),
+  },
+  {
+    path: 'auth/signup',
+    loadComponent: () =>
+      import('./pages/auth/signup/signup.component').then(
+        (c) => c.SignupComponent
+      ),
+  },
+  {
+    path: 'auth/assign-athlete',
+    loadComponent: () =>
+      import('./pages/auth/athlete-id/athlete-id.component').then(
+        (c) => c.AthleteIdComponent
+      ),
+  },
+  {
+    path: '**',
+    redirectTo: 'home',
+    pathMatch: 'full',
   },
   {
     path: '',

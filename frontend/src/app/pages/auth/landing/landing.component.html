@@ -5,15 +5,15 @@
   <div class="card bg-base-100 w-full max-w-sm shadow-2xl">
     <div class="card-body">
       <fieldset class="fieldset gap-4">
-        <button class="btn btn-primary" (click)="onClickSignup()">
+        <button class="btn btn-primary" routerLink="signup">
           <span class="">Sign up as a new user</span>
         </button>
         <div class="divider">OR</div>
-        <button class="btn btn-primary" (click)="onClickLogin()">
+        <button class="btn btn-primary" routerLink="login">
           <span class="">Login as an existing user</span>
         </button>
         <div class="divider">OR</div>
-        <button class="btn btn-neutral" (click)="onClickCancel()">
+        <button class="btn btn-neutral" routerLink="/home">
           <span class="">Nah, keep browsing without Login</span>
         </button>
       </fieldset>

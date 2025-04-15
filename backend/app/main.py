@@ -1,17 +1,14 @@
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Callable
 from contextlib import asynccontextmanager
-from typing import Callable
 
+import firebase_admin
 import uvicorn
-from fastapi import FastAPI, HTTPException, Request, Response, status
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.staticfiles import StaticFiles
 
 from app.auth.service import add_item_to_header, create_access_token, verify_token
 from app.database.base import Base
 from app.database.engine import session_manager
-from app.ui.template import templates
-from app.ui.views import router
 
 RESET_DB = False
 
@@ -26,33 +23,15 @@ async def lifespan(_: FastAPI) -> AsyncGenerator:
     yield
 
 
+cred = firebase_admin.credentials.Certificate("firebase_service_account.json")
+default_app = firebase_admin.initialize_app(cred)
 app = FastAPI(lifespan=lifespan)
-app.mount("/static", StaticFiles(directory="static"), name="static")
-app.include_router(router)
 app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
 
 
 @app.get("/health")
 async def health_check() -> dict:
     return {"status": "Ok"}
-
-
-@app.exception_handler(status.HTTP_404_NOT_FOUND)
-@app.exception_handler(status.HTTP_403_FORBIDDEN)
-@app.exception_handler(status.HTTP_401_UNAUTHORIZED)
-@app.exception_handler(HTTPException)
-async def custom_404_handler(request: Request, __) -> Response:  # noqa: ANN001
-    return await get_404(request=request)
-
-
-async def get_404(request: Request) -> Response:
-    response = templates.TemplateResponse(
-        request=request,
-        name="pages/404.jinja2",
-    )
-    response.headers["HX-Retarget"] = "body"
-    response.headers["HX-Reswap"] = "innerhtml"
-    return response
 
 
 @app.middleware("http")

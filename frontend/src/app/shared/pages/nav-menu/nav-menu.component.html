@@ -2,7 +2,7 @@
   <input type="checkbox" id="menu-drawer" class="drawer-toggle" />
   <div class="drawer-content">
     <!-- Nav bar -->
-    <div class="navbar bg-base-100 shadow-sm">
+    <div class="navbar bg-base-300 shadow-sm">
       <!-- Hamburger menu -->
       <div class="flex-none">
         <label for="menu-drawer" class="btn btn-square btn-ghost drawer-button">
@@ -17,7 +17,7 @@
       @if (auth.userName()) {
       <div class="flex-none dropdown dropdown-end">
         <div
-          class="flex flex-row justify-center items-center gap-2 bg-base-100 md:bg-base-200 md:shadow-md md:p-2"
+          class="flex flex-row justify-center items-center rounded-full gap-2 bg-base-100 md:shadow-md md:p-2"
           tabindex="0"
           role="button"
         >
@@ -32,14 +32,14 @@
           } @else {
 
           <div class="avatar avatar-online avatar-placeholder">
-            <div class="bg-base-300 w-10 md:w-8 rounded-full">
-              <span class="text-xs">{{ auth.userName()?.charAt(0) }}</span>
+            <div class="bg-base-100 md:bg-base-300 w-10 md:w-8 rounded-full">
+              <span class="text-xs">{{ auth.userInitials() }}</span>
             </div>
           </div>
           }
         </div>
         <ul
-          class="dropdown-content menu bg-base-100 rounded-box z-1 p-4 w-48 shadow-sm"
+          class="dropdown-content menu bg-base-200 rounded-box z-1 p-4 w-48 shadow-sm"
           tabindex="0"
         >
           <li><a href="">My Scores</a></li>
@@ -48,9 +48,14 @@
         </ul>
       </div>
       } @else {
-      <button class="btn btn-outline btn-primary" routerLink="/login">
-        Sign In
-      </button>
+      <div class="flex flex-row gap-2 mr-2">
+        <button class="btn btn-outline btn-primary" routerLink="/auth/login">
+          Login
+        </button>
+        <button class="btn btn-primary" routerLink="/auth/signup">
+          Sign Up
+        </button>
+      </div>
       }
     </div>
 

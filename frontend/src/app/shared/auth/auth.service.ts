@@ -1,34 +1,33 @@
 import {
   computed,
+  DestroyRef,
   inject,
   Injectable,
-  OnDestroy,
   signal,
-  TransferState,
 } from '@angular/core';
 import {
   Auth,
-  authState,
-  EmailAuthProvider,
-  getRedirectResult,
   GoogleAuthProvider,
-  isSignInWithEmailLink,
-  sendSignInLinkToEmail,
   signInWithEmailAndPassword,
-  signInWithEmailLink,
   signInWithPopup,
-  signInWithRedirect,
   signOut,
   User,
   user,
-  connectAuthEmulator,
   AuthErrorCodes,
   createUserWithEmailAndPassword,
   UserCredential,
+  connectAuthEmulator,
+  IdTokenResult,
+  idToken,
 } from '@angular/fire/auth';
-import { Subscription } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { RedirectCommand, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import {
+  customClaims,
+  hasCustomClaim,
+  idTokenResult,
+} from '@angular/fire/auth-guard';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -36,16 +35,27 @@ import { RedirectCommand, Router } from '@angular/router';
 export class AuthService {
   fireAuth = inject(Auth);
   router = inject(Router);
+  destroyRef = inject(DestroyRef);
 
-  // emulator = connectAuthEmulator(this.fireAuth, 'http://127.0.0.1:9099', {
-  //   disableWarnings: true,
-  // });
+  emulator = connectAuthEmulator(this.fireAuth, 'http://127.0.0.1:9099', {
+    disableWarnings: true,
+  });
 
   redirectURL = '';
-  user = signal<User | null>(null).asReadonly();
+  userSubscription$: Subscription;
+  user = signal<User | null>(null);
+
   userEmail = computed<string | null>(() => this.user()?.email ?? null);
   userName = computed<string | null>(() => this.user()?.displayName ?? null);
+  userInitials = computed<string | null>(
+    () =>
+      this.userName()
+        ?.split(' ')
+        .map((n) => n[0])
+        .join('') ?? null
+  );
   userPhotoURL = computed<string | null>(() => this.user()?.photoURL ?? null);
+  userAthleteIds = signal<string[] | null | unknown | undefined>(null);
 
   uiState = signal<string>('landing');
 
@@ -54,41 +64,39 @@ export class AuthService {
   newUserAthleteId = signal<string | null>(null);
   newUserEmail = signal<string | null>(null);
 
+  handleUserCredential(userCred: UserCredential) {
+    userCred.user.getIdTokenResult().then(this.checkCustomClaims);
+  }
+
+  checkCustomClaims(idTokenResult: IdTokenResult) {
+    console.log(idTokenResult);
+    const athleteIds: string[] | unknown = idTokenResult.claims.athleteIds;
+    if (athleteIds) {
+      // Custom Claims exist
+      // athleteIds is a custom claim list of type string[] e.g. ['12345', '23456']
+      try {
+        this.userAthleteIds.set(athleteIds);
+      } catch (error) {
+        console.log(error);
+      }
+      this.router.navigateByUrl('/home');
+      // console.log(this.userAthleteIds());
+    } else {
+      // No custom claims. Go to assignment
+      this.router.navigateByUrl('/auth/assign-athlete');
+    }
+  }
+
   async loginWithEmailPassword(email: string, password: string) {
-    await signInWithEmailAndPassword(this.fireAuth, email, password)
-      .then((userCred: UserCredential) => {
-        console.log(userCred);
-      })
-      .catch((error) => {
-        console.error(error);
-        if (error === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS) {
-          // User not created. Create account
-          this.signUpWithEmailPassword(email, password);
-        }
-      });
+    return await signInWithEmailAndPassword(this.fireAuth, email, password);
   }
 
   async signUpWithEmailPassword(email: string, password: string) {
-    await createUserWithEmailAndPassword(this.fireAuth, email, password)
-      .then((userCred: UserCredential) => {
-        console.log(userCred);
-        console.log(this.user);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    return await createUserWithEmailAndPassword(this.fireAuth, email, password);
   }
 
   async loginWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(this.fireAuth, provider)
-      .then((userCred: UserCredential) => {
-        console.log(userCred);
-        this.router.navigateByUrl(this.redirectURL);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    return await signInWithPopup(this.fireAuth, new GoogleAuthProvider());
   }
 
   async logout() {
@@ -96,6 +104,21 @@ export class AuthService {
   }
 
   constructor() {
-    this.user = toSignal(authState(this.fireAuth), { initialValue: null });
+    // this.user = toSignal(user(this.fireAuth), { initialValue: null });
+    this.userSubscription$ = user(this.fireAuth).subscribe(
+      (aUser: User | null) => {
+        console.log(aUser);
+        this.user.set(aUser);
+        if (aUser) {
+          aUser.getIdTokenResult().then(this.checkCustomClaims);
+        } else {
+          this.userAthleteIds.set(null);
+        }
+      }
+    );
+
+    this.destroyRef.onDestroy(() => {
+      this.userSubscription$.unsubscribe();
+    });
   }
 }

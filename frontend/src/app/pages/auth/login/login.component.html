@@ -1,16 +1,16 @@
 <app-auth-wrapper>
   <div class="text-center">
-    @if (newUser) {
-    <h1 class="text-2xl font-bold">Sign up as a new user</h1>
-
-    } @else {
-    <h1 class="text-2xl font-bold">Log in to as an existing user</h1>
-    }
+    <h1 class="text-2xl font-bold">Log in as an existing user</h1>
   </div>
+  <a routerLink="/auth/signup" class="link link-primary text-xs"
+    >Don't have an account? Sign up!</a
+  >
   <div class="card bg-base-100 w-full max-w-sm shadow-2xl">
     <div class="card-body">
       <form [formGroup]="loginForm">
         <fieldset class="fieldset gap-4">
+          <app-provider-login loginSignup="login" />
+          <div class="divider">OR</div>
           <input
             type="email"
             class="input w-full"
@@ -23,29 +23,13 @@
             placeholder="Password"
             formControlName="password"
           />
-          <button class="btn bg-black text-white">
+          <a href="" class="link link-primary">Forgot Password?</a>
+          <button class="btn btn-primary" (click)="onClickLogin()">
             <ng-icon name="ionMail" class="mr-auto"></ng-icon>
-            <span class="mr-auto">Sign in with Email</span>
+            <span class="mr-auto">Login with Email</span>
           </button>
-          <div class="divider">OR</div>
-          <button class="btn bg-white text-black">
-            <img src="images/auth/google.svg" class="mr-auto h-4" alt="" />
-            <span class="mr-auto">Sign in with Google</span>
-          </button>
-          <button class="btn bg-[#410093] text-white">
-            <ng-icon name="ionLogoYahoo" class="mr-auto"></ng-icon>
-            <span class="mr-auto">Sign in with Yahoo</span>
-          </button>
-          <button class="btn bg-gray-200 text-black">
-            <img src="images/auth/microsoft.svg" class="mr-auto h-4" alt="" />
-            <span class="mr-auto">Sign in with Microsoft</span>
-          </button>
-          <button class="btn bg-[#1877F2] text-white">
-            <img src="images/auth/facebook.svg" class="mr-auto h-4" alt="" />
-            <span class="mr-auto">Sign in with Facebook</span>
-          </button>
-          <div class="divider"></div>
-          <button class="btn btn-neutral" (click)="onClickCancel()">
+          <!-- <div class="divider"></div> -->
+          <button class="btn btn-neutral" routerLink="/home">
             <span>Cancel</span>
           </button>
         </fieldset>

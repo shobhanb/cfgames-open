@@ -1,46 +1,35 @@
 <app-auth-wrapper>
   <div class="text-center">
-    <h1 class="text-2xl font-bold">First time athlete sign up</h1>
+    <h1 class="text-2xl font-bold">Sign up as a new user</h1>
   </div>
+  <a routerLink="/auth/login" class="link link-primary text-xs"
+    >Already have an account? Login</a
+  >
   <div class="card bg-base-100 w-full max-w-sm shadow-2xl">
     <div class="card-body">
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <form [formGroup]="loginForm">
         <fieldset class="fieldset gap-4">
-          <!-- Gym -->
-          <legend class="fieldset-legend">Select your gym</legend>
-          <select class="select" name="gym" formControlName="gym">
-            <option disabled selected>Select Gym</option>
-            @for (gym of gyms(); track gym) {
-            <option [value]="gym">{{ gym }}</option>
-            }
-          </select>
-          <!-- Name -->
-          <legend class="fieldset-legend">
-            Select your name as per CF Games website/app
-          </legend>
-          <select class="select" name="name" formControlName="name">
-            <option disabled selected>Select Name</option>
-            @for (name of names(); track name + '') {
-            <option [value]="name">{{ name }}</option>
-            }
-          </select>
-          <!-- Athlete ID -->
-          <legend class="fieldset-legend">Select your CF Competitor ID</legend>
-          <select class="select" name="athleteId" formControlName="athleteId">
-            <option disabled selected>Select Competitor ID</option>
-            @for (athleteId of athleteIds(); track athleteId + '') {
-            <option [value]="athleteId">{{ athleteId }}</option>
-            }
-          </select>
-          <p class="validator-hint">
-            @if (isFormInvalid()) {Select Gym, Name & Competitor ID} @else {
-            &nbsp;}
-          </p>
-          <button type="submit" class="btn btn-primary">
-            <span class="">Sign up!</span>
+          <app-provider-login loginSignup="sign up" />
+          <div class="divider">OR</div>
+          <input
+            type="email"
+            class="input w-full"
+            placeholder="Email"
+            formControlName="email"
+          />
+          <input
+            type="password"
+            class="input w-full"
+            placeholder="Password"
+            formControlName="password"
+          />
+          <button class="btn btn-primary">
+            <ng-icon name="ionMail" class="mr-auto"></ng-icon>
+            <span class="mr-auto">Sign up with Email</span>
           </button>
-          <button class="btn btn-neutral" (click)="onClickCancel()">
-            <span class="">Cancel</span>
+          <!-- <div class="divider"></div> -->
+          <button class="btn btn-neutral" routerLink="/home">
+            <span>Cancel</span>
           </button>
         </fieldset>
       </form>
