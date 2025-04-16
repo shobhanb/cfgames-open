@@ -12,10 +12,8 @@ import { ProviderLoginComponent } from '../provider-login/provider-login.compone
 
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionLogoYahoo, ionMail } from '@ng-icons/ionicons';
-
-function filterUnique(value: any, index: number, array: any[]) {
-  return array.indexOf(value) === index;
-}
+import { FirebaseError } from '@angular/fire/app';
+import { AuthErrorCodes } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-signup',
@@ -40,7 +38,25 @@ export class SignupComponent {
     password: new FormControl('', { validators: [Validators.required] }),
   });
 
-  get newUser() {
-    return this.auth.uiState() === 'newUserLogin';
+  onClickSignUp() {
+    if (
+      this.loginForm.valid &&
+      this.loginForm.dirty &&
+      this.loginForm.value.email &&
+      this.loginForm.value.password
+    ) {
+      this.auth
+        .signUpWithEmailPassword(
+          this.loginForm.value.email,
+          this.loginForm.value.password
+        )
+        .catch((error: FirebaseError) => {
+          if (error.code === AuthErrorCodes.USER_DELETED) {
+            console.log('User not found. Please signup');
+          } else {
+            console.error(error);
+          }
+        });
+    }
   }
 }

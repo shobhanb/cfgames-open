@@ -1,1 +1,50 @@
-<p>assign-athlete works!</p>
+<app-auth-wrapper>
+  <div class="text-center">
+    <h1 class="text-2xl font-bold">{{ auth.userName() }}</h1>
+    <h1 class="text-xl mt-2 font-bold">Select your CF id to proceed</h1>
+  </div>
+  <div class="card bg-base-100 w-full max-w-sm shadow-2xl">
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <fieldset class="fieldset gap-4">
+          <!-- Gym -->
+          <legend class="fieldset-legend">Select your gym</legend>
+          <select class="select" name="gym" formControlName="gym">
+            <option disabled selected>Select Gym</option>
+            @for (gym of gyms(); track gym) {
+            <option [value]="gym">{{ gym }}</option>
+            }
+          </select>
+          <!-- Name -->
+          <legend class="fieldset-legend">
+            Select your name as per CF Games website/app
+          </legend>
+          <select class="select" name="name" formControlName="name">
+            <option disabled selected>Select Name</option>
+            @for (name of names(); track name + '') {
+            <option [value]="name">{{ name }}</option>
+            }
+          </select>
+          <!-- Athlete ID -->
+          <legend class="fieldset-legend">Select your CF Competitor ID</legend>
+          <select class="select" name="athleteId" formControlName="athleteId">
+            <option disabled selected>Select Competitor ID</option>
+            @for (athleteId of athleteIds(); track athleteId + '') {
+            <option [value]="athleteId">{{ athleteId }}</option>
+            }
+          </select>
+          <p class="validator-hint">
+            @if (isFormInvalid()) {Select Gym, Name & Competitor ID} @else {
+            &nbsp;}
+          </p>
+          <button type="submit" class="btn btn-primary">
+            <span class="">That's me!</span>
+          </button>
+          <button class="btn btn-neutral" (click)="onClickCancel()">
+            <span class="">Cancel</span>
+          </button>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</app-auth-wrapper>

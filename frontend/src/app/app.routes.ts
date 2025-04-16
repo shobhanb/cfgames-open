@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './shared/auth/auth-guard';
+import { AuthGuard, hasCustomClaim } from '@angular/fire/auth-guard';
+import { customLoginRedirect } from '../app/shared/auth/auth-guard';
 
 export const routes: Routes = [
   {
@@ -31,7 +32,7 @@ export const routes: Routes = [
         (c) => c.SchedulingComponent
       ),
     canActivate: [AuthGuard],
-    providers: [AuthGuard],
+    data: { authGuardPipe: () => customLoginRedirect },
   },
   {
     path: 'auth',
@@ -57,9 +58,11 @@ export const routes: Routes = [
   {
     path: 'auth/assign-athlete',
     loadComponent: () =>
-      import('./pages/auth/athlete-id/athlete-id.component').then(
-        (c) => c.AthleteIdComponent
+      import('./pages/auth/assign-athlete/assign-athlete.component').then(
+        (c) => c.AssignAthleteComponent
       ),
+    // canActivate: [AuthGuard],
+    // data: { authGuardPipe: () => customLoginRedirect },
   },
   {
     path: '**',

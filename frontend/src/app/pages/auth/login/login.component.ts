@@ -46,6 +46,7 @@ export class LoginComponent {
   onClickLogin() {
     if (
       this.loginForm.valid &&
+      this.loginForm.dirty &&
       this.loginForm.value.email &&
       this.loginForm.value.password
     ) {

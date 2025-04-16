@@ -1,29 +1,39 @@
-import { inject, Injectable } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
 import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  GuardResult,
-  MaybeAsync,
-  RedirectCommand,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
-import { AuthService } from './auth.service';
+  AuthPipe,
+  hasCustomClaim,
+  customClaims,
+  loggedIn,
+} from '@angular/fire/auth-guard';
+import { User } from 'firebase/auth';
+import { forkJoin, map, Observable, of, pipe, switchMap } from 'rxjs';
 
-export class AuthGuard implements CanActivate {
-  auth = inject(AuthService);
-  router = inject(Router);
+const combineAuthPipes = (authPipes: AuthPipe[]) =>
+  switchMap((t: Observable<User>) => forkJoin(authPipes.map((x) => x(t))));
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): MaybeAsync<GuardResult> {
-    if (this.auth.user()) {
+export const customLoginRedirect = pipe(
+  map((t: User) => of(t)),
+  combineAuthPipes([
+    loggedIn,
+    customClaims as AuthPipe,
+    hasCustomClaim('athleteId'),
+  ]),
+  map(([isLoggedIn, customClaimList, hasAthleteId]) => {
+    return {
+      loggedIn: isLoggedIn,
+      customClaims: customClaimList,
+      hasAthleteId,
+    };
+  }),
+  map((t) => {
+    if (t.hasAthleteId) {
       return true;
     }
-    this.auth.redirectURL = state.url;
-    const loginPath = this.router.parseUrl('/auth');
-    return new RedirectCommand(loginPath);
-  }
-}
+    if (t.loggedIn && !t.hasAthleteId) {
+      return ['/auth/assign-athlete'];
+    }
+    if (!t.loggedIn) {
+      return ['/auth'];
+    }
+    return ['/home'];
+  })
+);

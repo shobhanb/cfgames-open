@@ -1,9 +1,10 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
-import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import { UserCredential } from '@angular/fire/auth';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionLogoYahoo, ionMail } from '@ng-icons/ionicons';
 import { AuthService } from '../../../shared/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-provider-login',
@@ -14,6 +15,7 @@ import { AuthService } from '../../../shared/auth/auth.service';
 })
 export class ProviderLoginComponent {
   auth = inject(AuthService);
+  router = inject(Router);
   loginSignup = input.required<string>();
 
   onClickGoogle() {
