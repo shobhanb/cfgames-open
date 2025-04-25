@@ -1,5 +1,13 @@
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import APIKeyHeader, HTTPBearer
 
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/login",
-)
+#
+# API Key Auth
+#
+api_key_scheme = APIKeyHeader(name="X-API-KEY")
+
+
+#
+# Firebase Auth
+#
+
+bearer_scheme = HTTPBearer()

@@ -30,7 +30,7 @@ async def get_db_team_scores(
             func.sum(Score.spirit_score).label("spirit_score"),
             func.sum(Score.total_score).label("total_score"),
         )
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, Score.athlete_id == Athlete.competitor_id)
         .where((Score.ordinal == ordinal) & (Athlete.team_name.not_in(IGNORE_TEAMS)))
         .group_by(Athlete.team_name)
         .order_by(Athlete.team_name)
@@ -52,7 +52,7 @@ async def get_total_scores(db_session: AsyncSession) -> dict[str, dict[str, Any]
             Athlete.team_name,
             func.sum(Score.total_score).label("overall_score"),
         )
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, Score.athlete_id == Athlete.competitor_id)
         .where(Athlete.team_name.not_in(IGNORE_TEAMS))
         .group_by(Athlete.team_name)
         .order_by(Athlete.team_name)
@@ -77,17 +77,17 @@ async def get_leaderboard_scores(
         select(
             Athlete.name,
             Athlete.gender,
-            Athlete.mf_age_category,
+            Athlete.age_category,
             Athlete.team_name,
             Score.affiliate_scaled,
             Score.affiliate_rank,
             Score.score_display,
         )
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, Score.athlete_id == Athlete.competitor_id)
         .where((Score.ordinal == ordinal) & (Score.affiliate_rank <= 3))  # noqa: PLR2004
         .order_by(
             Athlete.gender,
-            Athlete.mf_age_category.asc(),
+            Athlete.age_category.asc(),
             Score.affiliate_scaled,
             Score.scaled,
             Score.score.desc(),
@@ -115,14 +115,12 @@ async def get_all_athlete_scores(
         select(
             Athlete.name,
             Athlete.gender,
-            Athlete.mf_age_category,
+            Athlete.age_category,
             Athlete.team_name,
-            Athlete.team_leader,
+            Athlete.team_role,
             Score.affiliate_scaled,
             Score.affiliate_rank,
             Score.score_display,
-            Score.reps,
-            Score.time_ms,
             Score.tiebreak_ms,
             Score.judge_name,
             Score.participation_score,
@@ -135,11 +133,11 @@ async def get_all_athlete_scores(
             Score.total_score,
             Score.valid,
         )
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, Score.athlete_id == Athlete.competitor_id)
         .where(Score.ordinal == ordinal)
         .order_by(
             Athlete.gender,
-            Athlete.mf_age_category.asc(),
+            Athlete.age_category.asc(),
             Score.affiliate_scaled,
             Score.scaled,
             Score.score.desc(),
@@ -165,7 +163,7 @@ async def get_team_name_max_score(db_session: AsyncSession) -> list[str]:
             Athlete.team_name,
             func.sum(Score.total_score).label("overall_score"),
         )
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, Score.athlete_id == Athlete.competitor_id)
         .group_by(Athlete.team_name)
         .order_by(Athlete.team_name)
     )

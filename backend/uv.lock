@@ -6,6 +6,15 @@ resolution-markers = [
 ]
 
 [[package]]
+name = "aiolimiter"
+version = "1.2.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f1/23/b52debf471f7a1e42e362d959a3982bdcb4fe13a5d46e63d28868807a79c/aiolimiter-1.2.1.tar.gz", hash = "sha256:e02a37ea1a855d9e832252a105420ad4d15011505512a1a1d814647451b5cca9", size = 7185 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f3/ba/df6e8e1045aebc4778d19b8a3a9bc1808adb1619ba94ca354d9ba17d86c3/aiolimiter-1.2.1-py3-none-any.whl", hash = "sha256:d3f249e9059a20badcb56b61601a83556133655c11d1eb3dd3e04ff069e5f3c7", size = 6711 },
+]
+
+[[package]]
 name = "aiosqlite"
 version = "0.21.0"
 source = { registry = "https://pypi.org/simple" }
@@ -50,6 +59,7 @@ dependencies = [
     { name = "firebase-admin" },
     { name = "greenlet" },
     { name = "httpx" },
+    { name = "httpx-limiter" },
     { name = "pydantic" },
     { name = "sqlalchemy" },
 ]
@@ -61,6 +71,7 @@ requires-dist = [
     { name = "firebase-admin", specifier = ">=6.7.0" },
     { name = "greenlet", specifier = ">=3.1.1" },
     { name = "httpx", specifier = ">=0.28.1" },
+    { name = "httpx-limiter", specifier = ">=0.2.0" },
     { name = "pydantic", specifier = ">=2.10.6" },
     { name = "sqlalchemy", specifier = ">=2.0.39" },
 ]
@@ -615,6 +626,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/b1/df/48c586a5fe32a0f01324ee087459e112ebb7224f646c0b5023f5e79e9956/httpx-0.28.1.tar.gz", hash = "sha256:75e98c5f16b0f35b567856f597f06ff2270a374470a5c2392242528e3e3e42fc", size = 141406 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2a/39/e50c7c3a983047577ee07d2a9e53faf5a69493943ec3f6a384bdc792deb2/httpx-0.28.1-py3-none-any.whl", hash = "sha256:d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad", size = 73517 },
+]
+
+[[package]]
+name = "httpx-limiter"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiolimiter" },
+    { name = "httpx" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/74/ad/8f645704623afe117cc9f457affdb3cc98a1162646bdb788c44f690029ac/httpx_limiter-0.2.0.tar.gz", hash = "sha256:085e74e0c28414b2f1adea3fee68f31b1139ed66824790feb4fa57534be83cfc", size = 10714 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/80/a2/f6b94755bcb9e5e28bcd578b5f5786cdb9543e14144589cba56e1e199cc4/httpx_limiter-0.2.0-py3-none-any.whl", hash = "sha256:a6a28a19346c3b88310262b91801a600574d207b5f51eb46167247a0f7620542", size = 9478 },
 ]
 
 [[package]]

@@ -5,7 +5,7 @@ import sys
 
 from fastapi import HTTPException, status
 
-log = logging.getLogger(__name__)
+log = logging.getLogger("uvicorn.error")
 
 
 def handle_exception(exc_type, exc_value, exc_traceback) -> None:  # noqa: ANN001
@@ -18,7 +18,7 @@ def handle_exception(exc_type, exc_value, exc_traceback) -> None:  # noqa: ANN00
 
 def unauthorised_exception(detail: str | None = None) -> HTTPException:
     if not detail:
-        detail = "Incorrect username or password"
+        detail = "Unauthorized"
     return HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail=detail,
@@ -27,7 +27,7 @@ def unauthorised_exception(detail: str | None = None) -> HTTPException:
 
 def not_found_exception(detail: str | None = None) -> HTTPException:
     if not detail:
-        detail = "Resource not found"
+        detail = "No rep!"
     return HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=detail,

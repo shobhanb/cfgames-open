@@ -4,34 +4,38 @@ import logging
 from itertools import product
 from random import choice
 from typing import Any
-from uuid import UUID
 
 from sqlalchemy import func, select, text, update
 
 from app.athlete.models import Athlete
-from app.cf_games.constants import AFFILIATE_ID, IGNORE_TEAMS, TEAM_LEADER_MAP, YEAR
+from app.cf_games.constants import IGNORE_TEAMS, TEAM_ROLE_MAP, YEAR
 from app.database.dependencies import db_dependency
 from app.score.models import SideScore
 
 log = logging.getLogger("uvicorn.error")
 
 
-async def get_year_affiliate_athletes(
+async def get_affiliate_athletes_list(
     db_session: db_dependency,
     year: int = int(YEAR),
-    affiliate_id: int = int(AFFILIATE_ID),
-) -> list[UUID]:
-    stmt = select(Athlete.id).where((Athlete.year == year) & (Athlete.affiliate_id == affiliate_id))
-    result = await db_session.execute(stmt)
-    return list(result.scalars())
+    affiliate_id: int | None = None,
+) -> list[dict]:
+    stmt = select(Athlete.affiliate_name, Athlete.affiliate_id, Athlete.name, Athlete.competitor_id).where(
+        Athlete.year == year,
+    )
+    if affiliate_id:
+        stmt = stmt.where(Athlete.affiliate_id == affiliate_id)
+    ret = await db_session.execute(stmt)
+    results = ret.mappings().all()
+    return [dict(x) for x in results]
 
 
 async def get_athlete_teams_list(
     db_session: db_dependency,
 ) -> list[dict[str, Any]]:
-    stmt = select(Athlete.name, Athlete.competitor_id, Athlete.team_name, Athlete.team_leader).order_by(
+    stmt = select(Athlete.name, Athlete.competitor_id, Athlete.team_name, Athlete.team_role).order_by(
         Athlete.team_name,
-        Athlete.team_leader.desc(),
+        Athlete.team_role.desc(),
         Athlete.name,
     )
     ret = await db_session.execute(stmt)
@@ -45,17 +49,17 @@ async def get_team_composition_dict(
         select(
             Athlete.team_name,
             Athlete.gender,
-            Athlete.mf_age_category,
+            Athlete.age_category,
             func.count().label("count"),
         )
         .group_by(
             Athlete.team_name,
             Athlete.gender,
-            Athlete.mf_age_category,
+            Athlete.age_category,
         )
         .order_by(
             Athlete.team_name,
-            Athlete.mf_age_category,
+            Athlete.age_category,
             Athlete.gender,
         )
     )
@@ -78,12 +82,12 @@ async def get_athlete_teams_dict(
     stmt = select(
         Athlete.name,
         Athlete.team_name,
-        Athlete.team_leader,
+        Athlete.team_role,
         Athlete.gender,
-        Athlete.mf_age_category,
+        Athlete.age_category,
     ).order_by(
         Athlete.team_name,
-        Athlete.team_leader.desc(),
+        Athlete.team_role.desc(),
         Athlete.name,
     )
     ret = await db_session.execute(stmt)
@@ -108,7 +112,7 @@ async def assign_athlete_to_team(
     athlete = await Athlete.find(async_session=db_session, competitor_id=competitor_id)
     if athlete:
         athlete.team_name = team_name
-        athlete.team_leader = TEAM_LEADER_MAP.get(tl_c, 0)
+        athlete.team_role = TEAM_ROLE_MAP.get(tl_c, 0)
         db_session.add(athlete)
         await db_session.commit()
 
@@ -146,7 +150,7 @@ async def random_assign_zz_athlete(
         while True:
             # Get all assignable athletes for category
             athlete_stmt = select(Athlete).where(
-                (Athlete.team_name == "zz") & (Athlete.gender == gender) & (Athlete.mf_age_category == age_cat),
+                (Athlete.team_name == "zz") & (Athlete.gender == gender) & (Athlete.age_category == age_cat),
             )
             result = await db_session.execute(athlete_stmt)
             athletes = result.scalars().all()

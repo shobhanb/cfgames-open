@@ -1,22 +1,13 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class DBSettings(BaseSettings):
-    url: str = "sqlite+aiosqlite:///test.db"
+class Settings(BaseSettings):
+    environment: str = "dev"
+    db_url: str = "sqlite+aiosqlite:///test.db"
+    frontend_url: str = "http://localhost:4200"
+    admin_api_key: str = "secret"
 
-    model_config = SettingsConfigDict(env_file=".env", env_prefix="db_", extra="ignore")
-
-
-class AuthSettings(BaseSettings):
-    admin_username: str = "admin"
-    admin_password: str = "password"  # noqa: S105
-    secret_key: str = "secretkey"  # noqa: S105
-    algorithm: str = "HS256"
-    access_token_expire_minutes: int = 10
-    refresh_token_expire_minutes: int = 30
-
-    model_config = SettingsConfigDict(env_file=".env", env_prefix="auth_", extra="ignore")
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
-db_settings = DBSettings()
-auth_settings = AuthSettings()
+settings = Settings()

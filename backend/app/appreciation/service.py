@@ -15,11 +15,11 @@ async def get_athlete_attendance_data(
     db_session: db_dependency,
 ) -> dict[str, dict[str, bool]]:
     stmt = (
-        select(Athlete.name, Athlete.id, Attendance.ordinal, Attendance.event_name)
+        select(Athlete.name, Athlete.competitor_id, Attendance.ordinal, Attendance.event_name)
         .join_from(
             Athlete,
             Attendance,
-            Athlete.id == Attendance.athlete_id,
+            Athlete.competitor_id == Attendance.athlete_id,
             isouter=True,
         )
         .order_by(Athlete.name, Attendance.ordinal)

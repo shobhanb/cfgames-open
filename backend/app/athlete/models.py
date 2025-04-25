@@ -2,22 +2,22 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer, String, UniqueConstraint
 from sqlalchemy.engine.default import DefaultExecutionContext
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.cf_games.constants import CF_DIVISION_MAP, MF_MASTERS_AGE_CUTOFF, MF_OPEN_AGE_CUTOFF
+from app.cf_games.constants import CF_DIVISION_MAP, MASTERS_AGE_CUTOFF, OPEN_AGE_CUTOFF
 from app.database.base import Base
 
 if TYPE_CHECKING:
     from app.score.models import Score
 
 
-def apply_mf_age_category(context: DefaultExecutionContext) -> str:
+def apply_age_category(context: DefaultExecutionContext) -> str:
     age = context.get_current_parameters()["age"]
-    if int(age) >= int(MF_MASTERS_AGE_CUTOFF):
+    if int(age) >= int(MASTERS_AGE_CUTOFF):
         return "3. Masters 55+"
-    if int(age) >= int(MF_OPEN_AGE_CUTOFF):
+    if int(age) >= int(OPEN_AGE_CUTOFF):
         return "2. Masters"
     return "1. Open"
 
@@ -28,9 +28,10 @@ def apply_division_name(context: DefaultExecutionContext) -> str:
 
 
 class Athlete(Base):
-    # PK / FK
-    competitor_id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    year: Mapped[int] = mapped_column(Integer, primary_key=True)
+    __table_args__ = (UniqueConstraint("competitor_id", "year"),)
+
+    competitor_id: Mapped[int] = mapped_column(Integer)
+    year: Mapped[int] = mapped_column(Integer)
 
     # CF Games data
     affiliate_id: Mapped[int] = mapped_column(Integer)
@@ -43,9 +44,9 @@ class Athlete(Base):
     age: Mapped[int] = mapped_column(Integer)
 
     # Affiliate columns
-    mf_age_category: Mapped[str] = mapped_column(String, default=apply_mf_age_category)
+    age_category: Mapped[str] = mapped_column(String, default=apply_age_category, onupdate=apply_age_category)
     team_name: Mapped[str] = mapped_column(String, default="zz")
-    team_leader: Mapped[int] = mapped_column(Integer, default=0)
+    team_role: Mapped[int] = mapped_column(Integer, default=0)
 
     # Relationships
     scores: Mapped[list[Score]] = relationship(back_populates="athlete")

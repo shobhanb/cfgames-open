@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
 from app.database.exceptions import DBSessionNotInitializedError
-from app.settings import db_settings
+from app.settings import settings
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, AsyncIterator
@@ -62,7 +62,7 @@ class SessionManager:
 
 
 session_manager = SessionManager(
-    db_settings.url,
+    settings.db_url,
     kwargs={
         "echo": False,
         "pool_pre_ping": True,

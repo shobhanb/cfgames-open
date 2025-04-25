@@ -1,14 +1,18 @@
-from collections.abc import AsyncGenerator, Callable
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+from typing import Any
 
-import firebase_admin
 import uvicorn
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
-from app.auth.service import add_item_to_header, create_access_token, verify_token
+from app.athlete.views import athlete_router
+from app.auth.views import auth_router
+from app.cf_games.views import cf_games_router
 from app.database.base import Base
 from app.database.engine import session_manager
+from app.settings import settings
 
 RESET_DB = False
 
@@ -23,9 +27,26 @@ async def lifespan(_: FastAPI) -> AsyncGenerator:
     yield
 
 
-cred = firebase_admin.credentials.Certificate("firebase_service_account.json")
-default_app = firebase_admin.initialize_app(cred)
-app = FastAPI(lifespan=lifespan)
+ENVIRONMENT = settings.environment
+SHOW_DOCS_ENVIRONMENT = {"local", "dev", "test"}
+
+app_configs: dict[str, Any] = {"debug": True, "title": "CF Games API", "lifespan": lifespan}
+if ENVIRONMENT not in SHOW_DOCS_ENVIRONMENT:
+    app_configs["openapi_url"] = None
+
+app = FastAPI(**app_configs)
+
+app.include_router(cf_games_router)
+app.include_router(auth_router)
+app.include_router(athlete_router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[settings.frontend_url],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
 
 
@@ -34,27 +55,5 @@ async def health_check() -> dict:
     return {"status": "Ok"}
 
 
-@app.middleware("http")
-async def add_admin_headers(request: Request, call_next: Callable) -> Response:
-    access_token = request.cookies.get("access_token")
-    if access_token:
-        access_token_data = verify_token(access_token)
-        if access_token_data:
-            request = add_item_to_header(request=request, key="rjtc_admin", value=access_token_data.username)  # type: ignore  # noqa: PGH003
-            return await call_next(request)
-
-    refresh_token = request.cookies.get("refresh_token")
-    if refresh_token:
-        refresh_token_data = verify_token(refresh_token)
-        if refresh_token_data:
-            new_access_token = create_access_token({"sub": refresh_token_data.username})
-            request = add_item_to_header(request=request, key="rjtc_admin", value=refresh_token_data.username)  # type: ignore  # noqa: PGH003
-            response = await call_next(request)
-            response.set_cookie(key="access_token", value=new_access_token, httponly=True, samesite="lax")
-            return response
-
-    return await call_next(request)
-
-
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="localhost", port=8000)

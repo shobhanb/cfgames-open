@@ -20,7 +20,7 @@ async def get_athlete_prefs(
     rx_pref_stmt = select(Athlete.name, AthleteRXPref.athlete_id, AthleteRXPref.rx_pref).join_from(
         AthleteRXPref,
         Athlete,
-        Athlete.id == AthleteRXPref.athlete_id,
+        Athlete.competitor_id == AthleteRXPref.athlete_id,
     )
     ret = await db_session.execute(rx_pref_stmt)
     athlete_rx_pref = ret.mappings().all()
@@ -33,7 +33,7 @@ async def get_athlete_prefs(
     ).join_from(
         AthleteTimePref,
         Athlete,
-        Athlete.id == AthleteTimePref.athlete_id,
+        Athlete.competitor_id == AthleteTimePref.athlete_id,
     )
     ret = await db_session.execute(time_pref_stmt)
     athlete_time_pref = ret.mappings().all()
@@ -54,7 +54,9 @@ async def random_assign_athlete_prefs(
     time_prefs: list[str] = TIME_PREFS,
 ) -> None:
     rx_pref_stmt = select(AthleteRXPref.athlete_id)
-    missing_time_stmt = select(Athlete.id).where(Athlete.id.not_in(rx_pref_stmt.scalar_subquery()))
+    missing_time_stmt = select(Athlete.competitor_id).where(
+        Athlete.competitor_id.not_in(rx_pref_stmt.scalar_subquery()),
+    )
     ret = await db_session.execute(missing_time_stmt)
     results = ret.scalars().all()
 
@@ -63,7 +65,9 @@ async def random_assign_athlete_prefs(
         db_session.add(rx_pref)
 
     time_pref_stmt = select(AthleteTimePref.athlete_id)
-    missing_time_stmt = select(Athlete.id).where(Athlete.id.not_in(time_pref_stmt.scalar_subquery()))
+    missing_time_stmt = select(Athlete.competitor_id).where(
+        Athlete.competitor_id.not_in(time_pref_stmt.scalar_subquery()),
+    )
     ret = await db_session.execute(missing_time_stmt)
     results = ret.scalars().all()
 
@@ -82,7 +86,7 @@ async def get_athlete_prefs_data_dump(db_session: AsyncSession) -> list[dict[str
     rx_pref_stmt = (
         select(
             Athlete.name,
-            Athlete.mf_age_category,
+            Athlete.age_category,
             Athlete.team_name,
             AthleteRXPref.rx_pref,
             AthleteTimePref.preference_nbr,
@@ -93,12 +97,12 @@ async def get_athlete_prefs_data_dump(db_session: AsyncSession) -> list[dict[str
         .join_from(
             Athlete,
             AthleteRXPref,
-            Athlete.id == AthleteRXPref.athlete_id,
+            Athlete.competitor_id == AthleteRXPref.athlete_id,
         )
         .join_from(
             Athlete,
             AthleteTimePref,
-            Athlete.id == AthleteTimePref.athlete_id,
+            Athlete.competitor_id == AthleteTimePref.athlete_id,
         )
         .order_by(Athlete.name, AthleteTimePref.preference_nbr)
     )

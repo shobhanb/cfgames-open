@@ -3,5 +3,6 @@
     "ruff.lint.ignore": [
         "D",
         "TC"
-    ]
+    ],
+    "git.openRepositoryInParentFolders": "prompt",
 }

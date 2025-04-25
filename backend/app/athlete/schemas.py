@@ -1,10 +1,8 @@
 from app.schemas import CustomBaseModel
 
 
-class AthleteBaseModel(CustomBaseModel):
-    year: int
+class AffiliateAthlete(CustomBaseModel):
+    affiliate_name: str
     affiliate_id: int
-    competitor_id: int
     name: str
-    gender: str
-    mf_age_category: str
+    competitor_id: int
