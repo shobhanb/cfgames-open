@@ -1,5 +1,6 @@
-export interface AthleteIDs {
-  gym: string;
+export interface AffiliateAthletes {
+  affiliate_name: string;
+  affiliate_id: number;
   name: string;
-  athleteId: number;
+  competitor_id: number;
 }

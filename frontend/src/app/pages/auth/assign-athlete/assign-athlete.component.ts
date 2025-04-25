@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { ApiService } from '../../../shared/data/api.service';
 import { AuthService } from '../../../shared/auth/auth.service';
-import { AthleteIDs } from '../../../shared/data/athlete-ids';
+import { AffiliateAthletes } from '../../../shared/data/athlete-ids';
 import {
   FormControl,
   FormGroup,
@@ -26,7 +26,7 @@ export class AssignAthleteComponent {
   auth = inject(AuthService);
   private router = inject(Router);
 
-  athleteData = signal<AthleteIDs[]>([]).asReadonly();
+  athleteData = signal<AffiliateAthletes[]>([]).asReadonly();
 
   gymFormControlSubscription$: any;
   nameFormControlSubscription$: any;
@@ -36,14 +36,14 @@ export class AssignAthleteComponent {
 
   gyms = computed<string[]>(() =>
     this.athleteData()
-      .map((athlete) => athlete.gym)
+      .map((athlete) => athlete.affiliate_name)
       .filter(filterUnique)
       .sort()
   );
 
   names = computed<string[]>(() =>
     this.athleteData()
-      .filter((athlete) => athlete.gym === this.selectedGym())
+      .filter((athlete) => athlete.affiliate_name === this.selectedGym())
       .map((athlete) => athlete.name)
       .filter(filterUnique)
       .sort()
@@ -51,9 +51,9 @@ export class AssignAthleteComponent {
 
   athleteIds = computed<number[]>(() =>
     this.athleteData()
-      .filter((athlete) => athlete.gym === this.selectedGym())
+      .filter((athlete) => athlete.affiliate_name === this.selectedGym())
       .filter((athlete) => athlete.name === this.selectedName())
-      .map((athlete) => athlete.athleteId)
+      .map((athlete) => athlete.competitor_id)
       .sort()
   );
 

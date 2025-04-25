@@ -31,13 +31,13 @@ export class AuthService {
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
 
-  private emulator = connectAuthEmulator(
-    this.fireAuth,
-    'http://127.0.0.1:9099',
-    {
-      disableWarnings: true,
-    }
-  );
+  // private emulator = connectAuthEmulator(
+  //   this.fireAuth,
+  //   'http://127.0.0.1:9099',
+  //   {
+  //     disableWarnings: true,
+  //   }
+  // );
 
   redirectURL = '';
   private userSubscription$: Subscription;
