@@ -14,14 +14,13 @@ import {
   User,
   user,
   createUserWithEmailAndPassword,
-  connectAuthEmulator,
   IdTokenResult,
   authState,
   UserCredential,
-  signInWithCredential,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { distinctUntilChanged, Subscription } from 'rxjs';
+import { AdminRole } from './admin-role';
 
 @Injectable({
   providedIn: 'root',
@@ -39,11 +38,21 @@ export class AuthService {
   //   }
   // );
 
-  redirectURL = '';
   private userSubscription$: Subscription;
 
   user = signal<User | null>(null);
   userAthleteId = signal<number | null>(null);
+
+  userAdminRole = signal<string | null>(null);
+  userAdminAll = computed<boolean>(
+    () => this.userAdminRole() === AdminRole.adminAll
+  );
+  userAdminGym = computed<boolean>(
+    () => this.userAdminRole() === AdminRole.adminGym
+  );
+  userAdminTeam = computed<boolean>(
+    () => this.userAdminRole() === AdminRole.adminTeam
+  );
 
   userEmail = computed<string | null>(() => this.user()?.email ?? null);
   userName = computed<string | null>(() => this.user()?.displayName ?? null);
@@ -57,57 +66,64 @@ export class AuthService {
   );
   userPhotoURL = computed<string | null>(() => this.user()?.photoURL ?? null);
 
-  newUserGym = signal<string | null>(null);
-  newUserName = signal<string | null>(null);
-  newUserAthleteId = signal<string | null>(null);
-  newUserEmail = signal<string | null>(null);
+  private postLoginSuccessHook = (userCred: UserCredential) => {
+    if (userCred) {
+      this.router.navigate(['/home']);
+    }
+  };
 
   async loginWithEmailPassword(email: string, password: string) {
-    return await signInWithEmailAndPassword(this.fireAuth, email, password);
-  }
-
-  async signUpWithEmailPassword(email: string, password: string) {
-    await createUserWithEmailAndPassword(this.fireAuth, email, password).then(
-      (userCred: UserCredential) => {
-        this.user.set(userCred.user);
-      }
-    );
+    return await signInWithEmailAndPassword(
+      this.fireAuth,
+      email,
+      password
+    ).then(this.postLoginSuccessHook);
   }
 
   async loginWithGoogle() {
-    return await signInWithPopup(this.fireAuth, new GoogleAuthProvider());
+    return await signInWithPopup(this.fireAuth, new GoogleAuthProvider()).then(
+      this.postLoginSuccessHook
+    );
+  }
+
+  async signUpWithEmailPassword(email: string, password: string) {
+    return await createUserWithEmailAndPassword(this.fireAuth, email, password);
   }
 
   async logout() {
     await signOut(this.fireAuth);
-    this.router.navigateByUrl('/home');
   }
 
-  async assignAthleteIds(athletId: string) {
-    console.log(
-      `Assigning athlete id %s to user %s`,
-      athletId,
-      this.userEmail()
-    );
-  }
+  async updateUser(name: string, athleteId: number) {}
 
   constructor() {
+    // Sign in, sign out & refresh token subscription to
+    // assign all the user info and custom claims
     this.userSubscription$ = user(this.fireAuth).subscribe(
       (aUser: User | null) => {
         this.user.set(aUser);
+        console.log('Usersub user signal is truthy' + !!this.user());
         if (aUser) {
           aUser.getIdTokenResult().then((idTokenResult: IdTokenResult) => {
+            // Admin claims
+            const adminClaim = idTokenResult.claims.admin;
+            if (typeof adminClaim === 'string') {
+              this.userAdminRole.set(adminClaim);
+            } else {
+              this.userAdminRole.set(null);
+            }
+
+            // Athlete Id claims
             const athleteIdClaim = idTokenResult.claims.athleteId;
             if (typeof athleteIdClaim === 'number') {
               this.userAthleteId.set(athleteIdClaim);
-              this.router.navigateByUrl('/home');
             } else {
               this.userAthleteId.set(null);
-              this.router.navigateByUrl('/auth/assign-athlete');
             }
           });
         } else {
           this.userAthleteId.set(null);
+          this.userAdminRole.set(null);
         }
       }
     );

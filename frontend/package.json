@@ -25,7 +25,6 @@
     "@tailwindcss/postcss": "^4.0.16",
     "daisyui": "^5.0.9",
     "firebase": "^11.6.0",
-    "firebaseui": "^6.1.0",
     "postcss": "^8.5.3",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.0.16",

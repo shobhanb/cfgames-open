@@ -1,0 +1,15 @@
+<input type="checkbox" class="modal-toggle" [checked]="modalShow()" hidden />
+
+@if (modalShow()) {
+
+<div class="modal">
+  <div class="modal-box">
+    <h3 class="font-bold text-lg">{{ modalTitle() }}</h3>
+    <p class="py-4">{{ modalMessage() }}</p>
+    <div class="modal-action">
+      <button class="btn btn-primary" (click)="closeModal()">OK</button>
+    </div>
+  </div>
+</div>
+
+}

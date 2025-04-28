@@ -1,6 +1,5 @@
 <app-auth-wrapper>
   <div class="text-center">
-    <h1 class="text-2xl font-bold">{{ auth.userName() }}</h1>
     <h1 class="text-xl mt-2 font-bold">Select your Crossfit ID to proceed</h1>
   </div>
   <div class="card bg-base-100 w-full max-w-sm shadow-2xl">
@@ -11,7 +10,7 @@
           <legend class="fieldset-legend">Select your gym</legend>
           <select class="select" name="gym" formControlName="gym">
             <option disabled selected>Select Gym</option>
-            @for (gym of gyms(); track gym) {
+            @for (gym of signupFormService.gyms(); track gym) {
             <option [value]="gym">{{ gym }}</option>
             }
           </select>
@@ -21,7 +20,7 @@
           </legend>
           <select class="select" name="name" formControlName="name">
             <option disabled selected>Select Name</option>
-            @for (name of names(); track name + '') {
+            @for (name of signupFormService.names(); track name + '') {
             <option [value]="name">{{ name }}</option>
             }
           </select>
@@ -29,7 +28,8 @@
           <legend class="fieldset-legend">Select your CF Competitor ID</legend>
           <select class="select" name="athleteId" formControlName="athleteId">
             <option disabled selected>Select Competitor ID</option>
-            @for (athleteId of athleteIds(); track athleteId + '') {
+            @for (athleteId of signupFormService.athleteIds(); track athleteId +
+            '') {
             <option [value]="athleteId">{{ athleteId }}</option>
             }
           </select>
@@ -37,12 +37,6 @@
             @if (isFormInvalid()) {Select Gym, Name & Competitor ID} @else {
             &nbsp;}
           </p>
-          <button type="submit" class="btn btn-primary">
-            <span class="">That's me!</span>
-          </button>
-          <button class="btn btn-neutral" (click)="onClickCancel()">
-            <span class="">Cancel</span>
-          </button>
         </fieldset>
       </form>
     </div>

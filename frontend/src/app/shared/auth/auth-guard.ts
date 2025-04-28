@@ -29,7 +29,7 @@ export const customLoginRedirect = pipe(
       return true;
     }
     if (t.loggedIn && !t.hasAthleteId) {
-      return ['/auth/assign-athlete'];
+      return ['/auth', 'assign-athlete'];
     }
     if (!t.loggedIn) {
       return ['/auth'];

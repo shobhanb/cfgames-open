@@ -1,0 +1,8 @@
+@if (toastShow()) {
+<div class="toast">
+  <div [classList]="toastClassList()">
+    <span>{{ toastMessage() }}</span>
+  </div>
+</div>
+
+}

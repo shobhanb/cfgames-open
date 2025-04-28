@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AuthWrapperComponent } from '../auth-wrapper/auth-wrapper.component';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../shared/auth/auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { ModalService } from '../../../shared/modal/modal.service';
 
 @Component({
   selector: 'app-landing',
@@ -9,19 +10,17 @@ import { Router, RouterLink } from '@angular/router';
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css',
 })
-export class LandingComponent {
-  auth = inject(AuthService);
-  router = inject(Router);
+export class LandingComponent implements OnInit {
+  private auth = inject(AuthService);
+  private modalService = inject(ModalService);
 
-  // onClickSignup() {
-  //   this.auth.uiState.set('newUserLogin');
-  // }
-
-  // onClickLogin() {
-  //   this.auth.uiState.set('existingUserLogin');
-  // }
-
-  // onClickCancel() {
-  //   this.router.navigateByUrl('/leaderboard');
-  // }
+  ngOnInit(): void {
+    if (!!this.auth.user()) {
+      this.modalService.show(
+        'Uh oh',
+        'Already logged in. Sign out if you want to switch user',
+        '/home'
+      );
+    }
+  }
 }

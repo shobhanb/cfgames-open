@@ -51,18 +51,9 @@ export const routes: Routes = [
   {
     path: 'auth/signup',
     loadComponent: () =>
-      import('./pages/auth/signup/signup.component').then(
-        (c) => c.SignupComponent
+      import('./pages/auth/signup-assign/signup-assign.component').then(
+        (c) => c.SignupAssignComponent
       ),
-  },
-  {
-    path: 'auth/assign-athlete',
-    loadComponent: () =>
-      import('./pages/auth/assign-athlete/assign-athlete.component').then(
-        (c) => c.AssignAthleteComponent
-      ),
-    // canActivate: [AuthGuard],
-    // data: { authGuardPipe: () => customLoginRedirect },
   },
   {
     path: '**',
