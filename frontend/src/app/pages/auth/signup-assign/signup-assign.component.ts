@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { SignupComponent } from './signup/signup.component';
 import { AssignAthleteComponent } from './assign-athlete/assign-athlete.component';
 import { SignupFormService } from './signup-form.service';
@@ -10,11 +10,13 @@ import { LoggedinWarningService } from '../../../shared/auth/loggedin-warning.se
   templateUrl: './signup-assign.component.html',
   styleUrl: './signup-assign.component.css',
 })
-export class SignupAssignComponent implements OnInit {
+export class SignupAssignComponent {
   private loggedinWarningService = inject(LoggedinWarningService);
   signupFormService = inject(SignupFormService);
 
-  ngOnInit(): void {
-    this.loggedinWarningService.checkLoggedIn();
+  constructor() {
+    effect(() => {
+      this.loggedinWarningService.checkLoggedIn();
+    });
   }
 }

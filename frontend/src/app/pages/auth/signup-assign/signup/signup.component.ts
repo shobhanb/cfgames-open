@@ -1,20 +1,21 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionLogoYahoo, ionMail } from '@ng-icons/ionicons';
 import { FirebaseError } from '@angular/fire/app';
-import { AuthErrorCodes, UserCredential } from '@angular/fire/auth';
+import { AuthErrorCodes, User, UserCredential } from '@angular/fire/auth';
 import { AuthWrapperComponent } from '../../auth-wrapper/auth-wrapper.component';
 import { ProviderLoginComponent } from '../../provider-login/provider-login.component';
 import { AuthService } from '../../../../shared/auth/auth.service';
 import { SignupFormService } from '../signup-form.service';
+import { ToastService } from '../../../../shared/toast/toast.service';
 import { ModalService } from '../../../../shared/modal/modal.service';
 
 @Component({
@@ -59,12 +60,10 @@ export class SignupComponent {
           this.loginForm.value.email,
           this.loginForm.value.password
         )
-        .then((aUser: UserCredential) =>
-          this.auth.updateUser(
-            this.signupFormService.selectedName()!,
-            this.signupFormService.selectedAthleteId()!
-          )
-        )
+        .then((userCred: UserCredential) => {
+          if (userCred) {
+          }
+        })
         .catch((error: FirebaseError) => {
           if (error.code === AuthErrorCodes.EMAIL_EXISTS) {
             console.log('Email already in use');

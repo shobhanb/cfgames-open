@@ -1,10 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { AuthWrapperComponent } from '../../auth-wrapper/auth-wrapper.component';
 import { SignupFormService } from '../signup-form.service';
@@ -25,7 +26,6 @@ export class AssignAthleteComponent {
 
   private gymFormControlSubscription$: any;
   private nameFormControlSubscription$: any;
-  private athleteIdFormControlSubscription$: any;
 
   form = new FormGroup({
     gym: new FormControl('', { validators: [Validators.required] }),
@@ -45,9 +45,9 @@ export class AssignAthleteComponent {
       this.form.value.name &&
       this.form.value.athleteId
     ) {
-      console.log(this.signupFormService.selectionValid());
-      console.log('Valid shiz. Go to signup');
-      this.router.navigate(['/auth', 'signup'], { replaceUrl: true });
+      this.signupFormService.selectedAthleteId.set(
+        Number(this.form.value.athleteId)
+      );
     }
   }
 
@@ -66,22 +66,19 @@ export class AssignAthleteComponent {
 
     this.nameFormControlSubscription$ =
       this.form.controls.name.valueChanges.subscribe((value) => {
-        this.form.controls.athleteId.setValue('');
         this.signupFormService.selectedName.set(value);
+        if (this.signupFormService.athleteIds().length === 1) {
+          this.form.controls.athleteId.setValue(
+            String(this.signupFormService.athleteIds()[0])
+          );
+        } else {
+          this.form.controls.athleteId.setValue('');
+        }
       });
-
-    this.athleteIdFormControlSubscription$ =
-      this.form.controls.athleteId.valueChanges
-        // Adding debounce time here to slow down reactivity a bit
-        .pipe(debounceTime(500))
-        .subscribe((value) => {
-          this.signupFormService.selectedAthleteId.set(Number(value));
-        });
   }
 
   ngOnDestroy(): void {
     this.gymFormControlSubscription$.unsubscribe();
     this.nameFormControlSubscription$.unsubscribe();
-    this.athleteIdFormControlSubscription$.unsubscribe();
   }
 }

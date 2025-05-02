@@ -1,8 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { AuthWrapperComponent } from '../auth-wrapper/auth-wrapper.component';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../../shared/auth/auth.service';
-import { ModalService } from '../../../shared/modal/modal.service';
+import { LoggedinWarningService } from '../../../shared/auth/loggedin-warning.service';
 
 @Component({
   selector: 'app-landing',
@@ -10,17 +9,12 @@ import { ModalService } from '../../../shared/modal/modal.service';
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css',
 })
-export class LandingComponent implements OnInit {
-  private auth = inject(AuthService);
-  private modalService = inject(ModalService);
+export class LandingComponent {
+  private loggedinWarningService = inject(LoggedinWarningService);
 
-  ngOnInit(): void {
-    if (!!this.auth.user()) {
-      this.modalService.show(
-        'Uh oh',
-        'Already logged in. Sign out if you want to switch user',
-        '/home'
-      );
-    }
+  constructor() {
+    effect(() => {
+      this.loggedinWarningService.checkLoggedIn();
+    });
   }
 }

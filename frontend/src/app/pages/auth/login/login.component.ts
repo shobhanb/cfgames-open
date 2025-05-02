@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { AuthWrapperComponent } from '../auth-wrapper/auth-wrapper.component';
 import {
   FormControl,
@@ -9,11 +9,10 @@ import {
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionLogoYahoo, ionMail } from '@ng-icons/ionicons';
 import { AuthService } from '../../../shared/auth/auth.service';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { ProviderLoginComponent } from '../provider-login/provider-login.component';
 import { AuthErrorCodes } from '@angular/fire/auth';
 import { FirebaseError } from 'firebase/app';
-import { filter, Subscription } from 'rxjs';
 import { LoggedinWarningService } from '../../../shared/auth/loggedin-warning.service';
 
 @Component({
@@ -29,13 +28,9 @@ import { LoggedinWarningService } from '../../../shared/auth/loggedin-warning.se
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   private auth = inject(AuthService);
-  private router = inject(Router);
   private loggedinWarningService = inject(LoggedinWarningService);
-
-  private routerSubscription$: Subscription | undefined;
-  private destroyRef = inject(DestroyRef);
 
   loginForm = new FormGroup({
     email: new FormControl('', {
@@ -66,7 +61,9 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    this.loggedinWarningService.checkLoggedIn();
+  constructor() {
+    effect(() => {
+      this.loggedinWarningService.checkLoggedIn();
+    });
   }
 }

@@ -15,12 +15,10 @@ import {
   user,
   createUserWithEmailAndPassword,
   IdTokenResult,
-  authState,
   UserCredential,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { distinctUntilChanged, Subscription } from 'rxjs';
-import { AdminRole } from './admin-role';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -44,15 +42,9 @@ export class AuthService {
   userAthleteId = signal<number | null>(null);
 
   userAdminRole = signal<string | null>(null);
-  userAdminAll = computed<boolean>(
-    () => this.userAdminRole() === AdminRole.adminAll
-  );
-  userAdminGym = computed<boolean>(
-    () => this.userAdminRole() === AdminRole.adminGym
-  );
-  userAdminTeam = computed<boolean>(
-    () => this.userAdminRole() === AdminRole.adminTeam
-  );
+  userAdminAll = computed<boolean>(() => this.userAdminRole() === 'all');
+  userAdminGym = computed<boolean>(() => this.userAdminRole() === 'gym');
+  userAdminTeam = computed<boolean>(() => this.userAdminRole() === 'team');
 
   userEmail = computed<string | null>(() => this.user()?.email ?? null);
   userName = computed<string | null>(() => this.user()?.displayName ?? null);
@@ -102,23 +94,21 @@ export class AuthService {
     this.userSubscription$ = user(this.fireAuth).subscribe(
       (aUser: User | null) => {
         this.user.set(aUser);
-        console.log('Usersub user signal is truthy' + !!this.user());
         if (aUser) {
           aUser.getIdTokenResult().then((idTokenResult: IdTokenResult) => {
             // Admin claims
-            const adminClaim = idTokenResult.claims.admin;
-            if (typeof adminClaim === 'string') {
-              this.userAdminRole.set(adminClaim);
+            const adminClaim: string | unknown = idTokenResult.claims.admin;
+            if (!!adminClaim) {
+              this.userAdminRole.set(adminClaim as string);
             } else {
               this.userAdminRole.set(null);
             }
 
-            // Athlete Id claims
-            const athleteIdClaim = idTokenResult.claims.athleteId;
-            if (typeof athleteIdClaim === 'number') {
-              this.userAthleteId.set(athleteIdClaim);
-            } else {
-              this.userAthleteId.set(null);
+            // Athlete Id claim
+            const athleteIdClaim: number | unknown =
+              idTokenResult.claims.athlete_id;
+            if (!!athleteIdClaim) {
+              this.userAthleteId.set(athleteIdClaim as number);
             }
           });
         } else {

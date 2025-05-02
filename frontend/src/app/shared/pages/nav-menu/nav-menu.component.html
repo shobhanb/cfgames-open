@@ -43,10 +43,10 @@
           tabindex="0"
         >
           @if ( auth.userAthleteId() ) {
-          <li>{{ "CF ID: " + auth.userAthleteId() }}</li>
+          <li>
+            <a>{{ "CF ID: " + auth.userAthleteId() }}</a>
+          </li>
           }
-          <li><a>My Scores</a></li>
-          <li><a>My team</a></li>
           <li><a (click)="onClickSignOut()">Sign Out</a></li>
         </ul>
       </div>

@@ -1,12 +1,12 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
-import { NgIcon, provideIcons } from '@ng-icons/core';
+import { provideIcons } from '@ng-icons/core';
 import { ionLogoYahoo, ionMail } from '@ng-icons/ionicons';
 import { AuthService } from '../../../shared/auth/auth.service';
 
 @Component({
   selector: 'app-provider-login',
-  imports: [NgIcon, TitleCasePipe],
+  imports: [TitleCasePipe],
   viewProviders: [provideIcons({ ionLogoYahoo, ionMail })],
   templateUrl: './provider-login.component.html',
   styleUrl: './provider-login.component.css',

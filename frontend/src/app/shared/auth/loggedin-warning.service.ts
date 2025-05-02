@@ -10,7 +10,6 @@ export class LoggedinWarningService {
   private modalService = inject(ModalService);
 
   checkLoggedIn() {
-    console.log('Landing Service check user is ' + !!this.auth.user());
     if (!!this.auth.user()) {
       this.modalService.show(
         'Uh oh',
@@ -19,6 +18,4 @@ export class LoggedinWarningService {
       );
     }
   }
-
-  constructor() {}
 }

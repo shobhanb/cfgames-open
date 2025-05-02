@@ -37,6 +37,16 @@
             @if (isFormInvalid()) {Select Gym, Name & Competitor ID} @else {
             &nbsp;}
           </p>
+          <button class="btn btn-primary" type="button" (click)="onSubmit()">
+            That's me
+          </button>
+          <button
+            class="btn btn-neutral"
+            type="button"
+            (click)="onClickCancel()"
+          >
+            Cancel
+          </button>
         </fieldset>
       </form>
     </div>
