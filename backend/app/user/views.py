@@ -7,16 +7,11 @@ from app.database.dependencies import db_dependency
 from app.user.schemas import AddUserSchema
 from app.user.service import add_custom_claim_athlete, queue_add_new_user
 
-auth_router = APIRouter(prefix="/auth", tags=["auth"])
+user_router = APIRouter(prefix="/user", tags=["user"])
 
 
-@auth_router.get("/me", status_code=status.HTTP_200_OK)
-async def auth_get_current_user_info(user_data: Annotated[dict, Depends(get_firebase_token_data)]) -> dict:
-    return user_data
-
-
-@auth_router.put("/me/{athlete_id}", status_code=status.HTTP_202_ACCEPTED)
-async def auth_put_queue_athleteid_assignment(
+@user_router.put("/me/{athlete_id}", status_code=status.HTTP_202_ACCEPTED)
+async def user_put_queue_athleteid_assignment(
     form_data: AddUserSchema,
     db_session: db_dependency,
     token_data: Annotated[dict, Depends(get_firebase_token_data)],
@@ -24,7 +19,7 @@ async def auth_put_queue_athleteid_assignment(
     await queue_add_new_user(db_session=db_session, token_data=token_data, athlete_data=form_data)
 
 
-@auth_router.put("/validate/{athlete_id}", status_code=status.HTTP_202_ACCEPTED)
+@user_router.put("/validate/{athlete_id}", status_code=status.HTTP_202_ACCEPTED)
 async def auth_put_validate_athleteid_assignment(
     athlete_id: int,
     db_session: db_dependency,

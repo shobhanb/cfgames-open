@@ -1,3 +1,4 @@
+import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
@@ -8,13 +9,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
 from app.athlete.views import athlete_router
+from app.auth.service import create_admin_user, get_custom_claims_by_email
 from app.auth.views import auth_router
 from app.cf_games.views import cf_games_router
 from app.database.base import Base
 from app.database.engine import session_manager
 from app.settings import settings
 
+log = logging.getLogger("uvicorn.error")
+
 RESET_DB = False
+CREATE_ADMIN_USER = True
 
 
 @asynccontextmanager
@@ -24,6 +29,9 @@ async def lifespan(_: FastAPI) -> AsyncGenerator:
         async with session_manager.connect() as conn:
             await conn.run_sync(Base.metadata.drop_all)
             await conn.run_sync(Base.metadata.create_all)
+    if CREATE_ADMIN_USER:
+        await create_admin_user(settings.admin_user_email, settings.admin_user_athlete_id)
+        log.info(await get_custom_claims_by_email(settings.admin_user_email))
     yield
 
 

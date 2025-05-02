@@ -43,8 +43,16 @@ async def get_current_user_email(token_data: Annotated[dict, Depends(get_firebas
     return token_data["email"]
 
 
-async def get_current_admin_user(token_data: Annotated[dict, Depends(get_firebase_token_data)]) -> bool:
-    return token_data["admin"] is True
+async def get_current_user_custom_claims(token_data: Annotated[dict, Depends(get_firebase_token_data)]) -> dict | None:
+    return token_data.get("custom_claims")
+
+
+async def check_admin_all(custom_claims: Annotated[dict, Depends(get_current_user_custom_claims)]) -> bool:
+    return custom_claims.get("admin") == "all"
+
+
+async def check_admin_gym(custom_claims: Annotated[dict, Depends(get_current_user_custom_claims)]) -> bool:
+    return (custom_claims.get("admin") == "all") or (custom_claims.get("admin") == "gym")
 
 
 async def get_current_user_competitor_id(token_data: Annotated[dict, Depends(get_firebase_token_data)]) -> int:
