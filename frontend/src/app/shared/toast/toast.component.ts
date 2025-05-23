@@ -25,18 +25,16 @@ export class ToastComponent implements OnInit {
   toastType = signal<'success' | 'error'>('success');
   toastShow = signal<boolean>(false);
 
-  toastClassList = computed<string>(() => 'alert alert-' + this.toastType());
-
   toastSubscription$: Subscription | undefined;
 
   ngOnInit(): void {
     this.toastSubscription$ = this.toastService.toastState$.subscribe(
-      ({ message, type, redirectUrl }) => {
+      ({ message, type, duration, redirectUrl }) => {
         this.toastMessage.set(message);
         this.toastType.set(type);
         this.toastShow.set(true);
 
-        timer(3000).subscribe(() => {
+        timer(duration).subscribe(() => {
           this.toastShow.set(false);
           if (redirectUrl) {
             this.router.navigate([redirectUrl]);

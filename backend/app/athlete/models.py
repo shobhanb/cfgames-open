@@ -6,7 +6,7 @@ from sqlalchemy import Integer, String, UniqueConstraint
 from sqlalchemy.engine.default import DefaultExecutionContext
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.cf_games.constants import CF_DIVISION_MAP, MASTERS_AGE_CUTOFF, OPEN_AGE_CUTOFF
+from app.cf_games.constants import CF_DIVISION_MAP, DEFAULT_TEAM_NAME, MASTERS_AGE_CUTOFF, OPEN_AGE_CUTOFF
 from app.database.base import Base
 
 if TYPE_CHECKING:
@@ -16,10 +16,10 @@ if TYPE_CHECKING:
 def apply_age_category(context: DefaultExecutionContext) -> str:
     age = context.get_current_parameters()["age"]
     if int(age) >= int(MASTERS_AGE_CUTOFF):
-        return "3. Masters 55+"
+        return "Masters 55+"
     if int(age) >= int(OPEN_AGE_CUTOFF):
-        return "2. Masters"
-    return "1. Open"
+        return "Masters"
+    return "Open"
 
 
 def apply_division_name(context: DefaultExecutionContext) -> str:
@@ -45,7 +45,7 @@ class Athlete(Base):
 
     # Affiliate columns
     age_category: Mapped[str] = mapped_column(String, default=apply_age_category, onupdate=apply_age_category)
-    team_name: Mapped[str] = mapped_column(String, default="zz")
+    team_name: Mapped[str] = mapped_column(String, default=DEFAULT_TEAM_NAME)
     team_role: Mapped[int] = mapped_column(Integer, default=0)
 
     # Relationships

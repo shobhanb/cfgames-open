@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { AuthGuard, hasCustomClaim } from '@angular/fire/auth-guard';
-import { customLoginRedirect } from '../app/shared/auth/auth-guard';
 
 export const routes: Routes = [
   {
@@ -31,8 +29,6 @@ export const routes: Routes = [
       import('./pages/scheduling/scheduling.component').then(
         (c) => c.SchedulingComponent
       ),
-    canActivate: [AuthGuard],
-    data: { authGuardPipe: () => customLoginRedirect },
   },
   {
     path: 'auth',
@@ -53,6 +49,20 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/auth/signup-assign/signup-assign.component').then(
         (c) => c.SignupAssignComponent
+      ),
+  },
+  {
+    path: 'auth/not-verified',
+    loadComponent: () =>
+      import('./pages/auth/not-verified/not-verified.component').then(
+        (c) => c.NotVerifiedComponent
+      ),
+  },
+  {
+    path: 'auth/verify/:token',
+    loadComponent: () =>
+      import('./pages/auth/verify/verify.component').then(
+        (c) => c.VerifyComponent
       ),
   },
   {

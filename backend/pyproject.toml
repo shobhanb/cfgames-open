@@ -7,10 +7,11 @@ requires-python = ">=3.12"
 dependencies = [
     "aiosqlite>=0.21.0",
     "fastapi[all,standard]>=0.115.11",
-    "firebase-admin>=6.7.0",
     "greenlet>=3.1.1",
     "httpx-limiter>=0.2.0",
     "httpx>=0.28.1",
     "pydantic>=2.10.6",
     "sqlalchemy>=2.0.39",
+    "fastapi-users[oauth,sqlalchemy]>=14.0.1",
+    "fastapi-mail>=1.4.2",
 ]

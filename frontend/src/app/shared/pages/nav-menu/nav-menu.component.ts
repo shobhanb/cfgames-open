@@ -1,9 +1,10 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroBars3 } from '@ng-icons/heroicons/outline';
 import { TitleService } from '../../title.service';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../../auth/auth.service';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { UserAuthService } from '../../user-auth/user-auth.service';
+import { ToastService } from '../../toast/toast.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -14,10 +15,12 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class NavMenuComponent {
   titleService = inject(TitleService);
-  auth = inject(AuthService);
-  router = inject(Router);
+  userAuthService = inject(UserAuthService);
 
   onClickSignOut() {
-    this.auth.logout();
+    this.userAuthService.logout();
+  }
+  onClickRefreshInfo() {
+    this.userAuthService.getMyInfo();
   }
 }

@@ -1,44 +1,32 @@
-import {
-  computed,
-  DestroyRef,
-  inject,
-  Injectable,
-  OnInit,
-  signal,
-} from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ApiService } from '../../../shared/data/api.service';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { HelperFunctionsService } from '../../../shared/helper-functions.service';
-import { AffiliateAthletes } from '../../../shared/data/athlete-ids';
-import { ModalService } from '../../../shared/modal/modal.service';
-import { AuthService } from '../../../shared/auth/auth.service';
-import { NavigationEnd, Router } from '@angular/router';
-import { filter, Subscription } from 'rxjs';
+import { apiAffiliateAthlete } from '../../../api/models';
+import { apiAthleteService } from '../../../api/services';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SignupFormService {
-  private api = inject(ApiService);
-  private auth = inject(AuthService);
   private helperFunctions = inject(HelperFunctionsService);
-  private modalService = inject(ModalService);
+  private apiAthlete = inject(apiAthleteService);
 
-  // To store the form data
-  selectedGym = signal<string | null>(null);
-  selectedName = signal<string | null>(null);
-  selectedAthleteId = signal<number | null>(null);
-  // Form data is valid
-  selectionValid = computed<boolean>(
-    () =>
-      !!this.selectedGym() &&
-      !!this.selectedName() &&
-      !!this.selectedAthleteId()
-  );
+  // Athlete data from API
+  athleteData = signal<apiAffiliateAthlete[]>([]);
 
-  // Affiliate & Athlete data from API
-  athleteData = signal<AffiliateAthletes[]>([]).asReadonly();
+  // This needs to be called by the component onInit
+  getAthleteData() {
+    this.apiAthlete.getAthleteListAthleteListGet().subscribe({
+      next: (data: apiAffiliateAthlete[]) => {
+        this.athleteData.set(data);
+      },
+      error: (err: any) => {
+        console.log('Error getting Athlete List', err);
+        this.athleteData.set([]);
+      },
+    });
+  }
 
+  // Input data split into gyms, names etc
   gyms = computed<string[]>(() =>
     this.athleteData()
       .map((athlete) => athlete.affiliate_name)
@@ -48,7 +36,7 @@ export class SignupFormService {
 
   names = computed<string[]>(() =>
     this.athleteData()
-      .filter((athlete) => athlete.affiliate_name === this.selectedGym())
+      .filter((athlete) => athlete.affiliate_name === this.selectedAffiliate())
       .map((athlete) => athlete.name)
       .filter(this.helperFunctions.filterUnique)
       .sort()
@@ -56,16 +44,33 @@ export class SignupFormService {
 
   athleteIds = computed<number[]>(() =>
     this.athleteData()
-      .filter((athlete) => athlete.affiliate_name === this.selectedGym())
+      .filter((athlete) => athlete.affiliate_name === this.selectedAffiliate())
       .filter((athlete) => athlete.name === this.selectedName())
       .map((athlete) => athlete.competitor_id)
       .sort()
   );
 
-  constructor() {
-    // Observable from API converted to signal
-    this.athleteData = toSignal(this.api.loadAthleteIds(), {
-      initialValue: [],
-    });
-  }
+  // To store the form data
+  selectedAffiliate = signal<string | null>(null);
+  selectedName = signal<string | null>(null);
+  selectedAthleteId = signal<number | null>(null);
+  enteredEmail = signal<string | null>(null);
+
+  selectedAffiliateId = computed<number | null>(() => {
+    return this.athleteData()
+      .filter((athlete) => athlete.competitor_id === this.selectedAthleteId())
+      .map((athlete) => athlete.affiliate_id)
+      .filter(this.helperFunctions.filterUnique)[0];
+  });
+
+  // Check if inputs are valid
+  // Use to switch components
+  selectionValid = computed<boolean>(
+    () =>
+      !!this.selectedAffiliate() &&
+      !!this.selectedAffiliateId() &&
+      !!this.selectedName() &&
+      !!this.selectedAthleteId() &&
+      !!this.enteredEmail()
+  );
 }

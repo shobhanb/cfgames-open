@@ -2,6 +2,7 @@
 *.db
 *.csv
 firebase_service_account.json
+google_client_secret.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

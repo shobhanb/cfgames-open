@@ -1,0 +1,38 @@
+<app-auth-wrapper>
+  <div class="flex flex-col gap-1 text-center">
+    <p>Verify your email to proceed</p>
+    <div class="divider"></div>
+    <p>Check your email for a link to verify</p>
+    <p>Maybe it's in your spam folder?</p>
+  </div>
+  <div class="divider"></div>
+  <p>Didn't receive it?</p>
+
+  <div class="card bg-base-100 w-full max-w-sm shadow-2xl">
+    <div class="card-body">
+      @if (! emailSent){
+      <form [formGroup]="emailForm">
+        <fieldset class="fieldset gap-4">
+          <legend class="fieldset-legend">Email</legend>
+          <input
+            class="input input-bordered"
+            type="email"
+            formControlName="email"
+            placeholder="{{ userAuth.user()?.email }}"
+            value="{{ userAuth.user()?.email }}"
+          />
+          <button
+            class="btn btn-primary"
+            type="button"
+            (click)="onClickSendEmail()"
+          >
+            Send verification email again
+          </button>
+        </fieldset>
+      </form>
+      } @else {
+      <p class="text-center text-lg">Email sent!</p>
+      }
+    </div>
+  </div>
+</app-auth-wrapper>

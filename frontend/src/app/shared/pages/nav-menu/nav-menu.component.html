@@ -14,40 +14,49 @@
         <span class="text-xl">{{ titleService.pageTitle() }}</span>
       </div>
       <!-- Profile icon dropdown -->
-      @if (auth.user()) {
+      @if (userAuthService.loggedIn()) {
       <div class="flex-none dropdown dropdown-end">
         <div
-          class="flex flex-row justify-center items-center rounded-full gap-2 bg-base-100 md:shadow-md md:p-2"
+          class="rounded-2xl bg-base-100 md:shadow-md px-4 py-2"
           tabindex="0"
           role="button"
         >
-          <span class="text-sm hidden md:inline">{{ auth.userName() }}</span>
-          @if ( auth.userPhotoURL() ) {
-          <div class="avatar avatar-online">
-            <div class="w-10 md:w-8 rounded-full">
-              <img [src]="auth.userPhotoURL()" alt="" />
-            </div>
-          </div>
-
-          } @else {
-
-          <div class="avatar avatar-online avatar-placeholder">
-            <div class="bg-base-100 md:bg-base-300 w-10 md:w-8 rounded-full">
-              <span class="text-xs">{{ auth.userInitials() }}</span>
-            </div>
-          </div>
-          }
+          <span class="text-md hidden md:inline">{{
+            userAuthService.user()!.name
+          }}</span>
+          <span class="text-md md:hidden">{{
+            userAuthService.userNameInitials()
+          }}</span>
         </div>
         <ul
-          class="dropdown-content menu bg-base-200 rounded-box z-1 p-4 w-48 shadow-sm"
+          class="dropdown-content flex flex-col gap-2 bg-base-200 rounded-box z-1 p-4 m-2 shadow-sm max-w-xs text-right"
           tabindex="0"
         >
-          @if ( auth.userAthleteId() ) {
-          <li>
-            <a>{{ "CF ID: " + auth.userAthleteId() }}</a>
-          </li>
+          <li class="md:hidden">{{ userAuthService.user()!.name }}</li>
+          <li>{{ userAuthService.user()!.email }}</li>
+          <li>{{ userAuthService.user()!.affiliate }}</li>
+          <li>{{ "CF ID: " + userAuthService.user()!.athlete_id }}</li>
+          @if (!userAuthService.user()?.is_verified) {
+          <li class="text-error">Email not verified!!</li>
           }
-          <li><a (click)="onClickSignOut()">Sign Out</a></li>
+          <li>
+            <button
+              class="btn btn-primary w-full"
+              type="button"
+              (click)="onClickRefreshInfo()"
+            >
+              Refresh
+            </button>
+          </li>
+          <li>
+            <button
+              class="btn btn-primary w-full"
+              type="button"
+              (click)="onClickSignOut()"
+            >
+              Log Out
+            </button>
+          </li>
         </ul>
       </div>
       } @else {

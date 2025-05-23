@@ -1,16 +1,13 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { AuthWrapperComponent } from '../../auth-wrapper/auth-wrapper.component';
 import { SignupFormService } from '../signup-form.service';
-import { AffiliateAthletes } from '../../../../shared/data/athlete-ids';
-import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-assign-athlete',
@@ -18,11 +15,9 @@ import { debounceTime } from 'rxjs';
   templateUrl: './assign-athlete.component.html',
   styleUrl: './assign-athlete.component.css',
 })
-export class AssignAthleteComponent {
+export class AssignAthleteComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   signupFormService = inject(SignupFormService);
-
-  athleteData = signal<AffiliateAthletes[]>([]).asReadonly();
 
   private gymFormControlSubscription$: any;
   private nameFormControlSubscription$: any;
@@ -31,10 +26,19 @@ export class AssignAthleteComponent {
     gym: new FormControl('', { validators: [Validators.required] }),
     name: new FormControl('', { validators: [Validators.required] }),
     athleteId: new FormControl('', { validators: [Validators.required] }),
+    email: new FormControl('', {
+      validators: [Validators.email, Validators.required],
+    }),
   });
 
-  isFormInvalid() {
-    return this.form.invalid && this.form.dirty;
+  get isAthleteIdInvalid() {
+    return (
+      this.form.controls.athleteId.invalid && this.form.controls.athleteId.dirty
+    );
+  }
+
+  get isEmailInvalid() {
+    return this.form.controls.email.invalid && this.form.controls.email.dirty;
   }
 
   onSubmit() {
@@ -43,10 +47,14 @@ export class AssignAthleteComponent {
       this.form.dirty &&
       this.form.value.gym &&
       this.form.value.name &&
-      this.form.value.athleteId
+      this.form.value.athleteId &&
+      this.form.value.email
     ) {
       this.signupFormService.selectedAthleteId.set(
         Number(this.form.value.athleteId)
+      );
+      this.signupFormService.enteredEmail.set(
+        this.form.value.email.toLowerCase().trim()
       );
     }
   }
@@ -57,11 +65,15 @@ export class AssignAthleteComponent {
   }
 
   ngOnInit(): void {
+    if (this.signupFormService.gyms().length == 1) {
+      this.form.controls.gym.setValue(this.signupFormService.gyms()[0]);
+    }
+
     this.gymFormControlSubscription$ =
       this.form.controls.gym.valueChanges.subscribe((value) => {
         this.form.controls.name.setValue('');
         this.form.controls.athleteId.setValue('');
-        this.signupFormService.selectedGym.set(value);
+        this.signupFormService.selectedAffiliate.set(value);
       });
 
     this.nameFormControlSubscription$ =

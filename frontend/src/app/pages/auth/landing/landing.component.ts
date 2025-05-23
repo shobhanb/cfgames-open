@@ -1,7 +1,7 @@
 import { Component, effect, inject } from '@angular/core';
 import { AuthWrapperComponent } from '../auth-wrapper/auth-wrapper.component';
 import { RouterLink } from '@angular/router';
-import { LoggedinWarningService } from '../../../shared/auth/loggedin-warning.service';
+import { ToastService } from '../../../shared/toast/toast.service';
 
 @Component({
   selector: 'app-landing',
@@ -10,11 +10,13 @@ import { LoggedinWarningService } from '../../../shared/auth/loggedin-warning.se
   styleUrl: './landing.component.css',
 })
 export class LandingComponent {
-  private loggedinWarningService = inject(LoggedinWarningService);
+  toastService = inject(ToastService);
+
+  onTest() {
+    this.toastService.showSuccess('Success');
+  }
 
   constructor() {
-    effect(() => {
-      this.loggedinWarningService.checkLoggedIn();
-    });
+    effect(() => {});
   }
 }

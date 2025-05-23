@@ -8,8 +8,8 @@ from app.schemas import CustomBaseModel
 
 
 class CFDataCountModel(CustomBaseModel):
-    year: int
     affiliate_id: int
+    year: int
     entrant_count: int
     score_count: int
 

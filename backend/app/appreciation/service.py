@@ -1,41 +1,48 @@
-from __future__ import annotations
-
-import logging
+from uuid import UUID
 
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.athlete.models import Athlete
-from app.attendance.models import Attendance
-from app.database.dependencies import db_dependency
 
-log = logging.getLogger("uvicorn.error")
+from .models import Appreciation
 
 
-async def get_athlete_attendance_data(
-    db_session: db_dependency,
-) -> dict[str, dict[str, bool]]:
+async def get_db_appreciation(
+    db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
+) -> list[Appreciation]:
     stmt = (
-        select(Athlete.name, Athlete.competitor_id, Attendance.ordinal, Attendance.event_name)
-        .join_from(
-            Athlete,
-            Attendance,
-            Athlete.competitor_id == Attendance.athlete_id,
-            isouter=True,
-        )
-        .order_by(Athlete.name, Attendance.ordinal)
+        select(Appreciation)
+        .join_from(Appreciation, Athlete, Appreciation.athlete_id == Athlete.id)
+        .where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year))
     )
     ret = await db_session.execute(stmt)
-    results = ret.mappings().all()
-    attendance = {}
-    for row in results:
-        id_ = row.get("id")
-        name = row.get("name")
-        ordinal = row.get("ordinal")
-        if id_ and id_ not in attendance:
-            attendance[id_] = {}
-        if name:
-            attendance[id_]["name"] = name
-        if ordinal:
-            attendance[id_][ordinal] = True
+    results = ret.scalars().all()
+    return list(results)
 
-    return attendance
+
+async def update_db_appreciation(
+    db_session: AsyncSession,
+    athlete_id: UUID,
+    ordinal: int,
+    score: int,
+) -> None:
+    appreciation = await Appreciation.find(
+        async_session=db_session,
+        athlete_id=athlete_id,
+        ordinal=ordinal,
+    )
+    if appreciation:
+        appreciation.score = score
+        db_session.add(appreciation)
+        await db_session.commit()
+    else:
+        new_appreciation = Appreciation(
+            athlete_id=athlete_id,
+            ordinal=ordinal,
+            score=score,
+        )
+        db_session.add(new_appreciation)
+        await db_session.commit()

@@ -1,8 +1,14 @@
 @if (toastShow()) {
-<div class="toast">
-  <div [classList]="toastClassList()">
+<div class="toast toast-middle">
+  @if (toastType() === 'success') {
+  <div role="alert" class="alert alert-success">
     <span>{{ toastMessage() }}</span>
   </div>
+  } @else if (toastType() === 'error') {
+  <div role="alert" class="alert alert-error">
+    <span>{{ toastMessage() }}</span>
+  </div>
+  }
 </div>
 
 }

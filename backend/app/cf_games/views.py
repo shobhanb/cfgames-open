@@ -1,27 +1,35 @@
 import logging
-from typing import Annotated
+from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.auth.dependencies import verify_admin_api_key
-from app.cf_games.constants import AFFILIATE_ID, YEAR
-from app.cf_games.service import process_cf_data
 from app.database.dependencies import db_dependency
 from app.exceptions import unauthorised_exception
+
+from .constants import AFFILIATE_ID, YEAR
+from .schemas import CFDataCountModel
+from .service import process_cf_data
 
 log = logging.getLogger("uvicorn.error")
 
 cf_games_router = APIRouter(prefix="/cfgames", tags=["cfgames"])
 
 
-@cf_games_router.get("/refresh", status_code=status.HTTP_200_OK)
+@cf_games_router.get("/refresh", status_code=status.HTTP_200_OK, response_model=CFDataCountModel, tags=["apikey"])
 async def refresh_cf_games_data(
     api_key_admin: Annotated[bool, Depends(verify_admin_api_key)],
     db_session: db_dependency,
-    year: int = int(YEAR),
     affiliate_id: int = int(AFFILIATE_ID),
-) -> None:
+    year: int = int(YEAR),
+) -> dict[str, Any]:
     if api_key_admin:
-        await process_cf_data(db_session=db_session, affiliate_id=affiliate_id, year=year)
+        try:
+            return await process_cf_data(db_session=db_session, affiliate_id=affiliate_id, year=year)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Error processing CF data",
+            ) from e
     else:
         raise unauthorised_exception()

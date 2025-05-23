@@ -5,7 +5,6 @@ from uuid import UUID
 from sqlalchemy import ForeignKey, Integer, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.cf_games.constants import DEFAULT_APPRECIATION_SCORE
 from app.database.base import Base
 
 
@@ -14,4 +13,4 @@ class Appreciation(Base):
 
     athlete_id: Mapped[UUID] = mapped_column(ForeignKey("athlete.id"))
     ordinal: Mapped[int] = mapped_column(Integer)
-    score: Mapped[int] = mapped_column(Integer, default=DEFAULT_APPRECIATION_SCORE)
+    score: Mapped[int] = mapped_column(Integer)

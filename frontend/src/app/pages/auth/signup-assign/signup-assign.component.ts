@@ -1,8 +1,7 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { SignupComponent } from './signup/signup.component';
 import { AssignAthleteComponent } from './assign-athlete/assign-athlete.component';
 import { SignupFormService } from './signup-form.service';
-import { LoggedinWarningService } from '../../../shared/auth/loggedin-warning.service';
 
 @Component({
   selector: 'app-signup-assign',
@@ -10,13 +9,12 @@ import { LoggedinWarningService } from '../../../shared/auth/loggedin-warning.se
   templateUrl: './signup-assign.component.html',
   styleUrl: './signup-assign.component.css',
 })
-export class SignupAssignComponent {
-  private loggedinWarningService = inject(LoggedinWarningService);
+export class SignupAssignComponent implements OnInit {
   signupFormService = inject(SignupFormService);
 
-  constructor() {
-    effect(() => {
-      this.loggedinWarningService.checkLoggedIn();
-    });
+  ngOnInit(): void {
+    this.signupFormService.getAthleteData();
   }
+
+  constructor() {}
 }

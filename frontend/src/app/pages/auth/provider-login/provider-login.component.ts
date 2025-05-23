@@ -2,7 +2,6 @@ import { TitleCasePipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { provideIcons } from '@ng-icons/core';
 import { ionLogoYahoo, ionMail } from '@ng-icons/ionicons';
-import { AuthService } from '../../../shared/auth/auth.service';
 
 @Component({
   selector: 'app-provider-login',
@@ -12,10 +11,7 @@ import { AuthService } from '../../../shared/auth/auth.service';
   styleUrl: './provider-login.component.css',
 })
 export class ProviderLoginComponent {
-  auth = inject(AuthService);
   loginSignup = input.required<string>();
 
-  onClickGoogle() {
-    this.auth.loginWithGoogle();
-  }
+  onClickGoogle() {}
 }

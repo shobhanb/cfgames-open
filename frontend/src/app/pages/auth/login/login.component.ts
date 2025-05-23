@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { AuthWrapperComponent } from '../auth-wrapper/auth-wrapper.component';
 import {
   FormControl,
@@ -8,29 +8,27 @@ import {
 } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionLogoYahoo, ionMail } from '@ng-icons/ionicons';
-import { AuthService } from '../../../shared/auth/auth.service';
-import { RouterLink } from '@angular/router';
-import { ProviderLoginComponent } from '../provider-login/provider-login.component';
-import { AuthErrorCodes } from '@angular/fire/auth';
-import { FirebaseError } from 'firebase/app';
-import { LoggedinWarningService } from '../../../shared/auth/loggedin-warning.service';
+import { Router, RouterLink } from '@angular/router';
+import { ModalService } from '../../../shared/modal/modal.service';
+import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
+import { apiAuthService } from '../../../api/services';
+import { StrictHttpResponse } from '../../../api/strict-http-response';
+import { apiBearerResponse } from '../../../api/models';
+import { timer } from 'rxjs';
+import { ToastService } from '../../../shared/toast/toast.service';
 
 @Component({
   selector: 'app-login',
-  imports: [
-    AuthWrapperComponent,
-    ReactiveFormsModule,
-    NgIcon,
-    RouterLink,
-    ProviderLoginComponent,
-  ],
+  imports: [AuthWrapperComponent, ReactiveFormsModule, NgIcon, RouterLink],
   viewProviders: [provideIcons({ ionLogoYahoo, ionMail })],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent {
-  private auth = inject(AuthService);
-  private loggedinWarningService = inject(LoggedinWarningService);
+export class LoginComponent implements OnInit {
+  private userAuth = inject(UserAuthService);
+  private toastService = inject(ToastService);
+  private modalService = inject(ModalService);
+  private apiAuth = inject(apiAuthService);
 
   loginForm = new FormGroup({
     email: new FormControl('', {
@@ -46,24 +44,38 @@ export class LoginComponent {
       this.loginForm.value.email &&
       this.loginForm.value.password
     ) {
-      this.auth
-        .loginWithEmailPassword(
-          this.loginForm.value.email,
-          this.loginForm.value.password
-        )
-        .catch((error: FirebaseError) => {
-          if (error.code === AuthErrorCodes.USER_DELETED) {
-            console.log('User not found. Please signup');
-          } else {
-            console.error(error);
-          }
+      this.apiAuth
+        .authDbLoginAuthLoginPost$Response({
+          body: {
+            username: this.loginForm.value.email,
+            password: this.loginForm.value.password,
+          },
+        })
+        .subscribe({
+          next: (response: StrictHttpResponse<apiBearerResponse>) => {
+            this.userAuth.token.set(response.body);
+            this.userAuth.getMyInfo();
+            this.toastService.showSuccess('Logged in', '/home');
+          },
+          error: (err: any) => {
+            console.log(err);
+            this.modalService.show(
+              'Error during Login',
+              err.error.detail,
+              '/home'
+            );
+          },
         });
     }
   }
 
   constructor() {
-    effect(() => {
-      this.loggedinWarningService.checkLoggedIn();
-    });
+    effect(() => {});
+  }
+
+  ngOnInit(): void {
+    if (this.userAuth.user()) {
+      this.loginForm.value.email = this.userAuth.user()!.email;
+    }
   }
 }

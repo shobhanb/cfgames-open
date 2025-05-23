@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import time
+from typing import Any
 
 from httpx import AsyncClient, HTTPError
 from httpx_limiter.async_rate_limited_transport import AsyncRateLimitedTransport
@@ -13,8 +14,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.appreciation.models import Appreciation
 from app.athlete.models import Athlete
+from app.athlete_prefs.service import assign_db_athlete_prefs
 from app.attendance.models import Attendance
-from app.cf_games.constants import (
+from app.score.models import Score
+from app.sidescore.models import SideScore
+
+from .constants import (
     ATTENDANCE_SCORE,
     CF_DIVISION_MAP,
     CF_LEADERBOARD_URL,
@@ -24,8 +29,7 @@ from app.cf_games.constants import (
     PARTICIPATION_SCORE,
     TOP3_SCORE,
 )
-from app.cf_games.schemas import CFEntrantInputModel, CFScoreInputModel
-from app.score.models import Score, SideScore
+from .schemas import CFEntrantInputModel, CFScoreInputModel
 
 log = logging.getLogger("uvicorn.error")
 
@@ -96,11 +100,11 @@ async def get_cf_data(affiliate_code: int, year: int) -> tuple[int, list[dict], 
     return year, entrant_list, scores_list
 
 
-async def process_cf_data(
+async def process_cf_data(  # noqa: C901, PLR0912
     db_session: AsyncSession,
     affiliate_id: int,
     year: int,
-) -> None:
+) -> dict[str, Any]:
     year, entrant_list, scores_list = await get_cf_data(affiliate_id, year)
 
     for entrant, scores in zip(entrant_list, scores_list, strict=True):
@@ -120,6 +124,13 @@ async def process_cf_data(
         else:
             athlete = Athlete(**entrant_model.model_dump(), year=year)
             db_session.add(athlete)
+            await db_session.flush()
+            athlete = await Athlete.find_or_raise(
+                async_session=db_session,
+                year=year,
+                competitor_id=entrant_model.competitor_id,
+            )
+            await assign_db_athlete_prefs(db_session=db_session, athlete_id=athlete.id)
 
         if scores:
             for score in scores:
@@ -128,6 +139,15 @@ async def process_cf_data(
                 except ValidationError:
                     log.exception("Error validating Entrant %s score %s", entrant, score)
                     raise
+
+                affiliate_scaled = "RX" if score_model.scaled == 0 else "Scaled"
+
+                tiebreak_ms = None
+                if score_model.breakdown:
+                    tiebreak_index = score_model.breakdown.rfind("Tiebreak: ")
+                    if tiebreak_index > 0:
+                        tiebreak_ms = score_model.breakdown[tiebreak_index + 10 :]
+
                 select_score_stmt = select(Score).where(
                     (Score.athlete_id == athlete.id) & (Score.ordinal == score_model.ordinal),
                 )
@@ -135,16 +155,27 @@ async def process_cf_data(
                 if event_score:
                     for var, value in vars(score_model).items():
                         setattr(event_score, var, value) if value else None
+                    event_score.affiliate_scaled = affiliate_scaled
+                    event_score.tiebreak_ms = tiebreak_ms
                 else:
                     event_score = Score(
                         **score_model.model_dump(),
                         athlete_id=athlete.id,
+                        affiliate_scaled=affiliate_scaled,
+                        tiebreak_ms=tiebreak_ms,
                     )
                     db_session.add(event_score)
 
     await db_session.commit()
 
     await update_affiliate_scores(db_session=db_session, affiliate_id=affiliate_id, year=year)
+
+    return {
+        "affiliate_id": affiliate_id,
+        "year": year,
+        "entrant_count": len(entrant_list),
+        "score_count": len(scores_list),
+    }
 
 
 async def update_affiliate_scores(
@@ -156,6 +187,7 @@ async def update_affiliate_scores(
     await apply_ranks(db_session=db_session, affiliate_id=affiliate_id, year=year)
     await apply_top3_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
     await apply_judge_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
+    await apply_total_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
 
 
 async def apply_participation_score(
@@ -232,11 +264,17 @@ async def apply_top3_score(
 
 async def apply_attendance_scores(
     db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
 ) -> None:
-    select_stmt = select(Score.id).join_from(
-        Score,
-        Attendance,
-        (Score.athlete_id == Attendance.athlete_id) & (Score.ordinal == Attendance.ordinal),
+    select_stmt = (
+        select(Score.id)
+        .join_from(
+            Score,
+            Attendance,
+            (Score.athlete_id == Attendance.athlete_id) & (Score.ordinal == Attendance.ordinal),
+        )
+        .where((Athlete.year == year) & (Athlete.affiliate_id == affiliate_id))
     )
     update_stmt = (
         update(Score).where(Score.id.in_(select_stmt.scalar_subquery())).values(attendance_score=ATTENDANCE_SCORE)
@@ -280,25 +318,46 @@ async def apply_judge_score(
 
 async def apply_appreciation_score(
     db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
 ) -> None:
-    appreciations = await Appreciation.find_all(async_session=db_session)
-
-    for appreciation in appreciations:
-        score = await Score.find(
-            async_session=db_session,
-            athlete_id=appreciation.athlete_id,
-            ordinal=appreciation.ordinal,
+    all_scores_stmt = (
+        select(Score.id)
+        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .where(
+            (Athlete.year == year) & (Athlete.affiliate_id == affiliate_id),
         )
-        if score:
-            score.appreciation_score = appreciation.score
-            db_session.add(score)
-            await db_session.commit()
+    )
+    remove_appreciation_stmt = (
+        update(Score).where(Score.id.in_(all_scores_stmt.scalar_subquery())).values(appreciation_score=0)
+    )
+    await db_session.execute(remove_appreciation_stmt)
+
+    appreciation_scores_stmt = (
+        select(Score.id, Appreciation.score)
+        .join_from(
+            Score,
+            Appreciation,
+            (Score.athlete_id == Appreciation.athlete_id) & (Score.ordinal == Appreciation.ordinal),
+        )
+        .join_from(Appreciation, Athlete, Appreciation.athlete_id == Athlete.id)
+        .where(
+            (Athlete.year == year) & (Athlete.affiliate_id == affiliate_id) & (Score.ordinal == Appreciation.ordinal),
+        )
+    )
+
+    ret = await db_session.execute(appreciation_scores_stmt)
+    update_values = ret.mappings().all()
+
+    await db_session.execute(update(Score).values([dict(x) for x in update_values]))
 
 
 async def apply_side_scores(
     db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
 ) -> None:
-    side_scores = await SideScore.all(async_session=db_session)
+    side_scores = await SideScore.find_all(async_session=db_session, affiliate_id=affiliate_id, year=year)
 
     for side_score in side_scores:
         select_stmt = (
@@ -322,3 +381,31 @@ async def apply_side_scores(
                 score.spirit_score = side_score.score
                 db_session.add(score)
                 await db_session.commit()
+
+
+async def apply_total_score(
+    db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
+) -> None:
+    select_stmt = (
+        select(
+            Score.id,
+            (
+                Score.participation_score
+                + Score.top3_score
+                + Score.judge_score
+                + Score.attendance_score
+                + Score.appreciation_score
+                + Score.side_challenge_score
+                + Score.spirit_score
+            ).label("total_score"),
+        )
+        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year))
+    )
+
+    results = await db_session.execute(select_stmt)
+    values = results.mappings().all()
+    await db_session.execute(update(Score), [dict(x) for x in values])
+    await db_session.commit()

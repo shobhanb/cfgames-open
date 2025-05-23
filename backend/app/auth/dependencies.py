@@ -1,14 +1,8 @@
-from typing import Annotated
-
 from fastapi import Depends
-from fastapi.security import HTTPAuthorizationCredentials
-from firebase_admin import auth
-from firebase_admin.exceptions import FirebaseError
 
-from app.auth.core import api_key_scheme, bearer_scheme
-from app.auth.exceptions import bearer_token_error
-from app.exceptions import unauthorised_exception
-from app.settings import settings
+from app.settings import auth_settings
+
+from .core import api_key_scheme
 
 #
 # API Key Auth
@@ -16,44 +10,4 @@ from app.settings import settings
 
 
 async def verify_admin_api_key(key: str = Depends(api_key_scheme)) -> bool:
-    return key == settings.admin_api_key
-
-
-#
-# Firebase Auth
-#
-
-
-async def get_firebase_token_data(
-    token: Annotated[HTTPAuthorizationCredentials, Depends(bearer_scheme)],
-) -> dict:
-    try:
-        if not token:
-            raise bearer_token_error()
-        return auth.verify_id_token(id_token=token)
-    except FirebaseError as e:
-        raise unauthorised_exception() from e
-
-
-async def get_current_user_uid(token_data: Annotated[dict, Depends(get_firebase_token_data)]) -> str:
-    return token_data["uid"]
-
-
-async def get_current_user_email(token_data: Annotated[dict, Depends(get_firebase_token_data)]) -> str:
-    return token_data["email"]
-
-
-async def get_current_user_custom_claims(token_data: Annotated[dict, Depends(get_firebase_token_data)]) -> dict | None:
-    return token_data.get("custom_claims")
-
-
-async def check_admin_all(custom_claims: Annotated[dict, Depends(get_current_user_custom_claims)]) -> bool:
-    return custom_claims.get("admin") == "all"
-
-
-async def check_admin_gym(custom_claims: Annotated[dict, Depends(get_current_user_custom_claims)]) -> bool:
-    return (custom_claims.get("admin") == "all") or (custom_claims.get("admin") == "gym")
-
-
-async def get_current_user_competitor_id(token_data: Annotated[dict, Depends(get_firebase_token_data)]) -> int:
-    return token_data["AthleteId"]
+    return key == auth_settings.admin_api_key

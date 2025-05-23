@@ -1,17 +1,68 @@
+from typing import Any, Literal
+from uuid import UUID
+
 from fastapi import APIRouter, status
 
-from app.athlete.schemas import AffiliateAthlete
-from app.athlete.service import get_affiliate_athletes_list
-from app.cf_games.constants import YEAR
 from app.database.dependencies import db_dependency
+
+from .schemas import AffiliateAthlete, AthleteDetail
+from .service import (
+    assign_db_athlete_to_team,
+    get_affiliate_athletes_list_unassigned,
+    get_db_athlete_detail,
+    random_assign_db_athletes,
+)
 
 athlete_router = APIRouter(prefix="/athlete", tags=["athlete"])
 
 
 @athlete_router.get("/list", status_code=status.HTTP_200_OK, response_model=list[AffiliateAthlete])
-async def get_athlete_list(  # noqa: ANN201
+async def get_athlete_list(
     db_session: db_dependency,
-    year: int = int(YEAR),
     affiliate_id: int | None = None,
-):
-    return await get_affiliate_athletes_list(db_session=db_session, year=year, affiliate_id=affiliate_id)
+    year: int | None = None,
+) -> list[dict[str, Any]]:
+    return await get_affiliate_athletes_list_unassigned(db_session=db_session, affiliate_id=affiliate_id, year=year)
+
+
+@athlete_router.get("/detail", status_code=status.HTTP_200_OK, response_model=list[AthleteDetail])
+async def get_athlete_detail(  # noqa: PLR0913
+    db_session: db_dependency,
+    affiliate_id: int,
+    year: int,
+    team_name: str | None = None,
+    age_category: Literal["Open", "Masters", "Masters 55+"] | None = None,
+    gender: Literal["F", "M"] | None = None,
+) -> list[dict[str, Any]]:
+    return await get_db_athlete_detail(
+        db_session=db_session,
+        affiliate_id=affiliate_id,
+        year=year,
+        team_name=team_name,
+        age_category=age_category,
+        gender=gender,
+    )
+
+
+@athlete_router.put("/team/assign", status_code=status.HTTP_202_ACCEPTED)
+async def assign_athlete_to_team(
+    db_session: db_dependency,
+    athlete_id: UUID,
+    team_name: str,
+    team_role: int,
+) -> None:
+    return await assign_db_athlete_to_team(
+        db_session=db_session,
+        athlete_id=athlete_id,
+        team_name=team_name,
+        team_role=team_role,
+    )
+
+
+@athlete_router.get("/team/assign/random/{affiliate_id}/{year}", status_code=status.HTTP_202_ACCEPTED)
+async def random_assign_athletes(
+    db_session: db_dependency,
+    affiliate_id: int,
+    year: int,
+) -> None:
+    await random_assign_db_athletes(db_session=db_session, affiliate_id=affiliate_id, year=year)

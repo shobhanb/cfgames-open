@@ -4,10 +4,11 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideNgIconsConfig } from '@ng-icons/core';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getMessaging, provideMessaging } from '@angular/fire/messaging';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authInterceptor } from './shared/auth/auth.interceptor';
+import { ApiModule } from './api/api.module';
+import { environment } from '../environments/environment';
+import { userAuthInterceptor } from './shared/user-auth/user-auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,8 +26,9 @@ export const appConfig: ApplicationConfig = {
         measurementId: 'G-QSRXKEWN90',
       })
     ),
-    provideAuth(() => getAuth()),
     provideMessaging(() => getMessaging()),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([userAuthInterceptor])),
+
+    ...(ApiModule.forRoot({ rootUrl: environment.apiBaseUrl }).providers ?? []),
   ],
 };

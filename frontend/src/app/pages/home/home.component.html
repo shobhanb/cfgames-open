@@ -1,4 +1,6 @@
 <app-pages>
-
-<p>home works!</p>
+  <p>home works!</p>
+  <p>{{ userAuth.user()?.email }}</p>
+  <p>{{ userAuth.token()?.access_token }}</p>
+  <p>{{ userAuth.loggedIn() }}</p>
 </app-pages>
