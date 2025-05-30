@@ -12,8 +12,15 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
 import { apiAthletePrefsModel } from '../models/api-athlete-prefs-model';
-import { getAthletePrefsAthletePrefsGet } from '../fn/athlete-prefs/get-athlete-prefs-athlete-prefs-get';
-import { GetAthletePrefsAthletePrefsGet$Params } from '../fn/athlete-prefs/get-athlete-prefs-athlete-prefs-get';
+import { apiAthletePrefsOutputModel } from '../models/api-athlete-prefs-output-model';
+import { getAthletePrefsAthletePrefsAllGet } from '../fn/athlete-prefs/get-athlete-prefs-athlete-prefs-all-get';
+import { GetAthletePrefsAthletePrefsAllGet$Params } from '../fn/athlete-prefs/get-athlete-prefs-athlete-prefs-all-get';
+import { getMyPrefsAthletePrefsMeGet } from '../fn/athlete-prefs/get-my-prefs-athlete-prefs-me-get';
+import { GetMyPrefsAthletePrefsMeGet$Params } from '../fn/athlete-prefs/get-my-prefs-athlete-prefs-me-get';
+import { updateAthletePrefsAthletePrefsCompetitorIdPost } from '../fn/athlete-prefs/update-athlete-prefs-athlete-prefs-competitor-id-post';
+import { UpdateAthletePrefsAthletePrefsCompetitorIdPost$Params } from '../fn/athlete-prefs/update-athlete-prefs-athlete-prefs-competitor-id-post';
+import { updateMyPrefsAthletePrefsMePost } from '../fn/athlete-prefs/update-my-prefs-athlete-prefs-me-post';
+import { UpdateMyPrefsAthletePrefsMePost$Params } from '../fn/athlete-prefs/update-my-prefs-athlete-prefs-me-post';
 
 @Injectable({ providedIn: 'root' })
 export class apiAthletePrefsService extends BaseService {
@@ -21,8 +28,74 @@ export class apiAthletePrefsService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getAthletePrefsAthletePrefsGet()` */
-  static readonly GetAthletePrefsAthletePrefsGetPath = '/athlete-prefs/';
+  /** Path part for operation `getMyPrefsAthletePrefsMeGet()` */
+  static readonly GetMyPrefsAthletePrefsMeGetPath = '/athlete-prefs/me';
+
+  /**
+   * Get My Prefs.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getMyPrefsAthletePrefsMeGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getMyPrefsAthletePrefsMeGet$Response(params?: GetMyPrefsAthletePrefsMeGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthletePrefsModel>>> {
+    return getMyPrefsAthletePrefsMeGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get My Prefs.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getMyPrefsAthletePrefsMeGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getMyPrefsAthletePrefsMeGet(params?: GetMyPrefsAthletePrefsMeGet$Params, context?: HttpContext): Observable<Array<apiAthletePrefsModel>> {
+    return this.getMyPrefsAthletePrefsMeGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiAthletePrefsModel>>): Array<apiAthletePrefsModel> => r.body)
+    );
+  }
+
+  /** Path part for operation `updateMyPrefsAthletePrefsMePost()` */
+  static readonly UpdateMyPrefsAthletePrefsMePostPath = '/athlete-prefs/me';
+
+  /**
+   * Update My Prefs.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateMyPrefsAthletePrefsMePost()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateMyPrefsAthletePrefsMePost$Response(params: UpdateMyPrefsAthletePrefsMePost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+    return updateMyPrefsAthletePrefsMePost(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Update My Prefs.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateMyPrefsAthletePrefsMePost$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateMyPrefsAthletePrefsMePost(params: UpdateMyPrefsAthletePrefsMePost$Params, context?: HttpContext): Observable<any> {
+    return this.updateMyPrefsAthletePrefsMePost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<any>): any => r.body)
+    );
+  }
+
+  /** Path part for operation `getAthletePrefsAthletePrefsAllGet()` */
+  static readonly GetAthletePrefsAthletePrefsAllGetPath = '/athlete-prefs/all';
 
   /**
    * Get Athlete Prefs.
@@ -30,12 +103,12 @@ export class apiAthletePrefsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAthletePrefsAthletePrefsGet()` instead.
+   * To access only the response body, use `getAthletePrefsAthletePrefsAllGet()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAthletePrefsAthletePrefsGet$Response(params: GetAthletePrefsAthletePrefsGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthletePrefsModel>>> {
-    return getAthletePrefsAthletePrefsGet(this.http, this.rootUrl, params, context);
+  getAthletePrefsAthletePrefsAllGet$Response(params: GetAthletePrefsAthletePrefsAllGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthletePrefsOutputModel>>> {
+    return getAthletePrefsAthletePrefsAllGet(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -44,13 +117,46 @@ export class apiAthletePrefsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAthletePrefsAthletePrefsGet$Response()` instead.
+   * To access the full response (for headers, for example), `getAthletePrefsAthletePrefsAllGet$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAthletePrefsAthletePrefsGet(params: GetAthletePrefsAthletePrefsGet$Params, context?: HttpContext): Observable<Array<apiAthletePrefsModel>> {
-    return this.getAthletePrefsAthletePrefsGet$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<apiAthletePrefsModel>>): Array<apiAthletePrefsModel> => r.body)
+  getAthletePrefsAthletePrefsAllGet(params: GetAthletePrefsAthletePrefsAllGet$Params, context?: HttpContext): Observable<Array<apiAthletePrefsOutputModel>> {
+    return this.getAthletePrefsAthletePrefsAllGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiAthletePrefsOutputModel>>): Array<apiAthletePrefsOutputModel> => r.body)
+    );
+  }
+
+  /** Path part for operation `updateAthletePrefsAthletePrefsCompetitorIdPost()` */
+  static readonly UpdateAthletePrefsAthletePrefsCompetitorIdPostPath = '/athlete-prefs/{competitor_id}';
+
+  /**
+   * Update Athlete Prefs.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateAthletePrefsAthletePrefsCompetitorIdPost()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateAthletePrefsAthletePrefsCompetitorIdPost$Response(params: UpdateAthletePrefsAthletePrefsCompetitorIdPost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+    return updateAthletePrefsAthletePrefsCompetitorIdPost(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Update Athlete Prefs.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateAthletePrefsAthletePrefsCompetitorIdPost$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateAthletePrefsAthletePrefsCompetitorIdPost(params: UpdateAthletePrefsAthletePrefsCompetitorIdPost$Params, context?: HttpContext): Observable<any> {
+    return this.updateAthletePrefsAthletePrefsCompetitorIdPost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<any>): any => r.body)
     );
   }
 

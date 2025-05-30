@@ -1,78 +1,38 @@
 import { Routes } from '@angular/router';
+import { userGuard } from './shared/user-auth/user.guard';
+import { adminGuard } from './shared/user-auth/admin.guard';
 
 export const routes: Routes = [
   {
-    path: 'home',
-    loadComponent: () =>
-      import('./pages/home/home.component').then((c) => c.HomeComponent),
-  },
-  {
-    path: 'leaderboard',
-    loadComponent: () =>
-      import('./pages/leaderboard/leaderboard.component').then(
-        (c) => c.LeaderboardComponent
-      ),
-  },
-  {
-    path: 'team',
-    loadComponent: () =>
-      import('./pages/team/team.component').then((c) => c.TeamComponent),
-  },
-  {
-    path: 'scores',
-    loadComponent: () =>
-      import('./pages/scores/scores.component').then((c) => c.ScoresComponent),
-  },
-  {
-    path: 'scheduling',
-    loadComponent: () =>
-      import('./pages/scheduling/scheduling.component').then(
-        (c) => c.SchedulingComponent
-      ),
+    path: 'public',
+    loadChildren: () =>
+      import('./pages/public/public.routes').then((c) => c.publicRoutes),
   },
   {
     path: 'auth',
-    loadComponent: () =>
-      import('./pages/auth/landing/landing.component').then(
-        (c) => c.LandingComponent
-      ),
+    loadChildren: () =>
+      import('./pages/auth/auth.routes').then((c) => c.authRoutes),
   },
   {
-    path: 'auth/login',
-    loadComponent: () =>
-      import('./pages/auth/login/login.component').then(
-        (c) => c.LoginComponent
-      ),
+    path: 'private',
+    loadChildren: () =>
+      import('./pages/private/private.routes').then((c) => c.privateRoutes),
+    canActivate: [userGuard],
   },
   {
-    path: 'auth/signup',
-    loadComponent: () =>
-      import('./pages/auth/signup-assign/signup-assign.component').then(
-        (c) => c.SignupAssignComponent
-      ),
-  },
-  {
-    path: 'auth/not-verified',
-    loadComponent: () =>
-      import('./pages/auth/not-verified/not-verified.component').then(
-        (c) => c.NotVerifiedComponent
-      ),
-  },
-  {
-    path: 'auth/verify/:token',
-    loadComponent: () =>
-      import('./pages/auth/verify/verify.component').then(
-        (c) => c.VerifyComponent
-      ),
+    path: 'admin',
+    loadChildren: () =>
+      import('./pages/admin/admin.routes').then((c) => c.adminRoutes),
+    canActivate: [adminGuard],
   },
   {
     path: '**',
-    redirectTo: 'home',
+    redirectTo: '/public/home',
     pathMatch: 'full',
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: '/public/home',
     pathMatch: 'full',
   },
 ];

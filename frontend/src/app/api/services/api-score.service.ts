@@ -11,8 +11,8 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { getScoresScoreAffiliateIdYearOrdinalGet } from '../fn/score/get-scores-score-affiliate-id-year-ordinal-get';
-import { GetScoresScoreAffiliateIdYearOrdinalGet$Params } from '../fn/score/get-scores-score-affiliate-id-year-ordinal-get';
+import { getScoresScoreAffiliateIdYearGet } from '../fn/score/get-scores-score-affiliate-id-year-get';
+import { GetScoresScoreAffiliateIdYearGet$Params } from '../fn/score/get-scores-score-affiliate-id-year-get';
 import { getTeamScoresOrdinalScoreTeamAffiliateIdYearOrdinalGet } from '../fn/score/get-team-scores-ordinal-score-team-affiliate-id-year-ordinal-get';
 import { GetTeamScoresOrdinalScoreTeamAffiliateIdYearOrdinalGet$Params } from '../fn/score/get-team-scores-ordinal-score-team-affiliate-id-year-ordinal-get';
 import { getTeamScoresOverallScoreTeamAffiliateIdYearGet } from '../fn/score/get-team-scores-overall-score-team-affiliate-id-year-get';
@@ -26,8 +26,8 @@ export class apiScoreService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getScoresScoreAffiliateIdYearOrdinalGet()` */
-  static readonly GetScoresScoreAffiliateIdYearOrdinalGetPath = '/score/{affiliate_id}/{year}/{ordinal}';
+  /** Path part for operation `getScoresScoreAffiliateIdYearGet()` */
+  static readonly GetScoresScoreAffiliateIdYearGetPath = '/score/{affiliate_id}/{year}';
 
   /**
    * Get Scores.
@@ -35,12 +35,12 @@ export class apiScoreService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getScoresScoreAffiliateIdYearOrdinalGet()` instead.
+   * To access only the response body, use `getScoresScoreAffiliateIdYearGet()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getScoresScoreAffiliateIdYearOrdinalGet$Response(params: GetScoresScoreAffiliateIdYearOrdinalGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiScoreModel>>> {
-    return getScoresScoreAffiliateIdYearOrdinalGet(this.http, this.rootUrl, params, context);
+  getScoresScoreAffiliateIdYearGet$Response(params: GetScoresScoreAffiliateIdYearGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiScoreModel>>> {
+    return getScoresScoreAffiliateIdYearGet(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -49,12 +49,12 @@ export class apiScoreService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getScoresScoreAffiliateIdYearOrdinalGet$Response()` instead.
+   * To access the full response (for headers, for example), `getScoresScoreAffiliateIdYearGet$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getScoresScoreAffiliateIdYearOrdinalGet(params: GetScoresScoreAffiliateIdYearOrdinalGet$Params, context?: HttpContext): Observable<Array<apiScoreModel>> {
-    return this.getScoresScoreAffiliateIdYearOrdinalGet$Response(params, context).pipe(
+  getScoresScoreAffiliateIdYearGet(params: GetScoresScoreAffiliateIdYearGet$Params, context?: HttpContext): Observable<Array<apiScoreModel>> {
+    return this.getScoresScoreAffiliateIdYearGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<apiScoreModel>>): Array<apiScoreModel> => r.body)
     );
   }

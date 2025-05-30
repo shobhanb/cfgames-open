@@ -3,7 +3,9 @@ from uuid import UUID
 
 from fastapi import APIRouter, status
 
+from app.athlete.models import Athlete
 from app.database.dependencies import db_dependency
+from app.user.dependencies import current_superuser_dependency, current_user_dependency
 
 from .schemas import AffiliateAthlete, AthleteDetail
 from .service import (
@@ -14,6 +16,14 @@ from .service import (
 )
 
 athlete_router = APIRouter(prefix="/athlete", tags=["athlete"])
+
+
+@athlete_router.get("/me", status_code=status.HTTP_200_OK, response_model=AthleteDetail)
+async def get_my_athlete_data(
+    db_session: db_dependency,
+    user: current_user_dependency,
+) -> Athlete:
+    return await Athlete.find_or_raise(async_session=db_session, competitor_id=user.athlete_id)
 
 
 @athlete_router.get("/list", status_code=status.HTTP_200_OK, response_model=list[AffiliateAthlete])
@@ -50,6 +60,7 @@ async def assign_athlete_to_team(
     athlete_id: UUID,
     team_name: str,
     team_role: int,
+    _: current_superuser_dependency,
 ) -> None:
     return await assign_db_athlete_to_team(
         db_session=db_session,
@@ -64,5 +75,6 @@ async def random_assign_athletes(
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
+    _: current_superuser_dependency,
 ) -> None:
     await random_assign_db_athletes(db_session=db_session, affiliate_id=affiliate_id, year=year)

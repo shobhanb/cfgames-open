@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { HelperFunctionsService } from '../../../shared/helper-functions.service';
-import { apiAffiliateAthlete } from '../../../api/models';
 import { apiAthleteService } from '../../../api/services';
+import { apiAffiliateAthlete } from '../../../api/models';
 
 @Injectable({
   providedIn: 'root',
@@ -21,12 +21,12 @@ export class SignupFormService {
       },
       error: (err: any) => {
         console.log('Error getting Athlete List', err);
-        this.athleteData.set([]);
+        // this.athleteData.set([]);
       },
     });
   }
 
-  // Input data split into gyms, names etc
+  // Input data split into gyms, names, athleteIds
   gyms = computed<string[]>(() =>
     this.athleteData()
       .map((athlete) => athlete.affiliate_name)

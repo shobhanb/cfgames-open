@@ -11,7 +11,7 @@
   <div class="card bg-base-100 w-full max-w-sm shadow-2xl">
     <div class="card-body">
       @if (! emailSent){
-      <form [formGroup]="emailForm">
+      <form [formGroup]="emailForm" (ngSubmit)="onClickSendEmail()">
         <fieldset class="fieldset gap-4">
           <legend class="fieldset-legend">Email</legend>
           <input
@@ -19,14 +19,12 @@
             type="email"
             formControlName="email"
             placeholder="{{ userAuth.user()?.email }}"
-            value="{{ userAuth.user()?.email }}"
           />
-          <button
-            class="btn btn-primary"
-            type="button"
-            (click)="onClickSendEmail()"
-          >
+          <button class="btn btn-primary" type="submit">
             Send verification email again
+          </button>
+          <button class="btn btn-neutral" type="reset" routerLink="/home">
+            Cancel
           </button>
         </fieldset>
       </form>

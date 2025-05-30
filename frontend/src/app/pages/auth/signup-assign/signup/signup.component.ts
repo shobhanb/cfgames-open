@@ -12,11 +12,12 @@ import { ionLogoYahoo, ionMail } from '@ng-icons/ionicons';
 import { AuthWrapperComponent } from '../../auth-wrapper/auth-wrapper.component';
 import { SignupFormService } from '../signup-form.service';
 import { ModalService } from '../../../../shared/modal/modal.service';
-import { UserAuthService } from '../../../../shared/user-auth/user-auth.service';
 import { apiAuthService } from '../../../../api/services';
+import { UserAuthService } from '../../../../shared/user-auth/user-auth.service';
+import { ToastService } from '../../../../shared/toast/toast.service';
 import { StrictHttpResponse } from '../../../../api/strict-http-response';
 import { apiUserRead } from '../../../../api/models';
-import { ToastService } from '../../../../shared/toast/toast.service';
+import { apiErrorMap } from '../../../../shared/error-mapping';
 
 @Component({
   selector: 'app-signup',
@@ -34,8 +35,22 @@ export class SignupComponent {
 
   loginForm = new FormGroup({
     // Not adding password requirements to keep it simple for lowest common denominator users
-    password: new FormControl('', { validators: [Validators.required] }),
+    password1: new FormControl('', { validators: [Validators.required] }),
+    password2: new FormControl('', { validators: [Validators.required] }),
   });
+
+  get formValid() {
+    return (
+      this.loginForm.dirty &&
+      this.loginForm.valid &&
+      !!this.loginForm.value.password1 &&
+      !!this.loginForm.value.password2
+    );
+  }
+
+  get passwordsMatch() {
+    return this.loginForm.value.password1 === this.loginForm.value.password2;
+  }
 
   onClickNotYou() {
     this.loginForm.reset();
@@ -45,16 +60,15 @@ export class SignupComponent {
 
   onClickSignUpWithEmail() {
     if (
-      this.loginForm.valid &&
-      this.loginForm.dirty &&
-      this.loginForm.value.password &&
+      this.formValid &&
+      this.passwordsMatch &&
       this.signupFormService.selectionValid()
     ) {
       this.apiAuth
         .registerRegisterAuthRegisterPost$Response({
           body: {
             email: this.signupFormService.enteredEmail()!,
-            password: this.loginForm.value.password,
+            password: this.loginForm.value.password1!,
             affiliate: this.signupFormService.selectedAffiliate()!,
             affiliate_id: this.signupFormService.selectedAffiliateId()!,
             athlete_id: this.signupFormService.selectedAthleteId()!,
@@ -66,17 +80,15 @@ export class SignupComponent {
             this.toastService.showSuccess('Registered, logging in');
 
             this.userAuth.loginWithEmailAndPassword({
-              username: this.signupFormService.enteredEmail()!,
-              password: this.loginForm.value.password!,
+              username: response.body.email,
+              password: this.loginForm.value.password1!,
             });
           },
           error: (err: any) => {
             console.log('Error during registration', err);
-            this.modalService.show(
-              'Error during registration',
-              err.error.detail,
-              '/home'
-            );
+            const detail: string = String(err?.error?.detail ?? '');
+            const friendlyMsg = apiErrorMap[detail] || detail;
+            this.modalService.show('No rep!', friendlyMsg, '/home');
           },
         });
     }

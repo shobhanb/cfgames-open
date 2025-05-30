@@ -25,7 +25,7 @@ class ScoreModel(ScoreExtendedModel, CustomBaseModel):
     affiliate_scaled: Literal["RX", "Scaled"]
     affiliate_rank: int | None = None
     score_display: str | None = None
-    tiebeak_ms: str | None = None
+    tiebreak_ms: str | None = None
 
 
 class TeamScoreModel(ScoreExtendedModel, CustomBaseModel):

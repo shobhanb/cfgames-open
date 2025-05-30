@@ -1,14 +1,16 @@
-import datetime as dt
+from uuid import UUID
 
 from app.schemas import CustomBaseModel
 
 
-class AthletePrefsModel(CustomBaseModel):
+class AthletePrefsOutputModel(CustomBaseModel):
     name: str
-    team_name: str
-    mf_age_category: str
-    rx_pref: str
+    competitor_id: int
     preference_nbr: int
     preference: str
-    updated_at: dt.datetime
-    created_at: dt.datetime
+
+
+class AthletePrefsModel(CustomBaseModel):
+    athlete_id: UUID
+    preference_nbr: int
+    preference: str

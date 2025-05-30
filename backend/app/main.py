@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
 from app.appreciation.views import appreciation_router
+from app.appreciation_score.views import appreciation_score_router
 from app.athlete.views import athlete_router
 from app.athlete_prefs.views import athlete_prefs_router
 from app.attendance.views import attendance_router
@@ -25,7 +26,7 @@ from app.user.views import auth_router
 log = logging.getLogger("uvicorn.error")
 
 RESET_DB = False
-RESET_AUTH_DB = True
+RESET_AUTH_DB = False
 
 
 @asynccontextmanager
@@ -57,6 +58,7 @@ app.include_router(auth_router)
 app.include_router(athlete_router)
 app.include_router(score_router)
 app.include_router(attendance_router)
+app.include_router(appreciation_score_router)
 app.include_router(appreciation_router)
 app.include_router(sidescore_router)
 app.include_router(teams_router)

@@ -1,5 +1,6 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import {
+  apiAthleteDetail,
   apiBearerResponse,
   apiBodyAuthDbLoginAuthLoginPost,
   apiBodyResetForgotPasswordAuthForgotPasswordPost,
@@ -10,9 +11,12 @@ import {
   apiUserRead,
   apiUserUpdate,
 } from '../../api/models';
-import { apiAuthService } from '../../api/services';
+import { apiAthleteService, apiAuthService } from '../../api/services';
 import { StrictHttpResponse } from '../../api/strict-http-response';
 import { ToastService } from '../toast/toast.service';
+import { ModalService } from '../modal/modal.service';
+import { apiErrorMap } from '../error-mapping';
+import { ScoreFilterService } from '../score-filter/score-filter.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,10 +24,13 @@ import { ToastService } from '../toast/toast.service';
 export class UserAuthService {
   private apiAuth = inject(apiAuthService);
   private toastService = inject(ToastService);
+  private modalService = inject(ModalService);
+  private apiAthlete = inject(apiAthleteService);
 
   user = signal<apiUserRead | null>(null);
   token = signal<apiBearerResponse | null>(null);
   loggedIn = computed<boolean>(() => !!this.user() && !!this.token());
+  athlete = signal<apiAthleteDetail | null>(null);
 
   userNameInitials = computed<string | null>(
     () =>
@@ -41,15 +48,15 @@ export class UserAuthService {
       .subscribe({
         next: (response: StrictHttpResponse<apiBearerResponse>) => {
           this.token.set(response.body);
+          this.getMyInfo();
+          localStorage.setItem('cfgames-token', JSON.stringify(response.body));
           this.toastService.showSuccess('Logged in', '/home');
-
-          if (!this.user()) {
-            this.getMyInfo();
-          }
         },
         error: (err: any) => {
-          console.log('Error during LoginWithEmailAndPassword', err);
-          this.token.set(null);
+          console.log('Error during login', err);
+          const detail: string = String(err?.error?.detail ?? '');
+          const friendlyMsg = apiErrorMap[detail] || detail;
+          this.modalService.show('No Rep!', friendlyMsg, '/home');
         },
       });
   }
@@ -60,6 +67,8 @@ export class UserAuthService {
         console.log('Logged out');
         this.user.set(null);
         this.token.set(null);
+        localStorage.removeItem('cfgames-token');
+        this.toastService.showSuccess('Logged out', '/home', 500);
       },
       error: (err: any) => {
         console.log('Error during Logout', err);
@@ -80,22 +89,6 @@ export class UserAuthService {
         },
         error: (err: any) => {
           console.log('Error during sendVerificationEmail', err);
-        },
-      });
-  }
-
-  verifyEmail(tokenData: apiBodyVerifyVerifyAuthVerifyPost) {
-    this.apiAuth
-      .verifyVerifyAuthVerifyPost$Response({
-        body: tokenData,
-      })
-      .subscribe({
-        next: (response: StrictHttpResponse<apiUserRead>) => {
-          this.user.set(response.body);
-        },
-        error: (err: any) => {
-          console.log('Error during verifyEmail', err);
-          this.user.set(null);
         },
       });
   }
@@ -124,10 +117,17 @@ export class UserAuthService {
       })
       .subscribe({
         next: () => {
-          console.log('Password changed successfully');
+          this.modalService.show(
+            'Rep!',
+            'Password reset successfully. Please login with the new password',
+            '/auth/login'
+          );
         },
         error: (err: any) => {
           console.log('Error during resetPassword', err);
+          const detail: string = String(err?.error?.detail ?? '');
+          const friendlyMsg = apiErrorMap[detail] || detail;
+          this.modalService.show('No rep!', friendlyMsg, '/home');
         },
       });
   }
@@ -138,31 +138,49 @@ export class UserAuthService {
         this.user.set(response.body);
       },
       error: (err: any) => {
-        console.log('Error during getMyInfo', err);
+        console.error('Error getting my user info', err);
         this.user.set(null);
       },
     });
   }
 
-  updateMyInfo(userInfo: apiUserUpdate) {
-    this.apiAuth
-      .usersPatchCurrentUserAuthMePatch$Response({ body: userInfo })
-      .subscribe({
-        next: (response: StrictHttpResponse<apiUserRead>) => {
-          this.user.set(response.body);
-        },
-        error: (err: any) => {
-          console.log('Error during updateMyInfo', err);
-          this.user.set(null);
-        },
-      });
+  getMyAthleteInfo() {
+    this.apiAthlete.getMyAthleteDataAthleteMeGet$Response().subscribe({
+      next: (response: StrictHttpResponse<apiAthleteDetail>) => {
+        this.athlete.set(response.body);
+      },
+      error: (err: any) => {
+        console.error('Error getting my athlete info', err);
+        this.athlete.set(null);
+      },
+    });
   }
 
-  constructor() {
-    effect(() => {
-      if (this.user() && !this.token()) {
-        this.getMyInfo();
+  loginWithLocalToken() {
+    // Initialize token from localStorage
+    const savedToken = localStorage.getItem('cfgames-token');
+    if (savedToken) {
+      try {
+        const parsedToken = JSON.parse(savedToken) as apiBearerResponse;
+        this.token.set(parsedToken);
+      } catch (error) {
+        this.token.set(null);
+        console.log('Error using token. Deleting from localstorage', error);
+        localStorage.removeItem('cfgames-token');
       }
-    });
+      if (this.token()) {
+        this.apiAuth.usersCurrentUserAuthMeGet$Response().subscribe({
+          next: (response: StrictHttpResponse<apiUserRead>) => {
+            this.user.set(response.body);
+            this.getMyAthleteInfo();
+          },
+          error: (err: any) => {
+            this.user.set(null);
+            this.token.set(null);
+            localStorage.removeItem('cfgames-token');
+          },
+        });
+      }
+    }
   }
 }

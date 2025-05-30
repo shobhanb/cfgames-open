@@ -18,7 +18,7 @@ export interface apiScoreModel {
   side_challenge_score: number;
   spirit_score: number;
   team_name?: (string | null);
-  tiebeak_ms?: (string | null);
+  tiebreak_ms?: (string | null);
   top3_score: number;
   total_score: number;
   year: number;

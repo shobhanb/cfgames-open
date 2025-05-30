@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 
 from app.database.dependencies import db_dependency
+from app.user.dependencies import current_superuser_dependency
 
 from .models import Teams
 from .schemas import TeamsModel
@@ -24,6 +25,7 @@ async def get_teams(
 
 @teams_router.post("/update/{affiliate_id}/{year}/", status_code=status.HTTP_202_ACCEPTED, response_model=TeamsModel)
 async def update_team_info(  # noqa: PLR0913
+    _: current_superuser_dependency,
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
@@ -47,6 +49,7 @@ async def update_team_info(  # noqa: PLR0913
     response_model=TeamsModel,
 )
 async def rename_team(
+    _: current_superuser_dependency,
     db_session: db_dependency,
     affiliate_id: int,
     year: int,

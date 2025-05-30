@@ -19,6 +19,8 @@ import { getAthleteDetailAthleteDetailGet } from '../fn/athlete/get-athlete-deta
 import { GetAthleteDetailAthleteDetailGet$Params } from '../fn/athlete/get-athlete-detail-athlete-detail-get';
 import { getAthleteListAthleteListGet } from '../fn/athlete/get-athlete-list-athlete-list-get';
 import { GetAthleteListAthleteListGet$Params } from '../fn/athlete/get-athlete-list-athlete-list-get';
+import { getMyAthleteDataAthleteMeGet } from '../fn/athlete/get-my-athlete-data-athlete-me-get';
+import { GetMyAthleteDataAthleteMeGet$Params } from '../fn/athlete/get-my-athlete-data-athlete-me-get';
 import { randomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet } from '../fn/athlete/random-assign-athletes-athlete-team-assign-random-affiliate-id-year-get';
 import { RandomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet$Params } from '../fn/athlete/random-assign-athletes-athlete-team-assign-random-affiliate-id-year-get';
 
@@ -26,6 +28,39 @@ import { RandomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet$Params } 
 export class apiAthleteService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `getMyAthleteDataAthleteMeGet()` */
+  static readonly GetMyAthleteDataAthleteMeGetPath = '/athlete/me';
+
+  /**
+   * Get My Athlete Data.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getMyAthleteDataAthleteMeGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getMyAthleteDataAthleteMeGet$Response(params?: GetMyAthleteDataAthleteMeGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAthleteDetail>> {
+    return getMyAthleteDataAthleteMeGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get My Athlete Data.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getMyAthleteDataAthleteMeGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getMyAthleteDataAthleteMeGet(params?: GetMyAthleteDataAthleteMeGet$Params, context?: HttpContext): Observable<apiAthleteDetail> {
+    return this.getMyAthleteDataAthleteMeGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiAthleteDetail>): apiAthleteDetail => r.body)
+    );
   }
 
   /** Path part for operation `getAthleteListAthleteListGet()` */

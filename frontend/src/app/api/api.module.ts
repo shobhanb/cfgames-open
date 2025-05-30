@@ -10,6 +10,7 @@ import { apiAuthService } from './services/api-auth.service';
 import { apiAthleteService } from './services/api-athlete.service';
 import { apiScoreService } from './services/api-score.service';
 import { apiAttendanceService } from './services/api-attendance.service';
+import { apiAppreciationScoreService } from './services/api-appreciation-score.service';
 import { apiAppreciationService } from './services/api-appreciation.service';
 import { apiSidescoreService } from './services/api-sidescore.service';
 import { apiTeamsService } from './services/api-teams.service';
@@ -27,6 +28,7 @@ import { apiAthletePrefsService } from './services/api-athlete-prefs.service';
     apiAthleteService,
     apiScoreService,
     apiAttendanceService,
+    apiAppreciationScoreService,
     apiAppreciationService,
     apiSidescoreService,
     apiTeamsService,

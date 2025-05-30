@@ -1,0 +1,35 @@
+<app-pages>
+  <app-score-filter></app-score-filter>
+  <div class="btn" (click)="onTest()">Test</div>
+  <div class="list bg-base-100">
+    @if (filteredScoresRX().length > 0) {
+    <div class="divider">RX</div>
+    @for (score of filteredScoresRX(); track $index ) {
+    <li class="list-row mx-2">
+      <div class="">{{ score.affiliate_rank }}</div>
+      <div class="list-col-grow">{{ score.name }}</div>
+      <div class="">{{ score.score_display }}</div>
+      @if ( score.tiebreak_ms) {
+      <div class="md:ml-10 text-xs text-right">
+        <span>Tiebreak</span>
+        <div class="">{{ score.tiebreak_ms }}</div>
+      </div>
+      }
+    </li>
+    } } @if (filteredScoresScaled().length > 0) {
+    <div class="divider">Scaled</div>
+    @for (score of filteredScoresScaled(); track $index ) {
+    <li class="list-row mx-2">
+      <div class="">{{ score.affiliate_rank }}</div>
+      <div class="list-col-grow">{{ score.name }}</div>
+      <div class="">{{ score.score_display }}</div>
+      @if ( score.tiebreak_ms) {
+      <div class="md:ml-10 text-xs text-right">
+        <span>Tiebreak</span>
+        <div class="">{{ score.tiebreak_ms }}</div>
+      </div>
+      }
+    </li>
+    } }
+  </div>
+</app-pages>

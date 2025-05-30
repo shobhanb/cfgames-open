@@ -12,9 +12,9 @@ from pydantic import ValidationError
 from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.appreciation.models import Appreciation
+from app.appreciation_score.models import AppreciationScore
 from app.athlete.models import Athlete
-from app.athlete_prefs.service import assign_db_athlete_prefs
+from app.athlete_prefs.service import init_assign_db_athlete_prefs
 from app.attendance.models import Attendance
 from app.score.models import Score
 from app.sidescore.models import SideScore
@@ -115,7 +115,7 @@ async def process_cf_data(  # noqa: C901, PLR0912
             raise
 
         select_athlete_stmt = select(Athlete).where(
-            (Athlete.year == year) & (Athlete.competitor_id == entrant_model.competitor_id),
+            (Athlete.competitor_id == entrant_model.competitor_id) & (Athlete.year == year),
         )
         athlete = await db_session.scalar(select_athlete_stmt)
         if athlete:
@@ -124,13 +124,13 @@ async def process_cf_data(  # noqa: C901, PLR0912
         else:
             athlete = Athlete(**entrant_model.model_dump(), year=year)
             db_session.add(athlete)
-            await db_session.flush()
-            athlete = await Athlete.find_or_raise(
-                async_session=db_session,
-                year=year,
-                competitor_id=entrant_model.competitor_id,
-            )
-            await assign_db_athlete_prefs(db_session=db_session, athlete_id=athlete.id)
+            # await db_session.flush()
+            # athlete = await Athlete.find_or_raise(
+            #     async_session=db_session,
+            #     year=year,
+            #     competitor_id=entrant_model.competitor_id,
+            # )
+            await init_assign_db_athlete_prefs(db_session=db_session, competitor_id=athlete.competitor_id)
 
         if scores:
             for score in scores:
@@ -334,15 +334,17 @@ async def apply_appreciation_score(
     await db_session.execute(remove_appreciation_stmt)
 
     appreciation_scores_stmt = (
-        select(Score.id, Appreciation.score)
+        select(Score.id, AppreciationScore.score)
         .join_from(
             Score,
-            Appreciation,
-            (Score.athlete_id == Appreciation.athlete_id) & (Score.ordinal == Appreciation.ordinal),
+            AppreciationScore,
+            (Score.athlete_id == AppreciationScore.athlete_id) & (Score.ordinal == AppreciationScore.ordinal),
         )
-        .join_from(Appreciation, Athlete, Appreciation.athlete_id == Athlete.id)
+        .join_from(AppreciationScore, Athlete, AppreciationScore.athlete_id == Athlete.id)
         .where(
-            (Athlete.year == year) & (Athlete.affiliate_id == affiliate_id) & (Score.ordinal == Appreciation.ordinal),
+            (Athlete.year == year)
+            & (Athlete.affiliate_id == affiliate_id)
+            & (Score.ordinal == AppreciationScore.ordinal),
         )
     )
 

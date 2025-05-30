@@ -1,24 +1,23 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AuthWrapperComponent } from '../auth-wrapper/auth-wrapper.component';
-import { apiAuthService } from '../../../api/services';
-import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { StrictHttpResponse } from '../../../api/strict-http-response';
 import { timer } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { apiAuthService } from '../../../api/services';
+import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
 
 @Component({
   selector: 'app-not-verified',
-  imports: [AuthWrapperComponent, ReactiveFormsModule],
+  imports: [AuthWrapperComponent, ReactiveFormsModule, RouterLink],
   templateUrl: './not-verified.component.html',
   styleUrl: './not-verified.component.css',
 })
-export class NotVerifiedComponent {
+export class NotVerifiedComponent implements OnInit {
   private apiAuth = inject(apiAuthService);
   userAuth = inject(UserAuthService);
   private router = inject(Router);
@@ -53,5 +52,11 @@ export class NotVerifiedComponent {
           console.log('Error requesting verification email', err);
         },
       });
+  }
+
+  ngOnInit(): void {
+    if (!!this.userAuth.user()) {
+      this.emailForm.controls.email.setValue(this.userAuth.user()!.email);
+    }
   }
 }

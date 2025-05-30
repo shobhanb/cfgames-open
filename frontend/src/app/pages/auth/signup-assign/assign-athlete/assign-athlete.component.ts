@@ -1,17 +1,17 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthWrapperComponent } from '../../auth-wrapper/auth-wrapper.component';
 import { SignupFormService } from '../signup-form.service';
 
 @Component({
   selector: 'app-assign-athlete',
-  imports: [AuthWrapperComponent, ReactiveFormsModule],
+  imports: [AuthWrapperComponent, ReactiveFormsModule, RouterLink],
   templateUrl: './assign-athlete.component.html',
   styleUrl: './assign-athlete.component.css',
 })
@@ -65,6 +65,8 @@ export class AssignAthleteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.signupFormService.getAthleteData();
+
     if (this.signupFormService.gyms().length == 1) {
       this.form.controls.gym.setValue(this.signupFormService.gyms()[0]);
     }

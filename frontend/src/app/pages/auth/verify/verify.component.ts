@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthWrapperComponent } from '../auth-wrapper/auth-wrapper.component';
-import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { apiAuthService } from '../../../api/services';
-import { StrictHttpResponse } from '../../../api/strict-http-response';
-import { apiUserRead } from '../../../api/models';
 import { ModalService } from '../../../shared/modal/modal.service';
+import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
+import { StrictHttpResponse } from '../../../api/strict-http-response';
+import { apiErrorMap } from '../../../shared/error-mapping';
 
 @Component({
   selector: 'app-verify',
@@ -26,16 +26,17 @@ export class VerifyComponent implements OnInit {
     this.apiAuth
       .verifyVerifyAuthVerifyPost$Response({ body: { token: token } })
       .subscribe({
-        next: (response: StrictHttpResponse<apiUserRead>) => {
+        next: () => {
           this.verified = true;
+          if (this.userAuth.loggedIn()) {
+            this.userAuth.getMyInfo();
+          }
         },
         error: (err: any) => {
           console.log('Error verifying email', err);
-          this.modalService.show(
-            'Error',
-            `Error verifying email: ${err.error.detail}`,
-            '/home'
-          );
+          const detail: string = String(err?.error?.detail ?? '');
+          const friendlyMsg = apiErrorMap[detail] || detail;
+          this.modalService.show('No Rep!', friendlyMsg, '/home');
         },
       });
   }

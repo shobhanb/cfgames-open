@@ -8,6 +8,7 @@ import {
   heroTrophy,
   heroUserGroup,
 } from '@ng-icons/heroicons/outline';
+import { UserAuthService } from '../../user-auth/user-auth.service';
 
 @Component({
   selector: 'app-dock',
@@ -24,4 +25,6 @@ import {
   templateUrl: './dock.component.html',
   styleUrl: './dock.component.css',
 })
-export class DockComponent {}
+export class DockComponent {
+  userAuth = inject(UserAuthService);
+}

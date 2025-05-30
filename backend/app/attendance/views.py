@@ -1,14 +1,15 @@
 from typing import Any
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
 
 from app.cf_games.service import apply_attendance_scores, apply_total_score
 from app.database.dependencies import db_dependency
+from app.user.dependencies import current_superuser
 
 from .schemas import AttendanceModel
 from .service import get_db_attendance, update_db_attendance
 
-attendance_router = APIRouter(prefix="/attendance", tags=["attendance"])
+attendance_router = APIRouter(prefix="/attendance", tags=["attendance"], dependencies=[Depends(current_superuser)])
 
 
 @attendance_router.get(
@@ -16,7 +17,7 @@ attendance_router = APIRouter(prefix="/attendance", tags=["attendance"])
     status_code=status.HTTP_200_OK,
     response_model=list[AttendanceModel],
 )
-async def get_appreciation(
+async def get_attendance(
     db_session: db_dependency,
     affiliate_id: int,
     year: int,

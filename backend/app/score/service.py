@@ -17,7 +17,7 @@ async def get_db_scores(  # noqa: PLR0913
     db_session: AsyncSession,
     year: int,
     affiliate_id: int,
-    ordinal: int,
+    ordinal: int | None = None,
     gender: str | None = None,
     age_category: str | None = None,
     affiliate_scaled: str | None = None,
@@ -47,7 +47,7 @@ async def get_db_scores(  # noqa: PLR0913
         )
         .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
         .where(
-            (Athlete.affiliate_id == affiliate_id) & (Athlete.year == year) & (Score.ordinal == ordinal),
+            (Athlete.affiliate_id == affiliate_id) & (Athlete.year == year),
         )
         .order_by(
             Athlete.gender,
@@ -59,6 +59,8 @@ async def get_db_scores(  # noqa: PLR0913
             Athlete.name,
         )
     )
+    if ordinal:
+        stmt = stmt.where(Score.ordinal == ordinal)
     if gender:
         stmt = stmt.where(Athlete.gender == gender)
     if age_category:

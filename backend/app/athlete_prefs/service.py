@@ -2,14 +2,15 @@ from __future__ import annotations
 
 import logging
 from typing import Any
-from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.athlete.models import Athlete
-from app.athlete_prefs.constants import TIME_PREFS
-from app.athlete_prefs.models import AthleteTimePref
+
+from .constants import TIME_PREFS
+from .models import AthleteTimePref
+from .schemas import AthletePrefsModel
 
 log = logging.getLogger("uvicorn.error")
 
@@ -22,14 +23,16 @@ async def get_db_athlete_prefs(
     time_pref_stmt = (
         select(
             Athlete.name,
-            AthleteTimePref.athlete_id,
+            Athlete.gender,
+            Athlete.age_category,
+            AthleteTimePref.competitor_id,
             AthleteTimePref.preference_nbr,
             AthleteTimePref.preference,
         )
         .join_from(
             AthleteTimePref,
             Athlete,
-            AthleteTimePref.athlete_id == Athlete.id,
+            AthleteTimePref.competitor_id == Athlete.competitor_id,
         )
         .where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year))
     )
@@ -38,14 +41,28 @@ async def get_db_athlete_prefs(
     return [dict(x) for x in results]
 
 
-async def assign_db_athlete_prefs(
+async def init_assign_db_athlete_prefs(
     db_session: AsyncSession,
-    athlete_id: UUID,
+    competitor_id: int,
 ) -> None:
-    time_pref_exists = await AthleteTimePref.find(async_session=db_session, athlete_id=athlete_id)
+    time_pref_exists = await AthleteTimePref.find(async_session=db_session, competitor_id=competitor_id)
     if not time_pref_exists:
         for nbr, pref in enumerate(TIME_PREFS):
-            time_pref = AthleteTimePref(athlete_id=athlete_id, preference_nbr=nbr, preference=pref)
+            time_pref = AthleteTimePref(competitor_id=competitor_id, preference_nbr=nbr, preference=pref)
             db_session.add(time_pref)
+
+    await db_session.commit()
+
+
+async def update_db_user_prefs(
+    db_session: AsyncSession,
+    competitor_id: int,
+    prefs: list[AthletePrefsModel],
+) -> None:
+    delete_stmt = delete(AthleteTimePref).where(AthleteTimePref.competitor_id == competitor_id)
+    await db_session.execute(delete_stmt)
+
+    for pref_data in prefs:
+        db_session.add(AthleteTimePref(**pref_data.model_dump()))
 
     await db_session.commit()

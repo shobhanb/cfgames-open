@@ -8,14 +8,9 @@ import {
 } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionLogoYahoo, ionMail } from '@ng-icons/ionicons';
-import { Router, RouterLink } from '@angular/router';
-import { ModalService } from '../../../shared/modal/modal.service';
+import { RouterLink } from '@angular/router';
+import { LoggedinWarningService } from '../loggedin-warning.service';
 import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
-import { apiAuthService } from '../../../api/services';
-import { StrictHttpResponse } from '../../../api/strict-http-response';
-import { apiBearerResponse } from '../../../api/models';
-import { timer } from 'rxjs';
-import { ToastService } from '../../../shared/toast/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -26,9 +21,7 @@ import { ToastService } from '../../../shared/toast/toast.service';
 })
 export class LoginComponent implements OnInit {
   private userAuth = inject(UserAuthService);
-  private toastService = inject(ToastService);
-  private modalService = inject(ModalService);
-  private apiAuth = inject(apiAuthService);
+  private loggedinWarning = inject(LoggedinWarningService);
 
   loginForm = new FormGroup({
     email: new FormControl('', {
@@ -44,38 +37,17 @@ export class LoginComponent implements OnInit {
       this.loginForm.value.email &&
       this.loginForm.value.password
     ) {
-      this.apiAuth
-        .authDbLoginAuthLoginPost$Response({
-          body: {
-            username: this.loginForm.value.email,
-            password: this.loginForm.value.password,
-          },
-        })
-        .subscribe({
-          next: (response: StrictHttpResponse<apiBearerResponse>) => {
-            this.userAuth.token.set(response.body);
-            this.userAuth.getMyInfo();
-            this.toastService.showSuccess('Logged in', '/home');
-          },
-          error: (err: any) => {
-            console.log(err);
-            this.modalService.show(
-              'Error during Login',
-              err.error.detail,
-              '/home'
-            );
-          },
-        });
+      this.userAuth.loginWithEmailAndPassword({
+        username: this.loginForm.value.email,
+        password: this.loginForm.value.password,
+      });
     }
-  }
-
-  constructor() {
-    effect(() => {});
   }
 
   ngOnInit(): void {
-    if (this.userAuth.user()) {
-      this.loginForm.value.email = this.userAuth.user()!.email;
-    }
+    this.userAuth.loginWithLocalToken();
+  }
+  constructor() {
+    effect(() => this.loggedinWarning.checkLoggedIn());
   }
 }

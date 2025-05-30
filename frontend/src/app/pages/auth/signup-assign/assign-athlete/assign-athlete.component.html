@@ -39,18 +39,18 @@
             type="email"
             name="email"
             class="input"
+            placeholder="Email"
+            autocomplete="email"
             formControlName="email"
           />
           <p class="validator-hint">
             @if (isAthleteIdInvalid) {Select Athlete Id} @else if
             (isEmailInvalid) {Enter a valid email address.} @else { &nbsp;}
           </p>
-          <button class="btn btn-primary" type="button" (click)="onSubmit()">
-            That's me
-          </button>
+          <button class="btn btn-primary" type="submit">That's me</button>
           <button
             class="btn btn-neutral"
-            type="button"
+            type="reset"
             (click)="onClickCancel()"
           >
             Cancel
@@ -59,4 +59,7 @@
       </form>
     </div>
   </div>
+  <a routerLink="/auth/login" class="link link-primary text-sm"
+    >Already have an account? Login</a
+  >
 </app-auth-wrapper>

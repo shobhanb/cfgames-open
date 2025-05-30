@@ -1,19 +1,55 @@
+from collections.abc import Sequence
 from typing import Any
 
 from fastapi import APIRouter, status
 
 from app.database.dependencies import db_dependency
+from app.exceptions import unauthorised_exception
+from app.user.dependencies import current_superuser_dependency, current_verified_user_dependency
 
-from .schemas import AthletePrefsModel
-from .service import get_db_athlete_prefs
+from .models import AthleteTimePref
+from .schemas import AthletePrefsModel, AthletePrefsOutputModel
+from .service import get_db_athlete_prefs, update_db_user_prefs
 
 athlete_prefs_router = APIRouter(prefix="/athlete-prefs", tags=["athlete-prefs"])
 
 
-@athlete_prefs_router.get("/", status_code=status.HTTP_200_OK, response_model=list[AthletePrefsModel])
+@athlete_prefs_router.get("/me", status_code=status.HTTP_200_OK, response_model=list[AthletePrefsModel])
+async def get_my_prefs(
+    db_session: db_dependency,
+    user: current_verified_user_dependency,
+) -> Sequence[AthleteTimePref]:
+    return await AthleteTimePref.find_all(async_session=db_session, competitor_id=user.athlete_id)
+
+
+@athlete_prefs_router.post("/me", status_code=status.HTTP_202_ACCEPTED)
+async def update_my_prefs(
+    db_session: db_dependency,
+    user: current_verified_user_dependency,
+    prefs: list[AthletePrefsModel],
+) -> None:
+    for pref in prefs:
+        if pref.athlete_id != user.athlete_id:
+            raise unauthorised_exception()
+
+    await update_db_user_prefs(db_session=db_session, competitor_id=user.athlete_id, prefs=prefs)
+
+
+@athlete_prefs_router.get("/all", status_code=status.HTTP_200_OK, response_model=list[AthletePrefsOutputModel])
 async def get_athlete_prefs(
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
+    _: current_superuser_dependency,
 ) -> list[dict[str, Any]]:
     return await get_db_athlete_prefs(db_session=db_session, affiliate_id=affiliate_id, year=year)
+
+
+@athlete_prefs_router.post("/{competitor_id}", status_code=status.HTTP_202_ACCEPTED)
+async def update_athlete_prefs(
+    db_session: db_dependency,
+    competitor_id: int,
+    _: current_superuser_dependency,
+    prefs: list[AthletePrefsModel],
+) -> None:
+    await update_db_user_prefs(db_session=db_session, competitor_id=competitor_id, prefs=prefs)

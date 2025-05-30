@@ -7,7 +7,7 @@
   >
   <div class="card bg-base-100 w-full max-w-sm shadow-2xl">
     <div class="card-body">
-      <form [formGroup]="loginForm">
+      <form [formGroup]="loginForm" (ngSubmit)="onClickLogin()">
         <fieldset class="fieldset gap-4">
           <!-- <app-provider-login loginSignup="login" />
           <div class="divider">OR</div> -->
@@ -15,25 +15,25 @@
             type="email"
             class="input w-full"
             placeholder="Email"
+            autocomplete="email"
             formControlName="email"
           />
           <input
             type="password"
             class="input w-full"
             placeholder="Password"
+            autocomplete="current-password"
             formControlName="password"
           />
-          <a href="" class="link link-primary">Forgot Password?</a>
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="onClickLogin()"
+          <a class="link link-primary" routerLink="/auth/forgot-password"
+            >Forgot Password?</a
           >
+          <button type="submit" class="btn btn-primary">
             <ng-icon name="ionMail" class="mr-auto"></ng-icon>
             <span class="mr-auto">Login with Email</span>
           </button>
           <!-- <div class="divider"></div> -->
-          <button type="button" class="btn btn-neutral" routerLink="/home">
+          <button type="cancel" class="btn btn-neutral" routerLink="/home">
             <span>Cancel</span>
           </button>
         </fieldset>

@@ -14,7 +14,7 @@ score_router = APIRouter(prefix="/score", tags=["score"])
 
 
 @score_router.get(
-    "/{affiliate_id}/{year}/{ordinal}",
+    "/{affiliate_id}/{year}",
     status_code=status.HTTP_200_OK,
     response_model=list[ScoreModel],
 )
@@ -22,7 +22,7 @@ async def get_scores(  # noqa: PLR0913
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
-    ordinal: int,
+    ordinal: int | None = None,
     gender: Literal["M", "F"] | None = None,
     age_category: Literal["Open", "Masters", "Masters 55+"] | None = None,
     affiliate_scaled: Literal["RX", "Scaled"] | None = None,

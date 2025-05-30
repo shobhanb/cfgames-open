@@ -13,29 +13,39 @@
   </div>
   <div class="card bg-base-100 w-full max-w-sm shadow-2xl">
     <div class="card-body">
-      <form [formGroup]="loginForm">
+      <form [formGroup]="loginForm" (ngSubmit)="onClickSignUpWithEmail()">
         <fieldset class="fieldset gap-4">
           <input
             type="email"
             class="input w-full"
             placeholder="{{ signupFormService.enteredEmail() }}"
+            autocomplete="email"
             disabled
           />
           <input
             type="password"
             class="input w-full"
             placeholder="Password"
-            formControlName="password"
+            autocomplete="new-password"
+            formControlName="password1"
           />
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="onClickSignUpWithEmail()"
-          >
+          <input
+            type="password"
+            class="input w-full"
+            placeholder="Re-enter password"
+            autocomplete="new-password"
+            formControlName="password2"
+          />
+          @if (!passwordsMatch) {
+          <span class="text-xs">Passwords do not match</span>
+          } @else {
+          <span class="text-xs">&nbsp;</span>
+          }
+          <button type="submit" class="btn btn-primary">
             <ng-icon name="ionMail" class="mr-auto"></ng-icon>
             <span class="mr-auto">Sign up</span>
           </button>
-          <button type="button" class="btn btn-neutral" routerLink="/home">
+          <button type="reset" class="btn btn-neutral" routerLink="/home">
             <span>Cancel</span>
           </button>
         </fieldset>

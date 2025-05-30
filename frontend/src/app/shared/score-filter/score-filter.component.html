@@ -1,0 +1,61 @@
+<div class="sticky top-16 z-5 bg-base-200 shadow-sm">
+  <div class="flex flex-col flex-1 mx-4">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Event</legend>
+      <select class="select w-full" (change)="onChangeEvent($event)">
+        @for (event of scoreFilter.eventsList; track event) {
+        <option
+          [value]="event[0]"
+          [selected]="scoreFilter.filter().ordinal == +event[0]"
+        >
+          {{ event[1] }}
+        </option>
+        }
+      </select>
+    </fieldset>
+  </div>
+
+  <div class="flex flex-row gap-2 mx-4">
+    <div class="flex flex-col flex-1">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Gender</legend>
+        <select class="select w-full" (change)="onChangeGender($event)">
+          @for (gender of scoreFilter.gendersList; track gender) {
+          <option
+            [value]="gender"
+            [selected]="scoreFilter.filter().gender === gender"
+          >
+            {{ gender }}
+          </option>
+          }
+        </select>
+      </fieldset>
+    </div>
+    <div class="flex flex-col flex-1">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Age Category</legend>
+        <select class="select w-full" (change)="onChangeAgeCategory($event)">
+          @for (ageCategory of scoreFilter.ageCategoriesList; track ageCategory)
+          {
+          <option
+            [value]="ageCategory"
+            [selected]="scoreFilter.filter().ageCategory === ageCategory"
+          >
+            {{ ageCategory }}
+          </option>
+          }
+        </select>
+      </fieldset>
+    </div>
+    <div class="flex flex-col flex-1">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Show Top 3</legend>
+        <select class="select w-full" (change)="onChangeTop3($event)">
+          <option value="1" selected>Top 3 only</option>
+          <option value="0">All</option>
+        </select>
+      </fieldset>
+    </div>
+  </div>
+  <br />
+</div>

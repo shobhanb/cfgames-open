@@ -14,8 +14,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { applyAttendanceAttendanceApplyAffiliateIdYearPost } from '../fn/attendance/apply-attendance-attendance-apply-affiliate-id-year-post';
 import { ApplyAttendanceAttendanceApplyAffiliateIdYearPost$Params } from '../fn/attendance/apply-attendance-attendance-apply-affiliate-id-year-post';
 import { apiAttendanceModel } from '../models/api-attendance-model';
-import { getAppreciationAttendanceAffiliateIdYearOrdinalGet } from '../fn/attendance/get-appreciation-attendance-affiliate-id-year-ordinal-get';
-import { GetAppreciationAttendanceAffiliateIdYearOrdinalGet$Params } from '../fn/attendance/get-appreciation-attendance-affiliate-id-year-ordinal-get';
+import { getAttendanceAttendanceAffiliateIdYearOrdinalGet } from '../fn/attendance/get-attendance-attendance-affiliate-id-year-ordinal-get';
+import { GetAttendanceAttendanceAffiliateIdYearOrdinalGet$Params } from '../fn/attendance/get-attendance-attendance-affiliate-id-year-ordinal-get';
 import { updateAttendanceAttendanceAffiliateIdYearPost } from '../fn/attendance/update-attendance-attendance-affiliate-id-year-post';
 import { UpdateAttendanceAttendanceAffiliateIdYearPost$Params } from '../fn/attendance/update-attendance-attendance-affiliate-id-year-post';
 
@@ -25,35 +25,35 @@ export class apiAttendanceService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getAppreciationAttendanceAffiliateIdYearOrdinalGet()` */
-  static readonly GetAppreciationAttendanceAffiliateIdYearOrdinalGetPath = '/attendance/{affiliate_id}/{year}/{ordinal}/';
+  /** Path part for operation `getAttendanceAttendanceAffiliateIdYearOrdinalGet()` */
+  static readonly GetAttendanceAttendanceAffiliateIdYearOrdinalGetPath = '/attendance/{affiliate_id}/{year}/{ordinal}/';
 
   /**
-   * Get Appreciation.
+   * Get Attendance.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAppreciationAttendanceAffiliateIdYearOrdinalGet()` instead.
+   * To access only the response body, use `getAttendanceAttendanceAffiliateIdYearOrdinalGet()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAppreciationAttendanceAffiliateIdYearOrdinalGet$Response(params: GetAppreciationAttendanceAffiliateIdYearOrdinalGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAttendanceModel>>> {
-    return getAppreciationAttendanceAffiliateIdYearOrdinalGet(this.http, this.rootUrl, params, context);
+  getAttendanceAttendanceAffiliateIdYearOrdinalGet$Response(params: GetAttendanceAttendanceAffiliateIdYearOrdinalGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAttendanceModel>>> {
+    return getAttendanceAttendanceAffiliateIdYearOrdinalGet(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Get Appreciation.
+   * Get Attendance.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAppreciationAttendanceAffiliateIdYearOrdinalGet$Response()` instead.
+   * To access the full response (for headers, for example), `getAttendanceAttendanceAffiliateIdYearOrdinalGet$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAppreciationAttendanceAffiliateIdYearOrdinalGet(params: GetAppreciationAttendanceAffiliateIdYearOrdinalGet$Params, context?: HttpContext): Observable<Array<apiAttendanceModel>> {
-    return this.getAppreciationAttendanceAffiliateIdYearOrdinalGet$Response(params, context).pipe(
+  getAttendanceAttendanceAffiliateIdYearOrdinalGet(params: GetAttendanceAttendanceAffiliateIdYearOrdinalGet$Params, context?: HttpContext): Observable<Array<apiAttendanceModel>> {
+    return this.getAttendanceAttendanceAffiliateIdYearOrdinalGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<apiAttendanceModel>>): Array<apiAttendanceModel> => r.body)
     );
   }
