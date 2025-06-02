@@ -2,7 +2,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, status
 
-from app.cf_games.service import apply_attendance_scores, apply_total_score
+from app.cf_games.service import apply_attendance_scores, apply_total_individual_score, apply_total_team_score
 from app.database.dependencies import db_dependency
 from app.user.dependencies import current_superuser
 
@@ -50,4 +50,5 @@ async def apply_attendance(
     year: int,
 ) -> None:
     await apply_attendance_scores(db_session=db_session, affiliate_id=affiliate_id, year=year)
-    await apply_total_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
+    await apply_total_individual_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
+    await apply_total_team_score(db_session=db_session, affiliate_id=affiliate_id, year=year)

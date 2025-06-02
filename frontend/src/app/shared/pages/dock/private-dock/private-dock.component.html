@@ -1,0 +1,38 @@
+<div class="dock bg-base-300">
+  <button type="button" (click)="onClickBack()">
+    <ng-icon name="heroArrowLeftCircle" />
+    <span class="dock-label">Back</span>
+  </button>
+  <button
+    type="button"
+    routerLink="/private/myscore"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroChartBar" />
+    <span class="dock-label">My Scores</span>
+  </button>
+  <button
+    type="button"
+    routerLink="/private/myteam"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroUserGroup" />
+    <span class="dock-label">My Team</span>
+  </button>
+  <button
+    type="button"
+    routerLink="/private/appreciation"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroHeart" />
+    <span class="dock-label">Appreciation</span>
+  </button>
+  <button
+    type="button"
+    routerLink="/private/scheduling"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroCalendar" />
+    <span class="dock-label">Scheduling</span>
+  </button>
+</div>

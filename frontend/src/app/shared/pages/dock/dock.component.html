@@ -1,24 +1,7 @@
-<div class="dock bg-base-300">
-  <button routerLink="/public/home" routerLinkActive="dock-active">
-    <ng-icon name="heroHome" />
-    <span class="dock-label">Home</span>
-  </button>
-  <button routerLink="/public/leaderboard" routerLinkActive="dock-active">
-    <ng-icon name="heroTrophy" />
-    <span class="dock-label">Leaderboard</span>
-  </button>
-  <button routerLink="/public/team" routerLinkActive="dock-active">
-    <ng-icon name="heroUserGroup" />
-    <span class="dock-label">Teams</span>
-  </button>
-  <button routerLink="/public/scores" routerLinkActive="dock-active">
-    <ng-icon name="heroChartBar" />
-    <span class="dock-label">Scores</span>
-  </button>
-  @if ( userAuth.loggedIn() ) {
-  <button routerLink="/private/scheduling" routerLinkActive="dock-active">
-    <ng-icon name="heroCalendarDays" />
-    <span class="dock-label">Scheduling</span>
-  </button>
-  }
-</div>
+@if (dockService.showDock() === 'admin') {
+<app-admin-dock></app-admin-dock>
+} @else if (dockService.showDock() === 'private') {
+<app-private-dock></app-private-dock>
+} @else {
+<app-public-dock></app-public-dock>
+}

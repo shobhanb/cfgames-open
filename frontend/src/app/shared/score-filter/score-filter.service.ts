@@ -1,7 +1,7 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { AGE_CATEGORIES, GENDERS, ScoreFilter } from './score-filter';
 import { UserAuthService } from '../user-auth/user-auth.service';
-import { ordinalMap } from '../ordinal-mapping';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -17,9 +17,11 @@ export class ScoreFilterService {
   };
 
   filter = signal<ScoreFilter>(this.defaultScoreFilter);
-  filteredEvent = computed<string>(() => ordinalMap[this.filter().ordinal!]);
+  filteredEvent = computed<string>(
+    () => environment.ordinalMap[this.filter().ordinal || 1]
+  );
 
-  eventsList = Object.entries(ordinalMap);
+  eventsList = Object.entries(environment.ordinalMap);
   gendersList = GENDERS;
   ageCategoriesList = AGE_CATEGORIES;
 
@@ -29,7 +31,7 @@ export class ScoreFilterService {
         ordinal: filter.ordinal || value.ordinal,
         gender: filter.gender || value.gender,
         ageCategory: filter.ageCategory || value.ageCategory,
-        topN: filter.top3 || value.top3,
+        top3: filter.top3 || value.top3,
       };
     });
   }

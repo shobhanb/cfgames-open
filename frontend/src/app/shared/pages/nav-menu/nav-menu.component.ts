@@ -6,7 +6,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserAuthService } from '../../user-auth/user-auth.service';
 import { ToastService } from '../../toast/toast.service';
 import { LoggedInButtonComponent } from './logged-in-button/logged-in-button.component';
-import { ordinalMap } from '../../ordinal-mapping';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-nav-menu',
@@ -20,5 +20,5 @@ export class NavMenuComponent {
   userAuth = inject(UserAuthService);
   toastService = inject(ToastService);
 
-  events = Object.entries(ordinalMap);
+  events = Object.entries(environment.ordinalMap);
 }

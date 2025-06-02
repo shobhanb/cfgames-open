@@ -2,7 +2,7 @@ from typing import Literal
 
 from fastapi import APIRouter, Depends, status
 
-from app.cf_games.service import apply_side_scores, apply_total_score
+from app.cf_games.service import apply_side_scores, apply_total_team_score
 from app.database.dependencies import db_dependency
 from app.sidescore.models import SideScore
 from app.user.dependencies import current_superuser
@@ -54,4 +54,4 @@ async def apply_sidescores(
     year: int,
 ) -> None:
     await apply_side_scores(db_session=db_session, affiliate_id=affiliate_id, year=year)
-    await apply_total_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
+    await apply_total_team_score(db_session=db_session, affiliate_id=affiliate_id, year=year)

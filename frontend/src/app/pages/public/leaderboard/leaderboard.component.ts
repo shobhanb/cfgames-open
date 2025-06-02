@@ -1,12 +1,10 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { PagesComponent } from '../../../shared/pages/pages.component';
 import { TitleService } from '../../../shared/title.service';
-import { apiScoreService } from '../../../api/services';
-import { environment } from '../../../../environments/environment';
-import { StrictHttpResponse } from '../../../api/strict-http-response';
-import { apiScoreModel } from '../../../api/models';
 import { ScoreFilterComponent } from '../../../shared/score-filter/score-filter.component';
-import { ScoreFilterService } from '../../../shared/score-filter/score-filter.service';
+import { ScoreService } from '../../../shared/score-filter/score.service';
+import { DockService } from '../../../shared/pages/dock/dock.service';
+import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
 
 @Component({
   selector: 'app-leaderboard',
@@ -16,63 +14,20 @@ import { ScoreFilterService } from '../../../shared/score-filter/score-filter.se
 })
 export class LeaderboardComponent implements OnInit {
   titleService = inject(TitleService);
-  apiScores = inject(apiScoreService);
-  scoreFilter = inject(ScoreFilterService);
-
-  scores = signal<apiScoreModel[]>([]);
-
-  filteredScores = computed<apiScoreModel[]>(() => {
-    const { ordinal, gender, ageCategory, top3 } = this.scoreFilter.filter();
-    return this.scores().filter(
-      (value: apiScoreModel) =>
-        value.ordinal === ordinal &&
-        value.gender === gender &&
-        value.age_category === ageCategory &&
-        (!top3 || (value.affiliate_rank != null && value.affiliate_rank <= 3))
-    );
-  });
-
-  filteredScoresRX = computed<apiScoreModel[]>(() =>
-    this.filteredScores().filter(
-      (value: apiScoreModel) => value.affiliate_scaled == 'RX'
-    )
-  );
-  filteredScoresScaled = computed<apiScoreModel[]>(() =>
-    this.filteredScores().filter(
-      (value: apiScoreModel) => value.affiliate_scaled == 'Scaled'
-    )
-  );
-
-  latestOrdinal = computed<number>(
-    () =>
-      Math.max(...this.scores().map((value: apiScoreModel) => value.ordinal)) ||
-      1
-  );
-
-  onTest() {
-    console.log(this.filteredScores());
-  }
+  scoreService = inject(ScoreService);
+  private dockService = inject(DockService);
+  userAuth = inject(UserAuthService);
 
   constructor() {
-    this.titleService.pageTitle.set('Leaderboard');
+    this.dockService.setPublic();
+    effect(() => {
+      this.titleService.pageTitle.set(
+        `${this.scoreService.event()} Leaderboard`
+      );
+    });
   }
 
   ngOnInit(): void {
-    this.apiScores
-      .getScoresScoreAffiliateIdYearGet$Response({
-        affiliate_id: environment.affiliateId,
-        year: environment.year,
-      })
-      .subscribe({
-        next: (response: StrictHttpResponse<apiScoreModel[]>) => {
-          this.scores.set(response.body);
-          if (this.latestOrdinal()) {
-            // this.scoreFilter.setFilter({ ordinal: this.latestOrdinal() });
-          }
-        },
-        error: (err: any) => {
-          console.error(err);
-        },
-      });
+    this.scoreService.getScores();
   }
 }

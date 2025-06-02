@@ -1,0 +1,46 @@
+<div class="dock bg-base-300">
+  <button type="button" (click)="onClickBack()">
+    <ng-icon name="heroArrowLeftCircle" />
+    <span class="dock-label">Back</span>
+  </button>
+  <button
+    type="button"
+    routerLink="/admin/athletes"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroUsers" />
+    <span class="dock-label">Athletes</span>
+  </button>
+  <button
+    type="button"
+    routerLink="/admin/teams"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroUserGroup" />
+    <span class="dock-label">Teams</span>
+  </button>
+  <button
+    type="button"
+    routerLink="/admin/scheduling"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroCalendarDays" />
+    <span class="dock-label">Scheduling</span>
+  </button>
+  <button
+    type="button"
+    routerLink="/admin/attendance"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroClipboardDocumentCheck" />
+    <span class="dock-label">Attendance</span>
+  </button>
+  <button
+    type="button"
+    routerLink="/admin/sidescores"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroChartBar" />
+    <span class="dock-label">Side Scores</span>
+  </button>
+</div>

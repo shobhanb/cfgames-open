@@ -30,6 +30,7 @@ export class VerifyComponent implements OnInit {
           this.verified = true;
           if (this.userAuth.loggedIn()) {
             this.userAuth.getMyInfo();
+            this.userAuth.getMyAthleteInfo();
           }
         },
         error: (err: any) => {

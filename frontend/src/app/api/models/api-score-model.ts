@@ -9,6 +9,7 @@ export interface apiScoreModel {
   age_category: 'Open' | 'Masters' | 'Masters 55+';
   appreciation_score: number;
   attendance_score: number;
+  competitor_id: number;
   gender: 'M' | 'F';
   judge_score: number;
   name: string;
@@ -20,6 +21,7 @@ export interface apiScoreModel {
   team_name?: (string | null);
   tiebreak_ms?: (string | null);
   top3_score: number;
-  total_score: number;
+  total_individual_score: number;
+  total_team_score: number;
   year: number;
 }

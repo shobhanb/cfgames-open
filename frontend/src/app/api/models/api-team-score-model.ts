@@ -13,6 +13,7 @@ export interface apiTeamScoreModel {
   spirit_score: number;
   team_name: string;
   top3_score: number;
-  total_score: number;
+  total_individual_score: number;
+  total_team_score: number;
   year: number;
 }

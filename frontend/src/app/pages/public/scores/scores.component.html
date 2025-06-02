@@ -1,3 +1,88 @@
 <app-pages>
-<p>scores works!</p>
+  <app-score-filter [showTop3Filter]="false"></app-score-filter>
+
+  <div class="bg-base-200 pb-4">
+    <fieldset class="mx-4 fieldset rounded-box border">
+      <legend class="fieldset-legend ml-6">Legend</legend>
+      <div class="flex flex-row justify-evenly items-center gap-2">
+        <div class="flex flex-col items-center text-center">
+          <ng-icon name="heroHeart" />
+          <span>Appreciation Score</span>
+        </div>
+        <div class="flex flex-col items-center text-center">
+          <ng-icon name="heroScale" />
+          <span>Judge Score</span>
+        </div>
+        <div class="flex flex-col items-center text-center">
+          <ng-icon name="heroHandRaised" />
+          <span>Attendance Score</span>
+        </div>
+        <div class="flex flex-col items-center text-center">
+          <ng-icon name="ionMedalOutline" />
+          <span>Top 3 Score</span>
+        </div>
+        <div class="flex flex-col items-center text-center">
+          <ng-icon name="ionBarbellOutline" />
+          <span>Participation Score</span>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="list bg-base-100">
+    @for (score of scoreService.individualScores(); track $index ) {
+    <li
+      class="list-row mx-2 items-center"
+      [class.border]="
+        userAuth.loggedIn() &&
+        userAuth.athlete()?.competitor_id === score.competitor_id
+      "
+      [class.border-accent]="
+        userAuth.loggedIn() &&
+        userAuth.athlete()?.competitor_id === score.competitor_id
+      "
+    >
+      <div class="list-col-grow">
+        <div class="flex flex-col">
+          <span>{{ score.name }}</span>
+          <span class="text-xs opacity-60 font-semibold">{{
+            score.team_name
+          }}</span>
+        </div>
+      </div>
+
+      @if (score.appreciation_score > 0) {
+      <div class="flex flex-col items-center">
+        <ng-icon name="heroHeart" />
+        <span>{{ score.appreciation_score }}</span>
+      </div>
+      } @if (score.judge_score) {
+      <div class="flex flex-col items-center">
+        <ng-icon name="heroScale" />
+        <span>{{ score.judge_score }}</span>
+      </div>
+      } @if (score.attendance_score > 0) {
+      <div class="flex flex-col items-center">
+        <ng-icon name="heroHandRaised" />
+        <span>{{ score.attendance_score }}</span>
+      </div>
+      } @if (score.top3_score > 0) {
+      <div class="flex flex-col items-center">
+        <ng-icon name="ionMedalOutline" />
+        <span>{{ score.top3_score }}</span>
+      </div>
+      } @if (score.participation_score > 0) {
+      <div class="flex flex-col items-center">
+        <ng-icon name="ionBarbellOutline" />
+        <span>{{ score.participation_score }}</span>
+      </div>
+      }
+      <div class="flex flex-col items-center">
+        <!-- <ng-icon name="heroScale" /> -->
+        <span>Total</span>
+        <span>{{ score.total_individual_score }}</span>
+      </div>
+    </li>
+    }
+  </div>
 </app-pages>

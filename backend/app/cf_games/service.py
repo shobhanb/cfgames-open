@@ -187,7 +187,8 @@ async def update_affiliate_scores(
     await apply_ranks(db_session=db_session, affiliate_id=affiliate_id, year=year)
     await apply_top3_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
     await apply_judge_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
-    await apply_total_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
+    await apply_total_individual_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
+    await apply_total_team_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
 
 
 async def apply_participation_score(
@@ -385,7 +386,33 @@ async def apply_side_scores(
                 await db_session.commit()
 
 
-async def apply_total_score(
+async def apply_total_individual_score(
+    db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
+) -> None:
+    select_stmt = (
+        select(
+            Score.id,
+            (
+                Score.participation_score
+                + Score.top3_score
+                + Score.judge_score
+                + Score.attendance_score
+                + Score.appreciation_score
+            ).label("total_individual_score"),
+        )
+        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year))
+    )
+
+    results = await db_session.execute(select_stmt)
+    values = results.mappings().all()
+    await db_session.execute(update(Score), [dict(x) for x in values])
+    await db_session.commit()
+
+
+async def apply_total_team_score(
     db_session: AsyncSession,
     affiliate_id: int,
     year: int,
@@ -401,7 +428,7 @@ async def apply_total_score(
                 + Score.appreciation_score
                 + Score.side_challenge_score
                 + Score.spirit_score
-            ).label("total_score"),
+            ).label("total_team_score"),
         )
         .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
         .where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year))

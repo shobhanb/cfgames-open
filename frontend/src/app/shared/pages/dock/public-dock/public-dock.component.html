@@ -1,0 +1,45 @@
+<div class="dock bg-base-300">
+  <button
+    type="button"
+    routerLink="/public/home"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroHome" />
+    <span class="dock-label">Home</span>
+  </button>
+  <button
+    type="button"
+    routerLink="/public/leaderboard"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroTrophy" />
+    <span class="dock-label">Leaderboard</span>
+  </button>
+  <button
+    type="button"
+    routerLink="/public/team"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroUserGroup" />
+    <span class="dock-label">Teams</span>
+  </button>
+  <button
+    type="button"
+    routerLink="/public/scores"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroChartBar" />
+    <span class="dock-label">Scores</span>
+  </button>
+  @if ( userAuth.loggedIn() ) {
+  <button type="button" (click)="onClickMe()">
+    <ng-icon name="heroUser" />
+    <span class="dock-label">Me</span>
+  </button>
+  } @if ( userAuth.loggedIn() && userAuth.user()?.is_superuser ) {
+  <button type="button" (click)="onClickAdmin()">
+    <ng-icon name="heroLockClosed" />
+    <span class="dock-label">Admin</span>
+  </button>
+  }
+</div>

@@ -49,6 +49,7 @@ export class UserAuthService {
         next: (response: StrictHttpResponse<apiBearerResponse>) => {
           this.token.set(response.body);
           this.getMyInfo();
+          this.getMyAthleteInfo();
           localStorage.setItem('cfgames-token', JSON.stringify(response.body));
           this.toastService.showSuccess('Logged in', '/home');
         },

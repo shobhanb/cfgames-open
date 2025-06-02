@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { ScoreFilterService } from './score-filter.service';
 import {
   AGE_CATEGORIES,
@@ -16,6 +16,26 @@ import {
 })
 export class ScoreFilterComponent {
   scoreFilter = inject(ScoreFilterService);
+
+  // Whether or not to show the Top3 filter on the template
+  // Required input
+  showTop3Filter = input.required<boolean>();
+
+  // Show or hide the filter
+  showFilter = signal<boolean>(false);
+
+  onClickShowFilter() {
+    this.showFilter.set(true);
+  }
+  onClickHideFilter() {
+    this.showFilter.set(false);
+  }
+
+  gridClassList = computed<string>(() =>
+    this.showTop3Filter()
+      ? 'grid gap-2 mx-4 grid-cols-5 md:grid-cols-3'
+      : 'grid gap-2 mx-4 grid-cols-3 md:grid-cols-2'
+  );
 
   onChangeEvent(event: Event) {
     const target = event.target as HTMLSelectElement;

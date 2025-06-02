@@ -11,7 +11,8 @@ class ScoreExtendedModel:
     appreciation_score: int
     side_challenge_score: int
     spirit_score: int
-    total_score: int
+    total_individual_score: int
+    total_team_score: int
 
 
 class ScoreModel(ScoreExtendedModel, CustomBaseModel):
@@ -19,6 +20,7 @@ class ScoreModel(ScoreExtendedModel, CustomBaseModel):
     year: int
     ordinal: int
     name: str
+    competitor_id: int
     gender: Literal["M", "F"]
     age_category: Literal["Open", "Masters", "Masters 55+"]
     team_name: str | None = None

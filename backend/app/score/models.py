@@ -44,7 +44,8 @@ class Score(Base):
     # Calculated columns
     affiliate_scaled: Mapped[str] = mapped_column(String)
     tiebreak_ms: Mapped[str | None] = mapped_column(String, nullable=True)
-    total_score: Mapped[int] = mapped_column(Integer, default=0)
+    total_individual_score: Mapped[int] = mapped_column(Integer, default=0)
+    total_team_score: Mapped[int] = mapped_column(Integer, default=0)
 
     # Relationships
     athlete: Mapped[Athlete] = relationship(back_populates="scores")

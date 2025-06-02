@@ -2,7 +2,7 @@
   <input type="checkbox" id="menu-drawer" class="drawer-toggle" />
   <div class="drawer-content">
     <!-- Nav bar -->
-    <div class="navbar sticky top-0 z-10 w-full bg-base-300 shadow-sm">
+    <div class="navbar sticky z-10 top-0 w-full bg-base-300 shadow-sm">
       <!-- Hamburger menu -->
       <div class="flex-none">
         <label for="menu-drawer" class="btn btn-square btn-ghost drawer-button">
@@ -26,7 +26,7 @@
       aria-label="close sidebar"
       class="drawer-overlay"
     ></label>
-    <ul class="menu bg-base-200 min-h-full w-80 p-4">
+    <ul class="menu bg-base-200 min-h-full w-70 p-4">
       <!-- Sidebar content -->
       <li>
         <a routerLink="/public/home" routerLinkActive="menu-active">Home</a>
@@ -43,11 +43,58 @@
         <a routerLink="/public/scores" routerLinkActive="menu-active">Scores</a>
       </li>
       @if (userAuth.loggedIn()) {
-      <li>
-        <a routerLink="/private/scheduling" routerLinkActive="menu-active"
-          >Scheduling</a
-        >
-      </li>
+      <ul class="">
+        {{
+          userAuth.user()?.name
+        }}
+        <li>
+          <a routerLink="/private/myscore" routerLinkActive="menu-active"
+            >My Scores</a
+          >
+        </li>
+        <li>
+          <a routerLink="/private/myteam" routerLinkActive="menu-active"
+            >My Team</a
+          >
+        </li>
+        <li>
+          <a routerLink="/private/appreciation" routerLinkActive="menu-active"
+            >Appreciation</a
+          >
+        </li>
+        <li>
+          <a routerLink="/private/scheduling" routerLinkActive="menu-active"
+            >Scheduling</a
+          >
+        </li>
+      </ul>
+      } @if (userAuth.loggedIn() && userAuth.user()?.is_superuser) {
+      <ul class="">
+        Admin bitch!
+        <li>
+          <a routerLink="/admin/athetes" routerLinkActive="menu-active"
+            >Athletes</a
+          >
+        </li>
+        <li>
+          <a routerLink="/admin/teams" routerLinkActive="menu-active">Teams</a>
+        </li>
+        <li>
+          <a routerLink="/admin/scheduling" routerLinkActive="menu-active"
+            >Scheduling</a
+          >
+        </li>
+        <li>
+          <a routerLink="/admin/attendance" routerLinkActive="menu-active"
+            >Attendance</a
+          >
+        </li>
+        <li>
+          <a routerLink="/admin/sidescores" routerLinkActive="menu-active"
+            >Side Scores</a
+          >
+        </li>
+      </ul>
       }
     </ul>
   </div>

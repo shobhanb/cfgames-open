@@ -1,30 +1,15 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import {
-  heroCalendarDays,
-  heroChartBar,
-  heroHome,
-  heroTrophy,
-  heroUserGroup,
-} from '@ng-icons/heroicons/outline';
-import { UserAuthService } from '../../user-auth/user-auth.service';
+import { DockService } from './dock.service';
+import { PublicDockComponent } from './public-dock/public-dock.component';
+import { PrivateDockComponent } from './private-dock/private-dock.component';
+import { AdminDockComponent } from './admin-dock/admin-dock.component';
 
 @Component({
   selector: 'app-dock',
-  imports: [NgIcon, RouterLink, RouterLinkActive],
-  viewProviders: [
-    provideIcons({
-      heroHome,
-      heroTrophy,
-      heroUserGroup,
-      heroChartBar,
-      heroCalendarDays,
-    }),
-  ],
+  imports: [PublicDockComponent, PrivateDockComponent, AdminDockComponent],
   templateUrl: './dock.component.html',
   styleUrl: './dock.component.css',
 })
 export class DockComponent {
-  userAuth = inject(UserAuthService);
+  dockService = inject(DockService);
 }

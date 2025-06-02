@@ -29,6 +29,7 @@ async def get_db_scores(  # noqa: PLR0913
             Athlete.year,
             Score.ordinal,
             Athlete.name,
+            Athlete.competitor_id,
             Athlete.gender,
             Athlete.age_category,
             Athlete.team_name,
@@ -43,7 +44,8 @@ async def get_db_scores(  # noqa: PLR0913
             Score.appreciation_score,
             Score.side_challenge_score,
             Score.spirit_score,
-            Score.total_score,
+            Score.total_individual_score,
+            Score.total_team_score,
         )
         .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
         .where(
@@ -94,7 +96,8 @@ async def get_db_team_scores_ordinal(
             func.sum(Score.appreciation_score).label("appreciation_score"),
             func.sum(Score.side_challenge_score).label("side_challenge_score"),
             func.sum(Score.spirit_score).label("spirit_score"),
-            func.sum(Score.total_score).label("total_score"),
+            func.sum(Score.total_individual_score).label("total_individual_score"),
+            func.sum(Score.total_team_score).label("total_team_score"),
         )
         .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
         .where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year) & (Score.ordinal == ordinal))
@@ -108,7 +111,41 @@ async def get_db_team_scores_ordinal(
     return [dict(x) for x in result]
 
 
-async def get_db_team_scores_overall(
+async def get_db_team_scores_all(
+    db_session: AsyncSession,
+    year: int,
+    affiliate_id: int,
+) -> list[dict[str, Any]]:
+    stmt = (
+        select(
+            Athlete.team_name,
+            Athlete.affiliate_id,
+            Athlete.year,
+            Score.ordinal,
+            func.count().label("count"),
+            func.sum(Score.participation_score).label("participation_score"),
+            func.sum(Score.top3_score).label("top3_score"),
+            func.sum(Score.attendance_score).label("attendance_score"),
+            func.sum(Score.judge_score).label("judge_score"),
+            func.sum(Score.appreciation_score).label("appreciation_score"),
+            func.sum(Score.side_challenge_score).label("side_challenge_score"),
+            func.sum(Score.spirit_score).label("spirit_score"),
+            func.sum(Score.total_individual_score).label("total_individual_score"),
+            func.sum(Score.total_team_score).label("total_team_score"),
+        )
+        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year))
+        .group_by(Athlete.team_name, Athlete.affiliate_id, Athlete.year, Score.ordinal)
+        .order_by(Athlete.team_name)
+    )
+
+    ret = await db_session.execute(stmt)
+    result = ret.mappings().all()
+
+    return [dict(x) for x in result]
+
+
+async def get_db_team_scores_total(
     db_session: AsyncSession,
     year: int,
     affiliate_id: int,
@@ -126,7 +163,8 @@ async def get_db_team_scores_overall(
             func.sum(Score.appreciation_score).label("appreciation_score"),
             func.sum(Score.side_challenge_score).label("side_challenge_score"),
             func.sum(Score.spirit_score).label("spirit_score"),
-            func.sum(Score.total_score).label("total_score"),
+            func.sum(Score.total_individual_score).label("total_individual_score"),
+            func.sum(Score.total_team_score).label("total_team_score"),
         )
         .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
         .where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year))

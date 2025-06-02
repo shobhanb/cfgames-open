@@ -1,11 +1,21 @@
 <app-pages>
-  <app-score-filter></app-score-filter>
-  <div class="btn" (click)="onTest()">Test</div>
+  <app-score-filter [showTop3Filter]="true"></app-score-filter>
   <div class="list bg-base-100">
-    @if (filteredScoresRX().length > 0) {
+    @if (scoreService.filteredScoresRXTopN().length > 0) {
     <div class="divider">RX</div>
-    @for (score of filteredScoresRX(); track $index ) {
-    <li class="list-row mx-2">
+
+    @for (score of scoreService.filteredScoresRXTopN(); track $index ) {
+    <li
+      class="list-row border mx-2 md:gap-8"
+      [class.border]="
+        userAuth.loggedIn() &&
+        userAuth.athlete()?.competitor_id === score.competitor_id
+      "
+      [class.border-accent]="
+        userAuth.loggedIn() &&
+        userAuth.athlete()?.competitor_id === score.competitor_id
+      "
+    >
       <div class="">{{ score.affiliate_rank }}</div>
       <div class="list-col-grow">{{ score.name }}</div>
       <div class="">{{ score.score_display }}</div>
@@ -16,10 +26,22 @@
       </div>
       }
     </li>
-    } } @if (filteredScoresScaled().length > 0) {
+
+    } } @if (scoreService.filteredScoresScaledTopN().length > 0) {
     <div class="divider">Scaled</div>
-    @for (score of filteredScoresScaled(); track $index ) {
-    <li class="list-row mx-2">
+    @for (score of scoreService.filteredScoresScaledTopN(); track $index ) {
+    <li
+      class="list-row mx-2 md:gap-8"
+      [class.border]="
+        userAuth.loggedIn() &&
+        userAuth.athlete()?.competitor_id === score.competitor_id
+      "
+      [class.border-accent]="
+        userAuth.loggedIn() &&
+        userAuth.athlete()?.competitor_id === score.competitor_id
+      "
+    >
+      >
       <div class="">{{ score.affiliate_rank }}</div>
       <div class="list-col-grow">{{ score.name }}</div>
       <div class="">{{ score.score_display }}</div>

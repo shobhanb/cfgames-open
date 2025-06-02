@@ -6,7 +6,7 @@ from fastapi import APIRouter, status
 from app.database.dependencies import db_dependency
 
 from .schemas import ScoreModel, TeamScoreModel
-from .service import get_db_scores, get_db_team_scores_ordinal, get_db_team_scores_overall
+from .service import get_db_scores, get_db_team_scores_all, get_db_team_scores_total
 
 log = logging.getLogger("uvicorn.error")
 
@@ -41,35 +41,33 @@ async def get_scores(  # noqa: PLR0913
 
 
 @score_router.get(
-    "/team/{affiliate_id}/{year}/{ordinal}",
+    "/team/all/{affiliate_id}/{year}",
     status_code=status.HTTP_200_OK,
     response_model=list[TeamScoreModel],
 )
-async def get_team_scores_ordinal(
+async def get_team_scores_all(
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
-    ordinal: int,
 ) -> list[dict[str, Any]]:
-    return await get_db_team_scores_ordinal(
+    return await get_db_team_scores_all(
         db_session=db_session,
         year=year,
         affiliate_id=affiliate_id,
-        ordinal=ordinal,
     )
 
 
 @score_router.get(
-    "/team/{affiliate_id}/{year}/",
+    "/team/total/{affiliate_id}/{year}",
     status_code=status.HTTP_200_OK,
     response_model=list[TeamScoreModel],
 )
-async def get_team_scores_overall(
+async def get_team_scores_total(
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
 ) -> list[dict[str, Any]]:
-    return await get_db_team_scores_overall(
+    return await get_db_team_scores_total(
         db_session=db_session,
         year=year,
         affiliate_id=affiliate_id,
