@@ -30,6 +30,9 @@
   </div>
 
   <div class="list bg-base-100">
+    <div class="divider">
+      {{ `${scoreFilter.filter().gender} - ${scoreFilter.filter().ageCategory}`}}
+    </div>
     @for (score of scoreService.individualScores(); track $index ) {
     <li
       class="list-row mx-2 items-center"

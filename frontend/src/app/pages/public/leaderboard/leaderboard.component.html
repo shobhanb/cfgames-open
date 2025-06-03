@@ -2,7 +2,9 @@
   <app-score-filter [showTop3Filter]="true"></app-score-filter>
   <div class="list bg-base-100">
     @if (scoreService.filteredScoresRXTopN().length > 0) {
-    <div class="divider">RX</div>
+    <div class="divider">
+      {{ `RX - ${scoreFilter.filter().gender} - ${scoreFilter.filter().ageCategory}`}}
+    </div>
 
     @for (score of scoreService.filteredScoresRXTopN(); track $index ) {
     <li
@@ -28,7 +30,9 @@
     </li>
 
     } } @if (scoreService.filteredScoresScaledTopN().length > 0) {
-    <div class="divider">Scaled</div>
+    <div class="divider">
+      {{ `Scaled - ${scoreFilter.filter().gender} - ${scoreFilter.filter().ageCategory}`}}
+    </div>
     @for (score of scoreService.filteredScoresScaledTopN(); track $index ) {
     <li
       class="list-row mx-2 md:gap-8"
@@ -41,7 +45,6 @@
         userAuth.athlete()?.competitor_id === score.competitor_id
       "
     >
-      >
       <div class="">{{ score.affiliate_rank }}</div>
       <div class="list-col-grow">{{ score.name }}</div>
       <div class="">{{ score.score_display }}</div>

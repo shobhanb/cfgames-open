@@ -5,6 +5,7 @@ import { ScoreFilterComponent } from '../../../shared/score-filter/score-filter.
 import { ScoreService } from '../../../shared/score-filter/score.service';
 import { DockService } from '../../../shared/pages/dock/dock.service';
 import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
+import { ScoreFilterService } from '../../../shared/score-filter/score-filter.service';
 
 @Component({
   selector: 'app-leaderboard',
@@ -15,6 +16,7 @@ import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
 export class LeaderboardComponent implements OnInit {
   titleService = inject(TitleService);
   scoreService = inject(ScoreService);
+  scoreFilter = inject(ScoreFilterService);
   private dockService = inject(DockService);
   userAuth = inject(UserAuthService);
 

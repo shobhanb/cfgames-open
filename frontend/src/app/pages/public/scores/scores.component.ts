@@ -12,6 +12,7 @@ import {
 } from '@ng-icons/heroicons/outline';
 import { ionMedalOutline, ionBarbellOutline } from '@ng-icons/ionicons';
 import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
+import { ScoreFilterService } from '../../../shared/score-filter/score-filter.service';
 
 @Component({
   selector: 'app-scores',
@@ -32,6 +33,7 @@ export class ScoresComponent implements OnInit {
   titleService = inject(TitleService);
   scoreService = inject(ScoreService);
   userAuth = inject(UserAuthService);
+  scoreFilter = inject(ScoreFilterService);
   private dockService = inject(DockService);
 
   constructor() {
