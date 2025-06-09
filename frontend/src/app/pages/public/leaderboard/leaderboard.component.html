@@ -1,14 +1,112 @@
 <app-pages>
-  <app-score-filter [showTop3Filter]="true"></app-score-filter>
   <div class="list bg-base-100">
-    @if (scoreService.filteredScoresRXTopN().length > 0) {
-    <div class="divider">
-      {{ `RX - ${scoreFilter.filter().gender} - ${scoreFilter.filter().ageCategory}`}}
+    <div class="sticky top-16 z-5 bg-base-200 shadow-sm">
+      @if (showFilter()) {
+      <div class="grid gap-2 mx-4 grid-cols-5 md:grid-cols-3">
+        <div class="col-span-full">
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Event</legend>
+            <select
+              class="select w-full"
+              (change)="onChangeFilter($event, 'event')"
+            >
+              @for (event of eventsList; track event) {
+              <option
+                [value]="event[0]"
+                [selected]="scoreService.scoreFilter().ordinal == +event[0]"
+              >
+                {{ event[1] }}
+              </option>
+              }
+            </select>
+          </fieldset>
+        </div>
+
+        <div class="">
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Gender</legend>
+            <select
+              class="select w-full"
+              (change)="onChangeFilter($event, 'gender')"
+            >
+              @for (gender of gendersList; track gender) {
+              <option
+                [value]="gender"
+                [selected]="scoreService.scoreFilter().gender === gender"
+              >
+                {{ gender }}
+              </option>
+              }
+            </select>
+          </fieldset>
+        </div>
+        <div class="col-span-2 md:col-span-1">
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Age Category</legend>
+            <select
+              class="select w-full"
+              (change)="onChangeFilter($event, 'ageCategory')"
+            >
+              @for (ageCategory of ageCategoriesList; track ageCategory) {
+              <option
+                [value]="ageCategory"
+                [selected]="
+                  scoreService.scoreFilter().ageCategory === ageCategory
+                "
+              >
+                {{ ageCategory }}
+              </option>
+              }
+            </select>
+          </fieldset>
+        </div>
+        <div class="flex flex-col col-span-2 md:col-span-1">
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Show</legend>
+            <select
+              class="select w-full"
+              (change)="onChangeFilter($event, 'top3')"
+            >
+              <option value="1" [selected]="scoreService.scoreFilter().top3">
+                Top 3 only
+              </option>
+              <option value="0" [selected]="!scoreService.scoreFilter().top3">
+                All
+              </option>
+            </select>
+          </fieldset>
+        </div>
+        <div class="col-span-full">
+          <button
+            type="button"
+            class="btn btn-outline w-full my-4"
+            (click)="showFilter.set(false)"
+          >
+            Hide filters
+          </button>
+        </div>
+      </div>
+      } @else {
+      <div class="mx-4">
+        <button
+          type="button"
+          class="btn btn-outline w-full my-4"
+          (click)="showFilter.set(true)"
+        >
+          Show filters
+        </button>
+      </div>
+      }
     </div>
 
-    @for (score of scoreService.filteredScoresRXTopN(); track $index ) {
+    @if (scoresRX().length > 0) {
+    <div class="divider">
+      {{ `RX - ${scoreService.scoreFilter().gender} - ${scoreService.scoreFilter().ageCategory}`}}
+    </div>
+
+    @for (score of scoresRX(); track $index ) {
     <li
-      class="list-row border mx-2 md:gap-8"
+      class="list-row md:mx-2 md:gap-8 items-center"
       [class.border]="
         userAuth.loggedIn() &&
         userAuth.athlete()?.competitor_id === score.competitor_id
@@ -19,7 +117,14 @@
       "
     >
       <div class="">{{ score.affiliate_rank }}</div>
-      <div class="list-col-grow">{{ score.name }}</div>
+      <div class="list-col-grow">
+        <div class="flex flex-col">
+          <span>{{ score.name }}</span>
+          <span class="text-xs opacity-60 font-semibold">{{
+            score.team_name
+          }}</span>
+        </div>
+      </div>
       <div class="">{{ score.score_display }}</div>
       @if ( score.tiebreak_ms) {
       <div class="md:ml-10 text-xs text-right">
@@ -29,13 +134,13 @@
       }
     </li>
 
-    } } @if (scoreService.filteredScoresScaledTopN().length > 0) {
+    } } @if (scoresScaled().length > 0) {
     <div class="divider">
-      {{ `Scaled - ${scoreFilter.filter().gender} - ${scoreFilter.filter().ageCategory}`}}
+      {{ `Scaled - ${scoreService.scoreFilter().gender} - ${scoreService.scoreFilter().ageCategory}`}}
     </div>
-    @for (score of scoreService.filteredScoresScaledTopN(); track $index ) {
+    @for (score of scoresScaled(); track $index ) {
     <li
-      class="list-row mx-2 md:gap-8"
+      class="list-row md:mx-2 md:gap-8 items-center"
       [class.border]="
         userAuth.loggedIn() &&
         userAuth.athlete()?.competitor_id === score.competitor_id
@@ -46,7 +151,14 @@
       "
     >
       <div class="">{{ score.affiliate_rank }}</div>
-      <div class="list-col-grow">{{ score.name }}</div>
+      <div class="list-col-grow">
+        <div class="flex flex-col">
+          <span>{{ score.name }}</span>
+          <span class="text-xs opacity-60 font-semibold">{{
+            score.team_name
+          }}</span>
+        </div>
+      </div>
       <div class="">{{ score.score_display }}</div>
       @if ( score.tiebreak_ms) {
       <div class="md:ml-10 text-xs text-right">

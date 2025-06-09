@@ -1,62 +1,113 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { apiScoreService } from '../../api/services';
 import { environment } from '../../../environments/environment';
 import { StrictHttpResponse } from '../../api/strict-http-response';
 import { apiScoreModel, apiTeamScoreModel } from '../../api/models';
-import { ScoreFilterService } from './score-filter.service';
+import { HelperFunctionsService } from '../helper-functions.service';
+import { UserAuthService } from '../user-auth/user-auth.service';
+import { ordinalMap } from '../ordinal-mapping';
+
+export const GENDERS = ['M', 'F', 'All'] as const;
+export const AGE_CATEGORIES = [
+  'Open',
+  'Masters',
+  'Masters 55+',
+  'All',
+] as const;
+export type Gender = (typeof GENDERS)[number];
+export type AgeCategory = (typeof AGE_CATEGORIES)[number];
+
+export interface ScoreFilter {
+  ordinal?: number;
+  gender?: Gender;
+  ageCategory?: AgeCategory;
+  top3?: boolean;
+  team?: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScoreService {
-  apiScores = inject(apiScoreService);
-  scoreFilter = inject(ScoreFilterService);
+  private apiScores = inject(apiScoreService);
+  private userAuth = inject(UserAuthService);
 
-  scores = signal<apiScoreModel[]>([]);
-  teamScores = signal<apiTeamScoreModel[]>([]);
-  event = computed<string>(
-    () => environment.ordinalMap[this.scoreFilter.filter().ordinal ?? 1]
-  );
+  private _scores = signal<apiScoreModel[]>([]);
+  private _teamScores = signal<apiTeamScoreModel[]>([]);
+  private _teamScoresTotal = signal<apiTeamScoreModel[]>([]);
 
-  // Main filtered scores
-  // Does not filter for top 3 here
-  filteredScores = computed<apiScoreModel[]>(() => {
-    const { ordinal, gender, ageCategory, top3 } = this.scoreFilter.filter();
-    return this.scores().filter(
-      (value: apiScoreModel) =>
-        value.ordinal === ordinal &&
-        value.gender === gender &&
-        value.age_category === ageCategory
-    );
+  private _scoreFilter = signal<ScoreFilter>({
+    ordinal: 1,
+    gender: 'F',
+    ageCategory: 'Masters',
+    top3: false,
+    team: 'All',
   });
 
-  // Main RX Scores
-  // This filters for Top 3
-  filteredScoresRXTopN = computed<apiScoreModel[]>(() =>
-    this.filteredScores().filter(
-      (value: apiScoreModel) =>
-        value.affiliate_scaled == 'RX' &&
-        (!this.scoreFilter.filter().top3 ||
-          (value.affiliate_rank != null && value.affiliate_rank <= 3))
-    )
+  // Score filter access point
+  readonly scoreFilter = this._scoreFilter.asReadonly();
+
+  // Event name e.g. 25.2 etc.
+  readonly filteredEvent = computed<string>(
+    () => ordinalMap[this.scoreFilter().ordinal || 1]
   );
 
-  // Main Scaled Scores
-  // This filters for Top 3
-  filteredScoresScaledTopN = computed<apiScoreModel[]>(() =>
-    this.filteredScores().filter(
-      (value: apiScoreModel) =>
-        value.affiliate_scaled == 'Scaled' &&
-        (!this.scoreFilter.filter().top3 ||
-          (value.affiliate_rank != null && value.affiliate_rank <= 3))
-    )
+  // Filtered scores for Leaderboards
+  // Filtered by Ordinal, Gender, Age category & Top3
+  // Sorted by rank
+  readonly filteredRankScores = computed<apiScoreModel[]>(() =>
+    this._scores()
+      .filter(
+        (value: apiScoreModel) =>
+          value.ordinal === this.scoreFilter().ordinal &&
+          (this.scoreFilter().gender === 'All' ||
+            value.gender === this.scoreFilter().gender) &&
+          (this.scoreFilter().ageCategory === 'All' ||
+            value.age_category === this.scoreFilter().ageCategory) &&
+          (!this.scoreFilter().top3 ||
+            (!!value.affiliate_rank && value.affiliate_rank <= 3))
+      )
+      .sort(
+        (a: apiScoreModel, b: apiScoreModel) =>
+          (a.affiliate_rank || 0) - (b.affiliate_rank || 0)
+      )
   );
 
-  // Scores sorted by individual score
-  individualScores = computed<apiScoreModel[]>(() =>
-    this.filteredScores().sort(
-      (a: apiScoreModel, b: apiScoreModel) =>
-        b.total_individual_score - a.total_individual_score
+  // Filtered Individual scores for Scores pages
+  // Filtered by Ordinal, Gender, Age category
+  // Sorted by Name
+  readonly filteredIndividualScores = computed<apiScoreModel[]>(() =>
+    this._scores()
+      .filter(
+        (value: apiScoreModel) =>
+          value.ordinal === this.scoreFilter().ordinal &&
+          (this.scoreFilter().gender === 'All' ||
+            value.gender === this.scoreFilter().gender) &&
+          (this.scoreFilter().ageCategory === 'All' ||
+            value.age_category === this.scoreFilter().ageCategory)
+      )
+      .sort((a: apiScoreModel, b: apiScoreModel) => (a.name > b.name ? 1 : -1))
+  );
+
+  // Filtered Team scores
+  // Filtered by Ordinal
+  // Sorted by Team score Descending
+  readonly filteredTeamScores = computed<apiTeamScoreModel[]>(() =>
+    this._teamScores()
+      .filter(
+        (value: apiTeamScoreModel) =>
+          value.ordinal === this.scoreFilter().ordinal
+      )
+      .sort(
+        (a: apiTeamScoreModel, b: apiTeamScoreModel) =>
+          b.total_team_score - a.total_team_score
+      )
+  );
+
+  readonly teamScoresTotal = computed<apiTeamScoreModel[]>(() =>
+    this._teamScoresTotal().sort(
+      (a: apiTeamScoreModel, b: apiTeamScoreModel) =>
+        b.total_team_score - a.total_team_score
     )
   );
 
@@ -68,7 +119,7 @@ export class ScoreService {
       })
       .subscribe({
         next: (response: StrictHttpResponse<apiScoreModel[]>) => {
-          this.scores.set(response.body);
+          this._scores.set(response.body);
         },
         error: (err: any) => {
           console.error(err);
@@ -84,7 +135,21 @@ export class ScoreService {
       })
       .subscribe({
         next: (response: StrictHttpResponse<apiTeamScoreModel[]>) => {
-          this.teamScores.set(response.body);
+          this._teamScores.set(response.body);
+        },
+        error: (err: any) => {
+          console.error(err);
+        },
+      });
+
+    this.apiScores
+      .getTeamScoresTotalScoreTeamTotalAffiliateIdYearGet$Response({
+        affiliate_id: environment.affiliateId,
+        year: environment.year,
+      })
+      .subscribe({
+        next: (response: StrictHttpResponse<apiTeamScoreModel[]>) => {
+          this._teamScoresTotal.set(response.body);
         },
         error: (err: any) => {
           console.error(err);
@@ -92,5 +157,27 @@ export class ScoreService {
       });
   }
 
-  constructor() {}
+  setFilter(filter: ScoreFilter) {
+    this._scoreFilter.update((value: ScoreFilter) => {
+      return {
+        ordinal: filter.ordinal || value.ordinal,
+        gender: filter.gender || value.gender,
+        ageCategory: filter.ageCategory || value.ageCategory,
+        top3: filter.top3 != undefined ? filter.top3 : value.top3,
+        team: filter.team || value.team,
+      };
+    });
+  }
+
+  constructor() {
+    effect(() => {
+      if (this.userAuth.athlete()) {
+        this.setFilter({
+          gender: this.userAuth.athlete()?.gender,
+          ageCategory: this.userAuth.athlete()?.age_category,
+          team: this.userAuth.athlete()?.team_name,
+        });
+      }
+    });
+  }
 }

@@ -16,7 +16,6 @@ import { StrictHttpResponse } from '../../api/strict-http-response';
 import { ToastService } from '../toast/toast.service';
 import { ModalService } from '../modal/modal.service';
 import { apiErrorMap } from '../error-mapping';
-import { ScoreFilterService } from '../score-filter/score-filter.service';
 
 @Injectable({
   providedIn: 'root',

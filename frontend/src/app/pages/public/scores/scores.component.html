@@ -1,41 +1,120 @@
 <app-pages>
-  <app-score-filter [showTop3Filter]="false"></app-score-filter>
-
-  <div class="bg-base-200 pb-4">
-    <fieldset class="mx-4 fieldset rounded-box border">
-      <legend class="fieldset-legend ml-6">Legend</legend>
-      <div class="flex flex-row justify-evenly items-center gap-2">
-        <div class="flex flex-col items-center text-center">
-          <ng-icon name="heroHeart" />
-          <span>Appreciation Score</span>
-        </div>
-        <div class="flex flex-col items-center text-center">
-          <ng-icon name="heroScale" />
-          <span>Judge Score</span>
-        </div>
-        <div class="flex flex-col items-center text-center">
-          <ng-icon name="heroHandRaised" />
-          <span>Attendance Score</span>
-        </div>
-        <div class="flex flex-col items-center text-center">
-          <ng-icon name="ionMedalOutline" />
-          <span>Top 3 Score</span>
-        </div>
-        <div class="flex flex-col items-center text-center">
-          <ng-icon name="ionBarbellOutline" />
-          <span>Participation Score</span>
-        </div>
+  <div class="sticky top-16 z-5 bg-base-200 shadow-sm">
+    @if (showFilter()) {
+    <div class="grid gap-2 mx-4 grid-cols-5 md:grid-cols-3">
+      <div class="col-span-full">
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Event</legend>
+          <select
+            class="select w-full"
+            (change)="onChangeFilter($event, 'event')"
+          >
+            @for (event of eventsList; track event) {
+            <option
+              [value]="event[0]"
+              [selected]="scoreService.scoreFilter().ordinal == +event[0]"
+            >
+              {{ event[1] }}
+            </option>
+            }
+          </select>
+        </fieldset>
       </div>
-    </fieldset>
+
+      <div class="">
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Gender</legend>
+          <select
+            class="select w-full"
+            (change)="onChangeFilter($event, 'gender')"
+          >
+            @for (gender of gendersList; track gender) {
+            <option
+              [value]="gender"
+              [selected]="scoreService.scoreFilter().gender === gender"
+            >
+              {{ gender }}
+            </option>
+            }
+          </select>
+        </fieldset>
+      </div>
+      <div class="col-span-2 md:col-span-1">
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Age Category</legend>
+          <select
+            class="select w-full"
+            (change)="onChangeFilter($event, 'ageCategory')"
+          >
+            @for (ageCategory of ageCategoriesList; track ageCategory) {
+            <option
+              [value]="ageCategory"
+              [selected]="
+                scoreService.scoreFilter().ageCategory === ageCategory
+              "
+            >
+              {{ ageCategory }}
+            </option>
+            }
+          </select>
+        </fieldset>
+      </div>
+      <div class="col-span-2 md:col-span-1">
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Team</legend>
+          <select
+            class="select w-full"
+            (change)="onChangeFilter($event, 'team')"
+          >
+            @for (team of teams(); track team) {
+            <option
+              [value]="team"
+              [selected]="scoreService.scoreFilter().team === team"
+            >
+              {{ team }}
+            </option>
+            }
+            <option
+              value="All"
+              [selected]="scoreService.scoreFilter().team === 'All'"
+            >
+              All
+            </option>
+          </select>
+        </fieldset>
+      </div>
+
+      <div class="col-span-full">
+        <button
+          type="button"
+          class="btn btn-outline w-full my-4"
+          (click)="showFilter.set(false)"
+        >
+          Hide filters
+        </button>
+      </div>
+    </div>
+    } @else {
+    <div class="mx-4">
+      <button
+        type="button"
+        class="btn btn-outline w-full my-4"
+        (click)="showFilter.set(true)"
+      >
+        Show filters
+      </button>
+    </div>
+    }
   </div>
+  <app-score-legend></app-score-legend>
 
   <div class="list bg-base-100">
     <div class="divider">
-      {{ `${scoreFilter.filter().gender} - ${scoreFilter.filter().ageCategory}`}}
+      {{ scoreFilterDisplay() }}
     </div>
-    @for (score of scoreService.individualScores(); track $index ) {
+    @for (score of showScores(); track $index ) {
     <li
-      class="list-row mx-2 items-center"
+      class="list-row md:mx-2 items-center"
       [class.border]="
         userAuth.loggedIn() &&
         userAuth.athlete()?.competitor_id === score.competitor_id
@@ -81,7 +160,6 @@
       </div>
       }
       <div class="flex flex-col items-center">
-        <!-- <ng-icon name="heroScale" /> -->
         <span>Total</span>
         <span>{{ score.total_individual_score }}</span>
       </div>
