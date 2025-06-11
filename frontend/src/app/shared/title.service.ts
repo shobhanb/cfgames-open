@@ -1,11 +1,10 @@
-import { Injectable, input, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TitleService {
+  pageTitle = signal('Default title');
 
-  pageTitle = signal('Default title') 
-
-  constructor() { }
+  constructor() {}
 }

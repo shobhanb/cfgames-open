@@ -12,6 +12,7 @@ from .service import (
     assign_db_athlete_to_team,
     get_affiliate_athletes_list_unassigned,
     get_db_athlete_detail,
+    get_user_data,
     random_assign_db_athletes,
 )
 
@@ -23,7 +24,7 @@ async def get_my_athlete_data(
     db_session: db_dependency,
     user: current_user_dependency,
 ) -> Athlete:
-    return await Athlete.find_or_raise(async_session=db_session, competitor_id=user.athlete_id)
+    return await get_user_data(db_session=db_session, competitor_id=user.athlete_id)
 
 
 @athlete_router.get("/list", status_code=status.HTTP_200_OK, response_model=list[AffiliateAthlete])

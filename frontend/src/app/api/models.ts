@@ -18,12 +18,14 @@ export type { apiBodyVerifyRequestTokenAuthRequestVerifyTokenPost } from './mode
 export type { apiBodyVerifyVerifyAuthVerifyPost } from './models/api-body-verify-verify-auth-verify-post';
 export type { apiErrorModel } from './models/api-error-model';
 export type { apiHttpValidationError } from './models/api-http-validation-error';
+export type { apiIndividualScoreModel } from './models/api-individual-score-model';
+export type { apiLeaderboardScoreModel } from './models/api-leaderboard-score-model';
 export type { apiOAuth2AuthorizeResponse } from './models/api-o-auth-2-authorize-response';
-export type { apiScoreModel } from './models/api-score-model';
 export type { apiSideScoreModel } from './models/api-side-score-model';
 export type { apiTeamScoreModel } from './models/api-team-score-model';
 export type { apiTeamsModel } from './models/api-teams-model';
 export type { apiUserCreate } from './models/api-user-create';
 export type { apiUserRead } from './models/api-user-read';
+export type { apiUserScoreModel } from './models/api-user-score-model';
 export type { apiUserUpdate } from './models/api-user-update';
 export type { apiValidationError } from './models/api-validation-error';

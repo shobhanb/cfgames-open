@@ -10,16 +10,16 @@ import { RequestBuilder } from '../../request-builder';
 
 import { apiTeamScoreModel } from '../../models/api-team-score-model';
 
-export interface GetTeamScoresTotalScoreTeamTotalAffiliateIdYearGet$Params {
+export interface GetTeamScoresScoreTeamGet$Params {
   affiliate_id: number;
   year: number;
 }
 
-export function getTeamScoresTotalScoreTeamTotalAffiliateIdYearGet(http: HttpClient, rootUrl: string, params: GetTeamScoresTotalScoreTeamTotalAffiliateIdYearGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiTeamScoreModel>>> {
-  const rb = new RequestBuilder(rootUrl, getTeamScoresTotalScoreTeamTotalAffiliateIdYearGet.PATH, 'get');
+export function getTeamScoresScoreTeamGet(http: HttpClient, rootUrl: string, params: GetTeamScoresScoreTeamGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiTeamScoreModel>>> {
+  const rb = new RequestBuilder(rootUrl, getTeamScoresScoreTeamGet.PATH, 'get');
   if (params) {
-    rb.path('affiliate_id', params.affiliate_id, {});
-    rb.path('year', params.year, {});
+    rb.query('affiliate_id', params.affiliate_id, {});
+    rb.query('year', params.year, {});
   }
 
   return http.request(
@@ -32,4 +32,4 @@ export function getTeamScoresTotalScoreTeamTotalAffiliateIdYearGet(http: HttpCli
   );
 }
 
-getTeamScoresTotalScoreTeamTotalAffiliateIdYearGet.PATH = '/score/team/total/{affiliate_id}/{year}';
+getTeamScoresScoreTeamGet.PATH = '/score/team';

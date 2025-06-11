@@ -13,7 +13,7 @@
               @for (event of eventsList; track event) {
               <option
                 [value]="event[0]"
-                [selected]="scoreService.scoreFilter().ordinal == +event[0]"
+                [selected]="scoreFilter.filter().ordinal == +event[0]"
               >
                 {{ event[1] }}
               </option>
@@ -32,7 +32,7 @@
               @for (gender of gendersList; track gender) {
               <option
                 [value]="gender"
-                [selected]="scoreService.scoreFilter().gender === gender"
+                [selected]="scoreFilter.filter().gender === gender"
               >
                 {{ gender }}
               </option>
@@ -50,9 +50,7 @@
               @for (ageCategory of ageCategoriesList; track ageCategory) {
               <option
                 [value]="ageCategory"
-                [selected]="
-                  scoreService.scoreFilter().ageCategory === ageCategory
-                "
+                [selected]="scoreFilter.filter().ageCategory === ageCategory"
               >
                 {{ ageCategory }}
               </option>
@@ -67,10 +65,10 @@
               class="select w-full"
               (change)="onChangeFilter($event, 'top3')"
             >
-              <option value="1" [selected]="scoreService.scoreFilter().top3">
+              <option value="1" [selected]="scoreFilter.filter().top3">
                 Top 3 only
               </option>
-              <option value="0" [selected]="!scoreService.scoreFilter().top3">
+              <option value="0" [selected]="!scoreFilter.filter().top3">
                 All
               </option>
             </select>
@@ -101,17 +99,17 @@
 
     @if (scoresRX().length > 0) {
     <div class="divider">
-      {{ `RX - ${scoreService.scoreFilter().gender} - ${scoreService.scoreFilter().ageCategory}`}}
+      {{ `RX - ${scoreFilter.filter().gender} - ${scoreFilter.filter().ageCategory}`}}
     </div>
 
     @for (score of scoresRX(); track $index ) {
     <li
-      class="list-row md:mx-2 md:gap-8 items-center"
+      class="list-row mx-1 md:mx-4 md:gap-8 items-center"
       [class.border]="
         userAuth.loggedIn() &&
         userAuth.athlete()?.competitor_id === score.competitor_id
       "
-      [class.border-accent]="
+      [class.bg-base-300]="
         userAuth.loggedIn() &&
         userAuth.athlete()?.competitor_id === score.competitor_id
       "
@@ -136,16 +134,16 @@
 
     } } @if (scoresScaled().length > 0) {
     <div class="divider">
-      {{ `Scaled - ${scoreService.scoreFilter().gender} - ${scoreService.scoreFilter().ageCategory}`}}
+      {{ `Scaled - ${scoreFilter.filter().gender} - ${scoreFilter.filter().ageCategory}`}}
     </div>
     @for (score of scoresScaled(); track $index ) {
     <li
-      class="list-row md:mx-2 md:gap-8 items-center"
+      class="list-row mx-1 md:mx-4 md:gap-8 items-center"
       [class.border]="
         userAuth.loggedIn() &&
         userAuth.athlete()?.competitor_id === score.competitor_id
       "
-      [class.border-accent]="
+      [class.bg-base-300]="
         userAuth.loggedIn() &&
         userAuth.athlete()?.competitor_id === score.competitor_id
       "

@@ -12,14 +12,17 @@
             <option
               [value]="event[0]"
               [selected]="
-                !showTotalScores() &&
-                scoreService.scoreFilter().ordinal == +event[0]
+                !scoreFilter.filter().ordinalTotals &&
+                scoreFilter.filter().ordinal == +event[0]
               "
             >
               {{ event[1] }}
             </option>
             }
-            <option value="Total" [selected]="[showTotalScores()]">
+            <option
+              value="Total"
+              [selected]="scoreFilter.filter().ordinalTotals"
+            >
               Total
             </option>
           </select>
@@ -29,13 +32,13 @@
   </div>
   <app-score-legend></app-score-legend>
   <div class="list bg-base-100">
-    @for (score of teamScores(); track $index ) {
+    @for (score of aggregatedTeamScores(); track $index ) {
     <li
-      class="list-row md:mx-2 items-center"
+      class="list-row mx-1 md:mx-4 items-center"
       [class.border]="
         userAuth.loggedIn() && userAuth.athlete()?.team_name === score.team_name
       "
-      [class.border-accent]="
+      [class.bg-base-300]="
         userAuth.loggedIn() && userAuth.athlete()?.team_name === score.team_name
       "
     >

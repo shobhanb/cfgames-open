@@ -8,13 +8,6 @@ import {
 } from '@angular/core';
 import { PagesComponent } from '../../../shared/pages/pages.component';
 import { TitleService } from '../../../shared/title.service';
-import {
-  AGE_CATEGORIES,
-  AgeCategory,
-  Gender,
-  GENDERS,
-  ScoreService,
-} from '../../../shared/score-filter/score.service';
 import { DockService } from '../../../shared/pages/dock/dock.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
@@ -25,9 +18,21 @@ import {
 import { ionMedalOutline, ionBarbellOutline } from '@ng-icons/ionicons';
 import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
 import { ScoreLegendComponent } from '../../../shared/score-legend/score-legend.component';
-import { apiScoreModel } from '../../../api/models';
 import { HelperFunctionsService } from '../../../shared/helper-functions.service';
 import { environment } from '../../../../environments/environment';
+import {
+  AGE_CATEGORIES,
+  AgeCategory,
+  Gender,
+  GENDERS,
+  ScoreFilterService,
+} from '../../../shared/score-filter.service';
+import { apiScoreService } from '../../../api/services';
+import {
+  apiIndividualScoreModel,
+  apiTeamScoreModel,
+} from '../../../api/models';
+import { StrictHttpResponse } from '../../../api/strict-http-response';
 
 @Component({
   selector: 'app-scores',
@@ -48,7 +53,8 @@ export class ScoresComponent implements OnInit {
   private titleService = inject(TitleService);
   private dockService = inject(DockService);
   private helperFunctions = inject(HelperFunctionsService);
-  scoreService = inject(ScoreService);
+  private apiScore = inject(apiScoreService);
+  scoreFilter = inject(ScoreFilterService);
   userAuth = inject(UserAuthService);
 
   showFilter = signal<boolean>(false);
@@ -56,53 +62,102 @@ export class ScoresComponent implements OnInit {
   gendersList = GENDERS;
   ageCategoriesList = AGE_CATEGORIES;
 
+  private _individualScores = signal<apiIndividualScoreModel[]>([]);
+
+  readonly teams = computed<string[]>(() => [
+    ...this._individualScores()
+      .map((value: apiIndividualScoreModel) => value.team_name)
+      .filter(this.helperFunctions.filterUnique)
+      .sort(),
+    'All',
+  ]);
+
+  readonly filteredIndividualScores = computed<apiIndividualScoreModel[]>(() =>
+    this._individualScores().filter(
+      (value: apiIndividualScoreModel) =>
+        (this.scoreFilter.filter().ordinalTotals ||
+          value.ordinal === this.scoreFilter.filter().ordinal) &&
+        (this.scoreFilter.filter().allGenders ||
+          value.gender === this.scoreFilter.filter().gender) &&
+        (this.scoreFilter.filter().allAgeCategories ||
+          value.age_category === this.scoreFilter.filter().ageCategory) &&
+        (this.scoreFilter.filter().team === 'All' ||
+          this.scoreFilter.filter().team === value.team_name)
+    )
+  );
+
+  readonly aggregatedIndividualScores = computed<apiIndividualScoreModel[]>(
+    () => {
+      const scoreMap = new Map<number, apiIndividualScoreModel>();
+
+      this.filteredIndividualScores().forEach(
+        (score: apiIndividualScoreModel) => {
+          const existingScore = scoreMap.get(score.competitor_id);
+
+          if (!existingScore) {
+            scoreMap.set(score.competitor_id, { ...score });
+          } else {
+            existingScore.appreciation_score += score.appreciation_score;
+            existingScore.judge_score += score.judge_score;
+            existingScore.attendance_score += score.attendance_score;
+            existingScore.top3_score += score.top3_score;
+            existingScore.participation_score += score.participation_score;
+            existingScore.total_individual_score +=
+              score.total_individual_score;
+          }
+        }
+      );
+
+      return Array.from(scoreMap.values()).sort((a, b) =>
+        a.name > b.name ? 1 : -1
+      );
+    }
+  );
+
   scoreFilterDisplay = computed<string>(() => {
-    const filter = this.scoreService.scoreFilter();
+    const filter = this.scoreFilter.filter();
 
     let display = '';
-    if (filter.gender && filter.gender !== 'All') {
+    if (!filter.allGenders) {
       display += filter.gender;
     }
-    if (filter.ageCategory && filter.ageCategory !== 'All') {
+    if (!filter.allAgeCategories) {
       display += (display ? ' - ' : '') + filter.ageCategory;
     }
-    if (filter.team && filter.team !== 'All') {
+    if (filter.team !== 'All') {
       display += (display ? ' - ' : '') + filter.team;
     }
 
     return display === '' ? 'All' : display;
   });
 
-  readonly teams = computed<string[]>(() =>
-    this.scoreService
-      .filteredIndividualScores()
-      .map((value: apiScoreModel) => value.team_name || '')
-      .filter(this.helperFunctions.filterUnique)
-      .sort()
-  );
-
-  readonly showScores = computed<apiScoreModel[]>(() =>
-    this.scoreService
-      .filteredIndividualScores()
-      .filter(
-        (value: apiScoreModel) =>
-          this.scoreService.scoreFilter().team === 'All' ||
-          value.team_name === this.scoreService.scoreFilter().team
-      )
-      .sort((a: apiScoreModel, b: apiScoreModel) => (a.name > b.name ? 1 : -1))
-  );
-
   constructor() {
     this.dockService.setPublic();
     effect(() => {
       this.titleService.pageTitle.set(
-        `${this.scoreService.filteredEvent()} Scores`
+        `${
+          this.scoreFilter.filter().ordinalTotals
+            ? 'Total'
+            : this.scoreFilter.filteredEvent()
+        } Scores`
       );
     });
   }
 
   ngOnInit(): void {
-    this.scoreService.getScores();
+    this.apiScore
+      .getIndividualScoresScoreIndividualGet$Response({
+        affiliate_id: environment.affiliateId,
+        year: environment.year,
+      })
+      .subscribe({
+        next: (response: StrictHttpResponse<apiIndividualScoreModel[]>) => {
+          this._individualScores.set(response.body);
+        },
+        error: (err: any) => {
+          console.error(err);
+        },
+      });
   }
 
   onChangeFilter(
@@ -112,18 +167,38 @@ export class ScoresComponent implements OnInit {
     const target = event.target as HTMLSelectElement;
     if (target.value) {
       if (type === 'event') {
-        this.scoreService.setFilter({ ordinal: Number(target.value) });
+        if (target.value === 'Total') {
+          this.scoreFilter.setFilter({ ordinalTotals: true });
+        } else {
+          this.scoreFilter.setFilter({
+            ordinalTotals: false,
+            ordinal: Number(target.value),
+          });
+        }
       } else if (type === 'gender') {
-        this.scoreService.setFilter({ gender: target.value as Gender });
+        if (target.value === 'All') {
+          this.scoreFilter.setFilter({ allGenders: true });
+        } else {
+          this.scoreFilter.setFilter({
+            allGenders: false,
+            gender: target.value as Gender,
+          });
+        }
       } else if (type === 'ageCategory') {
-        this.scoreService.setFilter({
-          ageCategory: target.value as AgeCategory,
-        });
+        if (target.value === 'All') {
+          this.scoreFilter.setFilter({ allAgeCategories: true });
+        } else {
+          this.scoreFilter.setFilter({
+            allAgeCategories: false,
+            ageCategory: target.value as AgeCategory,
+          });
+        }
       } else if (type === 'team') {
-        this.scoreService.setFilter({
+        this.scoreFilter.setFilter({
           team: target.value,
         });
       }
     }
+    console.log(this.filteredIndividualScores());
   }
 }

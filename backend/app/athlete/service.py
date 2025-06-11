@@ -18,6 +18,15 @@ from .models import Athlete
 log = logging.getLogger("uvicorn.error")
 
 
+async def get_user_data(
+    db_session: AsyncSession,
+    competitor_id: int,
+) -> Athlete:
+    stmt = select(Athlete).where(Athlete.competitor_id == competitor_id).order_by(Athlete.year.desc()).limit(1)
+    ret = await db_session.execute(stmt)
+    return ret.scalar_one()
+
+
 async def get_affiliate_athletes_list_unassigned(
     db_session: AsyncSession,
     affiliate_id: int | None = None,

@@ -1,12 +1,13 @@
 import logging
-from typing import Any, Literal
+from typing import Any
 
 from fastapi import APIRouter, status
 
 from app.database.dependencies import db_dependency
+from app.user.dependencies import current_verified_user_dependency
 
-from .schemas import ScoreModel, TeamScoreModel
-from .service import get_db_scores, get_db_team_scores_all, get_db_team_scores_total
+from .schemas import IndividualScoreModel, LeaderboardScoreModel, TeamScoreModel, UserScoreModel
+from .service import get_db_individual_scores, get_db_leaderboard, get_db_team_scores, get_my_db_scores
 
 log = logging.getLogger("uvicorn.error")
 
@@ -14,43 +15,16 @@ score_router = APIRouter(prefix="/score", tags=["score"])
 
 
 @score_router.get(
-    "/{affiliate_id}/{year}",
+    "/leaderboard",
     status_code=status.HTTP_200_OK,
-    response_model=list[ScoreModel],
+    response_model=list[LeaderboardScoreModel],
 )
-async def get_scores(  # noqa: PLR0913
-    db_session: db_dependency,
-    affiliate_id: int,
-    year: int,
-    ordinal: int | None = None,
-    gender: Literal["M", "F"] | None = None,
-    age_category: Literal["Open", "Masters", "Masters 55+"] | None = None,
-    affiliate_scaled: Literal["RX", "Scaled"] | None = None,
-    top_n: int | None = None,
-) -> list[dict[str, Any]]:
-    return await get_db_scores(
-        db_session=db_session,
-        year=year,
-        affiliate_id=affiliate_id,
-        ordinal=ordinal,
-        gender=gender,
-        age_category=age_category,
-        affiliate_scaled=affiliate_scaled,
-        top_n=top_n,
-    )
-
-
-@score_router.get(
-    "/team/all/{affiliate_id}/{year}",
-    status_code=status.HTTP_200_OK,
-    response_model=list[TeamScoreModel],
-)
-async def get_team_scores_all(
+async def get_leaderboard_scores(
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
 ) -> list[dict[str, Any]]:
-    return await get_db_team_scores_all(
+    return await get_db_leaderboard(
         db_session=db_session,
         year=year,
         affiliate_id=affiliate_id,
@@ -58,17 +32,42 @@ async def get_team_scores_all(
 
 
 @score_router.get(
-    "/team/total/{affiliate_id}/{year}",
+    "/individual",
     status_code=status.HTTP_200_OK,
-    response_model=list[TeamScoreModel],
+    response_model=list[IndividualScoreModel],
 )
-async def get_team_scores_total(
+async def get_individual_scores(
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
 ) -> list[dict[str, Any]]:
-    return await get_db_team_scores_total(
+    return await get_db_individual_scores(
         db_session=db_session,
         year=year,
         affiliate_id=affiliate_id,
     )
+
+
+@score_router.get(
+    "/team",
+    status_code=status.HTTP_200_OK,
+    response_model=list[TeamScoreModel],
+)
+async def get_team_scores(
+    db_session: db_dependency,
+    affiliate_id: int,
+    year: int,
+) -> list[dict[str, Any]]:
+    return await get_db_team_scores(
+        db_session=db_session,
+        year=year,
+        affiliate_id=affiliate_id,
+    )
+
+
+@score_router.get("/me", status_code=status.HTTP_200_OK, response_model=list[UserScoreModel])
+async def get_my_scores(
+    db_session: db_dependency,
+    user: current_verified_user_dependency,
+) -> list[dict[str, Any]]:
+    return await get_my_db_scores(db_session=db_session, competitor_id=user.athlete_id)

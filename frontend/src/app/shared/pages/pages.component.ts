@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component } from '@angular/core';
 import { DockComponent } from './dock/dock.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 

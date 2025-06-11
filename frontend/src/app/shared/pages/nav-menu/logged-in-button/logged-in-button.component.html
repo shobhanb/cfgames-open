@@ -18,6 +18,7 @@
     <li>{{ "Category: " + userAuth.athlete()?.age_category }}</li>
     <li>{{ userAuth.user()!.affiliate }}</li>
     <li>{{ "CF ID: " + userAuth.user()!.athlete_id }}</li>
+    <li>{{ userAuth.athlete()?.team_name }}</li>
     @if (!userAuth.user()?.is_verified) {
     <li class="text-error">Email not verified!!</li>
     <li>

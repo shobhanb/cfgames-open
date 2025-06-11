@@ -15,14 +15,7 @@
     <ng-icon name="heroTrophy" />
     <span class="dock-label">Leaderboard</span>
   </button>
-  <button
-    type="button"
-    routerLink="/public/team"
-    routerLinkActive="dock-active"
-  >
-    <ng-icon name="heroUserGroup" />
-    <span class="dock-label">Teams</span>
-  </button>
+
   <button
     type="button"
     routerLink="/public/scores"
@@ -30,6 +23,14 @@
   >
     <ng-icon name="heroChartBar" />
     <span class="dock-label">Scores</span>
+  </button>
+  <button
+    type="button"
+    routerLink="/public/team"
+    routerLinkActive="dock-active"
+  >
+    <ng-icon name="heroUserGroup" />
+    <span class="dock-label">Teams</span>
   </button>
   @if ( userAuth.loggedIn() ) {
   <button type="button" (click)="onClickMe()">

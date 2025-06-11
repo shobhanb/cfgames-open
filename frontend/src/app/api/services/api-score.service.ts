@@ -11,14 +11,18 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { getScoresScoreAffiliateIdYearGet } from '../fn/score/get-scores-score-affiliate-id-year-get';
-import { GetScoresScoreAffiliateIdYearGet$Params } from '../fn/score/get-scores-score-affiliate-id-year-get';
-import { getTeamScoresAllScoreTeamAllAffiliateIdYearGet } from '../fn/score/get-team-scores-all-score-team-all-affiliate-id-year-get';
-import { GetTeamScoresAllScoreTeamAllAffiliateIdYearGet$Params } from '../fn/score/get-team-scores-all-score-team-all-affiliate-id-year-get';
-import { getTeamScoresTotalScoreTeamTotalAffiliateIdYearGet } from '../fn/score/get-team-scores-total-score-team-total-affiliate-id-year-get';
-import { GetTeamScoresTotalScoreTeamTotalAffiliateIdYearGet$Params } from '../fn/score/get-team-scores-total-score-team-total-affiliate-id-year-get';
-import { apiScoreModel } from '../models/api-score-model';
+import { getIndividualScoresScoreIndividualGet } from '../fn/score/get-individual-scores-score-individual-get';
+import { GetIndividualScoresScoreIndividualGet$Params } from '../fn/score/get-individual-scores-score-individual-get';
+import { getLeaderboardScoresScoreLeaderboardGet } from '../fn/score/get-leaderboard-scores-score-leaderboard-get';
+import { GetLeaderboardScoresScoreLeaderboardGet$Params } from '../fn/score/get-leaderboard-scores-score-leaderboard-get';
+import { getMyScoresScoreMeGet } from '../fn/score/get-my-scores-score-me-get';
+import { GetMyScoresScoreMeGet$Params } from '../fn/score/get-my-scores-score-me-get';
+import { getTeamScoresScoreTeamGet } from '../fn/score/get-team-scores-score-team-get';
+import { GetTeamScoresScoreTeamGet$Params } from '../fn/score/get-team-scores-score-team-get';
+import { apiIndividualScoreModel } from '../models/api-individual-score-model';
+import { apiLeaderboardScoreModel } from '../models/api-leaderboard-score-model';
 import { apiTeamScoreModel } from '../models/api-team-score-model';
+import { apiUserScoreModel } from '../models/api-user-score-model';
 
 @Injectable({ providedIn: 'root' })
 export class apiScoreService extends BaseService {
@@ -26,102 +30,135 @@ export class apiScoreService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getScoresScoreAffiliateIdYearGet()` */
-  static readonly GetScoresScoreAffiliateIdYearGetPath = '/score/{affiliate_id}/{year}';
+  /** Path part for operation `getLeaderboardScoresScoreLeaderboardGet()` */
+  static readonly GetLeaderboardScoresScoreLeaderboardGetPath = '/score/leaderboard';
 
   /**
-   * Get Scores.
+   * Get Leaderboard Scores.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getScoresScoreAffiliateIdYearGet()` instead.
+   * To access only the response body, use `getLeaderboardScoresScoreLeaderboardGet()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getScoresScoreAffiliateIdYearGet$Response(params: GetScoresScoreAffiliateIdYearGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiScoreModel>>> {
-    return getScoresScoreAffiliateIdYearGet(this.http, this.rootUrl, params, context);
+  getLeaderboardScoresScoreLeaderboardGet$Response(params: GetLeaderboardScoresScoreLeaderboardGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiLeaderboardScoreModel>>> {
+    return getLeaderboardScoresScoreLeaderboardGet(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Get Scores.
+   * Get Leaderboard Scores.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getScoresScoreAffiliateIdYearGet$Response()` instead.
+   * To access the full response (for headers, for example), `getLeaderboardScoresScoreLeaderboardGet$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getScoresScoreAffiliateIdYearGet(params: GetScoresScoreAffiliateIdYearGet$Params, context?: HttpContext): Observable<Array<apiScoreModel>> {
-    return this.getScoresScoreAffiliateIdYearGet$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<apiScoreModel>>): Array<apiScoreModel> => r.body)
+  getLeaderboardScoresScoreLeaderboardGet(params: GetLeaderboardScoresScoreLeaderboardGet$Params, context?: HttpContext): Observable<Array<apiLeaderboardScoreModel>> {
+    return this.getLeaderboardScoresScoreLeaderboardGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiLeaderboardScoreModel>>): Array<apiLeaderboardScoreModel> => r.body)
     );
   }
 
-  /** Path part for operation `getTeamScoresAllScoreTeamAllAffiliateIdYearGet()` */
-  static readonly GetTeamScoresAllScoreTeamAllAffiliateIdYearGetPath = '/score/team/all/{affiliate_id}/{year}';
+  /** Path part for operation `getIndividualScoresScoreIndividualGet()` */
+  static readonly GetIndividualScoresScoreIndividualGetPath = '/score/individual';
 
   /**
-   * Get Team Scores All.
+   * Get Individual Scores.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getTeamScoresAllScoreTeamAllAffiliateIdYearGet()` instead.
+   * To access only the response body, use `getIndividualScoresScoreIndividualGet()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getTeamScoresAllScoreTeamAllAffiliateIdYearGet$Response(params: GetTeamScoresAllScoreTeamAllAffiliateIdYearGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiTeamScoreModel>>> {
-    return getTeamScoresAllScoreTeamAllAffiliateIdYearGet(this.http, this.rootUrl, params, context);
+  getIndividualScoresScoreIndividualGet$Response(params: GetIndividualScoresScoreIndividualGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiIndividualScoreModel>>> {
+    return getIndividualScoresScoreIndividualGet(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Get Team Scores All.
+   * Get Individual Scores.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getTeamScoresAllScoreTeamAllAffiliateIdYearGet$Response()` instead.
+   * To access the full response (for headers, for example), `getIndividualScoresScoreIndividualGet$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getTeamScoresAllScoreTeamAllAffiliateIdYearGet(params: GetTeamScoresAllScoreTeamAllAffiliateIdYearGet$Params, context?: HttpContext): Observable<Array<apiTeamScoreModel>> {
-    return this.getTeamScoresAllScoreTeamAllAffiliateIdYearGet$Response(params, context).pipe(
+  getIndividualScoresScoreIndividualGet(params: GetIndividualScoresScoreIndividualGet$Params, context?: HttpContext): Observable<Array<apiIndividualScoreModel>> {
+    return this.getIndividualScoresScoreIndividualGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiIndividualScoreModel>>): Array<apiIndividualScoreModel> => r.body)
+    );
+  }
+
+  /** Path part for operation `getTeamScoresScoreTeamGet()` */
+  static readonly GetTeamScoresScoreTeamGetPath = '/score/team';
+
+  /**
+   * Get Team Scores.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getTeamScoresScoreTeamGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getTeamScoresScoreTeamGet$Response(params: GetTeamScoresScoreTeamGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiTeamScoreModel>>> {
+    return getTeamScoresScoreTeamGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get Team Scores.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getTeamScoresScoreTeamGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getTeamScoresScoreTeamGet(params: GetTeamScoresScoreTeamGet$Params, context?: HttpContext): Observable<Array<apiTeamScoreModel>> {
+    return this.getTeamScoresScoreTeamGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<apiTeamScoreModel>>): Array<apiTeamScoreModel> => r.body)
     );
   }
 
-  /** Path part for operation `getTeamScoresTotalScoreTeamTotalAffiliateIdYearGet()` */
-  static readonly GetTeamScoresTotalScoreTeamTotalAffiliateIdYearGetPath = '/score/team/total/{affiliate_id}/{year}';
+  /** Path part for operation `getMyScoresScoreMeGet()` */
+  static readonly GetMyScoresScoreMeGetPath = '/score/me';
 
   /**
-   * Get Team Scores Total.
+   * Get My Scores.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getTeamScoresTotalScoreTeamTotalAffiliateIdYearGet()` instead.
+   * To access only the response body, use `getMyScoresScoreMeGet()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getTeamScoresTotalScoreTeamTotalAffiliateIdYearGet$Response(params: GetTeamScoresTotalScoreTeamTotalAffiliateIdYearGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiTeamScoreModel>>> {
-    return getTeamScoresTotalScoreTeamTotalAffiliateIdYearGet(this.http, this.rootUrl, params, context);
+  getMyScoresScoreMeGet$Response(params?: GetMyScoresScoreMeGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiUserScoreModel>>> {
+    return getMyScoresScoreMeGet(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Get Team Scores Total.
+   * Get My Scores.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getTeamScoresTotalScoreTeamTotalAffiliateIdYearGet$Response()` instead.
+   * To access the full response (for headers, for example), `getMyScoresScoreMeGet$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getTeamScoresTotalScoreTeamTotalAffiliateIdYearGet(params: GetTeamScoresTotalScoreTeamTotalAffiliateIdYearGet$Params, context?: HttpContext): Observable<Array<apiTeamScoreModel>> {
-    return this.getTeamScoresTotalScoreTeamTotalAffiliateIdYearGet$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<apiTeamScoreModel>>): Array<apiTeamScoreModel> => r.body)
+  getMyScoresScoreMeGet(params?: GetMyScoresScoreMeGet$Params, context?: HttpContext): Observable<Array<apiUserScoreModel>> {
+    return this.getMyScoresScoreMeGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiUserScoreModel>>): Array<apiUserScoreModel> => r.body)
     );
   }
 

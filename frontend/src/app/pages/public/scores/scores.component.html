@@ -12,11 +12,20 @@
             @for (event of eventsList; track event) {
             <option
               [value]="event[0]"
-              [selected]="scoreService.scoreFilter().ordinal == +event[0]"
+              [selected]="
+                !scoreFilter.filter().ordinalTotals &&
+                scoreFilter.filter().ordinal == +event[0]
+              "
             >
               {{ event[1] }}
             </option>
             }
+            <option
+              value="Total"
+              [selected]="scoreFilter.filter().ordinalTotals"
+            >
+              Total
+            </option>
           </select>
         </fieldset>
       </div>
@@ -31,11 +40,17 @@
             @for (gender of gendersList; track gender) {
             <option
               [value]="gender"
-              [selected]="scoreService.scoreFilter().gender === gender"
+              [selected]="
+                !scoreFilter.filter().allGenders &&
+                scoreFilter.filter().gender === gender
+              "
             >
               {{ gender }}
             </option>
             }
+            <option value="All" [selected]="scoreFilter.filter().allGenders">
+              All
+            </option>
           </select>
         </fieldset>
       </div>
@@ -50,12 +65,19 @@
             <option
               [value]="ageCategory"
               [selected]="
-                scoreService.scoreFilter().ageCategory === ageCategory
+                !scoreFilter.filter().allAgeCategories &&
+                scoreFilter.filter().ageCategory === ageCategory
               "
             >
               {{ ageCategory }}
             </option>
             }
+            <option
+              value="All"
+              [selected]="scoreFilter.filter().allAgeCategories"
+            >
+              All
+            </option>
           </select>
         </fieldset>
       </div>
@@ -69,17 +91,11 @@
             @for (team of teams(); track team) {
             <option
               [value]="team"
-              [selected]="scoreService.scoreFilter().team === team"
+              [selected]="scoreFilter.filter().team === team"
             >
               {{ team }}
             </option>
             }
-            <option
-              value="All"
-              [selected]="scoreService.scoreFilter().team === 'All'"
-            >
-              All
-            </option>
           </select>
         </fieldset>
       </div>
@@ -112,14 +128,14 @@
     <div class="divider">
       {{ scoreFilterDisplay() }}
     </div>
-    @for (score of showScores(); track $index ) {
+    @for (score of aggregatedIndividualScores(); track $index ) {
     <li
-      class="list-row md:mx-2 items-center"
-      [class.border]="
+      class="list-row mx-1 md:mx-4 items-center"
+      [class.bg-base-300]="
         userAuth.loggedIn() &&
         userAuth.athlete()?.competitor_id === score.competitor_id
       "
-      [class.border-accent]="
+      [class.border]="
         userAuth.loggedIn() &&
         userAuth.athlete()?.competitor_id === score.competitor_id
       "
@@ -133,32 +149,36 @@
         </div>
       </div>
 
-      @if (score.appreciation_score > 0) {
-      <div class="flex flex-col items-center">
-        <ng-icon name="heroHeart" />
-        <span>{{ score.appreciation_score }}</span>
+      <div
+        class="flex flex-row gap-2 text-xs sm:gap-4 sm:text-md items-center justify-evenly"
+      >
+        @if (score.appreciation_score > 0) {
+        <div class="flex flex-col items-center">
+          <ng-icon name="heroHeart" />
+          <span>{{ score.appreciation_score }}</span>
+        </div>
+        } @if (score.judge_score) {
+        <div class="flex flex-col items-center">
+          <ng-icon name="heroScale" />
+          <span>{{ score.judge_score }}</span>
+        </div>
+        } @if (score.attendance_score > 0) {
+        <div class="flex flex-col items-center">
+          <ng-icon name="heroHandRaised" />
+          <span>{{ score.attendance_score }}</span>
+        </div>
+        } @if (score.top3_score > 0) {
+        <div class="flex flex-col items-center">
+          <ng-icon name="ionMedalOutline" />
+          <span>{{ score.top3_score }}</span>
+        </div>
+        } @if (score.participation_score > 0) {
+        <div class="flex flex-col items-center">
+          <ng-icon name="ionBarbellOutline" />
+          <span>{{ score.participation_score }}</span>
+        </div>
+        }
       </div>
-      } @if (score.judge_score) {
-      <div class="flex flex-col items-center">
-        <ng-icon name="heroScale" />
-        <span>{{ score.judge_score }}</span>
-      </div>
-      } @if (score.attendance_score > 0) {
-      <div class="flex flex-col items-center">
-        <ng-icon name="heroHandRaised" />
-        <span>{{ score.attendance_score }}</span>
-      </div>
-      } @if (score.top3_score > 0) {
-      <div class="flex flex-col items-center">
-        <ng-icon name="ionMedalOutline" />
-        <span>{{ score.top3_score }}</span>
-      </div>
-      } @if (score.participation_score > 0) {
-      <div class="flex flex-col items-center">
-        <ng-icon name="ionBarbellOutline" />
-        <span>{{ score.participation_score }}</span>
-      </div>
-      }
       <div class="flex flex-col items-center">
         <span>Total</span>
         <span>{{ score.total_individual_score }}</span>

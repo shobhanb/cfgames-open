@@ -1,4 +1,4 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import {
   apiAthleteDetail,
   apiBearerResponse,
@@ -6,10 +6,7 @@ import {
   apiBodyResetForgotPasswordAuthForgotPasswordPost,
   apiBodyResetResetPasswordAuthResetPasswordPost,
   apiBodyVerifyRequestTokenAuthRequestVerifyTokenPost,
-  apiBodyVerifyVerifyAuthVerifyPost,
-  apiUserCreate,
   apiUserRead,
-  apiUserUpdate,
 } from '../../api/models';
 import { apiAthleteService, apiAuthService } from '../../api/services';
 import { StrictHttpResponse } from '../../api/strict-http-response';
