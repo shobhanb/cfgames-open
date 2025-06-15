@@ -1,3 +1,38 @@
 <app-pages>
-  <p>athletes works!</p>
+  <div class="list bg-base-100">
+    @for (user of allUsers(); track $index) {
+    <li
+      class="list-row mx-1 md:mx-4 items-center"
+      [class.border]="
+        userAuth.loggedIn() && userAuth.user()?.email === user.email
+      "
+      [class.bg-base-300]="
+        userAuth.loggedIn() && userAuth.user()?.email === user.email
+      "
+    >
+      <div class="list-col-grow">
+        <div class="flex flex-col">
+          <span>{{ user.name }}</span>
+          <span class="text-xs opacity-60 font-semibold">{{
+            "CF ID: " + user.athlete_id
+          }}</span>
+          <span class="text-xs opacity-60 font-semibold">{{ user.email }}</span>
+          @if (user.is_superuser) {
+          <span class="text-secondary">Admin</span>
+          }
+        </div>
+      </div>
+      <div class="text-xs flex flex-col items-end justify-around">
+        <span>Email</span>
+        @if (user.is_verified) {
+        <div class="">Verified</div>
+        } @else {
+        <div class="text-warning">Not Verified</div>
+        }
+      </div>
+      <button class="btn btn-primary" (click)="onClickEdit(user)">Edit</button>
+    </li>
+
+    }
+  </div>
 </app-pages>

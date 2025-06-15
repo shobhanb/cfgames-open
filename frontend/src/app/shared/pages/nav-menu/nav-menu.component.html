@@ -43,18 +43,13 @@
         <a routerLink="/public/team" routerLinkActive="menu-active">Team</a>
       </li>
       @if (userAuth.loggedIn()) {
-      <ul class="">
+      <ul class="mt-2">
         {{
           userAuth.user()?.name
         }}
         <li>
           <a routerLink="/private/myscore" routerLinkActive="menu-active"
             >My Scores</a
-          >
-        </li>
-        <li>
-          <a routerLink="/private/myteam" routerLinkActive="menu-active"
-            >My Team</a
           >
         </li>
         <li>
@@ -69,10 +64,10 @@
         </li>
       </ul>
       } @if (userAuth.loggedIn() && userAuth.user()?.is_superuser) {
-      <ul class="">
+      <ul class="mt-2">
         Admin bitch!
         <li>
-          <a routerLink="/admin/athetes" routerLinkActive="menu-active"
+          <a routerLink="/admin/athletes" routerLinkActive="menu-active"
             >Athletes</a
           >
         </li>

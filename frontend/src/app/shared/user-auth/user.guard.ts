@@ -9,5 +9,5 @@ export const userGuard: CanActivateFn = (route, state) => {
   if (userAuth.loggedIn() && userAuth.user()?.is_verified) {
     return true;
   }
-  return router.createUrlTree(['/auth', 'login']);
+  return router.createUrlTree(['/auth', 'not-verified']);
 };

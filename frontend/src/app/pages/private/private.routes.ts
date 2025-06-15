@@ -21,11 +21,6 @@ export const privateRoutes: Routes = [
       import('./myscore/myscore.component').then((c) => c.MyscoreComponent),
   },
   {
-    path: 'myteam',
-    loadComponent: () =>
-      import('./myteam/myteam.component').then((c) => c.MyteamComponent),
-  },
-  {
     path: '**',
     redirectTo: '/public/home',
     pathMatch: 'full',

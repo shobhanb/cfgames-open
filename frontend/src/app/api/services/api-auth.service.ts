@@ -15,9 +15,9 @@ import { authDbLoginAuthLoginPost } from '../fn/auth/auth-db-login-auth-login-po
 import { AuthDbLoginAuthLoginPost$Params } from '../fn/auth/auth-db-login-auth-login-post';
 import { authDbLogoutAuthLogoutPost } from '../fn/auth/auth-db-logout-auth-logout-post';
 import { AuthDbLogoutAuthLogoutPost$Params } from '../fn/auth/auth-db-logout-auth-logout-post';
-import { authVerifyEmailAuthVerifyGet } from '../fn/auth/auth-verify-email-auth-verify-get';
-import { AuthVerifyEmailAuthVerifyGet$Params } from '../fn/auth/auth-verify-email-auth-verify-get';
 import { apiBearerResponse } from '../models/api-bearer-response';
+import { getAllUsersAuthUsersAllGet } from '../fn/auth/get-all-users-auth-users-all-get';
+import { GetAllUsersAuthUsersAllGet$Params } from '../fn/auth/get-all-users-auth-users-all-get';
 import { apiOAuth2AuthorizeResponse } from '../models/api-o-auth-2-authorize-response';
 import { oauthAssociateGoogleAuthorizeAuthAssociateGoogleAuthorizeGet } from '../fn/auth/oauth-associate-google-authorize-auth-associate-google-authorize-get';
 import { OauthAssociateGoogleAuthorizeAuthAssociateGoogleAuthorizeGet$Params } from '../fn/auth/oauth-associate-google-authorize-auth-associate-google-authorize-get';
@@ -583,36 +583,36 @@ export class apiAuthService extends BaseService {
     );
   }
 
-  /** Path part for operation `authVerifyEmailAuthVerifyGet()` */
-  static readonly AuthVerifyEmailAuthVerifyGetPath = '/auth/verify/';
+  /** Path part for operation `getAllUsersAuthUsersAllGet()` */
+  static readonly GetAllUsersAuthUsersAllGetPath = '/auth/users/all';
 
   /**
-   * Auth Verify Email.
+   * Get All Users.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `authVerifyEmailAuthVerifyGet()` instead.
+   * To access only the response body, use `getAllUsersAuthUsersAllGet()` instead.
    *
    * This method doesn't expect any request body.
    */
-  authVerifyEmailAuthVerifyGet$Response(params: AuthVerifyEmailAuthVerifyGet$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return authVerifyEmailAuthVerifyGet(this.http, this.rootUrl, params, context);
+  getAllUsersAuthUsersAllGet$Response(params?: GetAllUsersAuthUsersAllGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiUserRead>>> {
+    return getAllUsersAuthUsersAllGet(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Auth Verify Email.
+   * Get All Users.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `authVerifyEmailAuthVerifyGet$Response()` instead.
+   * To access the full response (for headers, for example), `getAllUsersAuthUsersAllGet$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  authVerifyEmailAuthVerifyGet(params: AuthVerifyEmailAuthVerifyGet$Params, context?: HttpContext): Observable<string> {
-    return this.authVerifyEmailAuthVerifyGet$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
+  getAllUsersAuthUsersAllGet(params?: GetAllUsersAuthUsersAllGet$Params, context?: HttpContext): Observable<Array<apiUserRead>> {
+    return this.getAllUsersAuthUsersAllGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiUserRead>>): Array<apiUserRead> => r.body)
     );
   }
 

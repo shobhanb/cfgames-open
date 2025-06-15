@@ -1,0 +1,33 @@
+<app-pages>
+  <div class="flex flex-col items-center mx-4">
+    <div class="mt-6 card bg-base-300 w-full max-w-sm shadow-2xl">
+      <div class="card-body items-center text-center">
+        <h2 class="card-title my-4">{{ user()?.name }}</h2>
+        <h2 class="">{{ `CF ID: ${ user()?.athlete_id }` }}</h2>
+        <h2 class="">{{ user()?.email }}</h2>
+        <h2 class="">{{ user()?.affiliate }}</h2>
+        @if (user()?.is_superuser) {
+        <button
+          class="btn btn-primary w-full my-8"
+          (click)="onClickRevokeAdmin()"
+        >
+          Revoke admin
+        </button>
+        } @else {
+        <button
+          class="btn btn-primary w-full my-8"
+          (click)="onClickMakeAdmin()"
+        >
+          Make admin
+        </button>
+        }
+        <button class="btn btn-error w-full my-8" (click)="onClickDelete()">
+          Delete
+        </button>
+        <button class="btn btn-neutral w-full my-8" (click)="onClickCancel()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</app-pages>

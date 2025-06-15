@@ -37,7 +37,7 @@ export class VerifyComponent implements OnInit {
           console.log('Error verifying email', err);
           const detail: string = String(err?.error?.detail ?? '');
           const friendlyMsg = apiErrorMap[detail] || detail;
-          this.modalService.show('No Rep!', friendlyMsg, '/home');
+          this.modalService.showInfo('No Rep!', friendlyMsg, '/home');
         },
       });
   }

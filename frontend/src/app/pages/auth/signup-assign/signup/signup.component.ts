@@ -35,6 +35,9 @@ export class SignupComponent {
 
   loginForm = new FormGroup({
     // Not adding password requirements to keep it simple for lowest common denominator users
+    email: new FormControl('', {
+      validators: [Validators.email, Validators.required],
+    }),
     password1: new FormControl('', { validators: [Validators.required] }),
     password2: new FormControl('', { validators: [Validators.required] }),
   });
@@ -43,6 +46,7 @@ export class SignupComponent {
     return (
       this.loginForm.dirty &&
       this.loginForm.valid &&
+      !!this.loginForm.value.email &&
       !!this.loginForm.value.password1 &&
       !!this.loginForm.value.password2
     );
@@ -55,7 +59,6 @@ export class SignupComponent {
   onClickNotYou() {
     this.loginForm.reset();
     this.signupFormService.selectedAthleteId.set(null);
-    this.signupFormService.enteredEmail.set(null);
   }
 
   onClickSignUpWithEmail() {
@@ -67,7 +70,7 @@ export class SignupComponent {
       this.apiAuth
         .registerRegisterAuthRegisterPost$Response({
           body: {
-            email: this.signupFormService.enteredEmail()!,
+            email: this.loginForm.value.email!,
             password: this.loginForm.value.password1!,
             affiliate: this.signupFormService.selectedAffiliate()!,
             affiliate_id: this.signupFormService.selectedAffiliateId()!,
@@ -88,7 +91,7 @@ export class SignupComponent {
             console.log('Error during registration', err);
             const detail: string = String(err?.error?.detail ?? '');
             const friendlyMsg = apiErrorMap[detail] || detail;
-            this.modalService.show('No rep!', friendlyMsg, '/home');
+            this.modalService.showInfo('No Rep!', friendlyMsg, '/home');
           },
         });
     }

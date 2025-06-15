@@ -1,6 +1,5 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription, timer } from 'rxjs';
 import { ModalService } from './modal.service';
 
 @Component({
@@ -9,37 +8,19 @@ import { ModalService } from './modal.service';
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.css',
 })
-export class ModalComponent implements OnInit {
+export class ModalComponent {
   modalService = inject(ModalService);
-  router = inject(Router);
-  destroyRef = inject(DestroyRef);
+  private router = inject(Router);
 
-  modalTitle = signal<string>('');
-  modalMessage = signal<string>('');
-  modalShow = signal<boolean>(false);
-  modalRedirectUrl = signal<string | null>(null);
-
-  modalSubscription$: Subscription | undefined;
-
-  ngOnInit(): void {
-    this.modalSubscription$ = this.modalService.modalState$.subscribe(
-      ({ title, message, redirectUrl }) => {
-        this.modalTitle.set(title);
-        this.modalMessage.set(message);
-        this.modalRedirectUrl.set(redirectUrl);
-        this.modalShow.set(true);
-      }
-    );
-
-    this.destroyRef.onDestroy(() => {
-      this.modalSubscription$?.unsubscribe();
-    });
+  confirmModal(confirmed: boolean) {
+    this.modalService.confirm(confirmed);
   }
 
   closeModal() {
-    this.modalShow.set(false);
-    if (this.modalRedirectUrl()) {
-      this.router.navigate([this.modalRedirectUrl()]);
+    const redirectUrl = this.modalService.modalMessage()!.redirectUrl;
+    this.modalService.reset();
+    if (redirectUrl) {
+      this.router.navigate([redirectUrl]);
     }
   }
 }

@@ -8,6 +8,8 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { AuthWrapperComponent } from '../../auth-wrapper/auth-wrapper.component';
 import { SignupFormService } from '../signup-form.service';
+import { apiAffiliateAthlete } from '../../../../api/models';
+import { HelperFunctionsService } from '../../../../shared/helper-functions.service';
 
 @Component({
   selector: 'app-assign-athlete',
@@ -17,6 +19,7 @@ import { SignupFormService } from '../signup-form.service';
 })
 export class AssignAthleteComponent implements OnInit, OnDestroy {
   private router = inject(Router);
+  private helperFunctions = inject(HelperFunctionsService);
   signupFormService = inject(SignupFormService);
 
   private gymFormControlSubscription$: any;
@@ -26,9 +29,6 @@ export class AssignAthleteComponent implements OnInit, OnDestroy {
     gym: new FormControl('', { validators: [Validators.required] }),
     name: new FormControl('', { validators: [Validators.required] }),
     athleteId: new FormControl('', { validators: [Validators.required] }),
-    email: new FormControl('', {
-      validators: [Validators.email, Validators.required],
-    }),
   });
 
   get isAthleteIdInvalid() {
@@ -37,26 +37,37 @@ export class AssignAthleteComponent implements OnInit, OnDestroy {
     );
   }
 
-  get isEmailInvalid() {
-    return this.form.controls.email.invalid && this.form.controls.email.dirty;
-  }
-
   onSubmit() {
     if (
       this.form.valid &&
       this.form.dirty &&
       this.form.value.gym &&
       this.form.value.name &&
-      this.form.value.athleteId &&
-      this.form.value.email
+      this.form.value.athleteId
     ) {
       this.signupFormService.selectedAthleteId.set(
         Number(this.form.value.athleteId)
       );
-      this.signupFormService.enteredEmail.set(
-        this.form.value.email.toLowerCase().trim()
-      );
+      // this.signupFormService.selectedAffiliateId.set(
+      //   this.signupFormService
+      //     .athleteData()
+      //     .filter(
+      //       (athlete: apiAffiliateAthlete) =>
+      //         athlete.competitor_id === Number(this.form.value.athleteId)
+      //     )
+      //     .map((athlete: apiAffiliateAthlete) => athlete.affiliate_id)
+      //     .filter(this.helperFunctions.filterUnique)[0]
+      // );
     }
+    console.log(this.form.valid);
+    console.log(this.form.dirty);
+    console.log(this.form.value.gym);
+    console.log(this.form.value.name);
+    console.log(this.form.value.athleteId);
+    console.log(this.signupFormService.selectedAffiliate());
+    console.log(this.signupFormService.selectedAffiliateId());
+    console.log(this.signupFormService.selectedName());
+    console.log(this.signupFormService.selectedAthleteId());
   }
 
   onClickCancel() {

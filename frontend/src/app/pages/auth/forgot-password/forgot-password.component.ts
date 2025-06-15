@@ -40,7 +40,7 @@ export class ForgotPasswordComponent {
         })
         .subscribe({
           next: () => {
-            this.modalService.show(
+            this.modalService.showInfo(
               'Rep!',
               'Reset password email sent.',
               '/home'
@@ -50,7 +50,7 @@ export class ForgotPasswordComponent {
             console.log('Error in ForgotPasswordSubmit', err);
             const detail: string = String(err?.error?.detail ?? '');
             const friendlyMsg = apiErrorMap[detail] || detail;
-            this.modalService.show('No Rep!', friendlyMsg, '/home');
+            this.modalService.showInfo('No Rep!', friendlyMsg, '/home');
           },
         });
     }

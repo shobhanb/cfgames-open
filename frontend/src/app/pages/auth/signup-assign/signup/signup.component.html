@@ -3,9 +3,10 @@
     <div class="flex flex-col gap-1">
       <h1 class="text-2xl font-bold mb-2">Complete signup for</h1>
       <h1 class="text-2xl font-bold">{{ signupFormService.selectedName() }}</h1>
-      <h2 class="text-lg mb-2">{{ signupFormService.enteredEmail() }}</h2>
       <p class="text-xs">{{ signupFormService.selectedAffiliate() }}</p>
-      <p class="text-xs">{{ signupFormService.selectedAthleteId() }}</p>
+      <p class="text-xs">
+        {{ `CF ID: ${ signupFormService.selectedAthleteId() }`}}
+      </p>
       <div class="link link-error text-sm" (click)="onClickNotYou()">
         Not you?
       </div>
@@ -18,9 +19,9 @@
           <input
             type="email"
             class="input w-full"
-            placeholder="{{ signupFormService.enteredEmail() }}"
+            placeholder="Email"
             autocomplete="email"
-            disabled
+            formControlName="email"
           />
           <input
             type="password"

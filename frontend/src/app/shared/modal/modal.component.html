@@ -1,15 +1,30 @@
-<input type="checkbox" class="modal-toggle" [checked]="modalShow()" hidden />
+<input
+  type="checkbox"
+  class="modal-toggle"
+  [checked]="!!modalService.modalMessage()"
+  hidden
+/>
 
-@if (modalShow()) {
-
+@if (modalService.modalMessage()) {
 <div class="modal">
   <div class="modal-box">
-    <h3 class="font-bold text-lg">{{ modalTitle() }}</h3>
-    <p class="py-4">{{ modalMessage() }}</p>
+    @if (modalService.modalMessage()!.title) {
+    <h3 class="font-bold text-lg">{{ modalService.modalMessage()!.title }}</h3>
+    } @if (modalService.modalMessage()!.message) {
+    <p class="py-4">{{ modalService.modalMessage()!.message }}</p>
+    }
     <div class="modal-action">
+      @if (modalService.modalMessage()!.type === 'confirm') {
+      <button class="btn btn-primary" (click)="confirmModal(true)">
+        Confirm
+      </button>
+      <button class="btn btn-neutral" (click)="confirmModal(false)">
+        Cancel
+      </button>
+      } @else {
       <button class="btn btn-primary" (click)="closeModal()">OK</button>
+      }
     </div>
   </div>
 </div>
-
 }

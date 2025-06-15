@@ -2,6 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { HelperFunctionsService } from '../../../shared/helper-functions.service';
 import { apiAthleteService } from '../../../api/services';
 import { apiAffiliateAthlete } from '../../../api/models';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -15,15 +16,20 @@ export class SignupFormService {
 
   // This needs to be called by the component onInit
   getAthleteData() {
-    this.apiAthlete.getAthleteListAthleteListGet().subscribe({
-      next: (data: apiAffiliateAthlete[]) => {
-        this.athleteData.set(data);
-      },
-      error: (err: any) => {
-        console.log('Error getting Athlete List', err);
-        // this.athleteData.set([]);
-      },
-    });
+    this.apiAthlete
+      .getAthleteListAthleteListGet({
+        affiliate_id: environment.affiliateId,
+        year: environment.year,
+      })
+      .subscribe({
+        next: (data: apiAffiliateAthlete[]) => {
+          this.athleteData.set(data);
+        },
+        error: (err: any) => {
+          console.log('Error getting Athlete List', err);
+          // this.athleteData.set([]);
+        },
+      });
   }
 
   // Input data split into gyms, names, athleteIds
@@ -54,8 +60,8 @@ export class SignupFormService {
   selectedAffiliate = signal<string | null>(null);
   selectedName = signal<string | null>(null);
   selectedAthleteId = signal<number | null>(null);
-  enteredEmail = signal<string | null>(null);
 
+  // selectedAffiliateId = signal<number | null>(null);
   selectedAffiliateId = computed<number | null>(() => {
     return this.athleteData()
       .filter((athlete) => athlete.competitor_id === this.selectedAthleteId())
@@ -70,7 +76,6 @@ export class SignupFormService {
       !!this.selectedAffiliate() &&
       !!this.selectedAffiliateId() &&
       !!this.selectedName() &&
-      !!this.selectedAthleteId() &&
-      !!this.enteredEmail()
+      !!this.selectedAthleteId()
   );
 }

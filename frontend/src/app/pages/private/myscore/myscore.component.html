@@ -1,3 +1,32 @@
 <app-pages>
-  <p>myscore works!</p>
+  <div class="list bg-base-100">
+    @for (year of userScores(); track year[0]) {
+
+    <div class="divider">{{ year[0] }}</div>
+
+    @for (score of year[1]; track $index) {
+    <li class="list-row mx-1 md:mx-4 md:gap-8 items-center">
+      <div class="">{{ score.ordinal }}</div>
+      <div class="list-col-grow">
+        <div class="flex flex-col">
+          <span>{{ score.name }}</span>
+          @if (score.team_name != 'zz') {
+          <span>{{ score.team_name }}</span>
+          }
+          <span
+            class="text-xs opacity-60 font-semibold"
+            >{{    `${score.affiliate_scaled} - ${score.gender} - ${score.age_category}`  }}</span
+          >
+        </div>
+      </div>
+      <div class="">{{ score.score_display }}</div>
+      @if ( score.tiebreak_ms) {
+      <div class="md:ml-10 text-xs text-right">
+        <span>Tiebreak</span>
+        <div class="">{{ score.tiebreak_ms }}</div>
+      </div>
+      }
+    </li>
+    } }
+  </div>
 </app-pages>

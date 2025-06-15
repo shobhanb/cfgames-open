@@ -53,7 +53,7 @@ export class UserAuthService {
           console.log('Error during login', err);
           const detail: string = String(err?.error?.detail ?? '');
           const friendlyMsg = apiErrorMap[detail] || detail;
-          this.modalService.show('No Rep!', friendlyMsg, '/home');
+          this.modalService.showInfo('No Rep!', friendlyMsg, '/home');
         },
       });
   }
@@ -114,7 +114,7 @@ export class UserAuthService {
       })
       .subscribe({
         next: () => {
-          this.modalService.show(
+          this.modalService.showInfo(
             'Rep!',
             'Password reset successfully. Please login with the new password',
             '/auth/login'
@@ -124,7 +124,7 @@ export class UserAuthService {
           console.log('Error during resetPassword', err);
           const detail: string = String(err?.error?.detail ?? '');
           const friendlyMsg = apiErrorMap[detail] || detail;
-          this.modalService.show('No rep!', friendlyMsg, '/home');
+          this.modalService.showInfo('No Rep!', friendlyMsg, '/home');
         },
       });
   }
