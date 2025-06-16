@@ -106,8 +106,8 @@ export class ScoresComponent implements OnInit {
         }
       );
 
-      return Array.from(scoreMap.values()).sort((a, b) =>
-        a.name > b.name ? 1 : -1
+      return Array.from(scoreMap.values()).sort(
+        (a, b) => b.total_individual_score - a.total_individual_score
       );
     }
   );

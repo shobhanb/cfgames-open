@@ -56,15 +56,25 @@ export class LeaderboardComponent implements OnInit {
   );
 
   scoresRX = computed<apiLeaderboardScoreModel[]>(() =>
-    this.filteredLeaderboard().filter(
-      (value: apiLeaderboardScoreModel) => value.affiliate_scaled === 'RX'
-    )
+    this.filteredLeaderboard()
+      .filter(
+        (value: apiLeaderboardScoreModel) => value.affiliate_scaled === 'RX'
+      )
+      .sort(
+        (a: apiLeaderboardScoreModel, b: apiLeaderboardScoreModel) =>
+          a.affiliate_rank - b.affiliate_rank
+      )
   );
 
   scoresScaled = computed<apiLeaderboardScoreModel[]>(() =>
-    this.filteredLeaderboard().filter(
-      (value: apiLeaderboardScoreModel) => value.affiliate_scaled === 'Scaled'
-    )
+    this.filteredLeaderboard()
+      .filter(
+        (value: apiLeaderboardScoreModel) => value.affiliate_scaled === 'Scaled'
+      )
+      .sort(
+        (a: apiLeaderboardScoreModel, b: apiLeaderboardScoreModel) =>
+          a.affiliate_rank - b.affiliate_rank
+      )
   );
 
   constructor() {
