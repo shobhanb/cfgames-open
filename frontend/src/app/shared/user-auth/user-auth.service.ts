@@ -50,7 +50,7 @@ export class UserAuthService {
           this.toastService.showSuccess('Logged in', '/home');
         },
         error: (err: any) => {
-          console.log('Error during login', err);
+          console.error('Error during login', err);
           const detail: string = String(err?.error?.detail ?? '');
           const friendlyMsg = apiErrorMap[detail] || detail;
           this.modalService.showInfo('No Rep!', friendlyMsg, '/home');
@@ -61,14 +61,13 @@ export class UserAuthService {
   logout() {
     this.apiAuth.authDbLogoutAuthLogoutPost$Response().subscribe({
       next: () => {
-        console.log('Logged out');
         this.user.set(null);
         this.token.set(null);
         localStorage.removeItem('cfgames-token');
         this.toastService.showSuccess('Logged out', '/home', 500);
       },
       error: (err: any) => {
-        console.log('Error during Logout', err);
+        console.error('Error during Logout', err);
       },
     });
   }
@@ -81,11 +80,8 @@ export class UserAuthService {
         body: userInfo,
       })
       .subscribe({
-        next: () => {
-          console.log('Sent verification email');
-        },
         error: (err: any) => {
-          console.log('Error during sendVerificationEmail', err);
+          console.error('Error during sendVerificationEmail', err);
         },
       });
   }
@@ -98,11 +94,8 @@ export class UserAuthService {
         body: userInfo,
       })
       .subscribe({
-        next: () => {
-          console.log('Sent forgot password email');
-        },
         error: (err: any) => {
-          console.log('Error during sendForgotPasswordEmail', err);
+          console.error('Error during sendForgotPasswordEmail', err);
         },
       });
   }
@@ -121,7 +114,7 @@ export class UserAuthService {
           );
         },
         error: (err: any) => {
-          console.log('Error during resetPassword', err);
+          console.error('Error during resetPassword', err);
           const detail: string = String(err?.error?.detail ?? '');
           const friendlyMsg = apiErrorMap[detail] || detail;
           this.modalService.showInfo('No Rep!', friendlyMsg, '/home');
@@ -162,7 +155,6 @@ export class UserAuthService {
         this.token.set(parsedToken);
       } catch (error) {
         this.token.set(null);
-        console.log('Error using token. Deleting from localstorage', error);
         localStorage.removeItem('cfgames-token');
       }
       if (this.token()) {

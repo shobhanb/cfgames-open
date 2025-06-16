@@ -42,7 +42,6 @@ export class EditAthleteComponent implements OnInit {
       .subscribe({
         next: (confirmed: boolean) => {
           if (confirmed) {
-            console.log('Confirm make admin');
             this.apiAuth
               .usersPatchUserAuthIdPatch({
                 id: this.user()!.id,
@@ -56,9 +55,6 @@ export class EditAthleteComponent implements OnInit {
                   console.error(err);
                 },
               });
-            this.router.navigate(['/admin', 'athletes']);
-          } else {
-            console.log('Cancel make admin');
           }
         },
         error: (err: any) => {
@@ -75,7 +71,6 @@ export class EditAthleteComponent implements OnInit {
       .subscribe({
         next: (confirmed: boolean) => {
           if (confirmed) {
-            console.log('Confirm make admin');
             this.apiAuth
               .usersPatchUserAuthIdPatch({
                 id: this.user()!.id,
@@ -93,8 +88,6 @@ export class EditAthleteComponent implements OnInit {
                   console.error(err);
                 },
               });
-          } else {
-            console.log('Cancel revoke admin');
           }
         },
         error: (err: any) => {
@@ -111,7 +104,6 @@ export class EditAthleteComponent implements OnInit {
       .subscribe({
         next: (confirmed: boolean) => {
           if (confirmed) {
-            console.log('Confirm delete');
             this.apiAuth
               .usersDeleteUserAuthIdDelete({
                 id: this.user()!.id,
@@ -121,6 +113,7 @@ export class EditAthleteComponent implements OnInit {
                   if (this.user()?.id === this.userAuth.user()?.id) {
                     this.userAuth.user.set(null);
                     this.userAuth.token.set(null);
+                    this.router.navigate(['/home']);
                   } else {
                     this.router.navigate(['/admin', 'athletes']);
                   }
@@ -129,8 +122,6 @@ export class EditAthleteComponent implements OnInit {
                   console.error(err);
                 },
               });
-          } else {
-            console.log('Cancel delete');
           }
         },
         error: (err: any) => {

@@ -47,7 +47,7 @@ export class ForgotPasswordComponent {
             );
           },
           error: (err: any) => {
-            console.log('Error in ForgotPasswordSubmit', err);
+            console.error('Error in ForgotPasswordSubmit', err);
             const detail: string = String(err?.error?.detail ?? '');
             const friendlyMsg = apiErrorMap[detail] || detail;
             this.modalService.showInfo('No Rep!', friendlyMsg, '/home');

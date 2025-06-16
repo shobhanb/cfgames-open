@@ -48,26 +48,7 @@ export class AssignAthleteComponent implements OnInit, OnDestroy {
       this.signupFormService.selectedAthleteId.set(
         Number(this.form.value.athleteId)
       );
-      // this.signupFormService.selectedAffiliateId.set(
-      //   this.signupFormService
-      //     .athleteData()
-      //     .filter(
-      //       (athlete: apiAffiliateAthlete) =>
-      //         athlete.competitor_id === Number(this.form.value.athleteId)
-      //     )
-      //     .map((athlete: apiAffiliateAthlete) => athlete.affiliate_id)
-      //     .filter(this.helperFunctions.filterUnique)[0]
-      // );
     }
-    console.log(this.form.valid);
-    console.log(this.form.dirty);
-    console.log(this.form.value.gym);
-    console.log(this.form.value.name);
-    console.log(this.form.value.athleteId);
-    console.log(this.signupFormService.selectedAffiliate());
-    console.log(this.signupFormService.selectedAffiliateId());
-    console.log(this.signupFormService.selectedName());
-    console.log(this.signupFormService.selectedAthleteId());
   }
 
   onClickCancel() {

@@ -49,7 +49,7 @@ export class NotVerifiedComponent implements OnInit {
           });
         },
         error: (err: any) => {
-          console.log('Error requesting verification email', err);
+          console.error('Error requesting verification email', err);
         },
       });
   }

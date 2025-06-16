@@ -88,7 +88,7 @@ export class SignupComponent {
             });
           },
           error: (err: any) => {
-            console.log('Error during registration', err);
+            console.error('Error during registration', err);
             const detail: string = String(err?.error?.detail ?? '');
             const friendlyMsg = apiErrorMap[detail] || detail;
             this.modalService.showInfo('No Rep!', friendlyMsg, '/home');

@@ -26,7 +26,7 @@ export class SignupFormService {
           this.athleteData.set(data);
         },
         error: (err: any) => {
-          console.log('Error getting Athlete List', err);
+          console.error('Error getting Athlete List', err);
           // this.athleteData.set([]);
         },
       });
