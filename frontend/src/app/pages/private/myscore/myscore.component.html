@@ -12,9 +12,7 @@
         </span>
         <a
           class="link link-primary"
-          [href]="
-            getEventPath(eventService.getEventName(score.ordinal, score.year))
-          "
+          [href]="getEventPath(score)"
           target="_blank"
         >
           <ng-icon name="ionOpenOutline"></ng-icon>

@@ -48,13 +48,28 @@ export class MyscoreComponent implements OnInit {
     return orderedMap;
   });
 
-  getEventPath(event: string): string {
+  getEventPath(score: apiUserScoreModel): string {
     const baseURL = 'https://games.crossfit.com/workouts/open';
     // Remove any non-numeric characters after the decimal
+
+    const event = this.eventService.getEventName(score.ordinal, score.year);
+
     const [year, eventNum] = event.split('.');
     const fullYear = '20' + year;
     const cleanEventNum = eventNum.replace(/[a-zA-Z]/g, '');
-    return `${baseURL}/${fullYear}/${cleanEventNum}`;
+
+    let returnURL = `${baseURL}/${fullYear}/${cleanEventNum}`;
+
+    if (score.gender === 'M') {
+      returnURL += '?division=1';
+    } else {
+      returnURL += '?division=2';
+    }
+    if (score.affiliate_scaled === 'Scaled') {
+      returnURL += '&scaled=1';
+    }
+
+    return returnURL;
   }
 
   constructor() {
