@@ -6,8 +6,19 @@
 
     @for (score of year[1]; track $index) {
     <li class="list-row mx-1 md:mx-4 md:gap-8 items-center">
-      <div class="">
-        {{ eventService.getEventName(score.ordinal, score.year) }}
+      <div class="flex flex-col items-center">
+        <span>
+          {{ eventService.getEventName(score.ordinal, score.year) }}
+        </span>
+        <a
+          class="link link-primary"
+          [href]="
+            getEventPath(eventService.getEventName(score.ordinal, score.year))
+          "
+          target="_blank"
+        >
+          <ng-icon name="ionOpenOutline"></ng-icon>
+        </a>
       </div>
       <div class="list-col-grow">
         <div class="flex flex-col">

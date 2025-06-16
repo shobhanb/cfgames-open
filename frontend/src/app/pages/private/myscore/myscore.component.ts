@@ -6,10 +6,13 @@ import { apiScoreService } from '../../../api/services';
 import { StrictHttpResponse } from '../../../api/strict-http-response';
 import { apiUserScoreModel } from '../../../api/models';
 import { EventService } from '../../../shared/event.service';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { ionOpenOutline } from '@ng-icons/ionicons';
 
 @Component({
   selector: 'app-myscore',
-  imports: [PagesComponent],
+  imports: [PagesComponent, NgIcon],
+  providers: [provideIcons({ ionOpenOutline })],
   templateUrl: './myscore.component.html',
   styleUrl: './myscore.component.css',
 })
@@ -44,6 +47,15 @@ export class MyscoreComponent implements OnInit {
 
     return orderedMap;
   });
+
+  getEventPath(event: string): string {
+    const baseURL = 'https://games.crossfit.com/workouts/open';
+    // Remove any non-numeric characters after the decimal
+    const [year, eventNum] = event.split('.');
+    const fullYear = '20' + year;
+    const cleanEventNum = eventNum.replace(/[a-zA-Z]/g, '');
+    return `${baseURL}/${fullYear}/${cleanEventNum}`;
+  }
 
   constructor() {
     this.titleService.pageTitle.set('My Scores');
