@@ -20,6 +20,7 @@ class URLSettings(CustomBaseSettings):
 
 
 class AuthSettings(CustomBaseSettings):
+    token_lifetime_seconds: int = 3600
     admin_api_key: str = "secret"
     reset_password_token_key: str = "secret"  # noqa: S105
     verification_token_key: str = "secret"  # noqa: S105
