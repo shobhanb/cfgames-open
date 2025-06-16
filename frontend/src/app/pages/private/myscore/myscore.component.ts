@@ -5,6 +5,7 @@ import { TitleService } from '../../../shared/title.service';
 import { apiScoreService } from '../../../api/services';
 import { StrictHttpResponse } from '../../../api/strict-http-response';
 import { apiUserScoreModel } from '../../../api/models';
+import { EventService } from '../../../shared/event.service';
 
 @Component({
   selector: 'app-myscore',
@@ -16,6 +17,7 @@ export class MyscoreComponent implements OnInit {
   private titleService = inject(TitleService);
   private dockService = inject(DockService);
   private apiScore = inject(apiScoreService);
+  eventService = inject(EventService);
 
   private _userScores = signal<apiUserScoreModel[]>([]);
 
@@ -46,6 +48,7 @@ export class MyscoreComponent implements OnInit {
   constructor() {
     this.titleService.pageTitle.set('My Scores');
     this.dockService.setPrivate();
+    this.eventService.initialize();
   }
 
   ngOnInit(): void {

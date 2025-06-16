@@ -17,6 +17,7 @@ export type { apiBodyResetResetPasswordAuthResetPasswordPost } from './models/ap
 export type { apiBodyVerifyRequestTokenAuthRequestVerifyTokenPost } from './models/api-body-verify-request-token-auth-request-verify-token-post';
 export type { apiBodyVerifyVerifyAuthVerifyPost } from './models/api-body-verify-verify-auth-verify-post';
 export type { apiErrorModel } from './models/api-error-model';
+export type { apiEventsModel } from './models/api-events-model';
 export type { apiHttpValidationError } from './models/api-http-validation-error';
 export type { apiIndividualScoreModel } from './models/api-individual-score-model';
 export type { apiLeaderboardScoreModel } from './models/api-leaderboard-score-model';

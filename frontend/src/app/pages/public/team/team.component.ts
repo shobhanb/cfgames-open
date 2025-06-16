@@ -11,7 +11,6 @@ import { TitleService } from '../../../shared/title.service';
 import { DockService } from '../../../shared/pages/dock/dock.service';
 import { ScoreLegendComponent } from '../../../shared/score-legend/score-legend.component';
 import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
-import { environment } from '../../../../environments/environment';
 import {
   heroHeart,
   heroHandRaised,
@@ -31,6 +30,8 @@ import {
 import { apiScoreService } from '../../../api/services';
 import { StrictHttpResponse } from '../../../api/strict-http-response';
 import { HelperFunctionsService } from '../../../shared/helper-functions.service';
+import { EventService } from '../../../shared/event.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-team',
@@ -55,11 +56,11 @@ export class TeamComponent implements OnInit {
   private dockService = inject(DockService);
   private helperFunctions = inject(HelperFunctionsService);
   private apiScore = inject(apiScoreService);
+  eventService = inject(EventService);
   scoreFilter = inject(ScoreFilterService);
   userAuth = inject(UserAuthService);
 
   showFilter = signal<boolean>(false);
-  eventsList = Object.entries(environment.ordinalMap);
   gendersList = GENDERS;
   ageCategoriesList = AGE_CATEGORIES;
 
@@ -109,6 +110,7 @@ export class TeamComponent implements OnInit {
   });
 
   constructor() {
+    this.eventService.initialize();
     this.dockService.setPublic();
     effect(() => {
       this.titleService.pageTitle.set(

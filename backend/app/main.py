@@ -16,6 +16,7 @@ from app.attendance.views import attendance_router
 from app.cf_games.views import cf_games_router
 from app.database.base import Base
 from app.database.core import session_manager
+from app.events.views import cf_events_router
 from app.score.views import score_router
 from app.settings import env_settings, url_settings
 from app.sidescore.views import sidescore_router
@@ -53,6 +54,7 @@ if ENVIRONMENT not in DEV_ENVIRONMENTS:
 
 app = FastAPI(**app_configs)
 
+app.include_router(cf_events_router)
 app.include_router(cf_games_router)
 app.include_router(auth_router)
 app.include_router(athlete_router)

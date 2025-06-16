@@ -6,6 +6,7 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
+import { apiCfeventsService } from './services/api-cfevents.service';
 import { apiAuthService } from './services/api-auth.service';
 import { apiAthleteService } from './services/api-athlete.service';
 import { apiScoreService } from './services/api-score.service';
@@ -24,6 +25,7 @@ import { apiAthletePrefsService } from './services/api-athlete-prefs.service';
   exports: [],
   declarations: [],
   providers: [
+    apiCfeventsService,
     apiAuthService,
     apiAthleteService,
     apiScoreService,

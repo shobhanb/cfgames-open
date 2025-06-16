@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroBars3 } from '@ng-icons/heroicons/outline';
 import { TitleService } from '../../title.service';
@@ -6,7 +6,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserAuthService } from '../../user-auth/user-auth.service';
 import { ToastService } from '../../toast/toast.service';
 import { LoggedInButtonComponent } from './logged-in-button/logged-in-button.component';
-import { environment } from '../../../../environments/environment';
+import { EventService } from '../../event.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -19,6 +19,9 @@ export class NavMenuComponent {
   titleService = inject(TitleService);
   userAuth = inject(UserAuthService);
   toastService = inject(ToastService);
+  private eventService = inject(EventService);
 
-  events = Object.entries(environment.ordinalMap);
+  constructor() {
+    this.eventService.initialize();
+  }
 }

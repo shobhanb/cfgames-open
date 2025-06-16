@@ -21,6 +21,7 @@ import {
   GENDERS,
   ScoreFilterService,
 } from '../../../shared/score-filter.service';
+import { EventService } from '../../../shared/event.service';
 
 @Component({
   selector: 'app-leaderboard',
@@ -34,10 +35,10 @@ export class LeaderboardComponent implements OnInit {
   private apiScore = inject(apiScoreService);
   scoreFilter = inject(ScoreFilterService);
   userAuth = inject(UserAuthService);
+  eventService = inject(EventService);
 
   showFilter = signal<boolean>(false);
 
-  eventsList = Object.entries(environment.ordinalMap);
   gendersList = GENDERS;
   ageCategoriesList = AGE_CATEGORIES;
 
@@ -67,6 +68,7 @@ export class LeaderboardComponent implements OnInit {
   );
 
   constructor() {
+    this.eventService.initialize();
     this.dockService.setPublic();
     effect(() => {
       this.titleService.pageTitle.set(

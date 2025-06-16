@@ -6,7 +6,9 @@
 
     @for (score of year[1]; track $index) {
     <li class="list-row mx-1 md:mx-4 md:gap-8 items-center">
-      <div class="">{{ score.ordinal }}</div>
+      <div class="">
+        {{ eventService.getEventName(score.ordinal, score.year) }}
+      </div>
       <div class="list-col-grow">
         <div class="flex flex-col">
           <span>{{ score.name }}</span>

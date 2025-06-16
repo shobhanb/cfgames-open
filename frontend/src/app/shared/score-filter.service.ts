@@ -1,6 +1,7 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { UserAuthService } from './user-auth/user-auth.service';
 import { environment } from '../../environments/environment';
+import { EventService } from './event.service'; // Import EventService
 
 export const GENDERS = ['M', 'F'] as const;
 export const AGE_CATEGORIES = ['Open', 'Masters', 'Masters 55+'] as const;
@@ -25,6 +26,7 @@ export interface ScoreFilter {
 })
 export class ScoreFilterService {
   private userAuth = inject(UserAuthService);
+  private eventService = inject(EventService); // Add this line
 
   private _scoreFilter = signal<ScoreFilter>({
     ordinal: 1,
@@ -39,8 +41,8 @@ export class ScoreFilterService {
 
   readonly filter = this._scoreFilter.asReadonly();
 
-  readonly filteredEvent = computed<string>(
-    () => environment.ordinalMap[this._scoreFilter().ordinal]
+  readonly filteredEvent = computed<string>(() =>
+    this.eventService.getEventName(this._scoreFilter().ordinal)
   );
 
   setFilter(filter: {
@@ -75,6 +77,7 @@ export class ScoreFilterService {
   }
 
   constructor() {
+    this.eventService.initialize(); // Add this line
     effect(() => {
       if (this.userAuth.athlete()) {
         this.setFilter({

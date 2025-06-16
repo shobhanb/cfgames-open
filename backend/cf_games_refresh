@@ -1,7 +1,7 @@
 export BACKEND_URL="http://localhost:8000"
 export DEFAULT_AFFILIATE_ID="31316"
 # export DEFAULT_AFFILIATE_ID="22847"
-export DEFAULT_YEAR="2025"
+export DEFAULT_YEAR="2023"
 curl -X "GET" \
   "${BACKEND_URL}/cfgames/refresh?affiliate_id=${DEFAULT_AFFILIATE_ID}&year=${DEFAULT_YEAR}" \
   -H "accept: application/json" \

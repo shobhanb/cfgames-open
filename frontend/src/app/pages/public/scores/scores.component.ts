@@ -28,11 +28,9 @@ import {
   ScoreFilterService,
 } from '../../../shared/score-filter.service';
 import { apiScoreService } from '../../../api/services';
-import {
-  apiIndividualScoreModel,
-  apiTeamScoreModel,
-} from '../../../api/models';
+import { apiIndividualScoreModel } from '../../../api/models';
 import { StrictHttpResponse } from '../../../api/strict-http-response';
+import { EventService } from '../../../shared/event.service';
 
 @Component({
   selector: 'app-scores',
@@ -54,11 +52,11 @@ export class ScoresComponent implements OnInit {
   private dockService = inject(DockService);
   private helperFunctions = inject(HelperFunctionsService);
   private apiScore = inject(apiScoreService);
+  eventService = inject(EventService);
   scoreFilter = inject(ScoreFilterService);
   userAuth = inject(UserAuthService);
 
   showFilter = signal<boolean>(false);
-  eventsList = Object.entries(environment.ordinalMap);
   gendersList = GENDERS;
   ageCategoriesList = AGE_CATEGORIES;
 
@@ -132,6 +130,7 @@ export class ScoresComponent implements OnInit {
   });
 
   constructor() {
+    this.eventService.initialize();
     this.dockService.setPublic();
     effect(() => {
       this.titleService.pageTitle.set(
@@ -199,6 +198,5 @@ export class ScoresComponent implements OnInit {
         });
       }
     }
-    console.log(this.filteredIndividualScores());
   }
 }

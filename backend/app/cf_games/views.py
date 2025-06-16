@@ -1,9 +1,9 @@
 import logging
-from typing import Annotated, Any
+from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 
-from app.auth.dependencies import verify_admin_api_key
+from app.auth.dependencies import api_key_admin_dependency
 from app.database.dependencies import db_dependency
 from app.exceptions import unauthorised_exception
 
@@ -18,7 +18,7 @@ cf_games_router = APIRouter(prefix="/cfgames", tags=["cfgames"])
 
 @cf_games_router.get("/refresh", status_code=status.HTTP_200_OK, response_model=CFDataCountModel, tags=["apikey"])
 async def refresh_cf_games_data(
-    api_key_admin: Annotated[bool, Depends(verify_admin_api_key)],
+    api_key_admin: api_key_admin_dependency,
     db_session: db_dependency,
     affiliate_id: int = int(AFFILIATE_ID),
     year: int = int(YEAR),

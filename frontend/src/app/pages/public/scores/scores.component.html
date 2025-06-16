@@ -9,7 +9,7 @@
             class="select w-full"
             (change)="onChangeFilter($event, 'event')"
           >
-            @for (event of eventsList; track event) {
+            @for (event of eventService.eventsList(); track $index) {
             <option
               [value]="event[0]"
               [selected]="
