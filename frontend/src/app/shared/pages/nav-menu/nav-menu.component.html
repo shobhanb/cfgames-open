@@ -13,6 +13,17 @@
       <div class="flex-1">
         <span class="text-xl">{{ titleService.pageTitle() }}</span>
       </div>
+      <!-- Theme switcher -->
+      <div
+        class="mx-2 flex flex-col items-center"
+        (click)="themeService.toggleTheme()"
+      >
+        @if (themeService.isDark()) {
+        <ng-icon name="heroSun" class="swap-on"></ng-icon>
+        } @else {
+        <ng-icon name="heroMoon" class="swap-off"></ng-icon>
+        }
+      </div>
       <!-- Profile icon dropdown -->
       <app-logged-in-button></app-logged-in-button>
     </div>
