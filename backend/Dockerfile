@@ -1,22 +1,22 @@
+
 FROM python:3.12-slim
 
 WORKDIR /app
 
+# Install uv.
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
 # Copy dependency files
 COPY pyproject.toml uv.lock ./
 
-# Install UV
-RUN pip install uv
-
-# Install dependencies using UV
-RUN uv pip install -r <(uv pip freeze)
+# RUN uv sync 
+RUN uv sync --frozen --no-cache
 
 # Copy application code
-COPY app/ ./app/
-COPY templates/ ./templates/
+COPY . . 
 
 # Expose port
 EXPOSE 8000
 
 # Run the application
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uv", "run", "fastapi", "run", "--port", "8000", "--host", "0.0.0.0"]

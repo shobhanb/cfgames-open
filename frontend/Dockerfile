@@ -1,10 +1,10 @@
 # Build stage
-FROM node:20-slim as builder
+FROM node:20-slim 
 
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
 # Install dependencies
 RUN npm ci
@@ -16,14 +16,14 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM nginx:alpine
+#FROM nginx:alpine
 
 # Copy built files to nginx
-COPY --from=builder /app/dist/* /usr/share/nginx/html/
+#COPY --from=builder /app/dist/* /usr/share/nginx/html/
 
 # Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+#COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+#EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+#CMD ["nginx", "-g", "daemon off;"]

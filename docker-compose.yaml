@@ -14,12 +14,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     restart: unless-stopped
-    env_file:
-      - ./secrets/.env
     volumes:
       - ./backend/database.db:/app/database.db
-      - ./backend/firebase_service_account.json:/app/firebase_service_account.json
-      - ./backend/google_client_secret.json:/app/google_client_secret.json
 
   nginx:
     image: nginx:alpine
