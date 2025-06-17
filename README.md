@@ -1,7 +1,9 @@
 # CF Open Community Cup Webapp
 
 - Angular
-- Ionic
+- TailwindCSS / Daisyui
 - FastAPI
-- Firebase Auth
-- Postgres / Firebase cloud
+- nginx
+- certbot / letsencrypt
+- docker
+
