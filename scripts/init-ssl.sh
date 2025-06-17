@@ -19,13 +19,13 @@ mkdir -p certbot/conf
 mkdir -p certbot/www
 
 # Stop any running containers
-docker-compose down
+docker compose down
 
 # Start nginx
-docker-compose up -d nginx
+docker compose up -d nginx
 
 # Request the wildcard certificate using DNS challenge
-docker-compose run --rm certbot certonly \
+docker compose run --rm certbot certonly \
     --manual \
     --preferred-challenges dns \
     --email "$1" \
@@ -36,7 +36,7 @@ docker-compose run --rm certbot certonly \
     -d "cfgames.site"
 
 # Restart nginx to load the new certificates
-docker-compose restart nginx
+docker compose restart nginx
 
 echo "SSL certificate initialization completed!"
 echo "Important: You'll need to add DNS TXT records during the certificate request process"
