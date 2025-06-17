@@ -26,14 +26,13 @@ docker compose up -d nginx
 
 # Request the wildcard certificate using DNS challenge
 docker compose run --rm certbot certonly \
-    --manual \
-    --preferred-challenges dns \
+    --webroot \
+    --webroot-path /var/www/certbot \
     --email "$1" \
     --agree-tos \
     --no-eff-email \
     --force-renewal \
-    -d "*.cfgames.site" \
-    -d "cfgames.site"
+    -d "cfmf.cfgames.site"
 
 # Restart nginx to load the new certificates
 docker compose restart nginx
