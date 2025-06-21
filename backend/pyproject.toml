@@ -14,4 +14,5 @@ dependencies = [
     "sqlalchemy>=2.0.39",
     "fastapi-users[oauth,sqlalchemy]>=14.0.1",
     "fastapi-mail>=1.4.2",
+    "firebase-admin>=6.9.0",
 ]

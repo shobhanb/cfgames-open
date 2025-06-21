@@ -3,6 +3,7 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
 
+import firebase_admin
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,6 +18,7 @@ from app.cf_games.views import cf_games_router
 from app.database.base import Base
 from app.database.core import session_manager
 from app.events.views import cf_events_router
+from app.firebase_auth.views import firebase_auth_router
 from app.score.views import score_router
 from app.settings import env_settings, url_settings
 from app.sidescore.views import sidescore_router
@@ -26,8 +28,11 @@ from app.user.views import auth_router
 
 log = logging.getLogger("uvicorn.error")
 
-RESET_DB = False
-RESET_AUTH_DB = False
+RESET_DB = True
+RESET_AUTH_DB = True
+
+cred = firebase_admin.credentials.Certificate("firebase_service_account_key.json")
+default_app = firebase_admin.initialize_app(credential=cred)
 
 
 @asynccontextmanager
@@ -56,6 +61,7 @@ app = FastAPI(**app_configs)
 
 app.include_router(cf_events_router)
 app.include_router(cf_games_router)
+app.include_router(firebase_auth_router)
 app.include_router(auth_router)
 app.include_router(athlete_router)
 app.include_router(score_router)
