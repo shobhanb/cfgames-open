@@ -9,12 +9,15 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApiModule } from './api/api.module';
 import { environment } from '../environments/environment';
 import { userAuthInterceptor } from './shared/user-auth/user-auth.interceptor';
+import { getAuth, provideAuth } from '@angular/fire/auth';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideNgIconsConfig({ size: '1.3em' }),
+    provideHttpClient(withInterceptors([userAuthInterceptor])),
+    ...(ApiModule.forRoot({ rootUrl: environment.apiBaseUrl }).providers ?? []),
     provideFirebaseApp(() =>
       initializeApp({
         projectId: 'cfgames-21159',
@@ -26,9 +29,7 @@ export const appConfig: ApplicationConfig = {
         measurementId: 'G-QSRXKEWN90',
       })
     ),
+    provideAuth(() => getAuth()),
     provideMessaging(() => getMessaging()),
-    provideHttpClient(withInterceptors([userAuthInterceptor])),
-
-    ...(ApiModule.forRoot({ rootUrl: environment.apiBaseUrl }).providers ?? []),
   ],
 };
