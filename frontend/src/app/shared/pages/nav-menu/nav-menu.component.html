@@ -54,7 +54,8 @@
         <a routerLink="/public/team" routerLinkActive="menu-active">Team</a>
       </li>
       @if (userAuth.loggedIn()) {
-      <ul class="mt-2">
+      <div class="divider"></div>
+      <ul class="mt-2 text-xl">
         {{
           userAuth.user()?.displayName
         }}
@@ -75,7 +76,8 @@
         </li>
       </ul>
       } @if (userAuth.loggedIn() && userAuth.userCustomClaims()?.admin) {
-      <ul class="mt-2">
+      <div class="divider"></div>
+      <ul class="mt-2 text-xl">
         Admin bitch!
         <li>
           <a routerLink="/admin/athletes" routerLinkActive="menu-active"
