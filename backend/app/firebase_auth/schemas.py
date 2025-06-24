@@ -4,7 +4,7 @@ from app.schemas import CustomBaseModel
 
 
 class FirebaseCustomClaims(CustomBaseModel):
-    athlete_id: int | None
+    crossfit_id: int | None
     affiliate_id: int | None
     affiliate_name: str | None
     admin: bool = False
@@ -26,6 +26,6 @@ class CreateUser(CustomBaseModel):
     email: EmailStr
     password: str
     display_name: str
-    athlete_id: int
+    crossfit_id: int
     affiliate_id: int
     affiliate_name: str

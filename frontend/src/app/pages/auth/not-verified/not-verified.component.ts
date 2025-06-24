@@ -8,8 +8,8 @@ import {
 } from '@angular/forms';
 import { timer } from 'rxjs';
 import { Router, RouterLink } from '@angular/router';
-import { apiAuthService } from '../../../api/services';
 import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
+import { Auth, sendEmailVerification } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-not-verified',
@@ -17,9 +17,9 @@ import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
   templateUrl: './not-verified.component.html',
   styleUrl: './not-verified.component.css',
 })
-export class NotVerifiedComponent implements OnInit {
-  private apiAuth = inject(apiAuthService);
+export class NotVerifiedComponent {
   userAuth = inject(UserAuthService);
+  private auth = inject(Auth);
   private router = inject(Router);
 
   emailSent = false;
@@ -31,32 +31,16 @@ export class NotVerifiedComponent implements OnInit {
   });
 
   onClickSendEmail() {
-    const email: string =
-      this.userAuth.user()?.email || this.emailForm.value.email || '';
-
-    if (this.userAuth.user()) {
-    }
-    this.apiAuth
-      .verifyRequestTokenAuthRequestVerifyTokenPost$Response({
-        body: { email: email },
+    this.userAuth
+      .sendVerificationEmail()
+      .then(() => {
+        this.emailSent = true;
+        timer(3000).subscribe(() => {
+          this.router.navigate(['/home']);
+        });
       })
-      .subscribe({
-        next: () => {
-          this.emailSent = true;
-
-          timer(3000).subscribe(() => {
-            this.router.navigate(['/home']);
-          });
-        },
-        error: (err: any) => {
-          console.error('Error requesting verification email', err);
-        },
+      .catch((err: any) => {
+        console.error(err);
       });
-  }
-
-  ngOnInit(): void {
-    if (!!this.userAuth.user()) {
-      this.emailForm.controls.email.setValue(this.userAuth.user()!.email);
-    }
   }
 }

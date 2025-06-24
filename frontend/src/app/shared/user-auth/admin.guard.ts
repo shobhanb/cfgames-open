@@ -4,7 +4,11 @@ import { UserAuthService } from './user-auth.service';
 
 export const adminGuard: CanActivateFn = (route, state) => {
   const userAuth = inject(UserAuthService);
-  if (userAuth.loggedIn() && userAuth.user()?.is_superuser) {
+  if (
+    userAuth.loggedIn() &&
+    userAuth.user()?.emailVerified &&
+    userAuth.userCustomClaims()?.admin
+  ) {
     return true;
   }
   return false;

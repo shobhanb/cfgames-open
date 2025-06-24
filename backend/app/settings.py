@@ -1,4 +1,4 @@
-from pydantic import EmailStr, SecretStr
+from pydantic import EmailStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -20,26 +20,15 @@ class URLSettings(CustomBaseSettings):
 
 
 class AuthSettings(CustomBaseSettings):
-    token_lifetime_seconds: int = 3600
     admin_api_key: str = "secret"
-    reset_password_token_key: str = "secret"  # noqa: S105
-    verification_token_key: str = "secret"  # noqa: S105
-    oauth_token_key: str = "secret"  # noqa: S105
-    google_oauth_client_id: str = "secret"
-    google_oauth_client_secret: str = "secret"  # noqa: S105
 
 
-class EmailerSettings(CustomBaseSettings):
-    email_username: str = "noreply@example.com"
-    email_password: SecretStr
-    email_smtp_server: str
-    email_port: int
-    email_from: EmailStr
-    email_from_name: str
+class AdminUserSettings(CustomBaseSettings):
+    admin_user_email: EmailStr
 
 
 env_settings = EnvSettings()
 db_settings = DBSettings()
 url_settings = URLSettings()
 auth_settings = AuthSettings()
-emailer_settings = EmailerSettings()  # type: ignore  # noqa: PGH003
+admin_user_settings = AdminUserSettings()  # type: ignore  # noqa: PGH003

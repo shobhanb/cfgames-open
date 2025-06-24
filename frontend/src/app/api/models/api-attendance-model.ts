@@ -4,7 +4,7 @@
 
 export interface apiAttendanceModel {
   affiliate_id: number;
-  competitor_id: number;
+  crossfit_id: number;
   name: string;
   ordinal: number;
   year: number;

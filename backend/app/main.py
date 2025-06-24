@@ -23,13 +23,10 @@ from app.score.views import score_router
 from app.settings import env_settings, url_settings
 from app.sidescore.views import sidescore_router
 from app.teams.views import teams_router
-from app.user.models import AuthBase
-from app.user.views import auth_router
 
 log = logging.getLogger("uvicorn.error")
 
-RESET_DB = True
-RESET_AUTH_DB = True
+RESET_DB = False
 
 cred = firebase_admin.credentials.Certificate("firebase_service_account_key.json")
 default_app = firebase_admin.initialize_app(credential=cred)
@@ -42,10 +39,6 @@ async def lifespan(_: FastAPI) -> AsyncGenerator:
         async with session_manager.connect() as conn:
             await conn.run_sync(Base.metadata.drop_all)
             await conn.run_sync(Base.metadata.create_all)
-    if RESET_AUTH_DB:
-        async with session_manager.connect() as conn:
-            await conn.run_sync(AuthBase.metadata.drop_all)
-            await conn.run_sync(AuthBase.metadata.create_all)
 
     yield
 
@@ -62,7 +55,6 @@ app = FastAPI(**app_configs)
 app.include_router(cf_events_router)
 app.include_router(cf_games_router)
 app.include_router(firebase_auth_router)
-app.include_router(auth_router)
 app.include_router(athlete_router)
 app.include_router(score_router)
 app.include_router(attendance_router)

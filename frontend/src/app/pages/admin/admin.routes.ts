@@ -7,7 +7,7 @@ export const adminRoutes: Routes = [
       import('./athletes/athletes.component').then((c) => c.AthletesComponent),
   },
   {
-    path: 'edit-athlete/:userId',
+    path: 'edit-athlete/:uid',
     loadComponent: () =>
       import('./edit-athlete/edit-athlete.component').then(
         (c) => c.EditAthleteComponent

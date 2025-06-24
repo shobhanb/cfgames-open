@@ -90,10 +90,10 @@ export class ScoresComponent implements OnInit {
 
       this.filteredIndividualScores().forEach(
         (score: apiIndividualScoreModel) => {
-          const existingScore = scoreMap.get(score.competitor_id);
+          const existingScore = scoreMap.get(score.crossfit_id);
 
           if (!existingScore) {
-            scoreMap.set(score.competitor_id, { ...score });
+            scoreMap.set(score.crossfit_id, { ...score });
           } else {
             existingScore.appreciation_score += score.appreciation_score;
             existingScore.judge_score += score.judge_score;

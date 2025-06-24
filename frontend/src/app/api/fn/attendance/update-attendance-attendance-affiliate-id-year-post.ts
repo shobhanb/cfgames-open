@@ -12,7 +12,7 @@ import { RequestBuilder } from '../../request-builder';
 export interface UpdateAttendanceAttendanceAffiliateIdYearPost$Params {
   affiliate_id: number;
   year: number;
-  competitor_id: number;
+  crossfit_id: number;
   ordinal: number;
 }
 
@@ -21,7 +21,7 @@ export function updateAttendanceAttendanceAffiliateIdYearPost(http: HttpClient, 
   if (params) {
     rb.path('affiliate_id', params.affiliate_id, {});
     rb.path('year', params.year, {});
-    rb.query('competitor_id', params.competitor_id, {});
+    rb.query('crossfit_id', params.crossfit_id, {});
     rb.query('ordinal', params.ordinal, {});
   }
 

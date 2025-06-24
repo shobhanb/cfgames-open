@@ -1,14 +1,19 @@
+import logging
+
 from fastapi import APIRouter, status
 from firebase_admin import auth as fireauth
 from firebase_admin.auth import ListUsersPage, UserRecord
 from firebase_admin.exceptions import FirebaseError
 
 from app.database.dependencies import db_dependency
+from app.settings import admin_user_settings
 
 from .dependencies import admin_user_dependency
-from .exceptions import already_assigned_exception, invalid_input_exception
+from .exceptions import already_assigned_exception, firebase_error, invalid_input_exception
 from .models import FirebaseUser
 from .schemas import CreateUser, FirebaseCustomClaims, FirebaseUserRecord
+
+log = logging.getLogger("uvicorn.error")
 
 firebase_auth_router = APIRouter(prefix="/fireauth", tags=["fireauth"])
 
@@ -18,7 +23,7 @@ async def create_user(
     db_session: db_dependency,
     user_info: CreateUser,
 ) -> UserRecord:
-    athlete_assigned = await FirebaseUser.find(async_session=db_session, athlete_id=user_info.athlete_id)
+    athlete_assigned = await FirebaseUser.find(async_session=db_session, crossfit_id=user_info.crossfit_id)
     if athlete_assigned:
         raise already_assigned_exception()
 
@@ -28,25 +33,35 @@ async def create_user(
             password=user_info.password,
             display_name=user_info.display_name,
         )
-    except (ValueError, FirebaseError) as e:
-        msg = "Error creating user"
+    except ValueError as e:
+        msg = "Value error - Invalid user inputs"
         raise invalid_input_exception(msg) from e
+    except FirebaseError as e:
+        raise firebase_error(e) from e
 
     user_custom_claims = FirebaseCustomClaims(
-        athlete_id=user_info.athlete_id,
+        crossfit_id=user_info.crossfit_id,
         affiliate_id=user_info.affiliate_id,
         affiliate_name=user_info.affiliate_name,
     )
 
+    if user.email == admin_user_settings.admin_user_email:
+        user_custom_claims.admin = True
+    else:
+        user_custom_claims.admin = False
+
     try:
         fireauth.set_custom_user_claims(uid=user.uid, custom_claims=user_custom_claims.model_dump_json())
-    except (ValueError, FirebaseError) as e:
-        msg = "Error assigning user claims"
+    except ValueError as e:
+        msg = "Invalid UID for custom claims"
         raise invalid_input_exception(msg) from e
+    except FirebaseError as e:
+        raise firebase_error(e) from e
 
     firebase_user = FirebaseUser(
         email=user_info.email,
-        athlete_id=user_info.athlete_id,
+        uid=user.uid,
+        crossfit_id=user_info.crossfit_id,
         affiliate_id=user_info.affiliate_id,
         affiliate_name=user_info.affiliate_name,
     )
@@ -56,28 +71,29 @@ async def create_user(
     return fireauth.get_user(user.uid)
 
 
-@firebase_auth_router.post("/admin/{uid}", status_code=status.HTTP_202_ACCEPTED)
-async def make_user_admin(
+@firebase_auth_router.post("/change-admin/{uid}", status_code=status.HTTP_202_ACCEPTED)
+async def update_user_admin_rights(
     _: admin_user_dependency,
     uid: str,
+    admin: bool,  # noqa: FBT001
 ) -> None:
     user: UserRecord = fireauth.get_user(uid=uid)
     claims = user.custom_claims or {}
     validated_claims = FirebaseCustomClaims.model_validate(claims)
-    validated_claims.admin = True
+    validated_claims.admin = admin
 
     fireauth.set_custom_user_claims(uid=user.uid, custom_claims=validated_claims.model_dump_json())
 
 
-@firebase_auth_router.get("/{email}", status_code=status.HTTP_200_OK, response_model=FirebaseUserRecord)
+@firebase_auth_router.get("/user/{uid}", status_code=status.HTTP_200_OK, response_model=FirebaseUserRecord)
 async def get_user_info(
     _: admin_user_dependency,
-    email: str,
+    uid: str,
 ) -> UserRecord:
-    return fireauth.get_user_by_email(email)
+    return fireauth.get_user(uid)
 
 
-@firebase_auth_router.delete("/{uid}", status_code=status.HTTP_202_ACCEPTED)
+@firebase_auth_router.delete("/user/{uid}", status_code=status.HTTP_202_ACCEPTED)
 async def delete_user(
     _: admin_user_dependency,
     uid: str,
@@ -91,3 +107,27 @@ async def get_all_users(
 ) -> list[UserRecord]:
     page: ListUsersPage = fireauth.list_users()
     return list(page.iterate_all())
+
+
+@firebase_auth_router.post("/refresh_all", status_code=status.HTTP_200_OK)
+async def refresh_all_firebase_userdata(
+    # _: api_key_admin_dependency,
+    db_session: db_dependency,
+) -> None:
+    page: ListUsersPage = fireauth.list_users()
+    user_list: list[UserRecord] = list(page.iterate_all())
+
+    await FirebaseUser.delete_all(async_session=db_session)
+
+    for user in user_list:
+        if user.custom_claims:
+            firebase_user = FirebaseUser(
+                email=user.email,
+                uid=user.uid,
+                crossfit_id=user.custom_claims["crossfit_id"],
+                affiliate_id=user.custom_claims["affiliate_id"],
+                affiliate_name=user.custom_claims["affiliate_name"],
+            )
+            db_session.add(firebase_user)
+
+    await db_session.commit()

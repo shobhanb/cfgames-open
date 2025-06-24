@@ -14,8 +14,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { apiAppreciationModelOutput } from '../models/api-appreciation-model-output';
 import { getAppreciationAppreciationAffiliateIdYearOrdinalGet } from '../fn/appreciation/get-appreciation-appreciation-affiliate-id-year-ordinal-get';
 import { GetAppreciationAppreciationAffiliateIdYearOrdinalGet$Params } from '../fn/appreciation/get-appreciation-appreciation-affiliate-id-year-ordinal-get';
-import { updateAppreciationAppreciationAthleteIdOrdinalPost } from '../fn/appreciation/update-appreciation-appreciation-athlete-id-ordinal-post';
-import { UpdateAppreciationAppreciationAthleteIdOrdinalPost$Params } from '../fn/appreciation/update-appreciation-appreciation-athlete-id-ordinal-post';
+import { updateAppreciationAppreciationCrossfitIdOrdinalPost } from '../fn/appreciation/update-appreciation-appreciation-crossfit-id-ordinal-post';
+import { UpdateAppreciationAppreciationCrossfitIdOrdinalPost$Params } from '../fn/appreciation/update-appreciation-appreciation-crossfit-id-ordinal-post';
 
 @Injectable({ providedIn: 'root' })
 export class apiAppreciationService extends BaseService {
@@ -56,8 +56,8 @@ export class apiAppreciationService extends BaseService {
     );
   }
 
-  /** Path part for operation `updateAppreciationAppreciationAthleteIdOrdinalPost()` */
-  static readonly UpdateAppreciationAppreciationAthleteIdOrdinalPostPath = '/appreciation/{athlete_id}/{ordinal}';
+  /** Path part for operation `updateAppreciationAppreciationCrossfitIdOrdinalPost()` */
+  static readonly UpdateAppreciationAppreciationCrossfitIdOrdinalPostPath = '/appreciation/{crossfit_id}/{ordinal}';
 
   /**
    * Update Appreciation.
@@ -65,12 +65,12 @@ export class apiAppreciationService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateAppreciationAppreciationAthleteIdOrdinalPost()` instead.
+   * To access only the response body, use `updateAppreciationAppreciationCrossfitIdOrdinalPost()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateAppreciationAppreciationAthleteIdOrdinalPost$Response(params: UpdateAppreciationAppreciationAthleteIdOrdinalPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAppreciationModelOutput>> {
-    return updateAppreciationAppreciationAthleteIdOrdinalPost(this.http, this.rootUrl, params, context);
+  updateAppreciationAppreciationCrossfitIdOrdinalPost$Response(params: UpdateAppreciationAppreciationCrossfitIdOrdinalPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAppreciationModelOutput>> {
+    return updateAppreciationAppreciationCrossfitIdOrdinalPost(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -79,12 +79,12 @@ export class apiAppreciationService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updateAppreciationAppreciationAthleteIdOrdinalPost$Response()` instead.
+   * To access the full response (for headers, for example), `updateAppreciationAppreciationCrossfitIdOrdinalPost$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateAppreciationAppreciationAthleteIdOrdinalPost(params: UpdateAppreciationAppreciationAthleteIdOrdinalPost$Params, context?: HttpContext): Observable<apiAppreciationModelOutput> {
-    return this.updateAppreciationAppreciationAthleteIdOrdinalPost$Response(params, context).pipe(
+  updateAppreciationAppreciationCrossfitIdOrdinalPost(params: UpdateAppreciationAppreciationCrossfitIdOrdinalPost$Params, context?: HttpContext): Observable<apiAppreciationModelOutput> {
+    return this.updateAppreciationAppreciationCrossfitIdOrdinalPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<apiAppreciationModelOutput>): apiAppreciationModelOutput => r.body)
     );
   }

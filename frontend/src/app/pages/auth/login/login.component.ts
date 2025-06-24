@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, runInInjectionContext, inject } from '@angular/core';
 import { AuthWrapperComponent } from '../auth-wrapper/auth-wrapper.component';
 import {
   FormControl,
@@ -9,7 +9,7 @@ import {
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ionLogoYahoo, ionMail } from '@ng-icons/ionicons';
 import { RouterLink } from '@angular/router';
-import { LoggedinWarningService } from '../loggedin-warning.service';
+import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
 
 @Component({
@@ -19,9 +19,9 @@ import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
+  private auth = inject(Auth);
   private userAuth = inject(UserAuthService);
-  private loggedinWarning = inject(LoggedinWarningService);
 
   loginForm = new FormGroup({
     email: new FormControl('', {
@@ -37,17 +37,12 @@ export class LoginComponent implements OnInit {
       this.loginForm.value.email &&
       this.loginForm.value.password
     ) {
-      this.userAuth.loginWithEmailAndPassword({
-        username: this.loginForm.value.email,
-        password: this.loginForm.value.password,
-      });
+      this.userAuth.loginWithEmailAndPassword(
+        this.loginForm.value.email,
+        this.loginForm.value.password
+      );
     }
   }
 
-  ngOnInit(): void {
-    this.userAuth.loginWithLocalToken();
-  }
-  constructor() {
-    effect(() => this.loggedinWarning.checkLoggedIn());
-  }
+  constructor() {}
 }

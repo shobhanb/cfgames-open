@@ -24,7 +24,7 @@ async def get_db_leaderboard(
             Athlete.year,
             Score.ordinal,
             Athlete.name,
-            Athlete.competitor_id,
+            Athlete.crossfit_id,
             Athlete.gender,
             Athlete.age_category,
             Athlete.team_name,
@@ -33,7 +33,7 @@ async def get_db_leaderboard(
             Score.score_display,
             Score.tiebreak_ms,
         )
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .where(
             (Athlete.affiliate_id == affiliate_id) & (Athlete.year == year),
         )
@@ -54,7 +54,7 @@ async def get_db_individual_scores(
             Athlete.year,
             Score.ordinal,
             Athlete.name,
-            Athlete.competitor_id,
+            Athlete.crossfit_id,
             Athlete.gender,
             Athlete.age_category,
             Athlete.team_name,
@@ -66,7 +66,7 @@ async def get_db_individual_scores(
             Score.appreciation_score,
             Score.total_individual_score,
         )
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .where(
             (Athlete.affiliate_id == affiliate_id) & (Athlete.year == year),
         )
@@ -97,7 +97,7 @@ async def get_db_team_scores(
             func.sum(Score.spirit_score).label("spirit_score"),
             func.sum(Score.total_team_score).label("total_team_score"),
         )
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .group_by(
             Athlete.affiliate_id,
             Athlete.year,
@@ -114,14 +114,14 @@ async def get_db_team_scores(
     return [dict(x) for x in results]
 
 
-async def get_my_db_scores(db_session: AsyncSession, competitor_id: int) -> list[dict[str, Any]]:
+async def get_my_db_scores(db_session: AsyncSession, crossfit_id: int) -> list[dict[str, Any]]:
     stmt = (
         select(
             Athlete.affiliate_id,
             Athlete.year,
             Score.ordinal,
             Athlete.name,
-            Athlete.competitor_id,
+            Athlete.crossfit_id,
             Athlete.gender,
             Athlete.age_category,
             Athlete.team_name,
@@ -136,8 +136,8 @@ async def get_my_db_scores(db_session: AsyncSession, competitor_id: int) -> list
             Score.appreciation_score,
             Score.total_individual_score,
         )
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
-        .where(Athlete.competitor_id == competitor_id)
+        .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
+        .where(Athlete.crossfit_id == crossfit_id)
     )
 
     ret = await db_session.execute(stmt)

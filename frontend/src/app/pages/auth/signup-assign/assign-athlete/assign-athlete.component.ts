@@ -19,7 +19,6 @@ import { HelperFunctionsService } from '../../../../shared/helper-functions.serv
 })
 export class AssignAthleteComponent implements OnInit, OnDestroy {
   private router = inject(Router);
-  private helperFunctions = inject(HelperFunctionsService);
   signupFormService = inject(SignupFormService);
 
   private gymFormControlSubscription$: any;

@@ -9,16 +9,16 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface UpdateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost$Params {
-  athlete_id: string;
+export interface UpdateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Params {
+  crossfit_id: number;
   ordinal: number;
   score: number;
 }
 
-export function updateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost(http: HttpClient, rootUrl: string, params: UpdateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
-  const rb = new RequestBuilder(rootUrl, updateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost.PATH, 'post');
+export function updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost(http: HttpClient, rootUrl: string, params: UpdateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+  const rb = new RequestBuilder(rootUrl, updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost.PATH, 'post');
   if (params) {
-    rb.path('athlete_id', params.athlete_id, {});
+    rb.path('crossfit_id', params.crossfit_id, {});
     rb.path('ordinal', params.ordinal, {});
     rb.path('score', params.score, {});
   }
@@ -33,4 +33,4 @@ export function updateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePo
   );
 }
 
-updateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost.PATH = '/appreciation_score/{athlete_id}/{ordinal}/{score}';
+updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost.PATH = '/appreciation_score/{crossfit_id}/{ordinal}/{score}';

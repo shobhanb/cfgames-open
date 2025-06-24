@@ -1,23 +1,23 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from uuid import UUID
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String, Text, UniqueConstraint, Uuid
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import Boolean, Integer, String, Text, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.base import Base
 
 if TYPE_CHECKING:
-    from app.athlete.models import Athlete
+    pass
 
 
 class Score(Base):
-    __table_args__ = (UniqueConstraint("athlete_id", "ordinal"),)
+    __table_args__ = (UniqueConstraint("crossfit_id", "year", "ordinal"),)
 
     # PK / FK
-    athlete_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("athlete.id"))
+    crossfit_id: Mapped[int] = mapped_column(Integer)
     ordinal: Mapped[int] = mapped_column(Integer)
+    year: Mapped[int] = mapped_column(Integer)
 
     # CF Fields
     rank: Mapped[int] = mapped_column(Integer)
@@ -46,6 +46,3 @@ class Score(Base):
     tiebreak_ms: Mapped[str | None] = mapped_column(String, nullable=True)
     total_individual_score: Mapped[int] = mapped_column(Integer, default=0)
     total_team_score: Mapped[int] = mapped_column(Integer, default=0)
-
-    # Relationships
-    athlete: Mapped[Athlete] = relationship(back_populates="scores")

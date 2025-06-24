@@ -37,7 +37,7 @@
     <ng-icon name="heroUser" />
     <span class="dock-label">Me</span>
   </button>
-  } @if ( userAuth.loggedIn() && userAuth.user()?.is_superuser ) {
+  } @if ( userAuth.loggedIn() && userAuth.userCustomClaims()?.admin ) {
   <button type="button" (click)="onClickAdmin()">
     <ng-icon name="heroLockClosed" />
     <span class="dock-label">Admin</span>

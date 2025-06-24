@@ -17,8 +17,8 @@ import { getAthletePrefsAthletePrefsAllGet } from '../fn/athlete-prefs/get-athle
 import { GetAthletePrefsAthletePrefsAllGet$Params } from '../fn/athlete-prefs/get-athlete-prefs-athlete-prefs-all-get';
 import { getMyPrefsAthletePrefsMeGet } from '../fn/athlete-prefs/get-my-prefs-athlete-prefs-me-get';
 import { GetMyPrefsAthletePrefsMeGet$Params } from '../fn/athlete-prefs/get-my-prefs-athlete-prefs-me-get';
-import { updateAthletePrefsAthletePrefsCompetitorIdPost } from '../fn/athlete-prefs/update-athlete-prefs-athlete-prefs-competitor-id-post';
-import { UpdateAthletePrefsAthletePrefsCompetitorIdPost$Params } from '../fn/athlete-prefs/update-athlete-prefs-athlete-prefs-competitor-id-post';
+import { updateAthletePrefsAthletePrefsCrossfitIdPost } from '../fn/athlete-prefs/update-athlete-prefs-athlete-prefs-crossfit-id-post';
+import { UpdateAthletePrefsAthletePrefsCrossfitIdPost$Params } from '../fn/athlete-prefs/update-athlete-prefs-athlete-prefs-crossfit-id-post';
 import { updateMyPrefsAthletePrefsMePost } from '../fn/athlete-prefs/update-my-prefs-athlete-prefs-me-post';
 import { UpdateMyPrefsAthletePrefsMePost$Params } from '../fn/athlete-prefs/update-my-prefs-athlete-prefs-me-post';
 
@@ -127,8 +127,8 @@ export class apiAthletePrefsService extends BaseService {
     );
   }
 
-  /** Path part for operation `updateAthletePrefsAthletePrefsCompetitorIdPost()` */
-  static readonly UpdateAthletePrefsAthletePrefsCompetitorIdPostPath = '/athlete-prefs/{competitor_id}';
+  /** Path part for operation `updateAthletePrefsAthletePrefsCrossfitIdPost()` */
+  static readonly UpdateAthletePrefsAthletePrefsCrossfitIdPostPath = '/athlete-prefs/{crossfit_id}';
 
   /**
    * Update Athlete Prefs.
@@ -136,12 +136,12 @@ export class apiAthletePrefsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateAthletePrefsAthletePrefsCompetitorIdPost()` instead.
+   * To access only the response body, use `updateAthletePrefsAthletePrefsCrossfitIdPost()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateAthletePrefsAthletePrefsCompetitorIdPost$Response(params: UpdateAthletePrefsAthletePrefsCompetitorIdPost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
-    return updateAthletePrefsAthletePrefsCompetitorIdPost(this.http, this.rootUrl, params, context);
+  updateAthletePrefsAthletePrefsCrossfitIdPost$Response(params: UpdateAthletePrefsAthletePrefsCrossfitIdPost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+    return updateAthletePrefsAthletePrefsCrossfitIdPost(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -150,12 +150,12 @@ export class apiAthletePrefsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updateAthletePrefsAthletePrefsCompetitorIdPost$Response()` instead.
+   * To access the full response (for headers, for example), `updateAthletePrefsAthletePrefsCrossfitIdPost$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateAthletePrefsAthletePrefsCompetitorIdPost(params: UpdateAthletePrefsAthletePrefsCompetitorIdPost$Params, context?: HttpContext): Observable<any> {
-    return this.updateAthletePrefsAthletePrefsCompetitorIdPost$Response(params, context).pipe(
+  updateAthletePrefsAthletePrefsCrossfitIdPost(params: UpdateAthletePrefsAthletePrefsCrossfitIdPost$Params, context?: HttpContext): Observable<any> {
+    return this.updateAthletePrefsAthletePrefsCrossfitIdPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<any>): any => r.body)
     );
   }

@@ -4,13 +4,13 @@ from fastapi import APIRouter, Depends, status
 
 from app.cf_games.service import apply_side_scores, apply_total_team_score
 from app.database.dependencies import db_dependency
+from app.firebase_auth.dependencies import get_admin_user
 from app.sidescore.models import SideScore
-from app.user.dependencies import current_superuser
 
 from .schemas import SideScoreModel
 from .service import get_db_sidescores, update_db_sidescores
 
-sidescore_router = APIRouter(prefix="/sidescore", tags=["sidescore"], dependencies=[Depends(current_superuser)])
+sidescore_router = APIRouter(prefix="/sidescore", tags=["sidescore"], dependencies=[Depends(get_admin_user)])
 
 
 @sidescore_router.get(

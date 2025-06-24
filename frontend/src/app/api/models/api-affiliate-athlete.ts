@@ -5,6 +5,6 @@
 export interface apiAffiliateAthlete {
   affiliate_id: number;
   affiliate_name: string;
-  competitor_id: number;
+  crossfit_id: number;
   name: string;
 }

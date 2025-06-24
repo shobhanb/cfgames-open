@@ -1,11 +1,10 @@
 from typing import Any, Literal
-from uuid import UUID
 
 from fastapi import APIRouter, status
 
 from app.athlete.models import Athlete
 from app.database.dependencies import db_dependency
-from app.user.dependencies import current_superuser_dependency, current_user_dependency
+from app.firebase_auth.dependencies import admin_user_dependency, verified_user_dependency
 
 from .schemas import AffiliateAthlete, AthleteDetail
 from .service import (
@@ -22,9 +21,9 @@ athlete_router = APIRouter(prefix="/athlete", tags=["athlete"])
 @athlete_router.get("/me", status_code=status.HTTP_200_OK, response_model=AthleteDetail)
 async def get_my_athlete_data(
     db_session: db_dependency,
-    user: current_user_dependency,
+    user: verified_user_dependency,
 ) -> Athlete:
-    return await get_user_data(db_session=db_session, competitor_id=user.athlete_id)
+    return await get_user_data(db_session=db_session, crossfit_id=user.crossfit_id)
 
 
 @athlete_router.get("/list", status_code=status.HTTP_200_OK, response_model=list[AffiliateAthlete])
@@ -58,14 +57,16 @@ async def get_athlete_detail(  # noqa: PLR0913
 @athlete_router.put("/team/assign", status_code=status.HTTP_202_ACCEPTED)
 async def assign_athlete_to_team(
     db_session: db_dependency,
-    athlete_id: UUID,
+    crossfit_id: int,
+    year: int,
     team_name: str,
     team_role: int,
-    _: current_superuser_dependency,
+    _: admin_user_dependency,
 ) -> None:
     return await assign_db_athlete_to_team(
         db_session=db_session,
-        athlete_id=athlete_id,
+        crossfit_id=crossfit_id,
+        year=year,
         team_name=team_name,
         team_role=team_role,
     )
@@ -76,6 +77,6 @@ async def random_assign_athletes(
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
-    _: current_superuser_dependency,
+    _: admin_user_dependency,
 ) -> None:
     await random_assign_db_athletes(db_session=db_session, affiliate_id=affiliate_id, year=year)

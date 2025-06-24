@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -17,7 +15,7 @@ async def get_db_appreciation(
 ) -> list[Appreciation]:
     stmt = (
         select(Appreciation)
-        .join_from(Appreciation, Athlete, Appreciation.athlete_id == Athlete.id)
+        .join_from(Appreciation, Athlete, Appreciation.crossfit_id == Athlete.crossfit_id)
         .where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year) & (Appreciation.ordinal == ordinal))
     )
     ret = await db_session.execute(stmt)
@@ -27,16 +25,16 @@ async def get_db_appreciation(
 
 async def update_db_appreciation(
     db_session: AsyncSession,
-    athlete_id: UUID,
+    crossfit_id: int,
     ordinal: int,
     input_data: AppreciationModelInput,
 ) -> Appreciation:
-    appreciation = await Appreciation.find(db_session, athlete_id=athlete_id, ordinal=ordinal)
+    appreciation = await Appreciation.find(db_session, crossfit_id=crossfit_id, ordinal=ordinal)
     if appreciation:
         for var, value in vars(input_data).items():
             setattr(appreciation, var, value) if value else None
     else:
-        appreciation = Appreciation(**input_data.model_dump(), athlete_id=athlete_id, ordinal=ordinal)
+        appreciation = Appreciation(**input_data.model_dump(), crossfit_id=crossfit_id, ordinal=ordinal)
         db_session.add(appreciation)
 
     await db_session.commit()

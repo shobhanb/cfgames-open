@@ -5,21 +5,24 @@
     tabindex="0"
     role="button"
   >
-    <span class="text-md hidden md:inline">{{ userAuth.user()!.name }}</span>
+    <span class="text-md hidden md:inline">{{
+      userAuth.user()?.displayName
+    }}</span>
     <span class="text-md md:hidden">{{ userAuth.userNameInitials() }}</span>
   </div>
   <ul
     class="dropdown-content flex flex-col gap-2 bg-base-200 rounded-box z-1 p-4 m-2 shadow-sm"
     tabindex="0"
   >
-    <li class="md:hidden">{{ userAuth.user()!.name }}</li>
+    <li class="md:hidden">{{ userAuth.user()?.displayName }}</li>
     <li>{{ userAuth.user()!.email }}</li>
+    <li>{{ userAuth.userCustomClaims()?.affiliate_name }}</li>
+    <li>{{ "CF ID: " + userAuth.userCustomClaims()?.crossfit_id }}</li>
+    @if (userAuth.user()?.emailVerified) {
+    <li>{{ userAuth.athlete()?.team_name }}</li>
     <li>{{ "Gender: " + userAuth.athlete()?.gender }}</li>
     <li>{{ "Category: " + userAuth.athlete()?.age_category }}</li>
-    <li>{{ userAuth.user()!.affiliate }}</li>
-    <li>{{ "CF ID: " + userAuth.user()!.athlete_id }}</li>
-    <li>{{ userAuth.athlete()?.team_name }}</li>
-    @if (!userAuth.user()?.is_verified) {
+    } @else {
     <li class="text-error">Email not verified!!</li>
     <li>
       <button
@@ -30,7 +33,7 @@
         Uh oh
       </button>
     </li>
-    } @if (userAuth.user()?.is_superuser) {
+    } @if (userAuth.userCustomClaims()?.admin) {
     <li>Admin bitch!!</li>
     }
     <li>

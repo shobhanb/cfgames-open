@@ -10,15 +10,15 @@ import { RequestBuilder } from '../../request-builder';
 
 import { apiAthletePrefsModel } from '../../models/api-athlete-prefs-model';
 
-export interface UpdateAthletePrefsAthletePrefsCompetitorIdPost$Params {
-  competitor_id: number;
+export interface UpdateAthletePrefsAthletePrefsCrossfitIdPost$Params {
+  crossfit_id: number;
       body: Array<apiAthletePrefsModel>
 }
 
-export function updateAthletePrefsAthletePrefsCompetitorIdPost(http: HttpClient, rootUrl: string, params: UpdateAthletePrefsAthletePrefsCompetitorIdPost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
-  const rb = new RequestBuilder(rootUrl, updateAthletePrefsAthletePrefsCompetitorIdPost.PATH, 'post');
+export function updateAthletePrefsAthletePrefsCrossfitIdPost(http: HttpClient, rootUrl: string, params: UpdateAthletePrefsAthletePrefsCrossfitIdPost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+  const rb = new RequestBuilder(rootUrl, updateAthletePrefsAthletePrefsCrossfitIdPost.PATH, 'post');
   if (params) {
-    rb.path('competitor_id', params.competitor_id, {});
+    rb.path('crossfit_id', params.crossfit_id, {});
     rb.body(params.body, 'application/json');
   }
 
@@ -32,4 +32,4 @@ export function updateAthletePrefsAthletePrefsCompetitorIdPost(http: HttpClient,
   );
 }
 
-updateAthletePrefsAthletePrefsCompetitorIdPost.PATH = '/athlete-prefs/{competitor_id}';
+updateAthletePrefsAthletePrefsCrossfitIdPost.PATH = '/athlete-prefs/{crossfit_id}';

@@ -133,11 +133,11 @@
       class="list-row mx-1 md:mx-4 items-center"
       [class.bg-base-300]="
         userAuth.loggedIn() &&
-        userAuth.athlete()?.competitor_id === score.competitor_id
+        userAuth.athlete()?.crossfit_id === score.crossfit_id
       "
       [class.border]="
         userAuth.loggedIn() &&
-        userAuth.athlete()?.competitor_id === score.competitor_id
+        userAuth.athlete()?.crossfit_id === score.crossfit_id
       "
     >
       <div class="list-col-grow">

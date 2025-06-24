@@ -10,7 +10,8 @@ import { RequestBuilder } from '../../request-builder';
 
 
 export interface AssignAthleteToTeamAthleteTeamAssignPut$Params {
-  athlete_id: string;
+  crossfit_id: number;
+  year: number;
   team_name: string;
   team_role: number;
 }
@@ -18,7 +19,8 @@ export interface AssignAthleteToTeamAthleteTeamAssignPut$Params {
 export function assignAthleteToTeamAthleteTeamAssignPut(http: HttpClient, rootUrl: string, params: AssignAthleteToTeamAthleteTeamAssignPut$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
   const rb = new RequestBuilder(rootUrl, assignAthleteToTeamAthleteTeamAssignPut.PATH, 'put');
   if (params) {
-    rb.query('athlete_id', params.athlete_id, {});
+    rb.query('crossfit_id', params.crossfit_id, {});
+    rb.query('year', params.year, {});
     rb.query('team_name', params.team_name, {});
     rb.query('team_role', params.team_role, {});
   }

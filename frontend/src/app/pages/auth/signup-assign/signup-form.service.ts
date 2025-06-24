@@ -52,7 +52,7 @@ export class SignupFormService {
     this.athleteData()
       .filter((athlete) => athlete.affiliate_name === this.selectedAffiliate())
       .filter((athlete) => athlete.name === this.selectedName())
-      .map((athlete) => athlete.competitor_id)
+      .map((athlete) => athlete.crossfit_id)
       .sort()
   );
 
@@ -64,7 +64,7 @@ export class SignupFormService {
   // selectedAffiliateId = signal<number | null>(null);
   selectedAffiliateId = computed<number | null>(() => {
     return this.athleteData()
-      .filter((athlete) => athlete.competitor_id === this.selectedAthleteId())
+      .filter((athlete) => athlete.crossfit_id === this.selectedAthleteId())
       .map((athlete) => athlete.affiliate_id)
       .filter(this.helperFunctions.filterUnique)[0];
   });

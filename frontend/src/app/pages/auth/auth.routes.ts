@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { userGuard } from '../../shared/user-auth/user.guard';
 
 export const authRoutes: Routes = [
   {
@@ -31,7 +32,7 @@ export const authRoutes: Routes = [
       import('./verify/verify.component').then((c) => c.VerifyComponent),
   },
   {
-    path: 'reset-password/:token',
+    path: 'reset-password',
     loadComponent: () =>
       import('./reset-password/reset-password.component').then(
         (c) => c.ResetPasswordComponent

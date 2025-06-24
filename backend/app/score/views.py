@@ -4,7 +4,7 @@ from typing import Any
 from fastapi import APIRouter, status
 
 from app.database.dependencies import db_dependency
-from app.user.dependencies import current_verified_user_dependency
+from app.firebase_auth.dependencies import verified_user_dependency
 
 from .schemas import IndividualScoreModel, LeaderboardScoreModel, TeamScoreModel, UserScoreModel
 from .service import get_db_individual_scores, get_db_leaderboard, get_db_team_scores, get_my_db_scores
@@ -68,6 +68,6 @@ async def get_team_scores(
 @score_router.get("/me", status_code=status.HTTP_200_OK, response_model=list[UserScoreModel])
 async def get_my_scores(
     db_session: db_dependency,
-    user: current_verified_user_dependency,
+    user: verified_user_dependency,
 ) -> list[dict[str, Any]]:
-    return await get_my_db_scores(db_session=db_session, competitor_id=user.athlete_id)
+    return await get_my_db_scores(db_session=db_session, crossfit_id=user.crossfit_id)

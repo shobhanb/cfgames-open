@@ -16,8 +16,8 @@ import { ApplyAppreciationAppreciationScoreApplyAffiliateIdYearPost$Params } fro
 import { apiAppreciationScoreModel } from '../models/api-appreciation-score-model';
 import { getAppreciationScoresAppreciationScoreAffiliateIdYearGet } from '../fn/appreciation-score/get-appreciation-scores-appreciation-score-affiliate-id-year-get';
 import { GetAppreciationScoresAppreciationScoreAffiliateIdYearGet$Params } from '../fn/appreciation-score/get-appreciation-scores-appreciation-score-affiliate-id-year-get';
-import { updateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost } from '../fn/appreciation-score/update-appreciation-scores-appreciation-score-athlete-id-ordinal-score-post';
-import { UpdateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost$Params } from '../fn/appreciation-score/update-appreciation-scores-appreciation-score-athlete-id-ordinal-score-post';
+import { updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost } from '../fn/appreciation-score/update-appreciation-scores-appreciation-score-crossfit-id-ordinal-score-post';
+import { UpdateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Params } from '../fn/appreciation-score/update-appreciation-scores-appreciation-score-crossfit-id-ordinal-score-post';
 
 @Injectable({ providedIn: 'root' })
 export class apiAppreciationScoreService extends BaseService {
@@ -58,8 +58,8 @@ export class apiAppreciationScoreService extends BaseService {
     );
   }
 
-  /** Path part for operation `updateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost()` */
-  static readonly UpdateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePostPath = '/appreciation_score/{athlete_id}/{ordinal}/{score}';
+  /** Path part for operation `updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost()` */
+  static readonly UpdateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePostPath = '/appreciation_score/{crossfit_id}/{ordinal}/{score}';
 
   /**
    * Update Appreciation Scores.
@@ -67,12 +67,12 @@ export class apiAppreciationScoreService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost()` instead.
+   * To access only the response body, use `updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost()` instead.
    *
    * This method doesn't expect any request body.
    */
-  updateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost$Response(params: UpdateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
-    return updateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost(this.http, this.rootUrl, params, context);
+  updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Response(params: UpdateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+    return updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -81,12 +81,12 @@ export class apiAppreciationScoreService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost$Response()` instead.
+   * To access the full response (for headers, for example), `updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  updateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost(params: UpdateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost$Params, context?: HttpContext): Observable<any> {
-    return this.updateAppreciationScoresAppreciationScoreAthleteIdOrdinalScorePost$Response(params, context).pipe(
+  updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost(params: UpdateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Params, context?: HttpContext): Observable<any> {
+    return this.updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Response(params, context).pipe(
       map((r: StrictHttpResponse<any>): any => r.body)
     );
   }

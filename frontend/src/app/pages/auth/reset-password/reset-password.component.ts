@@ -10,6 +10,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LoggedinWarningService } from '../loggedin-warning.service';
 import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
 import { ModalService } from '../../../shared/modal/modal.service';
+import { Auth, sendPasswordResetEmail } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-reset-password',
@@ -17,8 +18,9 @@ import { ModalService } from '../../../shared/modal/modal.service';
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.css',
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent {
   private route = inject(ActivatedRoute);
+  private auth = inject(Auth);
   private userAuth = inject(UserAuthService);
   private modalService = inject(ModalService);
   private loggedinWarning = inject(LoggedinWarningService);
@@ -49,16 +51,10 @@ export class ResetPasswordComponent implements OnInit {
 
   onSubmit() {
     if (this.tokenValid && this.formValid && this.passwordsMatch) {
-      this.userAuth.resetPassword({
-        token: this.token!,
-        password: this.form.value.password1!,
-      });
+      console.log('TODO RESET PASSWORD');
     }
   }
 
-  ngOnInit(): void {
-    this.token = this.route.snapshot.paramMap.get('token');
-  }
   constructor() {
     effect(() => this.loggedinWarning.checkLoggedIn());
   }

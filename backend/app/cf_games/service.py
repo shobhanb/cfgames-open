@@ -115,7 +115,7 @@ async def process_cf_data(  # noqa: C901, PLR0912
             raise
 
         select_athlete_stmt = select(Athlete).where(
-            (Athlete.competitor_id == entrant_model.competitor_id) & (Athlete.year == year),
+            (Athlete.crossfit_id == entrant_model.crossfit_id) & (Athlete.year == year),
         )
         athlete = await db_session.scalar(select_athlete_stmt)
         if athlete:
@@ -124,13 +124,7 @@ async def process_cf_data(  # noqa: C901, PLR0912
         else:
             athlete = Athlete(**entrant_model.model_dump(), year=year)
             db_session.add(athlete)
-            # await db_session.flush()
-            # athlete = await Athlete.find_or_raise(
-            #     async_session=db_session,
-            #     year=year,
-            #     competitor_id=entrant_model.competitor_id,
-            # )
-            await init_assign_db_athlete_prefs(db_session=db_session, competitor_id=athlete.competitor_id)
+            await init_assign_db_athlete_prefs(db_session=db_session, crossfit_id=athlete.crossfit_id)
 
         if scores:
             for score in scores:
@@ -149,7 +143,9 @@ async def process_cf_data(  # noqa: C901, PLR0912
                         tiebreak_ms = score_model.breakdown[tiebreak_index + 10 :]
 
                 select_score_stmt = select(Score).where(
-                    (Score.athlete_id == athlete.id) & (Score.ordinal == score_model.ordinal),
+                    (Score.crossfit_id == athlete.crossfit_id)
+                    & (Score.year == athlete.year)
+                    & (Score.ordinal == score_model.ordinal),
                 )
                 event_score = await db_session.scalar(select_score_stmt)
                 if event_score:
@@ -160,7 +156,8 @@ async def process_cf_data(  # noqa: C901, PLR0912
                 else:
                     event_score = Score(
                         **score_model.model_dump(),
-                        athlete_id=athlete.id,
+                        crossfit_id=athlete.crossfit_id,
+                        year=athlete.year,
                         affiliate_scaled=affiliate_scaled,
                         tiebreak_ms=tiebreak_ms,
                     )
@@ -198,7 +195,7 @@ async def apply_participation_score(
 ) -> None:
     select_stmt = (
         select(Score.id)
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .where(
             (Athlete.year == year)
             & (Athlete.affiliate_id == affiliate_id)
@@ -228,7 +225,7 @@ async def apply_ranks(
             )
             .label("affiliate_rank"),
         )
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .where(
             (Athlete.year == year)
             & (Athlete.affiliate_id == affiliate_id)
@@ -250,7 +247,7 @@ async def apply_top3_score(
 ) -> None:
     select_stmt = (
         select(Score.id)
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .where(
             (Athlete.year == year)
             & (Athlete.affiliate_id == affiliate_id)
@@ -273,7 +270,7 @@ async def apply_attendance_scores(
         .join_from(
             Score,
             Attendance,
-            (Score.athlete_id == Attendance.athlete_id) & (Score.ordinal == Attendance.ordinal),
+            (Score.crossfit_id == Attendance.crossfit_id) & (Score.ordinal == Attendance.ordinal),
         )
         .where((Athlete.year == year) & (Athlete.affiliate_id == affiliate_id))
     )
@@ -292,7 +289,7 @@ async def apply_judge_score(
 ) -> None:
     select_judge_stmt = (
         select(Score.judge_name, Score.ordinal)
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .where((Athlete.year == year) & (Athlete.affiliate_id == affiliate_id))
         .distinct()
     )
@@ -301,7 +298,7 @@ async def apply_judge_score(
     for row in judges:
         select_score_stmt = (
             select(Score.id)
-            .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+            .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
             .where(
                 (Athlete.year == year)
                 & (Athlete.affiliate_id == affiliate_id)
@@ -324,7 +321,7 @@ async def apply_appreciation_score(
 ) -> None:
     all_scores_stmt = (
         select(Score.id)
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .where(
             (Athlete.year == year) & (Athlete.affiliate_id == affiliate_id),
         )
@@ -339,9 +336,9 @@ async def apply_appreciation_score(
         .join_from(
             Score,
             AppreciationScore,
-            (Score.athlete_id == AppreciationScore.athlete_id) & (Score.ordinal == AppreciationScore.ordinal),
+            (Score.crossfit_id == AppreciationScore.crossfit_id) & (Score.ordinal == AppreciationScore.ordinal),
         )
-        .join_from(AppreciationScore, Athlete, AppreciationScore.athlete_id == Athlete.id)
+        .join_from(AppreciationScore, Athlete, AppreciationScore.crossfit_id == Athlete.crossfit_id)
         .where(
             (Athlete.year == year)
             & (Athlete.affiliate_id == affiliate_id)
@@ -366,7 +363,7 @@ async def apply_side_scores(
         select_stmt = (
             (
                 select(Score)
-                .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+                .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
                 .where((Score.ordinal == side_score.ordinal) & (Athlete.team_name == side_score.team_name))
             )
             .order_by(Athlete.team_role.desc())
@@ -402,7 +399,7 @@ async def apply_total_individual_score(
                 + Score.appreciation_score
             ).label("total_individual_score"),
         )
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year))
     )
 
@@ -430,7 +427,7 @@ async def apply_total_team_score(
                 + Score.spirit_score
             ).label("total_team_score"),
         )
-        .join_from(Score, Athlete, Score.athlete_id == Athlete.id)
+        .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year))
     )
 

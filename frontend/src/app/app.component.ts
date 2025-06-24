@@ -11,11 +11,7 @@ import { ThemeService } from './shared/theme.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   private userAuth = inject(UserAuthService);
   private themeService = inject(ThemeService);
-
-  ngOnInit(): void {
-    this.userAuth.loginWithLocalToken();
-  }
 }

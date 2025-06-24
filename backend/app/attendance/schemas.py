@@ -5,5 +5,5 @@ class AttendanceModel(CustomBaseModel):
     year: int
     affiliate_id: int
     name: str
-    competitor_id: int
+    crossfit_id: int
     ordinal: int

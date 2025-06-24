@@ -3,7 +3,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException, status
 
-from app.auth.dependencies import api_key_admin_dependency
+from app.apikey_auth.dependencies import api_key_admin_dependency
 from app.database.dependencies import db_dependency
 from app.exceptions import unauthorised_exception
 

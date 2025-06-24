@@ -107,11 +107,11 @@
       class="list-row mx-1 md:mx-4 md:gap-8 items-center"
       [class.border]="
         userAuth.loggedIn() &&
-        userAuth.athlete()?.competitor_id === score.competitor_id
+        userAuth.athlete()?.crossfit_id === score.crossfit_id
       "
       [class.bg-base-300]="
         userAuth.loggedIn() &&
-        userAuth.athlete()?.competitor_id === score.competitor_id
+        userAuth.athlete()?.crossfit_id === score.crossfit_id
       "
     >
       <div class="">{{ score.affiliate_rank }}</div>
@@ -141,11 +141,11 @@
       class="list-row mx-1 md:mx-4 md:gap-8 items-center"
       [class.border]="
         userAuth.loggedIn() &&
-        userAuth.athlete()?.competitor_id === score.competitor_id
+        userAuth.athlete()?.crossfit_id === score.crossfit_id
       "
       [class.bg-base-300]="
         userAuth.loggedIn() &&
-        userAuth.athlete()?.competitor_id === score.competitor_id
+        userAuth.athlete()?.crossfit_id === score.crossfit_id
       "
     >
       <div class="">{{ score.affiliate_rank }}</div>

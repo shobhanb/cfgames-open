@@ -56,7 +56,7 @@
       @if (userAuth.loggedIn()) {
       <ul class="mt-2">
         {{
-          userAuth.user()?.name
+          userAuth.user()?.displayName
         }}
         <li>
           <a routerLink="/private/myscore" routerLinkActive="menu-active"
@@ -74,7 +74,7 @@
           >
         </li>
       </ul>
-      } @if (userAuth.loggedIn() && userAuth.user()?.is_superuser) {
+      } @if (userAuth.loggedIn() && userAuth.userCustomClaims()?.admin) {
       <ul class="mt-2">
         Admin bitch!
         <li>

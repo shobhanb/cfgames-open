@@ -13,19 +13,19 @@
     >
       <div class="list-col-grow">
         <div class="flex flex-col">
-          <span>{{ user.name }}</span>
+          <span>{{ user.display_name }}</span>
           <span class="text-xs opacity-60 font-semibold">{{
-            "CF ID: " + user.athlete_id
+            "CF ID: " + user.custom_claims?.crossfit_id
           }}</span>
           <span class="text-xs opacity-60 font-semibold">{{ user.email }}</span>
-          @if (user.is_superuser) {
+          @if (user.custom_claims?.admin) {
           <span class="text-secondary">Admin</span>
           }
         </div>
       </div>
       <div class="text-xs flex flex-col items-end justify-around">
         <span>Email</span>
-        @if (user.is_verified) {
+        @if (user.email_verified) {
         <div class="">Verified</div>
         } @else {
         <div class="text-warning">Not Verified</div>

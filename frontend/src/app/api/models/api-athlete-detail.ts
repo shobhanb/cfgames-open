@@ -6,9 +6,8 @@ export interface apiAthleteDetail {
   affiliate_id: number;
   affiliate_name: string;
   age_category: 'Open' | 'Masters' | 'Masters 55+';
-  competitor_id: number;
+  crossfit_id: number;
   gender: 'F' | 'M';
-  id: string;
   name: string;
   team_name: string;
   team_role: number;

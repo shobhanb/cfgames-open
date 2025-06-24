@@ -7,7 +7,7 @@ export interface apiLeaderboardScoreModel {
   affiliate_rank: number;
   affiliate_scaled: 'RX' | 'Scaled';
   age_category: 'Open' | 'Masters' | 'Masters 55+';
-  competitor_id: number;
+  crossfit_id: number;
   gender: 'M' | 'F';
   name: string;
   ordinal: number;

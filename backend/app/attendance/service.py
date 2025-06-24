@@ -19,11 +19,11 @@ async def get_db_attendance(
     ordinal: int,
 ) -> list[dict[str, Any]]:
     stmt = (
-        select(Athlete.year, Athlete.affiliate_id, Athlete.name, Athlete.competitor_id, Attendance.ordinal)
+        select(Athlete.year, Athlete.affiliate_id, Athlete.name, Athlete.crossfit_id, Attendance.ordinal)
         .join_from(
             Attendance,
             Athlete,
-            Attendance.athlete_id == Athlete.id,
+            (Attendance.crossfit_id == Athlete.crossfit_id) & (Attendance.year == Athlete.year),
         )
         .where((Athlete.year == year) & (Athlete.affiliate_id == affiliate_id) & (Attendance.ordinal == ordinal))
     )
@@ -37,15 +37,19 @@ async def update_db_attendance(
     affiliate_id: int,
     year: int,
     ordinal: int,
-    competitor_id: int,
+    crossfit_id: int,
 ) -> None:
     select_stmt = (
         select(Attendance)
-        .join_from(Attendance, Athlete, Attendance.athlete_id == Athlete.id)
+        .join_from(
+            Attendance,
+            Athlete,
+            (Attendance.crossfit_id == Athlete.crossfit_id) & (Attendance.year == Athlete.year),
+        )
         .where(
             (Athlete.year == year)
             & (Athlete.affiliate_id == affiliate_id)
-            & (Athlete.competitor_id == competitor_id)
+            & (Athlete.crossfit_id == crossfit_id)
             & (Attendance.ordinal == ordinal),
         )
     )
@@ -57,8 +61,8 @@ async def update_db_attendance(
             async_session=db_session,
             year=year,
             affiliate_id=affiliate_id,
-            competitor_id=competitor_id,
+            crossfit_id=crossfit_id,
         )
-        new_attendance = Attendance(athlete_id=athlete.id, ordinal=ordinal)
+        new_attendance = Attendance(crossfit_id=athlete.crossfit_id, year=year, ordinal=ordinal)
         db_session.add(new_attendance)
         await db_session.commit()

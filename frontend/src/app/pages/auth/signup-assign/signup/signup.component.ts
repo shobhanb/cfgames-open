@@ -12,12 +12,15 @@ import { ionLogoYahoo, ionMail } from '@ng-icons/ionicons';
 import { AuthWrapperComponent } from '../../auth-wrapper/auth-wrapper.component';
 import { SignupFormService } from '../signup-form.service';
 import { ModalService } from '../../../../shared/modal/modal.service';
-import { apiAuthService } from '../../../../api/services';
-import { UserAuthService } from '../../../../shared/user-auth/user-auth.service';
+import { apiFireauthService } from '../../../../api/services';
 import { ToastService } from '../../../../shared/toast/toast.service';
-import { StrictHttpResponse } from '../../../../api/strict-http-response';
-import { apiUserRead } from '../../../../api/models';
-import { apiErrorMap } from '../../../../shared/error-mapping';
+import {
+  Auth,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  UserCredential,
+} from '@angular/fire/auth';
+import { UserAuthService } from '../../../../shared/user-auth/user-auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -29,17 +32,22 @@ import { apiErrorMap } from '../../../../shared/error-mapping';
 export class SignupComponent {
   private modalService = inject(ModalService);
   signupFormService = inject(SignupFormService);
-  private apiAuth = inject(apiAuthService);
+  private apiFireAuth = inject(apiFireauthService);
+  private fireAuth = inject(Auth);
   private userAuth = inject(UserAuthService);
   private toastService = inject(ToastService);
 
   loginForm = new FormGroup({
-    // Not adding password requirements to keep it simple for lowest common denominator users
+    // Not adding complex password requirements to keep it simple for lowest common denominator users
     email: new FormControl('', {
       validators: [Validators.email, Validators.required],
     }),
-    password1: new FormControl('', { validators: [Validators.required] }),
-    password2: new FormControl('', { validators: [Validators.required] }),
+    password1: new FormControl('', {
+      validators: [Validators.required, Validators.minLength(6)],
+    }),
+    password2: new FormControl('', {
+      validators: [Validators.required, Validators.minLength(6)],
+    }),
   });
 
   get formValid() {
@@ -67,31 +75,50 @@ export class SignupComponent {
       this.passwordsMatch &&
       this.signupFormService.selectionValid()
     ) {
-      this.apiAuth
-        .registerRegisterAuthRegisterPost$Response({
+      this.apiFireAuth
+        .createUserFireauthSignupPost({
           body: {
             email: this.loginForm.value.email!,
             password: this.loginForm.value.password1!,
-            affiliate: this.signupFormService.selectedAffiliate()!,
+            display_name: this.signupFormService.selectedName()!,
             affiliate_id: this.signupFormService.selectedAffiliateId()!,
-            athlete_id: this.signupFormService.selectedAthleteId()!,
-            name: this.signupFormService.selectedName()!,
+            affiliate_name: this.signupFormService.selectedAffiliate()!,
+            crossfit_id: this.signupFormService.selectedAthleteId()!,
           },
         })
         .subscribe({
-          next: (response: StrictHttpResponse<apiUserRead>) => {
-            this.toastService.showSuccess('Registered, logging in');
-
-            this.userAuth.loginWithEmailAndPassword({
-              username: response.body.email,
-              password: this.loginForm.value.password1!,
-            });
+          next: () => {
+            signInWithEmailAndPassword(
+              this.fireAuth,
+              this.loginForm.value.email!,
+              this.loginForm.value.password1!
+            )
+              .then((result: UserCredential) => {
+                if (
+                  this.fireAuth.currentUser &&
+                  !this.fireAuth.currentUser.emailVerified
+                ) {
+                  this.userAuth
+                    .sendVerificationEmail()
+                    .then(() => {
+                      this.modalService.showInfo(
+                        'Success',
+                        'Check your email for verification link',
+                        '/public/home'
+                      );
+                    })
+                    .catch((err: any) =>
+                      console.error('Error sending verification email', err)
+                    );
+                }
+              })
+              .catch((err: any) => {
+                console.error('Error signing in after signup', err);
+              });
           },
           error: (err: any) => {
-            console.error('Error during registration', err);
-            const detail: string = String(err?.error?.detail ?? '');
-            const friendlyMsg = apiErrorMap[detail] || detail;
-            this.modalService.showInfo('No Rep!', friendlyMsg, '/home');
+            this.modalService.showInfo('No Rep!', err.error.detail, '/home');
+            console.error('Error during signup', err);
           },
         });
     }

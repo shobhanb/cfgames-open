@@ -1,4 +1,5 @@
 from fastapi import HTTPException, status
+from firebase_admin.exceptions import FirebaseError
 
 
 def invalid_input_exception(detail: str | None = None) -> HTTPException:
@@ -10,11 +11,11 @@ def invalid_input_exception(detail: str | None = None) -> HTTPException:
     )
 
 
-def firebase_error(detail: str | None = None) -> HTTPException:
-    if not detail:
-        detail = "Firebae Error"
+def firebase_error(e: FirebaseError) -> HTTPException:
+    detail = getattr(e, "default_message", getattr(e, "code", str(e))) or "Firebase Error"
+    status_code = getattr(e.http_response, "status_code", status.HTTP_400_BAD_REQUEST)
     return HTTPException(
-        status_code=status.HTTP_502_BAD_GATEWAY,
+        status_code=status_code,
         detail=detail,
     )
 

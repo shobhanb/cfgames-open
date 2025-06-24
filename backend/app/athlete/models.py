@@ -4,13 +4,13 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import Integer, String, UniqueConstraint
 from sqlalchemy.engine.default import DefaultExecutionContext
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.cf_games.constants import CF_DIVISION_MAP, DEFAULT_TEAM_NAME, MASTERS_AGE_CUTOFF, OPEN_AGE_CUTOFF
 from app.database.base import Base
 
 if TYPE_CHECKING:
-    from app.score.models import Score
+    pass
 
 
 def apply_age_category(context: DefaultExecutionContext) -> str:
@@ -28,9 +28,9 @@ def apply_division_name(context: DefaultExecutionContext) -> str:
 
 
 class Athlete(Base):
-    __table_args__ = (UniqueConstraint("competitor_id", "year"),)
+    __table_args__ = (UniqueConstraint("crossfit_id", "year"),)
 
-    competitor_id: Mapped[int] = mapped_column(Integer)
+    crossfit_id: Mapped[int] = mapped_column(Integer)
     year: Mapped[int] = mapped_column(Integer)
 
     # CF Games data
@@ -47,6 +47,3 @@ class Athlete(Base):
     age_category: Mapped[str] = mapped_column(String, default=apply_age_category, onupdate=apply_age_category)
     team_name: Mapped[str] = mapped_column(String, default=DEFAULT_TEAM_NAME)
     team_role: Mapped[int] = mapped_column(Integer, default=0)
-
-    # Relationships
-    scores: Mapped[list[Score]] = relationship(back_populates="athlete")

@@ -3,7 +3,7 @@ from collections.abc import Sequence
 
 from fastapi import APIRouter, status
 
-from app.auth.dependencies import api_key_admin_dependency
+from app.apikey_auth.dependencies import api_key_admin_dependency
 from app.database.dependencies import db_dependency
 
 from .constants import EVENTS

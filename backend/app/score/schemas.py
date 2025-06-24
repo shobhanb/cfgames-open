@@ -12,7 +12,7 @@ class BaseModel(CustomBaseModel):
 
 class AthleteModel(BaseModel):
     name: str
-    competitor_id: int
+    crossfit_id: int
     gender: Literal["M", "F"]
     age_category: Literal["Open", "Masters", "Masters 55+"]
 

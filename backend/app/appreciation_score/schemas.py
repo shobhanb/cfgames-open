@@ -1,9 +1,7 @@
-from uuid import UUID
-
 from app.schemas import CustomBaseModel
 
 
 class AppreciationScoreModel(CustomBaseModel):
-    athlete_id: UUID
+    crossfit_id: int
     ordinal: int
     score: int

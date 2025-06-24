@@ -4,12 +4,12 @@ from fastapi import APIRouter, Depends, status
 
 from app.cf_games.service import apply_attendance_scores, apply_total_individual_score, apply_total_team_score
 from app.database.dependencies import db_dependency
-from app.user.dependencies import current_superuser
+from app.firebase_auth.dependencies import get_admin_user
 
 from .schemas import AttendanceModel
 from .service import get_db_attendance, update_db_attendance
 
-attendance_router = APIRouter(prefix="/attendance", tags=["attendance"], dependencies=[Depends(current_superuser)])
+attendance_router = APIRouter(prefix="/attendance", tags=["attendance"], dependencies=[Depends(get_admin_user)])
 
 
 @attendance_router.get(
@@ -31,14 +31,14 @@ async def update_attendance(
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
-    competitor_id: int,
+    crossfit_id: int,
     ordinal: int,
 ) -> None:
     return await update_db_attendance(
         db_session=db_session,
         affiliate_id=affiliate_id,
         year=year,
-        competitor_id=competitor_id,
+        crossfit_id=crossfit_id,
         ordinal=ordinal,
     )
 

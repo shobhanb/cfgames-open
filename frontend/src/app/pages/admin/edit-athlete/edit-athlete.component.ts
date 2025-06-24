@@ -7,14 +7,14 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { apiAuthService } from '../../../api/services';
-import { apiUserRead } from '../../../api/models';
 import { PagesComponent } from '../../../shared/pages/pages.component';
 import { TitleService } from '../../../shared/title.service';
 import { DockService } from '../../../shared/pages/dock/dock.service';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
+import { apiFirebaseUserRecord } from '../../../api/models';
+import { apiFireauthService } from '../../../api/services';
 
 @Component({
   selector: 'app-edit-athlete',
@@ -24,28 +24,28 @@ import { UserAuthService } from '../../../shared/user-auth/user-auth.service';
 })
 export class EditAthleteComponent implements OnInit {
   private route = inject(ActivatedRoute);
-  private apiAuth = inject(apiAuthService);
   private titleService = inject(TitleService);
   private dockService = inject(DockService);
   private modalService = inject(ModalService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   private userAuth = inject(UserAuthService);
+  private apiFireauth = inject(apiFireauthService);
 
-  private userId: string | null = null;
+  private uid: string | null = null;
 
-  user = signal<apiUserRead | null>(null);
+  user = signal<apiFirebaseUserRecord | null>(null);
 
   onClickMakeAdmin() {
-    const subscription = this.modalService
-      .showConfirm('Sure?', `Make ${this.user()?.name} admin?`)
+    const modalSubscription = this.modalService
+      .showConfirm('Sure?', `Make ${this.user()?.display_name} admin?`)
       .subscribe({
         next: (confirmed: boolean) => {
           if (confirmed) {
-            this.apiAuth
-              .usersPatchUserAuthIdPatch({
-                id: this.user()!.id,
-                body: { is_superuser: true },
+            this.apiFireauth
+              .updateUserAdminRightsFireauthChangeAdminUidPost({
+                uid: this.user()!.uid,
+                admin: true,
               })
               .subscribe({
                 next: () => {
@@ -62,23 +62,26 @@ export class EditAthleteComponent implements OnInit {
         },
       });
 
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+    this.destroyRef.onDestroy(() => modalSubscription.unsubscribe());
   }
 
   onClickRevokeAdmin() {
     const subscription = this.modalService
-      .showConfirm('Sure?', `Revoke admin rights for ${this.user()?.name}?`)
+      .showConfirm(
+        'Sure?',
+        `Revoke admin rights for ${this.user()?.display_name}?`
+      )
       .subscribe({
         next: (confirmed: boolean) => {
           if (confirmed) {
-            this.apiAuth
-              .usersPatchUserAuthIdPatch({
-                id: this.user()!.id,
-                body: { is_superuser: false },
+            this.apiFireauth
+              .updateUserAdminRightsFireauthChangeAdminUidPost({
+                uid: this.user()!.uid,
+                admin: false,
               })
               .subscribe({
                 next: () => {
-                  if (this.user()?.id === this.userAuth.user()?.id) {
+                  if (this.user()!.uid === this.userAuth.user()!.uid) {
                     this.userAuth.logout();
                   } else {
                     this.router.navigate(['/admin', 'athletes']);
@@ -100,19 +103,16 @@ export class EditAthleteComponent implements OnInit {
 
   onClickDelete() {
     const subscription = this.modalService
-      .showConfirm('Sure?', `Delete ${this.user()?.name} ?`)
+      .showConfirm('Sure?', `Delete ${this.user()?.display_name} ?`)
       .subscribe({
         next: (confirmed: boolean) => {
           if (confirmed) {
-            this.apiAuth
-              .usersDeleteUserAuthIdDelete({
-                id: this.user()!.id,
-              })
+            this.apiFireauth
+              .deleteUserFireauthUserUidDelete({ uid: this.user()!.uid })
               .subscribe({
                 next: () => {
-                  if (this.user()?.id === this.userAuth.user()?.id) {
-                    this.userAuth.user.set(null);
-                    this.userAuth.token.set(null);
+                  if (this.user()!.uid === this.userAuth.user()!.uid) {
+                    this.userAuth.logout();
                     this.router.navigate(['/home']);
                   } else {
                     this.router.navigate(['/admin', 'athletes']);
@@ -137,22 +137,26 @@ export class EditAthleteComponent implements OnInit {
   }
 
   constructor() {
-    effect(() => this.titleService.pageTitle.set(`Edit ${this.user()?.name}`));
+    effect(() =>
+      this.titleService.pageTitle.set(`Edit ${this.user()?.display_name}`)
+    );
     this.dockService.setAdmin();
   }
 
   ngOnInit(): void {
-    this.userId = this.route.snapshot.paramMap.get('userId');
+    this.uid = this.route.snapshot.paramMap.get('uid');
 
-    if (this.userId) {
-      this.apiAuth.usersUserAuthIdGet({ id: this.userId }).subscribe({
-        next: (data: apiUserRead) => {
-          this.user.set(data);
-        },
-        error: (err: any) => {
-          console.error(err);
-        },
-      });
+    if (this.uid) {
+      this.apiFireauth
+        .getUserInfoFireauthUserUidGet({ uid: this.uid })
+        .subscribe({
+          next: (data: apiFirebaseUserRecord) => {
+            this.user.set(data);
+          },
+          error: (err: any) => {
+            console.error(err);
+          },
+        });
     }
   }
 }

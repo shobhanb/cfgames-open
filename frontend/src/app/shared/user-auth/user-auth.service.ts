@@ -1,175 +1,152 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
 import {
-  apiAthleteDetail,
-  apiBearerResponse,
-  apiBodyAuthDbLoginAuthLoginPost,
-  apiBodyResetForgotPasswordAuthForgotPasswordPost,
-  apiBodyResetResetPasswordAuthResetPasswordPost,
-  apiBodyVerifyRequestTokenAuthRequestVerifyTokenPost,
-  apiUserRead,
-} from '../../api/models';
-import { apiAthleteService, apiAuthService } from '../../api/services';
+  computed,
+  DestroyRef,
+  inject,
+  Injectable,
+  signal,
+} from '@angular/core';
 import { StrictHttpResponse } from '../../api/strict-http-response';
 import { ToastService } from '../toast/toast.service';
 import { ModalService } from '../modal/modal.service';
-import { apiErrorMap } from '../error-mapping';
+import {
+  Auth,
+  idToken,
+  IdTokenResult,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  signOut,
+  User,
+  user,
+  UserCredential,
+  ActionCodeSettings,
+  applyActionCode,
+} from '@angular/fire/auth';
+import { apiAthleteService } from '../../api/services';
+import { Subscription } from 'rxjs';
+import { apiAthleteDetail, apiFirebaseCustomClaims } from '../../api/models';
+import { FirebaseError } from 'firebase/app';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserAuthService {
-  private apiAuth = inject(apiAuthService);
+  private destroyRef = inject(DestroyRef);
   private toastService = inject(ToastService);
   private modalService = inject(ModalService);
   private apiAthlete = inject(apiAthleteService);
 
-  user = signal<apiUserRead | null>(null);
-  token = signal<apiBearerResponse | null>(null);
-  loggedIn = computed<boolean>(() => !!this.user() && !!this.token());
-  athlete = signal<apiAthleteDetail | null>(null);
+  private auth = inject(Auth);
+  // Signin, signout, token refresh
+  private user$ = user(this.auth);
+  private userSubscription: Subscription;
 
-  userNameInitials = computed<string | null>(
-    () =>
-      this.user()
-        ?.name.split(' ')
+  // Signin, signout, token refresh
+  private idToken$ = idToken(this.auth);
+  private idTokenSubscription: Subscription;
+
+  readonly user = signal<User | null>(null);
+  readonly userCustomClaims = signal<apiFirebaseCustomClaims | null>(null);
+  readonly token = signal<string | null>(null);
+  readonly loggedIn = computed<boolean>(() => !!this.user() && !!this.token());
+  readonly athlete = signal<apiAthleteDetail | null>(null);
+  readonly userNameInitials = computed<string | null>(() => {
+    const currentUser = this.user();
+    if (currentUser && currentUser.displayName) {
+      return currentUser.displayName
+        .split(' ')
         .map((n) => n[0])
-        .join('') || null
-  );
+        .join('');
+    }
+    return null;
+  });
 
-  loginWithEmailAndPassword(loginInfo: apiBodyAuthDbLoginAuthLoginPost) {
-    this.apiAuth
-      .authDbLoginAuthLoginPost$Response({
-        body: loginInfo,
-      })
-      .subscribe({
-        next: (response: StrictHttpResponse<apiBearerResponse>) => {
-          this.token.set(response.body);
-          this.getMyInfo();
+  constructor() {
+    this.userSubscription = this.user$.subscribe((aUser: User | null) => {
+      this.user.set(aUser);
+
+      if (aUser) {
+        aUser.getIdTokenResult().then((value: IdTokenResult) => {
+          const customClaims = value.claims;
+          this.userCustomClaims.set({
+            admin: customClaims.admin ? true : false,
+            affiliate_id:
+              typeof customClaims.affiliate_id === 'number'
+                ? customClaims.affiliate_id
+                : null,
+            affiliate_name:
+              typeof customClaims.affiliate_name === 'string'
+                ? customClaims.affiliate_name
+                : null,
+            crossfit_id:
+              typeof customClaims.crossfit_id === 'number'
+                ? customClaims.crossfit_id
+                : null,
+          });
+        });
+      } else {
+        this.userCustomClaims.set(null);
+      }
+    });
+
+    this.idTokenSubscription = this.idToken$.subscribe(
+      (token: string | null) => {
+        this.token.set(token);
+        if (!this.athlete()) {
           this.getMyAthleteInfo();
-          localStorage.setItem('cfgames-token', JSON.stringify(response.body));
-          this.toastService.showSuccess('Logged in', '/home');
-        },
-        error: (err: any) => {
-          console.error('Error during login', err);
-          const detail: string = String(err?.error?.detail ?? '');
-          const friendlyMsg = apiErrorMap[detail] || detail;
-          this.modalService.showInfo('No Rep!', friendlyMsg, '/home');
-        },
+        } else {
+          this.token.set(null);
+        }
+      }
+    );
+
+    this.destroyRef.onDestroy(() => {
+      this.userSubscription.unsubscribe();
+      this.idTokenSubscription.unsubscribe();
+    });
+  }
+
+  loginWithEmailAndPassword(email: string, password: string) {
+    signInWithEmailAndPassword(this.auth, email, password)
+      .then((value: UserCredential) => {
+        this.toastService.showSuccess('Logged in', '/public/home');
+      })
+      .catch((err: FirebaseError) => {
+        console.error(err);
+        this.toastService.showError(err.message);
       });
   }
 
   logout() {
-    this.apiAuth.authDbLogoutAuthLogoutPost$Response().subscribe({
-      next: () => {
-        this.user.set(null);
-        this.token.set(null);
-        localStorage.removeItem('cfgames-token');
-        this.toastService.showSuccess('Logged out', '/home', 500);
-      },
-      error: (err: any) => {
-        console.error('Error during Logout', err);
-      },
-    });
-  }
-
-  sendVerificationEmail(
-    userInfo: apiBodyVerifyRequestTokenAuthRequestVerifyTokenPost
-  ) {
-    this.apiAuth
-      .verifyRequestTokenAuthRequestVerifyTokenPost$Response({
-        body: userInfo,
-      })
-      .subscribe({
-        error: (err: any) => {
-          console.error('Error during sendVerificationEmail', err);
-        },
-      });
-  }
-
-  sendForgotPasswordEmail(
-    userInfo: apiBodyResetForgotPasswordAuthForgotPasswordPost
-  ) {
-    this.apiAuth
-      .resetForgotPasswordAuthForgotPasswordPost$Response({
-        body: userInfo,
-      })
-      .subscribe({
-        error: (err: any) => {
-          console.error('Error during sendForgotPasswordEmail', err);
-        },
-      });
-  }
-
-  resetPassword(data: apiBodyResetResetPasswordAuthResetPasswordPost) {
-    this.apiAuth
-      .resetResetPasswordAuthResetPasswordPost$Response({
-        body: data,
-      })
-      .subscribe({
-        next: () => {
-          this.modalService.showInfo(
-            'Rep!',
-            'Password reset successfully. Please login with the new password',
-            '/auth/login'
-          );
-        },
-        error: (err: any) => {
-          console.error('Error during resetPassword', err);
-          const detail: string = String(err?.error?.detail ?? '');
-          const friendlyMsg = apiErrorMap[detail] || detail;
-          this.modalService.showInfo('No Rep!', friendlyMsg, '/home');
-        },
-      });
-  }
-
-  getMyInfo() {
-    this.apiAuth.usersCurrentUserAuthMeGet$Response().subscribe({
-      next: (response: StrictHttpResponse<apiUserRead>) => {
-        this.user.set(response.body);
-      },
-      error: (err: any) => {
-        console.error('Error getting my user info', err);
-        this.user.set(null);
-      },
-    });
+    signOut(this.auth);
   }
 
   getMyAthleteInfo() {
-    this.apiAthlete.getMyAthleteDataAthleteMeGet$Response().subscribe({
-      next: (response: StrictHttpResponse<apiAthleteDetail>) => {
-        this.athlete.set(response.body);
+    return this.apiAthlete.getMyAthleteDataAthleteMeGet().subscribe({
+      next: (data: apiAthleteDetail) => {
+        this.athlete.set(data);
       },
-      error: (err: any) => {
+      error: (err: Error) => {
         console.error('Error getting my athlete info', err);
         this.athlete.set(null);
+        this.toastService.showError(err.message);
       },
     });
   }
 
-  loginWithLocalToken() {
-    // Initialize token from localStorage
-    const savedToken = localStorage.getItem('cfgames-token');
-    if (savedToken) {
-      try {
-        const parsedToken = JSON.parse(savedToken) as apiBearerResponse;
-        this.token.set(parsedToken);
-      } catch (error) {
-        this.token.set(null);
-        localStorage.removeItem('cfgames-token');
-      }
-      if (this.token()) {
-        this.apiAuth.usersCurrentUserAuthMeGet$Response().subscribe({
-          next: (response: StrictHttpResponse<apiUserRead>) => {
-            this.user.set(response.body);
-            this.getMyAthleteInfo();
-          },
-          error: (err: any) => {
-            this.user.set(null);
-            this.token.set(null);
-            localStorage.removeItem('cfgames-token');
-          },
-        });
-      }
-    }
+  async sendVerificationEmail(): Promise<void> {
+    const actionCodeSettings: ActionCodeSettings = {
+      url: `http://localhost:4200/auth/verify`,
+      handleCodeInApp: true,
+    };
+    return await sendEmailVerification(this.user()!, actionCodeSettings);
+  }
+
+  refreshTokenAfterVerification() {
+    this.auth.currentUser?.reload().then(() => {
+      this.auth.currentUser
+        ?.getIdToken(true)
+        .then((idToken: string) => this.token.set(idToken));
+    });
   }
 }

@@ -1,10 +1,8 @@
-from uuid import UUID
-
 from fastapi import APIRouter, Depends, status
 
 from app.cf_games.service import apply_appreciation_score, apply_total_individual_score, apply_total_team_score
 from app.database.dependencies import db_dependency
-from app.user.dependencies import current_superuser
+from app.firebase_auth.dependencies import get_admin_user
 
 from .models import AppreciationScore
 from .schemas import AppreciationScoreModel
@@ -13,7 +11,7 @@ from .service import get_db_appreciation, update_db_appreciation
 appreciation_score_router = APIRouter(
     prefix="/appreciation_score",
     tags=["appreciation_score"],
-    dependencies=[Depends(current_superuser)],
+    dependencies=[Depends(get_admin_user)],
 )
 
 
@@ -30,16 +28,16 @@ async def get_appreciation_scores(
     return await get_db_appreciation(db_session=db_session, affiliate_id=affiliate_id, year=year)
 
 
-@appreciation_score_router.post("/{athlete_id}/{ordinal}/{score}", status_code=status.HTTP_202_ACCEPTED)
+@appreciation_score_router.post("/{crossfit_id}/{ordinal}/{score}", status_code=status.HTTP_202_ACCEPTED)
 async def update_appreciation_scores(
     db_session: db_dependency,
-    athlete_id: UUID,
+    crossfit_id: int,
     ordinal: int,
     score: int,
 ) -> None:
     return await update_db_appreciation(
         db_session=db_session,
-        athlete_id=athlete_id,
+        crossfit_id=crossfit_id,
         ordinal=ordinal,
         score=score,
     )

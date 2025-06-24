@@ -7,7 +7,7 @@ export interface apiIndividualScoreModel {
   age_category: 'Open' | 'Masters' | 'Masters 55+';
   appreciation_score: number;
   attendance_score: number;
-  competitor_id: number;
+  crossfit_id: number;
   gender: 'M' | 'F';
   judge_score: number;
   name: string;

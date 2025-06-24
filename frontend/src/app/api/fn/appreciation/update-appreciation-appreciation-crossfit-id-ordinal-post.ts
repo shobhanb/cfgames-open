@@ -11,16 +11,16 @@ import { RequestBuilder } from '../../request-builder';
 import { apiAppreciationModelInput } from '../../models/api-appreciation-model-input';
 import { apiAppreciationModelOutput } from '../../models/api-appreciation-model-output';
 
-export interface UpdateAppreciationAppreciationAthleteIdOrdinalPost$Params {
-  athlete_id: string;
+export interface UpdateAppreciationAppreciationCrossfitIdOrdinalPost$Params {
+  crossfit_id: number;
   ordinal: number;
       body: apiAppreciationModelInput
 }
 
-export function updateAppreciationAppreciationAthleteIdOrdinalPost(http: HttpClient, rootUrl: string, params: UpdateAppreciationAppreciationAthleteIdOrdinalPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAppreciationModelOutput>> {
-  const rb = new RequestBuilder(rootUrl, updateAppreciationAppreciationAthleteIdOrdinalPost.PATH, 'post');
+export function updateAppreciationAppreciationCrossfitIdOrdinalPost(http: HttpClient, rootUrl: string, params: UpdateAppreciationAppreciationCrossfitIdOrdinalPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAppreciationModelOutput>> {
+  const rb = new RequestBuilder(rootUrl, updateAppreciationAppreciationCrossfitIdOrdinalPost.PATH, 'post');
   if (params) {
-    rb.path('athlete_id', params.athlete_id, {});
+    rb.path('crossfit_id', params.crossfit_id, {});
     rb.path('ordinal', params.ordinal, {});
     rb.body(params.body, 'application/json');
   }
@@ -35,4 +35,4 @@ export function updateAppreciationAppreciationAthleteIdOrdinalPost(http: HttpCli
   );
 }
 
-updateAppreciationAppreciationAthleteIdOrdinalPost.PATH = '/appreciation/{athlete_id}/{ordinal}';
+updateAppreciationAppreciationCrossfitIdOrdinalPost.PATH = '/appreciation/{crossfit_id}/{ordinal}';

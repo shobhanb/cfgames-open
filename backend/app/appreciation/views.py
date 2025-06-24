@@ -1,10 +1,8 @@
-from uuid import UUID
-
 from fastapi import APIRouter, status
 
 from app.database.dependencies import db_dependency
 from app.exceptions import unauthorised_exception
-from app.user.dependencies import current_superuser_dependency, current_verified_user_dependency
+from app.firebase_auth.dependencies import admin_user_dependency, verified_user_dependency
 
 from .models import Appreciation
 from .schemas import AppreciationModelInput, AppreciationModelOutput
@@ -23,28 +21,28 @@ async def get_appreciation(
     affiliate_id: int,
     year: int,
     ordinal: int,
-    _: current_superuser_dependency,
+    _: admin_user_dependency,
 ) -> list[Appreciation]:
     return await get_db_appreciation(db_session=db_session, affiliate_id=affiliate_id, year=year, ordinal=ordinal)
 
 
 @appreciation_router.post(
-    "/{athlete_id}/{ordinal}",
+    "/{crossfit_id}/{ordinal}",
     status_code=status.HTTP_202_ACCEPTED,
     response_model=AppreciationModelOutput,
 )
 async def update_appreciation(
     db_session: db_dependency,
-    athlete_id: UUID,
+    crossfit_id: int,
     ordinal: int,
     input_data: AppreciationModelInput,
-    user: current_verified_user_dependency,
+    user: verified_user_dependency,
 ) -> Appreciation:
-    if user.id != athlete_id:
+    if user.crossfit_id != crossfit_id:
         raise unauthorised_exception()
     return await update_db_appreciation(
         db_session=db_session,
-        athlete_id=athlete_id,
+        crossfit_id=crossfit_id,
         ordinal=ordinal,
         input_data=input_data,
     )

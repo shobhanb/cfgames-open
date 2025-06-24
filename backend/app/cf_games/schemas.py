@@ -15,7 +15,7 @@ class CFDataCountModel(CustomBaseModel):
 
 
 class CFEntrantInputModel(CustomBaseModel):
-    competitor_id: int = Field(alias="competitorId")
+    crossfit_id: int = Field(alias="competitorId")
     name: str = Field(alias="competitorName")
     first_name: str = Field(alias="firstName")
     last_name: str = Field(alias="lastName")

@@ -7,9 +7,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { apiAuthService } from '../../../api/services';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { apiErrorMap } from '../../../shared/error-mapping';
+import { Auth, sendPasswordResetEmail } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-forgot-password',
@@ -18,7 +18,7 @@ import { apiErrorMap } from '../../../shared/error-mapping';
   styleUrl: './forgot-password.component.css',
 })
 export class ForgotPasswordComponent {
-  private apiAuth = inject(apiAuthService);
+  private auth = inject(Auth);
   private modalService = inject(ModalService);
   private router = inject(Router);
 
@@ -34,25 +34,7 @@ export class ForgotPasswordComponent {
       this.forgotPasswordForm.valid &&
       this.forgotPasswordForm.value.email
     ) {
-      this.apiAuth
-        .resetForgotPasswordAuthForgotPasswordPost$Response({
-          body: { email: this.forgotPasswordForm.value.email },
-        })
-        .subscribe({
-          next: () => {
-            this.modalService.showInfo(
-              'Rep!',
-              'Reset password email sent.',
-              '/home'
-            );
-          },
-          error: (err: any) => {
-            console.error('Error in ForgotPasswordSubmit', err);
-            const detail: string = String(err?.error?.detail ?? '');
-            const friendlyMsg = apiErrorMap[detail] || detail;
-            this.modalService.showInfo('No Rep!', friendlyMsg, '/home');
-          },
-        });
+      sendPasswordResetEmail(this.auth, this.forgotPasswordForm.value.email);
     }
   }
 }
