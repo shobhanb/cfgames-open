@@ -55,10 +55,10 @@
       </li>
       @if (userAuth.loggedIn()) {
       <div class="divider"></div>
-      <ul class="mt-2 text-xl">
-        {{
-          userAuth.user()?.displayName
-        }}
+      <ul>
+        <span class="text-xl my-4">
+          {{ userAuth.user()?.displayName }}
+        </span>
         <li>
           <a routerLink="/private/myscore" routerLinkActive="menu-active"
             >My Scores</a
@@ -77,8 +77,8 @@
       </ul>
       } @if (userAuth.loggedIn() && userAuth.userCustomClaims()?.admin) {
       <div class="divider"></div>
-      <ul class="mt-2 text-xl">
-        Admin bitch!
+      <ul>
+        <span class="text-xl my-4">Admin bitch!</span>
         <li>
           <a routerLink="/admin/athletes" routerLinkActive="menu-active"
             >Athletes</a
