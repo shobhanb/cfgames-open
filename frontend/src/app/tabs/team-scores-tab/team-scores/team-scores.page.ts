@@ -10,9 +10,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
-  IonToolbar,
-  IonSegment,
-  IonSegmentButton,
   IonLabel,
   IonList,
   IonItem,
@@ -28,8 +25,7 @@ import { EventService } from 'src/app/services/event.service';
 import { apiScoreService } from 'src/app/api/services';
 import { ScoreFilterService } from 'src/app/services/score-filter.service';
 import { environment } from 'src/environments/environment';
-import { apiIndividualScoreModel, apiTeamScoreModel } from 'src/app/api/models';
-import { GetIndividualScoresScoreIndividualGet$Params } from 'src/app/api/fn/score/get-individual-scores-score-individual-get';
+import { apiTeamScoreModel } from 'src/app/api/models';
 import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
 import { TeamNamePipe } from '../../../pipes/team-name.pipe';
 import { AuthService } from 'src/app/services/auth.service';
@@ -47,12 +43,9 @@ import { GetTeamScoresScoreTeamGet$Params } from 'src/app/api/fn/score/get-team-
     IonItem,
     IonList,
     IonLabel,
-    IonSegmentButton,
-    IonSegment,
     IonContent,
     IonAccordion,
     IonAccordionGroup,
-    IonToolbar,
     CommonModule,
     IonSkeletonText,
     FormsModule,
