@@ -19,6 +19,9 @@ import {
   IonAccordion,
   IonAccordionGroup,
   IonCard,
+  IonRefresher,
+  IonRefresherContent,
+  IonSkeletonText,
 } from '@ionic/angular/standalone';
 import { HeaderComponent } from '../../../shared/header/header.component';
 import { EventService } from 'src/app/services/event.service';
@@ -38,6 +41,8 @@ import { GetTeamScoresScoreTeamGet$Params } from 'src/app/api/fn/score/get-team-
   styleUrls: ['./team-scores.page.scss'],
   standalone: true,
   imports: [
+    IonRefresherContent,
+    IonRefresher,
     IonCard,
     IonItem,
     IonList,
@@ -49,6 +54,7 @@ import { GetTeamScoresScoreTeamGet$Params } from 'src/app/api/fn/score/get-team-
     IonAccordionGroup,
     IonToolbar,
     CommonModule,
+    IonSkeletonText,
     FormsModule,
     HeaderComponent,
     TeamNamePipe,
@@ -119,9 +125,17 @@ export class TeamScoresPage implements OnInit {
     });
   });
 
-  constructor() {}
+  expandedAccordions: string[] = [];
+  dataLoaded = false;
 
-  ngOnInit() {
+  handleRefresh(event: CustomEvent) {
+    this.dataLoaded = false;
+    this.getData();
+    this.expandedAccordions = [];
+    (event.target as HTMLIonRefresherElement).complete();
+  }
+
+  getData() {
     const params: GetTeamScoresScoreTeamGet$Params = {
       affiliate_id: environment.affiliateId,
       year: this.year,
@@ -130,10 +144,17 @@ export class TeamScoresPage implements OnInit {
     this.apiScore.getTeamScoresScoreTeamGet(params).subscribe({
       next: (value: apiTeamScoreModel[]) => {
         this.teamScores.set(value);
+        this.dataLoaded = true;
       },
       error: (err: any) => {
         console.error(err);
       },
     });
+  }
+
+  constructor() {}
+
+  ngOnInit() {
+    this.getData();
   }
 }

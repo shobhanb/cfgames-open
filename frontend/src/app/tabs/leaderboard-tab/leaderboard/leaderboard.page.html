@@ -1,6 +1,10 @@
 <app-header [title]="title()" backLink="/leaderboard"></app-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <ion-toolbar>
     <ion-segment
       [value]="scoreFilter.filter().gender"
@@ -54,6 +58,7 @@
     <ion-card-header>
       <ion-card-title>RX</ion-card-title>
     </ion-card-header>
+    @if (dataLoaded) {
     <ion-list>
       @for (item of leaderboardRX(); track $index) {
       <ion-item
@@ -69,7 +74,7 @@
           </ion-label>
           <ion-text>{{ item.team_name | teamName }}</ion-text>
         </ion-label>
-        <div class="score-wrapper" slot="end">
+        <div slot="end">
           <ion-label class="ion-text-end">{{ item.score_display }}</ion-label>
           @if (item.tiebreak_ms) {
           <ion-note>{{ 'Tiebreak ' + item.tiebreak_ms }}</ion-note>
@@ -78,12 +83,39 @@
       </ion-item>
       }
     </ion-list>
+    } @else {
+    <ion-list>
+      @for (item of [0,1,2]; track $index) {
+      <ion-item>
+        <div class="" slot="start">
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 20px; height: 20px"
+          ></ion-skeleton-text>
+        </div>
+        <ion-label>
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 150px; height: 40px"
+          ></ion-skeleton-text>
+        </ion-label>
+        <div slot="end">
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 80px; height: 30px"
+          ></ion-skeleton-text>
+        </div>
+      </ion-item>
+      }
+    </ion-list>
+    }
   </ion-card>
 
   <ion-card>
     <ion-card-header>
       <ion-card-title>Scaled</ion-card-title>
     </ion-card-header>
+    @if (dataLoaded) {
     <ion-list>
       @for (item of leaderboardScaled(); track $index) {
       <ion-item
@@ -108,5 +140,31 @@
       </ion-item>
       }
     </ion-list>
+    } @else {
+    <ion-list>
+      @for (item of [0,1,2]; track $index) {
+      <ion-item>
+        <div class="" slot="start">
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 20px; height: 20px"
+          ></ion-skeleton-text>
+        </div>
+        <ion-label>
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 150px; height: 40px"
+          ></ion-skeleton-text>
+        </ion-label>
+        <div slot="end">
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 80px; height: 30px"
+          ></ion-skeleton-text>
+        </div>
+      </ion-item>
+      }
+    </ion-list>
+    }
   </ion-card>
 </ion-content>

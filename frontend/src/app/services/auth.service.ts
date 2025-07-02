@@ -63,6 +63,18 @@ export class AuthService {
     return null;
   });
 
+  readonly verifiedUser = computed<boolean>(
+    () => (!!this.user() && this.user()?.emailVerified) || false
+  );
+
+  readonly adminUser = computed<boolean>(
+    () =>
+      (!!this.user() &&
+        this.user()?.emailVerified &&
+        this.userCustomClaims()?.admin) ||
+      false
+  );
+
   constructor() {
     this.userSubscription = this.user$.subscribe((aUser: User | null) => {
       this.user.set(aUser);
@@ -128,7 +140,6 @@ export class AuthService {
   signup(params: CreateUserFireauthSignupPost$Params) {
     this.apiFireAuth.createUserFireauthSignupPost(params).subscribe({
       next: (value: apiFirebaseUserRecord) => {
-        console.log(value);
         this.toastService.showToast('Signed up!', 'success', null, 1000);
         this.loginWithEmailAndPassword(params.body.email, params.body.password);
       },

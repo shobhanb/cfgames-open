@@ -1,5 +1,8 @@
 <app-header title="Team Scores"></app-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <app-event-list link="/team-scores" [showTotals]="true"></app-event-list>
 </ion-content>

@@ -19,6 +19,9 @@ import {
   IonAccordion,
   IonAccordionGroup,
   IonCard,
+  IonRefresher,
+  IonRefresherContent,
+  IonSkeletonText,
 } from '@ionic/angular/standalone';
 import { HeaderComponent } from '../../../shared/header/header.component';
 import { EventService } from 'src/app/services/event.service';
@@ -37,6 +40,8 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./individual-scores.page.scss'],
   standalone: true,
   imports: [
+    IonRefresherContent,
+    IonRefresher,
     IonCard,
     IonItem,
     IonList,
@@ -51,6 +56,7 @@ import { AuthService } from 'src/app/services/auth.service';
     FormsModule,
     HeaderComponent,
     TeamNamePipe,
+    IonSkeletonText,
   ],
 })
 export class IndividualScoresPage implements OnInit {
@@ -142,10 +148,9 @@ export class IndividualScoresPage implements OnInit {
   });
 
   expandedAccordions: string[] = [];
+  dataLoaded = false;
 
-  constructor() {}
-
-  ngOnInit() {
+  getData() {
     const params: GetIndividualScoresScoreIndividualGet$Params = {
       affiliate_id: environment.affiliateId,
       year: this.year,
@@ -154,10 +159,32 @@ export class IndividualScoresPage implements OnInit {
     this.apiScore.getIndividualScoresScoreIndividualGet(params).subscribe({
       next: (value: apiIndividualScoreModel[]) => {
         this.scores.set(value);
+        this.dataLoaded = true;
+
+        if (
+          (!this.teamsList().includes(this.scoreFilter.filter().team) &&
+            this.teamsList().length > 0) ||
+          (this.scoreFilter.filter().team === 'zz' &&
+            this.teamsList().length > 1)
+        ) {
+          this.scoreFilter.setFilter({ team: this.teamsList()[0] });
+        }
       },
       error: (err: any) => {
         console.error(err);
       },
     });
+  }
+
+  handleRefresh(event: CustomEvent) {
+    this.dataLoaded = false;
+    this.getData();
+    (event.target as HTMLIonRefresherElement).complete();
+  }
+
+  constructor() {}
+
+  ngOnInit() {
+    this.getData();
   }
 }

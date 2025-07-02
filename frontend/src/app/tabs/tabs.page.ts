@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -10,8 +10,17 @@ import {
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
-import { trophy, barbell, people, person, lockOpen } from 'ionicons/icons';
+import {
+  trophy,
+  barbell,
+  people,
+  person,
+  lockOpen,
+  home,
+} from 'ionicons/icons';
 import { ToastComponent } from '../shared/toast/toast.component';
+import { Auth } from '@angular/fire/auth';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-tabs',
@@ -30,8 +39,10 @@ import { ToastComponent } from '../shared/toast/toast.component';
   ],
 })
 export class TabsPage implements OnInit {
+  authService = inject(AuthService);
+
   constructor() {
-    addIcons({ trophy, barbell, people, person, lockOpen });
+    addIcons({ home, trophy, barbell, people, person, lockOpen });
   }
 
   ngOnInit() {}

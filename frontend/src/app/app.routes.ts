@@ -12,7 +12,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/leaderboard',
+    redirectTo: '/home',
     pathMatch: 'full',
   },
 ];

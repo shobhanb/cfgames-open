@@ -53,7 +53,7 @@ export class EventService {
     return `${baseURL}/${fullYear}/${cleanEventNum}`;
   }
 
-  constructor() {
+  getData() {
     this.apiEvents.getCfeventsCfeventsGet().subscribe({
       next: (events) => {
         this.events.set(
@@ -64,6 +64,9 @@ export class EventService {
       },
       error: (err) => console.error('Error loading events:', err),
     });
-    console.log();
+  }
+
+  constructor() {
+    this.getData();
   }
 }

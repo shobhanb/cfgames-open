@@ -1,10 +1,14 @@
 <app-header [title]="title()" backLink="/team-scores"></app-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-card>
+    @if (dataLoaded) {
     <ion-list>
       @for (score of rankedScores(); track $index) {
-      <ion-accordion-group [multiple]="true">
+      <ion-accordion-group [multiple]="true" [value]="expandedAccordions">
         <ion-accordion [value]="score.team_name">
           <ion-item
             slot="header"
@@ -66,5 +70,15 @@
 
       }
     </ion-list>
+    } @else {
+    <ion-list>
+      @for (item of [0,1,2,3,4,5]; track $index) {
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 100%; height: 45px; margin-bottom: 20px"
+      ></ion-skeleton-text>
+      }
+    </ion-list>
+    }
   </ion-card>
 </ion-content>

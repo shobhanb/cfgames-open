@@ -22,6 +22,9 @@ import {
   IonCard,
   IonCardHeader,
   IonCardTitle,
+  IonRefresher,
+  IonRefresherContent,
+  IonSkeletonText,
 } from '@ionic/angular/standalone';
 import { HeaderComponent } from '../../../shared/header/header.component';
 import { EventService } from 'src/app/services/event.service';
@@ -41,6 +44,8 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./leaderboard.page.scss'],
   standalone: true,
   imports: [
+    IonRefresherContent,
+    IonRefresher,
     IonCardTitle,
     IonCardHeader,
     IonCard,
@@ -57,6 +62,7 @@ import { AuthService } from 'src/app/services/auth.service';
     IonContent,
     HeaderComponent,
     TeamNamePipe,
+    IonSkeletonText,
   ],
 })
 export class LeaderboardPage implements OnInit {
@@ -65,6 +71,8 @@ export class LeaderboardPage implements OnInit {
   private apiScore = inject(apiScoreService);
   scoreFilter = inject(ScoreFilterService);
   authService = inject(AuthService);
+
+  dataLoaded = false;
 
   @Input({ required: true }) year: number = 0;
   @Input({ required: true }) ordinal: number = 0;
@@ -112,6 +120,30 @@ export class LeaderboardPage implements OnInit {
       )
   );
 
+  private getData() {
+    this.apiScore
+      .getLeaderboardScoresScoreLeaderboardGet({
+        affiliate_id: environment.affiliateId,
+        year: this.year,
+        ordinal: this.ordinal,
+      })
+      .subscribe({
+        next: (data: apiLeaderboardScoreModel[]) => {
+          this.leaderboard.set(data);
+          this.dataLoaded = true;
+        },
+        error: (err: any) => {
+          console.error(err);
+        },
+      });
+  }
+
+  handleRefresh(event: CustomEvent) {
+    this.dataLoaded = false;
+    this.getData();
+    (event.target as HTMLIonRefresherElement).complete();
+  }
+
   onSelectionChanged(
     event: CustomEvent,
     type: 'gender' | 'ageCategory' | 'top3'
@@ -135,19 +167,6 @@ export class LeaderboardPage implements OnInit {
   }
 
   ngOnInit() {
-    this.apiScore
-      .getLeaderboardScoresScoreLeaderboardGet({
-        affiliate_id: environment.affiliateId,
-        year: this.year,
-        ordinal: this.ordinal,
-      })
-      .subscribe({
-        next: (data: apiLeaderboardScoreModel[]) => {
-          this.leaderboard.set(data);
-        },
-        error: (err: any) => {
-          console.error(err);
-        },
-      });
+    this.getData();
   }
 }

@@ -1,9 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonRefresher,
+  IonRefresherContent,
+} from '@ionic/angular/standalone';
 import { HeaderComponent } from '../../shared/header/header.component';
 import { EventListComponent } from '../../shared/event-list/event-list.component';
+import { EventService } from 'src/app/services/event.service';
 
 @Component({
   selector: 'app-individual-scores-tab',
@@ -11,6 +16,8 @@ import { EventListComponent } from '../../shared/event-list/event-list.component
   styleUrls: ['./individual-scores-tab.page.scss'],
   standalone: true,
   imports: [
+    IonRefresherContent,
+    IonRefresher,
     IonContent,
     CommonModule,
     FormsModule,
@@ -19,6 +26,12 @@ import { EventListComponent } from '../../shared/event-list/event-list.component
   ],
 })
 export class IndividualScoresTabPage implements OnInit {
+  private eventService = inject(EventService);
+
+  handleRefresh(event: CustomEvent) {
+    this.eventService.getData();
+    (event.target as HTMLIonRefresherElement).complete();
+  }
   constructor() {}
 
   ngOnInit() {}

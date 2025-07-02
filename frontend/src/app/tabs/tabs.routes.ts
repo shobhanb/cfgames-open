@@ -1,11 +1,18 @@
 import { Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
+import { userGuard } from '../guards/user.guard';
+import { adminGuard } from '../guards/admin.guard';
 
 export const tabsRoutes: Routes = [
   {
     path: '',
     component: TabsPage,
     children: [
+      {
+        path: 'home',
+        loadComponent: () =>
+          import('./home-tab/home-tab.page').then((c) => c.HomeTabPage),
+      },
       {
         path: 'leaderboard',
         loadComponent: () =>
@@ -52,22 +59,24 @@ export const tabsRoutes: Routes = [
         path: 'me',
         loadComponent: () =>
           import('./me-tab/me-tab.page').then((c) => c.MeTabPage),
+        canActivate: [userGuard],
       },
       {
         path: 'admin',
         loadComponent: () =>
           import('./admin-tab/admin-tab.page').then((c) => c.AdminTabPage),
+        canActivate: [adminGuard],
       },
       {
         path: '',
-        redirectTo: '/leaderboard',
+        redirectTo: '/home',
         pathMatch: 'full',
       },
     ],
   },
   {
     path: '',
-    redirectTo: '/leaderboard',
+    redirectTo: '/home',
     pathMatch: 'full',
   },
 ];
