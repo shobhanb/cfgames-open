@@ -17,6 +17,7 @@ async def get_db_leaderboard(
     db_session: AsyncSession,
     year: int,
     affiliate_id: int,
+    ordinal: int | None,
 ) -> list[dict[str, Any]]:
     stmt = (
         select(
@@ -38,6 +39,8 @@ async def get_db_leaderboard(
             (Athlete.affiliate_id == affiliate_id) & (Athlete.year == year),
         )
     )
+    if ordinal:
+        stmt = stmt.where(Score.ordinal == ordinal)
     ret = await db_session.execute(stmt)
     results = ret.mappings().all()
     return [dict(x) for x in results]
@@ -47,8 +50,9 @@ async def get_db_individual_scores(
     db_session: AsyncSession,
     year: int,
     affiliate_id: int,
+    ordinal: int | None,
 ) -> list[dict[str, Any]]:
-    ordinal_stmt = (
+    stmt = (
         select(
             Athlete.affiliate_id,
             Athlete.year,
@@ -72,7 +76,9 @@ async def get_db_individual_scores(
         )
     )
 
-    ret = await db_session.execute(ordinal_stmt)
+    if ordinal:
+        stmt = stmt.where(Score.ordinal == ordinal)
+    ret = await db_session.execute(stmt)
     results = ret.mappings().all()
     return [dict(x) for x in results]
 
@@ -81,8 +87,9 @@ async def get_db_team_scores(
     db_session: AsyncSession,
     year: int,
     affiliate_id: int,
+    ordinal: int | None,
 ) -> list[dict[str, Any]]:
-    ordinal_stmt = (
+    stmt = (
         select(
             Athlete.affiliate_id,
             Athlete.year,
@@ -108,8 +115,10 @@ async def get_db_team_scores(
             (Athlete.affiliate_id == affiliate_id) & (Athlete.year == year),
         )
     )
+    if ordinal:
+        stmt = stmt.where(Score.ordinal == ordinal)
 
-    ret = await db_session.execute(ordinal_stmt)
+    ret = await db_session.execute(stmt)
     results = ret.mappings().all()
     return [dict(x) for x in results]
 

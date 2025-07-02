@@ -1,6 +1,6 @@
 {
-  "name": "frontend",
-  "short_name": "frontend",
+  "name": "CF Games",
+  "short_name": "CF Games",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

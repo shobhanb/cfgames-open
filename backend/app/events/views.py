@@ -9,6 +9,7 @@ from app.database.dependencies import db_dependency
 from .constants import EVENTS
 from .models import Events
 from .schemas import EventsModel
+from .service import get_events_with_data
 
 log = logging.getLogger("uvicorn.error")
 
@@ -23,7 +24,7 @@ cf_events_router = APIRouter(prefix="/cfevents", tags=["cfevents"])
 async def get_cfevents(
     db_session: db_dependency,
 ) -> Sequence[Events]:
-    return await Events.all(async_session=db_session)
+    return await get_events_with_data(db_session=db_session)
 
 
 @cf_events_router.post(

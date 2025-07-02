@@ -23,11 +23,13 @@ async def get_leaderboard_scores(
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
+    ordinal: int | None = None,
 ) -> list[dict[str, Any]]:
     return await get_db_leaderboard(
         db_session=db_session,
         year=year,
         affiliate_id=affiliate_id,
+        ordinal=ordinal,
     )
 
 
@@ -40,11 +42,13 @@ async def get_individual_scores(
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
+    ordinal: int | None = None,
 ) -> list[dict[str, Any]]:
     return await get_db_individual_scores(
         db_session=db_session,
         year=year,
         affiliate_id=affiliate_id,
+        ordinal=ordinal,
     )
 
 
@@ -57,11 +61,13 @@ async def get_team_scores(
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
+    ordinal: int | None = None,
 ) -> list[dict[str, Any]]:
     return await get_db_team_scores(
         db_session=db_session,
         year=year,
         affiliate_id=affiliate_id,
+        ordinal=ordinal,
     )
 
 
