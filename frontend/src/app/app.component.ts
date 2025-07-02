@@ -1,17 +1,22 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ToastComponent } from './shared/toast/toast.component';
-import { ModalComponent } from './shared/modal/modal.component';
-import { UserAuthService } from './shared/user-auth/user-auth.service';
-import { ThemeService } from './shared/theme.service';
+import { Component } from '@angular/core';
+import { Router, NavigationStart } from '@angular/router';
+import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToastComponent, ModalComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  templateUrl: 'app.component.html',
+  styleUrls: ['app.component.scss'],
+  imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  private userAuth = inject(UserAuthService);
-  private themeService = inject(ThemeService);
+  constructor(private router: Router) {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        if (document.activeElement instanceof HTMLElement) {
+          // This is to get rid of the aria-hidden warning
+          document.activeElement.blur();
+        }
+      }
+    });
+  }
 }

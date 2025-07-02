@@ -1,0 +1,58 @@
+<ion-content class="ion-padding ion-margin ion-justify-content-center">
+  <div class="ion-padding-top ion-margin-top ion-margin-bottom">
+    <h1>CFGames Community Cup</h1>
+    <h4>Login as an existing user</h4>
+  </div>
+  <ion-button
+    type="button"
+    fill="clear"
+    href="/auth/signup"
+    class="ion-margin-bottom"
+    >Don't have an account? Sign up!</ion-button
+  >
+
+  <form [formGroup]="loginForm" (ngSubmit)="onClickLogin()">
+    <ion-list class="ion-margin-vertical">
+      <ion-item>
+        <ion-input
+          type="email"
+          label="Email"
+          labelPlacement="stacked"
+          placeholder="froning@crossfit.com"
+          formControlName="email"
+          [required]="true"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          type="password"
+          label="Password"
+          labelPlacement="stacked"
+          placeholder="burpees4LYFE"
+          formControlName="password"
+          minlength="6"
+          [required]="true"
+        >
+          <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+        </ion-input>
+      </ion-item>
+    </ion-list>
+
+    <ion-button fill="clear" class="ion-margin-bottom" type="button">
+      <a>Forgot Password?</a>
+    </ion-button>
+
+    <ion-button expand="block" type="submit" class="ion-margin-top"
+      >Login</ion-button
+    >
+    <ion-button
+      expand="block"
+      type="button"
+      color="medium"
+      routerLink="/"
+      routerDirection="root"
+      class="ion-margin-top"
+      >Cancel</ion-button
+    >
+  </form>
+</ion-content>

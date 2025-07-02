@@ -1,0 +1,112 @@
+<app-header [title]="title()" backLink="/leaderboard"></app-header>
+
+<ion-content>
+  <ion-toolbar>
+    <ion-segment
+      [value]="scoreFilter.filter().gender"
+      (ionChange)="onSelectionChanged($event, 'gender')"
+    >
+      <ion-segment-button value="M">
+        <ion-label>M</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="F">
+        <ion-label>F</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment
+      [value]="scoreFilter.filter().ageCategory"
+      (ionChange)="onSelectionChanged($event, 'ageCategory')"
+    >
+      <ion-segment-button value="Open">
+        <ion-label>Open</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Masters">
+        <ion-label>Masters</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Masters 55+">
+        <ion-label>Masters 55+</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment value="Top3" (ionChange)="onSelectionChanged($event, 'top3')">
+      <ion-segment-button value="Top3">
+        <ion-label>Top 3 Only</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="All">
+        <ion-label>Show All</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-button
+    expand="block"
+    fill="clear"
+    size="small"
+    [href]="movementStandardsLink()"
+    target="_blank"
+    >Movement Standards
+    <ion-icon slot="end" name="open-outline"></ion-icon>
+  </ion-button>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>RX</ion-card-title>
+    </ion-card-header>
+    <ion-list>
+      @for (item of leaderboardRX(); track $index) {
+      <ion-item
+        class="leaderboard-row"
+        [color]="item.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'secondary' : ''"
+      >
+        <div class="" slot="start">
+          <span>{{ item.affiliate_rank }}</span>
+        </div>
+        <ion-label>
+          <ion-label class="leaderboard-name">
+            <strong>{{ item.name }}</strong><br />
+          </ion-label>
+          <ion-text>{{ item.team_name | teamName }}</ion-text>
+        </ion-label>
+        <div class="score-wrapper" slot="end">
+          <ion-label class="ion-text-end">{{ item.score_display }}</ion-label>
+          @if (item.tiebreak_ms) {
+          <ion-note>{{ 'Tiebreak ' + item.tiebreak_ms }}</ion-note>
+          }
+        </div>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Scaled</ion-card-title>
+    </ion-card-header>
+    <ion-list>
+      @for (item of leaderboardScaled(); track $index) {
+      <ion-item
+        class="leaderboard-row"
+        [color]="item.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'secondary' : ''"
+      >
+        <div class="rank-wrapper" slot="start">
+          <span>{{ item.affiliate_rank }}</span>
+        </div>
+        <ion-label>
+          <ion-label class="leaderboard-name">
+            <strong>{{ item.name }}</strong><br />
+          </ion-label>
+          <ion-text>{{ item.team_name | teamName }}</ion-text>
+        </ion-label>
+        <div class="score-wrapper" slot="end">
+          <ion-label class="ion-text-end">{{ item.score_display }}</ion-label>
+          @if (item.tiebreak_ms) {
+          <ion-note>{{ 'Tiebreak ' + item.tiebreak_ms }}</ion-note>
+          }
+        </div>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card>
+</ion-content>

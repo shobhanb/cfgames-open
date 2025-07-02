@@ -1,14 +1,10 @@
-@if (toastShow()) {
-<div class="toast">
-  @if (toastType() === 'success') {
-  <div role="alert" class="alert alert-success">
-    <span>{{ toastMessage() }}</span>
-  </div>
-  } @else if (toastType() === 'error') {
-  <div role="alert" class="alert alert-error">
-    <span>{{ toastMessage() }}</span>
-  </div>
-  }
-</div>
-
-}
+<ion-toast
+  [isOpen]="toastService.isOpen()"
+  [color]="toastService.color()"
+  [message]="toastService.message()"
+  translucent="true"
+  swipeGesture="vertical"
+  position="bottom"
+  [buttons]="toastButtons"
+  cssClass="toast-bottom"
+></ion-toast>

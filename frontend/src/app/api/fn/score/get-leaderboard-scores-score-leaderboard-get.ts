@@ -13,6 +13,7 @@ import { apiLeaderboardScoreModel } from '../../models/api-leaderboard-score-mod
 export interface GetLeaderboardScoresScoreLeaderboardGet$Params {
   affiliate_id: number;
   year: number;
+  ordinal?: (number | null);
 }
 
 export function getLeaderboardScoresScoreLeaderboardGet(http: HttpClient, rootUrl: string, params: GetLeaderboardScoresScoreLeaderboardGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiLeaderboardScoreModel>>> {
@@ -20,6 +21,7 @@ export function getLeaderboardScoresScoreLeaderboardGet(http: HttpClient, rootUr
   if (params) {
     rb.query('affiliate_id', params.affiliate_id, {});
     rb.query('year', params.year, {});
+    rb.query('ordinal', params.ordinal, {});
   }
 
   return http.request(

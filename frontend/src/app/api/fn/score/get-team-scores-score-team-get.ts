@@ -13,6 +13,7 @@ import { apiTeamScoreModel } from '../../models/api-team-score-model';
 export interface GetTeamScoresScoreTeamGet$Params {
   affiliate_id: number;
   year: number;
+  ordinal?: (number | null);
 }
 
 export function getTeamScoresScoreTeamGet(http: HttpClient, rootUrl: string, params: GetTeamScoresScoreTeamGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiTeamScoreModel>>> {
@@ -20,6 +21,7 @@ export function getTeamScoresScoreTeamGet(http: HttpClient, rootUrl: string, par
   if (params) {
     rb.query('affiliate_id', params.affiliate_id, {});
     rb.query('year', params.year, {});
+    rb.query('ordinal', params.ordinal, {});
   }
 
   return http.request(

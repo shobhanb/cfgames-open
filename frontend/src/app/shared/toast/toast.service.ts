@@ -1,44 +1,40 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { timer } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
-  private toastSubject = new Subject<{
-    message: string;
-    type: 'success' | 'error';
-    duration: number;
-    redirectUrl: string | null;
-  }>();
+  router = inject(Router);
 
-  toastState$ = this.toastSubject.asObservable();
+  readonly isOpen = signal<boolean>(false);
+  readonly color = signal<'primary' | 'success' | 'warning' | 'danger'>(
+    'success'
+  );
+  readonly message = signal<string | null>(null);
 
-  private defaultToastDuration = 1000;
-
-  showSuccess(
+  showToast(
     message: string,
+    color: 'primary' | 'success' | 'warning' | 'danger' = 'success',
     redirectUrl: string | null = null,
-    duration: number = this.defaultToastDuration
+    duration: number = 2000
   ) {
-    this.toastSubject.next({
-      message: message,
-      type: 'success',
-      duration: duration,
-      redirectUrl: redirectUrl,
+    this.message.set(message);
+    this.color.set(color);
+    this.isOpen.set(true);
+
+    timer(duration).subscribe(() => {
+      this.isOpen.set(false);
+      if (redirectUrl) {
+        this.router.navigateByUrl(redirectUrl);
+      }
     });
   }
 
-  showError(
-    message: string,
-    redirectUrl: string | null = null,
-    duration: number = this.defaultToastDuration
-  ) {
-    this.toastSubject.next({
-      message: message,
-      type: 'error',
-      duration: duration,
-      redirectUrl: redirectUrl,
-    });
+  show404() {
+    return this.showToast('Invalid URL', 'danger', '/', 2000);
   }
+
+  constructor() {}
 }

@@ -13,6 +13,7 @@ import { apiIndividualScoreModel } from '../../models/api-individual-score-model
 export interface GetIndividualScoresScoreIndividualGet$Params {
   affiliate_id: number;
   year: number;
+  ordinal?: (number | null);
 }
 
 export function getIndividualScoresScoreIndividualGet(http: HttpClient, rootUrl: string, params: GetIndividualScoresScoreIndividualGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiIndividualScoreModel>>> {
@@ -20,6 +21,7 @@ export function getIndividualScoresScoreIndividualGet(http: HttpClient, rootUrl:
   if (params) {
     rb.query('affiliate_id', params.affiliate_id, {});
     rb.query('year', params.year, {});
+    rb.query('ordinal', params.ordinal, {});
   }
 
   return http.request(

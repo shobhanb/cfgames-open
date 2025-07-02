@@ -1,0 +1,70 @@
+<app-header [title]="title()" backLink="/team-scores"></app-header>
+
+<ion-content>
+  <ion-card>
+    <ion-list>
+      @for (score of rankedScores(); track $index) {
+      <ion-accordion-group [multiple]="true">
+        <ion-accordion [value]="score.team_name">
+          <ion-item
+            slot="header"
+            [color]="score.team_name === authService.athlete()?.team_name ? 'secondary' : 'light'"
+            class="score-row"
+          >
+            <div class="rank-wrapper" slot="start">
+              <span>{{ score.rank }}</span>
+            </div>
+            <ion-label>{{ score.team_name | teamName }}</ion-label>
+            <ion-label slot="end">{{ score.total_team_score }}</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <ion-list>
+              @if (score.participation_score) {
+              <ion-item>
+                <ion-label>Participation</ion-label>
+                <ion-label slot="end"
+                  >{{ score.participation_score }}</ion-label
+                >
+              </ion-item>
+              } @if (score.top3_score) {
+              <ion-item>
+                <ion-label>Top 3</ion-label>
+                <ion-label slot="end">{{ score.top3_score }}</ion-label>
+              </ion-item>
+              } @if (score.judge_score) {
+              <ion-item>
+                <ion-label>Judge</ion-label>
+                <ion-label slot="end">{{ score.judge_score }}</ion-label>
+              </ion-item>
+              } @if (score.attendance_score) {
+              <ion-item>
+                <ion-label>Attendance</ion-label>
+                <ion-label slot="end">{{ score.attendance_score }}</ion-label>
+              </ion-item>
+              } @if (score.appreciation_score) {
+              <ion-item>
+                <ion-label>Appreciation</ion-label>
+                <ion-label slot="end">{{ score.appreciation_score }}</ion-label>
+              </ion-item>
+              } @if (score.side_challenge_score) {
+              <ion-item>
+                <ion-label>Side Challenge</ion-label>
+                <ion-label slot="end"
+                  >{{ score.side_challenge_score }}</ion-label
+                >
+              </ion-item>
+              } @if (score.spirit_score) {
+              <ion-item>
+                <ion-label>Appreciation</ion-label>
+                <ion-label slot="end">{{ score.spirit_score }}</ion-label>
+              </ion-item>
+              }
+            </ion-list>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+
+      }
+    </ion-list>
+  </ion-card>
+</ion-content>

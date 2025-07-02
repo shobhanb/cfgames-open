@@ -1,0 +1,72 @@
+@if (authService.user()) {
+<ion-buttons>
+  <ion-chip id="user-chip" color="primary" (click)="openModal()">
+    <ion-label>{{ authService.userNameInitials() }}</ion-label>
+  </ion-chip>
+</ion-buttons>
+<ion-modal
+  [isOpen]="isModalOpen"
+  (didDismiss)="isModalOpen = false"
+  [breakpoints]="[0, 0.25, 0.5, 0.75]"
+  [initialBreakpoint]="0.75"
+>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button (click)="onClickCancel()">Cancel</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list class="ion-margin" [inset]="true">
+        <ion-list-header>
+          {{ authService.user()?.displayName }}
+        </ion-list-header>
+        <ion-item>
+          {{ authService.user()?.email }}
+        </ion-item>
+        <ion-item>
+          {{`CF ID: ${ authService.userCustomClaims()?.crossfit_id }`}}
+        </ion-item>
+        <ion-item>
+          {{ authService.userCustomClaims()?.affiliate_name }}
+        </ion-item>
+        @if (authService.user()?.emailVerified) {
+
+        <ion-item>
+          {{`Team: ${ authService.athlete()!.team_name  | teamName}`}}
+        </ion-item>
+        <ion-item>
+          {{`Gender: ${ authService.athlete()?.gender }`}}
+        </ion-item>
+        <ion-item>
+          {{`Age Category: ${ authService.athlete()?.age_category }`}}
+        </ion-item>
+        @if (authService.userCustomClaims()?.admin) {
+        <ion-item>Admin Bitch!</ion-item>
+        } }
+      </ion-list>
+      @if (! authService.user()?.emailVerified) {
+      <ion-list class="ion-margin">
+        <ion-list-header>Email not verified</ion-list-header>
+        <ion-item>Check your spam folder</ion-item>
+        <ion-button fill="clear" (click)="onClickResendVerificationEmail()"
+          >Resend verification email</ion-button
+        >
+        <ion-button fill="clear" (click)="onClickRefresh()"
+          >Refresh verification status</ion-button
+        >
+      </ion-list>
+      }
+      <ion-button expand="block" class="ion-margin" (click)="onClickSignOut()"
+        >Sign Out</ion-button
+      >
+    </ion-content>
+  </ng-template>
+</ion-modal>
+} @else {
+<ion-buttons>
+  <ion-button href="/auth/login">Login</ion-button>
+</ion-buttons>
+}

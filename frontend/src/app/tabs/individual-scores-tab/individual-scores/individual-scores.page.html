@@ -1,0 +1,98 @@
+<app-header [title]="title()" backLink="/individual-scores"></app-header>
+
+<ion-content>
+  <ion-toolbar>
+    <ion-segment
+      [value]="scoreFilter.filter().gender"
+      (ionChange)="onSelectionChanged($event, 'gender')"
+    >
+      <ion-segment-button value="M">
+        <ion-label>M</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="F">
+        <ion-label>F</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment
+      [value]="scoreFilter.filter().ageCategory"
+      (ionChange)="onSelectionChanged($event, 'ageCategory')"
+    >
+      <ion-segment-button value="Open">
+        <ion-label>Open</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Masters">
+        <ion-label>Masters</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Masters 55+">
+        <ion-label>Masters 55+</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment
+      [scrollable]="true"
+      [value]="scoreFilter.filter().team"
+      (ionChange)="onSelectionChanged($event, 'team')"
+    >
+      @for (team of teamsList(); track $index) {
+      <ion-segment-button [value]="team">
+        <ion-label>{{ team | teamName }}</ion-label>
+      </ion-segment-button>
+      }
+    </ion-segment>
+  </ion-toolbar>
+
+  <ion-card>
+    <ion-list>
+      @for (score of aggregatedScores(); track $index) {
+      <ion-accordion-group [value]="expandedAccordions" [multiple]="true">
+        <ion-accordion [value]="score.crossfit_id">
+          <ion-item
+            slot="header"
+            [color]="score.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'secondary' : 'light'"
+            class="score-row"
+          >
+            <ion-label>{{ score.name }}</ion-label>
+            <ion-label slot="end">{{ score.total_individual_score }}</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <ion-list>
+              @if (score.participation_score) {
+              <ion-item>
+                <ion-label>Participation</ion-label>
+                <ion-label slot="end"
+                  >{{ score.participation_score }}</ion-label
+                >
+              </ion-item>
+              } @if (score.top3_score) {
+              <ion-item>
+                <ion-label>Top 3</ion-label>
+                <ion-label slot="end">{{ score.top3_score }}</ion-label>
+              </ion-item>
+              } @if (score.judge_score) {
+              <ion-item>
+                <ion-label>Judge</ion-label>
+                <ion-label slot="end">{{ score.judge_score }}</ion-label>
+              </ion-item>
+              } @if (score.attendance_score) {
+              <ion-item>
+                <ion-label>Attendance</ion-label>
+                <ion-label slot="end">{{ score.attendance_score }}</ion-label>
+              </ion-item>
+              } @if (score.appreciation_score) {
+              <ion-item>
+                <ion-label>Appreciation</ion-label>
+                <ion-label slot="end">{{ score.appreciation_score }}</ion-label>
+              </ion-item>
+              }
+            </ion-list>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+
+      }
+    </ion-list>
+  </ion-card>
+</ion-content>
