@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
-import { SwUpdate } from '@angular/service-worker';
+import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,10 @@ import { SwUpdate } from '@angular/service-worker';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  constructor(private router: Router, private swUpdate: SwUpdate) {
+  private router = inject(Router);
+  private swUpdate = inject(SwUpdate);
+
+  constructor() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         if (document.activeElement instanceof HTMLElement) {
@@ -20,12 +24,19 @@ export class AppComponent {
       }
     });
 
+    // Listen for service worker updates
     if (this.swUpdate.isEnabled) {
-      this.swUpdate.versionUpdates.subscribe(() => {
-        if (confirm('A new version is available. Reload?')) {
-          window.location.reload();
-        }
-      });
+      this.swUpdate.versionUpdates
+        .pipe(
+          filter(
+            (evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'
+          )
+        )
+        .subscribe(() => {
+          if (confirm('A new version is available. Reload to update?')) {
+            document.location.reload();
+          }
+        });
     }
   }
 }
