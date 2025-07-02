@@ -7,13 +7,14 @@ WORKDIR /app
 COPY package*.json  ./
 
 # Install dependencies
+RUN npm install -g @ionic/cli
 RUN npm ci
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN ionic build --prod
+RUN NODE_OPTIONS=--max-old-space-size=2048 ionic build --prod
 
 # Production stage
 FROM nginx:alpine
