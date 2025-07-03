@@ -1,8 +1,10 @@
 <ion-header>
   <ion-toolbar>
+    @if (backLink()) {
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button [defaultHref]="backLink()"></ion-back-button>
     </ion-buttons>
+    }
     <ion-title>{{ title() }}</ion-title>
 
     <app-auth-state slot="end"></app-auth-state>
