@@ -23,7 +23,6 @@ import { AuthStateComponent } from './auth-state/auth-state.component';
 })
 export class HeaderComponent implements OnInit {
   title = input.required<string>();
-  backLink = input<string | null>(null);
 
   constructor() {}
 
