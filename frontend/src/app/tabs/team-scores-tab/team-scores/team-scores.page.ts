@@ -19,8 +19,12 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonSkeletonText,
+  IonHeader,
+  IonBackButton,
+  IonButtons,
+  IonToolbar,
+  IonTitle,
 } from '@ionic/angular/standalone';
-import { HeaderComponent } from '../../../shared/header/header.component';
 import { EventService } from 'src/app/services/event.service';
 import { apiScoreService } from 'src/app/api/services';
 import { ScoreFilterService } from 'src/app/services/score-filter.service';
@@ -30,6 +34,7 @@ import { HelperFunctionsService } from 'src/app/services/helper-functions.servic
 import { TeamNamePipe } from '../../../pipes/team-name.pipe';
 import { AuthService } from 'src/app/services/auth.service';
 import { GetTeamScoresScoreTeamGet$Params } from 'src/app/api/fn/score/get-team-scores-score-team-get';
+import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
 
 @Component({
   selector: 'app-team-scores',
@@ -37,6 +42,11 @@ import { GetTeamScoresScoreTeamGet$Params } from 'src/app/api/fn/score/get-team-
   styleUrls: ['./team-scores.page.scss'],
   standalone: true,
   imports: [
+    IonTitle,
+    IonToolbar,
+    IonButtons,
+    IonBackButton,
+    IonHeader,
     IonRefresherContent,
     IonRefresher,
     IonCard,
@@ -49,8 +59,8 @@ import { GetTeamScoresScoreTeamGet$Params } from 'src/app/api/fn/score/get-team-
     CommonModule,
     IonSkeletonText,
     FormsModule,
-    HeaderComponent,
     TeamNamePipe,
+    AuthStateComponent,
   ],
 })
 export class TeamScoresPage implements OnInit {

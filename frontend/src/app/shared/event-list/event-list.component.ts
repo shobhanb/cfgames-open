@@ -7,6 +7,7 @@ import {
   IonLabel,
   IonItem,
   IonCard,
+  IonRouterLink,
 } from '@ionic/angular/standalone';
 import { EventService } from 'src/app/services/event.service';
 
@@ -22,6 +23,7 @@ import { EventService } from 'src/app/services/event.service';
     IonLabel,
     IonItem,
     RouterLink,
+    IonRouterLink,
   ],
 })
 export class EventListComponent implements OnInit {

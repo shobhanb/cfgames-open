@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs/operators';
@@ -11,7 +10,6 @@ import { filter } from 'rxjs/operators';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  private router = inject(Router);
   private swUpdate = inject(SwUpdate);
 
   constructor() {

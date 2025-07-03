@@ -1,4 +1,12 @@
-<app-header [title]="title()" backLink="individual-scores"></app-header>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="individual-scores"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ title() }}</ion-title>
+    <app-auth-state slot="end"></app-auth-state>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">

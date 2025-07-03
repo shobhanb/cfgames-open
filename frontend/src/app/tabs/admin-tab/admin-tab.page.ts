@@ -7,8 +7,11 @@ import {
   IonCardHeader,
   IonCardContent,
   IonCardTitle,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
 } from '@ionic/angular/standalone';
-import { HeaderComponent } from '../../shared/header/header.component';
+import { AuthStateComponent } from '../../shared/auth-state/auth-state.component';
 
 @Component({
   selector: 'app-admin-tab',
@@ -16,6 +19,9 @@ import { HeaderComponent } from '../../shared/header/header.component';
   styleUrls: ['./admin-tab.page.scss'],
   standalone: true,
   imports: [
+    IonToolbar,
+    IonTitle,
+    IonHeader,
     IonCardTitle,
     IonCardContent,
     IonCardHeader,
@@ -23,7 +29,7 @@ import { HeaderComponent } from '../../shared/header/header.component';
     IonContent,
     CommonModule,
     FormsModule,
-    HeaderComponent,
+    AuthStateComponent,
   ],
 })
 export class AdminTabPage implements OnInit {

@@ -1,4 +1,9 @@
-<app-header title="Individual Scores"></app-header>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Individual Scores</ion-title>
+    <app-auth-state slot="end"></app-auth-state>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">

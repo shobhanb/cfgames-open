@@ -25,8 +25,11 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonSkeletonText,
+  IonHeader,
+  IonBackButton,
+  IonButtons,
+  IonTitle,
 } from '@ionic/angular/standalone';
-import { HeaderComponent } from '../../../shared/header/header.component';
 import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import { apiLeaderboardScoreModel } from 'src/app/api/models';
@@ -37,6 +40,7 @@ import { TeamNamePipe } from 'src/app/pipes/team-name.pipe';
 import { addIcons } from 'ionicons';
 import { openOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/services/auth.service';
+import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
 
 @Component({
   selector: 'app-leaderboard',
@@ -44,6 +48,10 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./leaderboard.page.scss'],
   standalone: true,
   imports: [
+    IonTitle,
+    IonButtons,
+    IonBackButton,
+    IonHeader,
     IonRefresherContent,
     IonRefresher,
     IonCardTitle,
@@ -60,9 +68,9 @@ import { AuthService } from 'src/app/services/auth.service';
     IonItem,
     IonList,
     IonContent,
-    HeaderComponent,
     TeamNamePipe,
     IonSkeletonText,
+    AuthStateComponent,
   ],
 })
 export class LeaderboardPage implements OnInit {

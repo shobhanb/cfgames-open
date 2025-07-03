@@ -5,16 +5,13 @@ import {
   IonContent,
   IonHeader,
   IonTitle,
-  IonList,
-  IonItem,
   IonToolbar,
   IonCard,
   IonCardTitle,
   IonCardContent,
   IonCardHeader,
-  IonButton,
 } from '@ionic/angular/standalone';
-import { HeaderComponent } from '../../shared/header/header.component';
+import { AuthStateComponent } from '../../shared/auth-state/auth-state.component';
 
 @Component({
   selector: 'app-me-tab',
@@ -22,20 +19,17 @@ import { HeaderComponent } from '../../shared/header/header.component';
   styleUrls: ['./me-tab.page.scss'],
   standalone: true,
   imports: [
-    IonButton,
     IonCardHeader,
     IonCardContent,
     IonCardTitle,
     IonCard,
     IonContent,
     IonHeader,
-    IonList,
-    IonItem,
     IonTitle,
     IonToolbar,
     CommonModule,
     FormsModule,
-    HeaderComponent,
+    AuthStateComponent,
   ],
 })
 export class MeTabPage implements OnInit {

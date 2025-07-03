@@ -1,4 +1,9 @@
-<app-header title="Me"></app-header>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Me</ion-title>
+    <app-auth-state slot="end"></app-auth-state>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
   <ion-card [button]="true" type="button">

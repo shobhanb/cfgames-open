@@ -5,10 +5,13 @@ import {
   IonContent,
   IonRefresher,
   IonRefresherContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
 } from '@ionic/angular/standalone';
-import { HeaderComponent } from '../../shared/header/header.component';
 import { EventListComponent } from '../../shared/event-list/event-list.component';
 import { EventService } from 'src/app/services/event.service';
+import { AuthStateComponent } from '../../shared/auth-state/auth-state.component';
 
 @Component({
   selector: 'app-leaderboard-tab',
@@ -16,13 +19,16 @@ import { EventService } from 'src/app/services/event.service';
   styleUrls: ['./leaderboard-tab.page.scss'],
   standalone: true,
   imports: [
+    IonToolbar,
+    IonTitle,
+    IonHeader,
     IonRefresherContent,
     IonRefresher,
     IonContent,
     CommonModule,
     FormsModule,
-    HeaderComponent,
     EventListComponent,
+    AuthStateComponent,
   ],
 })
 export class LeaderboardTabPage implements OnInit {

@@ -12,8 +12,8 @@ import {
   IonToolbar,
   IonListHeader,
 } from '@ionic/angular/standalone';
+import { TeamNamePipe } from 'src/app/pipes/team-name.pipe';
 import { AuthService } from 'src/app/services/auth.service';
-import { TeamNamePipe } from '../../../pipes/team-name.pipe';
 
 @Component({
   selector: 'app-auth-state',

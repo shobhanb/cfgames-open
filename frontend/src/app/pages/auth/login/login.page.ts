@@ -13,9 +13,10 @@ import {
   IonInputPasswordToggle,
   IonItem,
   IonList,
+  IonRouterLink,
 } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/services/auth.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +33,7 @@ import { RouterLink } from '@angular/router';
     CommonModule,
     ReactiveFormsModule,
     RouterLink,
+    IonRouterLink,
   ],
 })
 export class LoginPage implements OnInit {

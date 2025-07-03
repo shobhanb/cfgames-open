@@ -22,8 +22,11 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonSkeletonText,
+  IonHeader,
+  IonBackButton,
+  IonButtons,
+  IonTitle,
 } from '@ionic/angular/standalone';
-import { HeaderComponent } from '../../../shared/header/header.component';
 import { EventService } from 'src/app/services/event.service';
 import { apiScoreService } from 'src/app/api/services';
 import { ScoreFilterService } from 'src/app/services/score-filter.service';
@@ -33,6 +36,7 @@ import { GetIndividualScoresScoreIndividualGet$Params } from 'src/app/api/fn/sco
 import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
 import { TeamNamePipe } from '../../../pipes/team-name.pipe';
 import { AuthService } from 'src/app/services/auth.service';
+import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
 
 @Component({
   selector: 'app-individual-scores',
@@ -40,6 +44,10 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./individual-scores.page.scss'],
   standalone: true,
   imports: [
+    IonTitle,
+    IonButtons,
+    IonBackButton,
+    IonHeader,
     IonRefresherContent,
     IonRefresher,
     IonCard,
@@ -54,9 +62,9 @@ import { AuthService } from 'src/app/services/auth.service';
     IonToolbar,
     CommonModule,
     FormsModule,
-    HeaderComponent,
     TeamNamePipe,
     IonSkeletonText,
+    AuthStateComponent,
   ],
 })
 export class IndividualScoresPage implements OnInit {
