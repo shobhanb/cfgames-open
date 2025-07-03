@@ -1,12 +1,18 @@
 import { inject } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
-import { CanActivateFn } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
+import { Auth, User, user } from '@angular/fire/auth';
+import { map } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 export const userGuard: CanActivateFn = (route, state) => {
   const auth = inject(Auth);
-
-  if (auth.currentUser && auth.currentUser.emailVerified) {
-    return true;
-  }
-  return false;
+  const router = inject(Router);
+  return user(auth).pipe(
+    map((firebaseUser: User | null) => {
+      if (firebaseUser && firebaseUser.emailVerified) {
+        return true;
+      }
+      return router.createUrlTree(['/home']);
+    })
+  );
 };

@@ -62,9 +62,67 @@ export const tabsRoutes: Routes = [
         canActivate: [userGuard],
       },
       {
+        path: 'me/my-scores',
+        loadComponent: () =>
+          import('./me-tab/my-scores/my-scores.page').then(
+            (c) => c.MyScoresPage
+          ),
+        canActivate: [userGuard],
+      },
+      {
+        path: 'me/appreciation',
+        loadComponent: () =>
+          import('./me-tab/appreciation/appreciation.page').then(
+            (c) => c.AppreciationPage
+          ),
+        canActivate: [userGuard],
+      },
+      {
+        path: 'me/schedule',
+        loadComponent: () =>
+          import('./me-tab/schedule/schedule.page').then((c) => c.SchedulePage),
+        canActivate: [userGuard],
+      },
+      {
         path: 'admin',
         loadComponent: () =>
           import('./admin-tab/admin-tab.page').then((c) => c.AdminTabPage),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'admin/users',
+        loadComponent: () =>
+          import('./admin-tab/users/users.page').then((c) => c.UsersPage),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'admin/teams',
+        loadComponent: () =>
+          import('./admin-tab/teams/teams.page').then((c) => c.TeamsPage),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'admin/scheduling',
+        loadComponent: () =>
+          import('./admin-tab/scheduling/scheduling.page').then(
+            (c) => c.SchedulingPage
+          ),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'admin/attendance',
+        loadComponent: () =>
+          import('./admin-tab/attendance/attendance.page').then(
+            (c) => c.AttendancePage
+          ),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'admin/side-scores',
+        loadComponent: () =>
+          import('./admin-tab/side-scores/side-scores.page').then(
+            (c) => c.SideScoresPage
+          ),
         canActivate: [adminGuard],
       },
       {

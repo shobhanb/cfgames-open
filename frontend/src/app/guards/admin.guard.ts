@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { CanActivateFn } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { Auth, user, User } from '@angular/fire/auth';
 import { customClaims } from '@angular/fire/auth-guard';
 import { switchMap, map, of } from 'rxjs';
@@ -12,6 +12,7 @@ function isParsedToken(
 
 export const adminGuard: CanActivateFn = (route, state) => {
   const auth = inject(Auth);
+  const router = inject(Router);
   return user(auth).pipe(
     switchMap((firebaseUser: User | null) => {
       if (!firebaseUser) return of(false);
@@ -20,7 +21,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
           if (isParsedToken(claims)) {
             return !!claims.admin && !!claims.email_verified;
           }
-          return false;
+          return router.createUrlTree(['/home']);
         })
       );
     })
