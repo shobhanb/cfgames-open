@@ -20,7 +20,7 @@ import {
 } from '@ionic/angular/standalone';
 import { apiAthleteService, apiFireauthService } from 'src/app/api/services';
 import { environment } from 'src/environments/environment';
-import { apiAffiliateAthlete, apiFirebaseUserRecord } from 'src/app/api/models';
+import { apiAffiliateAthlete } from 'src/app/api/models';
 import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { CreateUserFireauthSignupPost$Params } from 'src/app/api/fn/fireauth/create-user-fireauth-signup-post';
