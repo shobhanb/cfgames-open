@@ -8,4 +8,108 @@
   </ion-toolbar>
 </ion-header>
 
-<p>Users</p>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-toolbar>
+    <ion-segment
+      [value]="filterAdmin()"
+      (ionChange)="onSelectionChanged($event)"
+    >
+      <ion-segment-button [value]="true">
+        <ion-label>Admin</ion-label>
+      </ion-segment-button>
+      <ion-segment-button [value]="false">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      [debounce]="500"
+      (ionInput)="onSearchBarInput($event)"
+    ></ion-searchbar>
+  </ion-toolbar>
+
+  @if (dataLoaded) {
+  <ion-list>
+    @for (user of filteredUsers(); track user.uid) {
+    <ion-item
+      [color]="user.custom_claims?.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'secondary' : ''"
+    >
+      <ion-label>
+        <ion-label><strong> {{ user.display_name }}</strong></ion-label>
+        <ion-note>{{ 'CF ID: ' + user.custom_claims?.crossfit_id }}</ion-note>
+        <br />
+        <ion-note>{{ user.email }}</ion-note>
+      </ion-label>
+
+      @if (user.custom_claims?.admin) {
+      <ion-label
+        slot="end"
+        [color]="user.custom_claims?.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'warning' : 'danger'"
+        >Admin</ion-label
+      >
+      } @if (!user.email_verified) {
+      <ion-label slot="end" color="medium">Not Verified</ion-label>
+      }
+      <ion-icon
+        slot="end"
+        name="ellipsis-horizontal-outline"
+        [id]="'item-popover-trigger-' + user.uid"
+      ></ion-icon>
+      <ion-popover
+        [trigger]="'item-popover-trigger-' + user.uid"
+        triggerAction="click"
+      >
+        <ng-template>
+          @if (user.custom_claims?.admin) {
+          <ion-button type="button" (click)="onClickAdmin(user.uid, false)"
+            >Revoke Admin Rights</ion-button
+          >
+          } @else {
+          <ion-button type="button" (click)="onClickAdmin(user.uid, true)"
+            >Make Admin</ion-button
+          >
+          }
+          <ion-button
+            type="button"
+            color="danger"
+            (click)="onClickDelete(user.uid)"
+            >Delete</ion-button
+          >
+        </ng-template>
+      </ion-popover>
+    </ion-item>
+
+    }
+  </ion-list>
+  } @else {
+  <ion-list>
+    @for (item of [0,1,2]; track $index) {
+    <ion-item>
+      <div class="" slot="start">
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 20px; height: 20px"
+        ></ion-skeleton-text>
+      </div>
+      <ion-label>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 150px; height: 40px"
+        ></ion-skeleton-text>
+      </ion-label>
+      <div slot="end">
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 80px; height: 30px"
+        ></ion-skeleton-text>
+      </div>
+    </ion-item>
+    }
+  </ion-list>
+  }
+</ion-content>

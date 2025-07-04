@@ -96,9 +96,13 @@ async def get_user_info(
 @firebase_auth_router.delete("/user/{uid}", status_code=status.HTTP_202_ACCEPTED)
 async def delete_user(
     _: admin_user_dependency,
+    db_session: db_dependency,
     uid: str,
 ) -> None:
     fireauth.delete_user(uid)
+    user = await FirebaseUser.find(async_session=db_session, uid=uid)
+    if user:
+        await user.delete(async_session=db_session)
 
 
 @firebase_auth_router.get("/all", status_code=status.HTTP_200_OK, response_model=list[FirebaseUserRecord])
