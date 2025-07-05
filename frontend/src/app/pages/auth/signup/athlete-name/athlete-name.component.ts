@@ -1,12 +1,10 @@
 import {
   Component,
   computed,
-  EventEmitter,
   inject,
   input,
   OnInit,
   output,
-  Output,
   signal,
 } from '@angular/core';
 import {

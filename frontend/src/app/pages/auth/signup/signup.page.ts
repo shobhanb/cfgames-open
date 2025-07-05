@@ -17,21 +17,18 @@ import {
   IonLabel,
   IonNote,
   IonListHeader,
-  LoadingController,
   ModalController,
 } from '@ionic/angular/standalone';
 import { apiAthleteService, apiFireauthService } from 'src/app/api/services';
 import { environment } from 'src/environments/environment';
 import { apiAffiliateAthlete, apiFirebaseUserRecord } from 'src/app/api/models';
 import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
-import { AuthService } from 'src/app/services/auth.service';
 import { CreateUserFireauthSignupPost$Params } from 'src/app/api/fn/fireauth/create-user-fireauth-signup-post';
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import {
   Auth,
   sendEmailVerification,
   signInWithEmailAndPassword,
-  User,
   UserCredential,
 } from '@angular/fire/auth';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -132,15 +129,6 @@ export class SignupPage implements OnInit {
       )
       .map((value: apiAffiliateAthlete) => value.crossfit_id)
   );
-
-  // onAthleteNameChange(event: CustomEvent) {
-  //   this.selectedAthleteName.set(event.detail.value);
-  //   this.selectedCrossfitId.set(
-  //     this.athleteCrossfitIds().length === 1
-  //       ? this.athleteCrossfitIds()[0]
-  //       : null
-  //   );
-  // }
 
   onAthleteCrossfitIdChange(event: CustomEvent) {
     this.selectedCrossfitId.set(event.detail.value);
