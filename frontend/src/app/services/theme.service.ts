@@ -9,11 +9,18 @@ export class ThemeService {
   private prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
   constructor() {
-    // Initialize theme on service creation
-    this.initializeDarkTheme(this.prefersDark.matches);
-    this.prefersDark.addEventListener('change', (mediaQuery) =>
-      this.initializeDarkTheme(mediaQuery.matches)
-    );
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark' || saved === 'light') {
+      this.initializeDarkTheme(saved === 'dark');
+    } else {
+      this.initializeDarkTheme(this.prefersDark.matches);
+    }
+    this.prefersDark.addEventListener('change', (mediaQuery) => {
+      // Only auto-switch if user hasn't set a preference
+      if (!localStorage.getItem('theme')) {
+        this.initializeDarkTheme(mediaQuery.matches);
+      }
+    });
   }
 
   initializeDarkTheme(isDark: boolean) {
@@ -25,6 +32,7 @@ export class ThemeService {
     const newValue = !this.themeToggle();
     this.themeToggle.set(newValue);
     this.toggleDarkTheme(newValue);
+    localStorage.setItem('theme', newValue ? 'dark' : 'light');
   }
 
   private toggleDarkTheme(shouldAdd: boolean) {

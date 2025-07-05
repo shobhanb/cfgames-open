@@ -20,7 +20,6 @@ import { ThemeService } from './services/theme.service';
 })
 export class AppComponent {
   private swUpdate = inject(SwUpdate);
-  private themeService = inject(ThemeService);
 
   loading = false;
 
