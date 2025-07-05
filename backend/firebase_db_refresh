@@ -1,0 +1,6 @@
+export BACKEND_URL="http://localhost:8000"
+curl -X "POST" \
+  "${BACKEND_URL}/fireauth/refresh_all" \
+  -H "accept: application/json" \
+  -H "X-API-KEY: ${ADMIN_API_KEY}" \
+  -d ""

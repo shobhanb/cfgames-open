@@ -5,6 +5,7 @@ from firebase_admin import auth as fireauth
 from firebase_admin.auth import ListUsersPage, UserRecord
 from firebase_admin.exceptions import FirebaseError
 
+from app.apikey_auth.dependencies import api_key_admin_dependency
 from app.database.dependencies import db_dependency
 from app.settings import admin_user_settings
 
@@ -115,7 +116,7 @@ async def get_all_users(
 
 @firebase_auth_router.post("/refresh_all", status_code=status.HTTP_200_OK)
 async def refresh_all_firebase_userdata(
-    # _: api_key_admin_dependency,
+    _: api_key_admin_dependency,
     db_session: db_dependency,
 ) -> None:
     page: ListUsersPage = fireauth.list_users()
