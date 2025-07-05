@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Select Athlete</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-searchbar
+    debounce="500"
+    placeholder="Search name"
+    (ionInput)="onSearchBarInput($event)"
+  ></ion-searchbar>
+  <ion-list>
+    @for (name of filteredNames(); track $index) {
+    <ion-item (click)="selectName(name)"> {{ name }} </ion-item>}
+  </ion-list>
+</ion-content>

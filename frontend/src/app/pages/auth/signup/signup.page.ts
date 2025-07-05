@@ -18,6 +18,7 @@ import {
   IonNote,
   IonListHeader,
   LoadingController,
+  ModalController,
 } from '@ionic/angular/standalone';
 import { apiAthleteService, apiFireauthService } from 'src/app/api/services';
 import { environment } from 'src/environments/environment';
@@ -34,6 +35,7 @@ import {
   UserCredential,
 } from '@angular/fire/auth';
 import { LoadingService } from 'src/app/services/loading.service';
+import { AthleteNameComponent } from './athlete-name/athlete-name.component';
 
 @Component({
   selector: 'app-signup',
@@ -62,6 +64,7 @@ export class SignupPage implements OnInit {
   private loadingService = inject(LoadingService);
   private toastService = inject(ToastService);
   private helperFunctions = inject(HelperFunctionsService);
+  private modalController = inject(ModalController);
 
   // Controls the UI - show assign athlete form, or show signup email/password form
   readonly showAssignAthleteForm = signal<boolean>(true);
@@ -101,6 +104,25 @@ export class SignupPage implements OnInit {
       .filter(this.helperFunctions.filterUnique)
   );
 
+  async openAthleteSelectModal() {
+    const modal = await this.modalController.create({
+      component: AthleteNameComponent,
+      componentProps: { athleteNames: this.athleteNames },
+    });
+
+    await modal.present();
+    const { data } = await modal.onDidDismiss();
+    if (data) {
+      this.selectedAthleteName.set(data);
+
+      this.selectedCrossfitId.set(
+        this.athleteCrossfitIds().length === 1
+          ? this.athleteCrossfitIds()[0]
+          : null
+      );
+    }
+  }
+
   // Filtered CF IDs based on selected Name
   readonly athleteCrossfitIds = computed<number[]>(() =>
     this.athleteData()
@@ -111,14 +133,14 @@ export class SignupPage implements OnInit {
       .map((value: apiAffiliateAthlete) => value.crossfit_id)
   );
 
-  onAthleteNameChange(event: CustomEvent) {
-    this.selectedAthleteName.set(event.detail.value);
-    this.selectedCrossfitId.set(
-      this.athleteCrossfitIds().length === 1
-        ? this.athleteCrossfitIds()[0]
-        : null
-    );
-  }
+  // onAthleteNameChange(event: CustomEvent) {
+  //   this.selectedAthleteName.set(event.detail.value);
+  //   this.selectedCrossfitId.set(
+  //     this.athleteCrossfitIds().length === 1
+  //       ? this.athleteCrossfitIds()[0]
+  //       : null
+  //   );
+  // }
 
   onAthleteCrossfitIdChange(event: CustomEvent) {
     this.selectedCrossfitId.set(event.detail.value);

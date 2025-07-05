@@ -18,7 +18,7 @@ export class ToastService {
     message: string,
     color: 'primary' | 'success' | 'warning' | 'danger' = 'success',
     redirectUrl: string | null = null,
-    duration: number = 2000
+    duration: number = 1000
   ) {
     this.message.set(message);
     this.color.set(color);

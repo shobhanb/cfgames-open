@@ -19,17 +19,18 @@
   >
     <ion-list class="ion-margin-vertical">
       <ion-item>
-        <ion-select
-          label="Name"
-          placeholder="Click"
-          interface="modal"
-          (ionChange)="onAthleteNameChange($event)"
+        <ion-label>Name</ion-label>
+        <ion-label slot="end" (click)="openAthleteSelectModal()"
+          >{{ selectedAthleteName() || 'Click to select'}}</ion-label
         >
-          @for (name of athleteNames(); track $index) {
-          <ion-select-option [value]="name">{{ name }}</ion-select-option>
-          }
-        </ion-select>
+        <!-- <ion-input
+          [value]="selectedAthleteName()"
+          readonly
+          placeholder="Click to select"
+          (click)="openAthleteSelectModal()"
+        ></ion-input> -->
       </ion-item>
+      @if (athleteCrossfitIds().length > 1) {
       <ion-item>
         <ion-select
           label="CF ID"
@@ -43,6 +44,12 @@
           }
         </ion-select>
       </ion-item>
+      } @else if (athleteCrossfitIds().length === 1) {
+      <ion-item>
+        <ion-label>CF ID</ion-label>
+        <ion-label slot="end">{{ athleteCrossfitIds()[0] }}</ion-label>
+      </ion-item>
+      }
     </ion-list>
 
     <br />

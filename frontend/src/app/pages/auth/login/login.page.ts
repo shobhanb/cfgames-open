@@ -76,27 +76,36 @@ export class LoginPage implements OnInit {
         this.loginForm.value.password
       )
         .then((value: UserCredential) => {
-          this.loadingService.showLoading('Getting athlete info');
-          this.authService
-            .getMyAthleteInfo()
-            .then(() => {
-              this.loadingService.dismissLoading();
-              this.toastService.showToast(
-                `LFGGGGG ${value.user.displayName}`,
-                'success',
-                '/',
-                1000
-              );
-            })
-            .catch((err) => {
-              this.loadingService.dismissLoading();
-              this.toastService.showToast(
-                `Error loading athlete info: ${err.message}`,
-                'danger',
-                '/',
-                3000
-              );
-            });
+          if (value.user.emailVerified) {
+            this.loadingService.showLoading('Getting athlete info');
+            this.authService
+              .getMyAthleteInfo()
+              .then(() => {
+                this.loadingService.dismissLoading();
+                this.toastService.showToast(
+                  `LFGGGGG ${value.user.displayName}`,
+                  'success',
+                  '/',
+                  1000
+                );
+              })
+              .catch((err) => {
+                this.loadingService.dismissLoading();
+                this.toastService.showToast(
+                  `Error loading athlete info: ${err.message}`,
+                  'danger',
+                  '/',
+                  3000
+                );
+              });
+          } else {
+            this.loadingService.dismissLoading();
+            this.toastService.showToast(
+              'Logged in. Pls verify your email',
+              'warning',
+              '/'
+            );
+          }
         })
         .catch((err: FirebaseError) => {
           console.error(err);
