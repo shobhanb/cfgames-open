@@ -17,13 +17,23 @@ import {
   IonLabel,
   IonNote,
   IonListHeader,
+  LoadingController,
 } from '@ionic/angular/standalone';
 import { apiAthleteService, apiFireauthService } from 'src/app/api/services';
 import { environment } from 'src/environments/environment';
-import { apiAffiliateAthlete } from 'src/app/api/models';
+import { apiAffiliateAthlete, apiFirebaseUserRecord } from 'src/app/api/models';
 import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { CreateUserFireauthSignupPost$Params } from 'src/app/api/fn/fireauth/create-user-fireauth-signup-post';
+import { ToastService } from 'src/app/shared/toast/toast.service';
+import {
+  Auth,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  User,
+  UserCredential,
+} from '@angular/fire/auth';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-signup',
@@ -48,7 +58,9 @@ import { CreateUserFireauthSignupPost$Params } from 'src/app/api/fn/fireauth/cre
 export class SignupPage implements OnInit {
   private apiAthlete = inject(apiAthleteService);
   private apiAuth = inject(apiFireauthService);
-  private fireAuth = inject(AuthService);
+  private fireAuth = inject(Auth);
+  private loadingService = inject(LoadingService);
+  private toastService = inject(ToastService);
   private helperFunctions = inject(HelperFunctionsService);
 
   // Controls the UI - show assign athlete form, or show signup email/password form
@@ -124,7 +136,7 @@ export class SignupPage implements OnInit {
     this.showAssignAthleteForm.set(true);
   }
 
-  onSubmitSignupForm() {
+  async onSubmitSignupForm() {
     if (
       this.selectedAffiliateId &&
       this.selectedAffiliateName &&
@@ -133,6 +145,8 @@ export class SignupPage implements OnInit {
       this.signupForm.value.email &&
       this.signupForm.value.password
     ) {
+      this.loadingService.showLoading('Signing up');
+
       const params: CreateUserFireauthSignupPost$Params = {
         body: {
           affiliate_id: this.selectedAffiliateId,
@@ -143,7 +157,62 @@ export class SignupPage implements OnInit {
           password: this.signupForm.value.password,
         },
       };
-      this.fireAuth.signup(params);
+
+      this.apiAuth.createUserFireauthSignupPost(params).subscribe({
+        next: (value: apiFirebaseUserRecord) => {
+          this.loadingService.showLoading('Signed up. Logging in');
+
+          const userCredential = signInWithEmailAndPassword(
+            this.fireAuth,
+            params.body.email,
+            params.body.password
+          )
+            .then((value: UserCredential) => {
+              this.loadingService.showLoading(
+                `Logged in. Sending verification email to ${value.user.email}`
+              );
+              sendEmailVerification(value.user)
+                .then(() => {
+                  this.loadingService.dismissLoading();
+                  this.toastService.showToast(
+                    'Check your email for verification link',
+                    'success',
+                    '/',
+                    3000
+                  );
+                })
+                .catch((err: any) => {
+                  this.loadingService.dismissLoading();
+                  this.toastService.showToast(
+                    'Error sending verification email: ' + err.error.detail,
+                    'danger',
+                    '/',
+                    3000
+                  );
+                });
+            })
+            .catch((err: any) => {
+              console.error(err);
+              this.loadingService.dismissLoading();
+              this.toastService.showToast(
+                'Error logging in: ' + err.error.detail,
+                'danger',
+                '/',
+                3000
+              );
+            });
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.loadingService.dismissLoading();
+          this.toastService.showToast(
+            'Error signing up: ' + err.error.detail,
+            'danger',
+            '/',
+            3000
+          );
+        },
+      });
     }
   }
 

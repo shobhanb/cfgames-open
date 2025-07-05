@@ -28,6 +28,7 @@ import { FirebaseError } from '@angular/fire/app';
 import { ToastService } from '../shared/toast/toast.service';
 import { environment } from 'src/environments/environment';
 import { CreateUserFireauthSignupPost$Params } from '../api/fn/fireauth/create-user-fireauth-signup-post';
+import { LoadingService } from './loading.service';
 
 @Injectable({
   providedIn: 'root',
@@ -37,6 +38,7 @@ export class AuthService {
   private apiAthlete = inject(apiAthleteService);
   private apiFireAuth = inject(apiFireauthService);
   private toastService = inject(ToastService);
+  private loadingService = inject(LoadingService);
 
   private auth = inject(Auth);
   // Signin, signout, token refresh
@@ -106,7 +108,12 @@ export class AuthService {
     this.idTokenSubscription = this.idToken$.subscribe(
       (token: string | null) => {
         this.token.set(token);
-        if (!!token && !this.athlete() && this.user()?.emailVerified) {
+        if (
+          !!token &&
+          !this.athlete() &&
+          this.user() &&
+          this.user()!.emailVerified
+        ) {
           this.getMyAthleteInfo();
         } else {
           this.token.set(null);
@@ -137,11 +144,12 @@ export class AuthService {
     );
   }
 
-  signup(params: CreateUserFireauthSignupPost$Params) {
+  async signup(params: CreateUserFireauthSignupPost$Params) {
     this.apiFireAuth.createUserFireauthSignupPost(params).subscribe({
       next: (value: apiFirebaseUserRecord) => {
         this.toastService.showToast('Signed up!', 'success', null, 1000);
         this.loginWithEmailAndPassword(params.body.email, params.body.password);
+        this.sendVerificationEmail();
       },
       error: (err: any) => {
         console.error(err.error.detail);
@@ -150,25 +158,24 @@ export class AuthService {
     });
   }
 
-  getMyAthleteInfo() {
-    return this.apiAthlete.getMyAthleteDataAthleteMeGet().subscribe({
-      next: (data: apiAthleteDetail) => {
-        this.athlete.set(data);
-      },
-      error: (err: Error) => {
-        console.error('Error getting my athlete info', err);
-        this.athlete.set(null);
-        this.toastService.showToast(err.message, 'danger');
-      },
+  getMyAthleteInfo(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.apiAthlete.getMyAthleteDataAthleteMeGet().subscribe({
+        next: (data: apiAthleteDetail) => {
+          this.athlete.set(data);
+          resolve(true);
+        },
+        error: (err: Error) => {
+          console.error('Error getting my athlete info', err);
+          this.athlete.set(null);
+          reject(err);
+        },
+      });
     });
   }
 
   async sendVerificationEmail() {
-    const actionCodeSettings: ActionCodeSettings = {
-      url: `${environment.frontendUrl}/auth/verify`,
-      handleCodeInApp: true,
-    };
-    sendEmailVerification(this.user()!, actionCodeSettings)
+    sendEmailVerification(this.user()!)
       .then(() => {
         this.toastService.showToast(
           'Sent verification email',

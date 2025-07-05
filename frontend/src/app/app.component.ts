@@ -9,12 +9,13 @@ import {
   NavigationCancel,
   NavigationError,
 } from '@angular/router';
+import { ToastComponent } from './shared/toast/toast.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
-  imports: [IonLoading, IonApp, IonRouterOutlet],
+  imports: [IonLoading, IonApp, IonRouterOutlet, ToastComponent],
 })
 export class AppComponent {
   private swUpdate = inject(SwUpdate);

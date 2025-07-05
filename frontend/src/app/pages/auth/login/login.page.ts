@@ -17,6 +17,14 @@ import {
 } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
+import {
+  Auth,
+  signInWithEmailAndPassword,
+  UserCredential,
+} from '@angular/fire/auth';
+import { LoadingService } from 'src/app/services/loading.service';
+import { ToastService } from 'src/app/shared/toast/toast.service';
+import { FirebaseError } from '@angular/fire/app';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +45,10 @@ import { Router, RouterLink } from '@angular/router';
   ],
 })
 export class LoginPage implements OnInit {
-  authService = inject(AuthService);
+  private fireAuth = inject(Auth);
+  private authService = inject(AuthService);
+  private loadingService = inject(LoadingService);
+  private toastService = inject(ToastService);
 
   constructor() {}
 
@@ -57,10 +68,46 @@ export class LoginPage implements OnInit {
       this.loginForm.value.email &&
       this.loginForm.value.password
     ) {
-      this.authService.loginWithEmailAndPassword(
+      this.loadingService.showLoading('Logging in');
+
+      signInWithEmailAndPassword(
+        this.fireAuth,
         this.loginForm.value.email,
         this.loginForm.value.password
-      );
+      )
+        .then((value: UserCredential) => {
+          this.loadingService.showLoading('Getting athlete info');
+          this.authService
+            .getMyAthleteInfo()
+            .then(() => {
+              this.loadingService.dismissLoading();
+              this.toastService.showToast(
+                `LFGGGGG ${value.user.displayName}`,
+                'success',
+                '/',
+                1000
+              );
+            })
+            .catch((err) => {
+              this.loadingService.dismissLoading();
+              this.toastService.showToast(
+                `Error loading athlete info: ${err.message}`,
+                'danger',
+                '/',
+                3000
+              );
+            });
+        })
+        .catch((err: FirebaseError) => {
+          console.error(err);
+          this.loadingService.dismissLoading();
+          this.toastService.showToast(
+            `Error logging in: ${err.message}`,
+            'danger',
+            '/',
+            3000
+          );
+        });
     }
   }
 }
