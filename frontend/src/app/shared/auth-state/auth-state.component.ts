@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import {
   IonButtons,
   IonChip,
@@ -11,7 +11,10 @@ import {
   IonHeader,
   IonToolbar,
   IonListHeader,
+  IonIcon,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { personCircleOutline } from 'ionicons/icons';
 import { TeamNamePipe } from 'src/app/pipes/team-name.pipe';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -20,6 +23,7 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './auth-state.component.html',
   styleUrls: ['./auth-state.component.scss'],
   imports: [
+    IonIcon,
     IonListHeader,
     IonToolbar,
     IonHeader,
@@ -39,7 +43,9 @@ export class AuthStateComponent implements OnInit {
 
   @ViewChild(IonModal) modal!: IonModal;
 
-  constructor() {}
+  constructor() {
+    addIcons({ personCircleOutline });
+  }
 
   ngOnInit() {}
 
