@@ -14,8 +14,13 @@ import {
   IonInput,
   IonItem,
   IonList,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
 } from '@ionic/angular/standalone';
 import { ToastService } from 'src/app/shared/toast/toast.service';
+import { ThemeComponent } from '../../../shared/theme/theme.component';
+import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
 
 @Component({
   selector: 'app-forgot-password',
@@ -23,12 +28,17 @@ import { ToastService } from 'src/app/shared/toast/toast.service';
   styleUrls: ['./forgot-password.page.scss'],
   standalone: true,
   imports: [
+    IonTitle,
+    IonToolbar,
+    IonHeader,
     IonList,
     IonItem,
     IonButton,
     IonInput,
     IonContent,
     ReactiveFormsModule,
+    ThemeComponent,
+    AuthStateComponent,
   ],
 })
 export class ForgotPasswordPage implements OnInit {

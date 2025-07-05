@@ -1,4 +1,12 @@
-<ion-content class="ion-padding ion-margin ion-justify-content-center">
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+    <app-theme slot="end"></app-theme>
+    <app-auth-state slot="end"></app-auth-state>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-horizontal ion-justify-content-center">
   <div class="ion-padding-top ion-margin-top ion-margin-bottom">
     <h1>CFGames Community Cup</h1>
     <h4>Login as an existing user</h4>
@@ -47,7 +55,11 @@
       <a>Forgot Password?</a>
     </ion-button>
 
-    <ion-button expand="block" type="submit" class="ion-margin-top"
+    <ion-button
+      expand="block"
+      type="submit"
+      class="ion-margin-top"
+      [disabled]="loginForm.invalid"
       >Login</ion-button
     >
     <ion-button

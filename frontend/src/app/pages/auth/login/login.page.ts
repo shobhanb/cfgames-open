@@ -14,6 +14,9 @@ import {
   IonItem,
   IonList,
   IonRouterLink,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
 } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/services/auth.service';
 import { RouterLink } from '@angular/router';
@@ -25,6 +28,8 @@ import {
 import { LoadingService } from 'src/app/services/loading.service';
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import { FirebaseError } from '@angular/fire/app';
+import { ThemeComponent } from '../../../shared/theme/theme.component';
+import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +37,9 @@ import { FirebaseError } from '@angular/fire/app';
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
+    IonTitle,
+    IonToolbar,
+    IonHeader,
     IonList,
     IonItem,
     IonInput,
@@ -42,6 +50,8 @@ import { FirebaseError } from '@angular/fire/app';
     ReactiveFormsModule,
     RouterLink,
     IonRouterLink,
+    ThemeComponent,
+    AuthStateComponent,
   ],
 })
 export class LoginPage implements OnInit {

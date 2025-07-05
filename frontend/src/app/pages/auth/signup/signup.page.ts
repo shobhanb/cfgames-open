@@ -18,6 +18,9 @@ import {
   IonNote,
   IonListHeader,
   ModalController,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
 } from '@ionic/angular/standalone';
 import { apiAthleteService, apiFireauthService } from 'src/app/api/services';
 import { environment } from 'src/environments/environment';
@@ -34,6 +37,8 @@ import {
 import { LoadingService } from 'src/app/services/loading.service';
 import { AthleteNameComponent } from './athlete-name/athlete-name.component';
 import { FirebaseError } from '@angular/fire/app';
+import { ThemeComponent } from '../../../shared/theme/theme.component';
+import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
 
 @Component({
   selector: 'app-signup',
@@ -41,6 +46,9 @@ import { FirebaseError } from '@angular/fire/app';
   styleUrls: ['./signup.page.scss'],
   standalone: true,
   imports: [
+    IonTitle,
+    IonToolbar,
+    IonHeader,
     IonListHeader,
     IonNote,
     IonLabel,
@@ -53,6 +61,8 @@ import { FirebaseError } from '@angular/fire/app';
     IonSelect,
     IonSelectOption,
     ReactiveFormsModule,
+    ThemeComponent,
+    AuthStateComponent,
   ],
 })
 export class SignupPage implements OnInit {
@@ -134,6 +144,10 @@ export class SignupPage implements OnInit {
   onAthleteCrossfitIdChange(event: CustomEvent) {
     this.selectedCrossfitId.set(event.detail.value);
   }
+
+  assignAthleteFormValid = computed<boolean>(
+    () => !!this.selectedAthleteName() && !!this.selectedCrossfitId()
+  );
 
   onSubmitAssignAthleteForm() {
     if (this.selectedAthleteName() && this.selectedCrossfitId()) {
