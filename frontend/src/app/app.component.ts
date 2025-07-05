@@ -10,6 +10,7 @@ import {
   NavigationError,
 } from '@angular/router';
 import { ToastComponent } from './shared/toast/toast.component';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +20,8 @@ import { ToastComponent } from './shared/toast/toast.component';
 })
 export class AppComponent {
   private swUpdate = inject(SwUpdate);
+  private themeService = inject(ThemeService);
+
   loading = false;
 
   constructor(private router: Router) {

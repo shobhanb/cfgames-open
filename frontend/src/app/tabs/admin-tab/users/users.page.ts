@@ -31,6 +31,7 @@ import { addIcons } from 'ionicons';
 import { ellipsisHorizontalOutline } from 'ionicons/icons';
 import { AlertService } from 'src/app/services/alert.service';
 import { ToastService } from 'src/app/shared/toast/toast.service';
+import { ThemeComponent } from '../../../shared/theme/theme.component';
 
 @Component({
   selector: 'app-users',
@@ -60,6 +61,7 @@ import { ToastService } from 'src/app/shared/toast/toast.service';
     CommonModule,
     FormsModule,
     AuthStateComponent,
+    ThemeComponent,
   ],
 })
 export class UsersPage implements OnInit {

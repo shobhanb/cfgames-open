@@ -41,6 +41,7 @@ import { addIcons } from 'ionicons';
 import { openOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/services/auth.service';
 import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
+import { ThemeComponent } from '../../../shared/theme/theme.component';
 
 @Component({
   selector: 'app-leaderboard',
@@ -71,6 +72,7 @@ import { AuthStateComponent } from '../../../shared/auth-state/auth-state.compon
     TeamNamePipe,
     IonSkeletonText,
     AuthStateComponent,
+    ThemeComponent,
   ],
 })
 export class LeaderboardPage implements OnInit {

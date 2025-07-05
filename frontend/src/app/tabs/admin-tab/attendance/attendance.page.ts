@@ -10,6 +10,7 @@ import {
   IonButtons,
 } from '@ionic/angular/standalone';
 import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
+import { ThemeComponent } from '../../../shared/theme/theme.component';
 
 @Component({
   selector: 'app-attendance',
@@ -26,6 +27,7 @@ import { AuthStateComponent } from '../../../shared/auth-state/auth-state.compon
     CommonModule,
     FormsModule,
     AuthStateComponent,
+    ThemeComponent,
   ],
 })
 export class AttendancePage implements OnInit {

@@ -38,6 +38,7 @@ import { TeamNamePipe } from '../../../pipes/team-name.pipe';
 import { AuthService } from 'src/app/services/auth.service';
 import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
 import { ToastService } from 'src/app/shared/toast/toast.service';
+import { ThemeComponent } from '../../../shared/theme/theme.component';
 
 @Component({
   selector: 'app-individual-scores',
@@ -66,6 +67,7 @@ import { ToastService } from 'src/app/shared/toast/toast.service';
     TeamNamePipe,
     IonSkeletonText,
     AuthStateComponent,
+    ThemeComponent,
   ],
 })
 export class IndividualScoresPage implements OnInit {

@@ -35,6 +35,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { GetTeamScoresScoreTeamGet$Params } from 'src/app/api/fn/score/get-team-scores-score-team-get';
 import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
 import { ToastService } from 'src/app/shared/toast/toast.service';
+import { ThemeComponent } from '../../../shared/theme/theme.component';
 
 @Component({
   selector: 'app-team-scores',
@@ -61,6 +62,7 @@ import { ToastService } from 'src/app/shared/toast/toast.service';
     FormsModule,
     TeamNamePipe,
     AuthStateComponent,
+    ThemeComponent,
   ],
 })
 export class TeamScoresPage implements OnInit {

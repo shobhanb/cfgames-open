@@ -16,7 +16,7 @@ import {
   IonRouterLink,
 } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/services/auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import {
   Auth,
   signInWithEmailAndPassword,

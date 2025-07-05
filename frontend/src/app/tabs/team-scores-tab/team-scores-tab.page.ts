@@ -12,6 +12,7 @@ import {
 import { EventListComponent } from '../../shared/event-list/event-list.component';
 import { EventService } from 'src/app/services/event.service';
 import { AuthStateComponent } from '../../shared/auth-state/auth-state.component';
+import { ThemeComponent } from '../../shared/theme/theme.component';
 
 @Component({
   selector: 'app-team-scores-tab',
@@ -29,6 +30,7 @@ import { AuthStateComponent } from '../../shared/auth-state/auth-state.component
     FormsModule,
     EventListComponent,
     AuthStateComponent,
+    ThemeComponent,
   ],
 })
 export class TeamScoresTabPage implements OnInit {

@@ -12,6 +12,7 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { AuthStateComponent } from '../../shared/auth-state/auth-state.component';
+import { ThemeComponent } from '../../shared/theme/theme.component';
 
 @Component({
   selector: 'app-admin-tab',
@@ -30,6 +31,7 @@ import { AuthStateComponent } from '../../shared/auth-state/auth-state.component
     CommonModule,
     FormsModule,
     AuthStateComponent,
+    ThemeComponent,
   ],
 })
 export class AdminTabPage implements OnInit {
