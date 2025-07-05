@@ -7,6 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   IonContent,
   IonButton,
@@ -33,6 +34,7 @@ import { ToastService } from 'src/app/shared/toast/toast.service';
 export class ForgotPasswordPage implements OnInit {
   private toastService = inject(ToastService);
   private fireAuth = inject(Auth);
+  private router = inject(Router);
 
   emailForm = new FormGroup({
     email: new FormControl('', {
@@ -40,7 +42,7 @@ export class ForgotPasswordPage implements OnInit {
     }),
   });
 
-  async onClickSubmit() {
+  async onSubmit() {
     if (this.emailForm.valid && this.emailForm.dirty) {
       sendPasswordResetEmail(this.fireAuth, this.emailForm.value.email!)
         .then(() => {
@@ -56,6 +58,11 @@ export class ForgotPasswordPage implements OnInit {
           this.toastService.showToast(err.message, 'danger', '/', 3000);
         });
     }
+  }
+
+  onCancel() {
+    this.emailForm.reset();
+    this.router.navigate(['/']);
   }
 
   constructor() {}
