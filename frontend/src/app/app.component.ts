@@ -39,7 +39,12 @@ export class AppComponent {
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
-        this.loading = true;
+        // Disable loading spinner for /auth routes
+        if (event.url.startsWith('/auth')) {
+          this.loading = false;
+        } else {
+          this.loading = true;
+        }
       } else if (
         event instanceof NavigationEnd ||
         event instanceof NavigationCancel ||
