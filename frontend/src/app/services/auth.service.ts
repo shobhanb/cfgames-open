@@ -38,9 +38,9 @@ export class AuthService {
   private apiAthlete = inject(apiAthleteService);
   private apiFireAuth = inject(apiFireauthService);
   private toastService = inject(ToastService);
-  private loadingService = inject(LoadingService);
 
   private auth = inject(Auth);
+
   // Signin, signout, token refresh
   private user$ = user(this.auth);
   private userSubscription: Subscription;
@@ -127,16 +127,16 @@ export class AuthService {
     });
   }
 
-  loginWithEmailAndPassword(email: string, password: string) {
-    signInWithEmailAndPassword(this.auth, email, password)
-      .then((value: UserCredential) => {
-        this.toastService.showToast('Logged in', 'success', '/', 1000);
-      })
-      .catch((err: FirebaseError) => {
-        console.error(err);
-        this.toastService.showToast(err.message, 'danger');
-      });
-  }
+  // loginWithEmailAndPassword(email: string, password: string) {
+  //   signInWithEmailAndPassword(this.auth, email, password)
+  //     .then((value: UserCredential) => {
+  //       this.toastService.showToast('Logged in', 'success', '/', 1000);
+  //     })
+  //     .catch((err: FirebaseError) => {
+  //       console.error(err);
+  //       this.toastService.showToast(err.message, 'danger');
+  //     });
+  // }
 
   logout() {
     signOut(this.auth).then(() =>
@@ -144,20 +144,21 @@ export class AuthService {
     );
   }
 
-  async signup(params: CreateUserFireauthSignupPost$Params) {
-    this.apiFireAuth.createUserFireauthSignupPost(params).subscribe({
-      next: (value: apiFirebaseUserRecord) => {
-        this.toastService.showToast('Signed up!', 'success', null, 1000);
-        this.loginWithEmailAndPassword(params.body.email, params.body.password);
-        this.sendVerificationEmail();
-      },
-      error: (err: any) => {
-        console.error(err.error.detail);
-        this.toastService.showToast(err.error.detail, 'danger', '/', 3000);
-      },
-    });
-  }
+  // async signup(params: CreateUserFireauthSignupPost$Params) {
+  //   this.apiFireAuth.createUserFireauthSignupPost(params).subscribe({
+  //     next: (value: apiFirebaseUserRecord) => {
+  //       this.toastService.showToast('Signed up!', 'success', null, 1000);
+  //       this.loginWithEmailAndPassword(params.body.email, params.body.password);
+  //       this.sendVerificationEmail();
+  //     },
+  //     error: (err: any) => {
+  //       console.error(err.error.detail);
+  //       this.toastService.showToast(err.error.detail, 'danger', '/', 3000);
+  //     },
+  //   });
+  // }
 
+  // Yes
   getMyAthleteInfo(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.apiAthlete.getMyAthleteDataAthleteMeGet().subscribe({
@@ -184,9 +185,9 @@ export class AuthService {
           1000
         );
       })
-      .catch((err: any) => {
+      .catch((err: FirebaseError) => {
         this.toastService.showToast(
-          'Error sending verification email',
+          `Error sending verification email: ${err.message}`,
           'danger',
           null,
           1000

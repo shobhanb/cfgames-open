@@ -142,6 +142,7 @@ export class LeaderboardPage implements OnInit {
         },
         error: (err: any) => {
           console.error(err);
+          this.toastService.showToast(err.message, 'danger', null, 3000);
         },
       });
   }

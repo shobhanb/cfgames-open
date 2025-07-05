@@ -30,6 +30,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { addIcons } from 'ionicons';
 import { ellipsisHorizontalOutline } from 'ionicons/icons';
 import { AlertService } from 'src/app/services/alert.service';
+import { ToastService } from 'src/app/shared/toast/toast.service';
 
 @Component({
   selector: 'app-users',
@@ -65,6 +66,7 @@ export class UsersPage implements OnInit {
   private apiFireAuth = inject(apiFireauthService);
   private popoverController = inject(PopoverController);
   private alertService = inject(AlertService);
+  private toastService = inject(ToastService);
   authService = inject(AuthService);
 
   dataLoaded = false;
@@ -131,6 +133,7 @@ export class UsersPage implements OnInit {
           },
           error: (err: any) => {
             console.error(err);
+            this.toastService.showToast(err.message, 'danger', null, 3000);
           },
         });
     }
@@ -156,6 +159,7 @@ export class UsersPage implements OnInit {
         },
         error: (err: any) => {
           console.error(err);
+          this.toastService.showToast(err.message, 'danger', null, 3000);
         },
       });
     }
@@ -177,6 +181,7 @@ export class UsersPage implements OnInit {
       },
       error: (err: any) => {
         console.error(err);
+        this.toastService.showToast(err.message, 'danger', null, 3000);
       },
     });
   }

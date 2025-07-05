@@ -30,11 +30,11 @@ import { apiScoreService } from 'src/app/api/services';
 import { ScoreFilterService } from 'src/app/services/score-filter.service';
 import { environment } from 'src/environments/environment';
 import { apiTeamScoreModel } from 'src/app/api/models';
-import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
 import { TeamNamePipe } from '../../../pipes/team-name.pipe';
 import { AuthService } from 'src/app/services/auth.service';
 import { GetTeamScoresScoreTeamGet$Params } from 'src/app/api/fn/score/get-team-scores-score-team-get';
 import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
+import { ToastService } from 'src/app/shared/toast/toast.service';
 
 @Component({
   selector: 'app-team-scores',
@@ -66,7 +66,8 @@ import { AuthStateComponent } from '../../../shared/auth-state/auth-state.compon
 export class TeamScoresPage implements OnInit {
   private eventService = inject(EventService);
   private apiScore = inject(apiScoreService);
-  private helperFunctions = inject(HelperFunctionsService);
+  private toastService = inject(ToastService);
+
   scoreFilter = inject(ScoreFilterService);
   authService = inject(AuthService);
 
@@ -151,6 +152,7 @@ export class TeamScoresPage implements OnInit {
       },
       error: (err: any) => {
         console.error(err);
+        this.toastService.showToast(err.message, 'danger', null, 3000);
       },
     });
   }

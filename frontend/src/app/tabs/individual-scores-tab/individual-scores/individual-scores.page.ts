@@ -37,6 +37,7 @@ import { HelperFunctionsService } from 'src/app/services/helper-functions.servic
 import { TeamNamePipe } from '../../../pipes/team-name.pipe';
 import { AuthService } from 'src/app/services/auth.service';
 import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
+import { ToastService } from 'src/app/shared/toast/toast.service';
 
 @Component({
   selector: 'app-individual-scores',
@@ -71,6 +72,8 @@ export class IndividualScoresPage implements OnInit {
   private eventService = inject(EventService);
   private apiScore = inject(apiScoreService);
   private helperFunctions = inject(HelperFunctionsService);
+  private toastService = inject(ToastService);
+
   scoreFilter = inject(ScoreFilterService);
   authService = inject(AuthService);
 
@@ -180,6 +183,7 @@ export class IndividualScoresPage implements OnInit {
       },
       error: (err: any) => {
         console.error(err);
+        this.toastService.showToast(err.message, 'danger', null, 3000);
       },
     });
   }

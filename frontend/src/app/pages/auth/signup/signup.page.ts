@@ -33,6 +33,7 @@ import {
 } from '@angular/fire/auth';
 import { LoadingService } from 'src/app/services/loading.service';
 import { AthleteNameComponent } from './athlete-name/athlete-name.component';
+import { FirebaseError } from '@angular/fire/app';
 
 @Component({
   selector: 'app-signup',
@@ -191,21 +192,21 @@ export class SignupPage implements OnInit {
                     3000
                   );
                 })
-                .catch((err: any) => {
+                .catch((err: FirebaseError) => {
                   this.loadingService.dismissLoading();
                   this.toastService.showToast(
-                    'Error sending verification email: ' + err.error.detail,
+                    'Error sending verification email: ' + err.message,
                     'danger',
                     '/',
                     3000
                   );
                 });
             })
-            .catch((err: any) => {
+            .catch((err: FirebaseError) => {
               console.error(err);
               this.loadingService.dismissLoading();
               this.toastService.showToast(
-                'Error logging in: ' + err.error.detail,
+                'Error logging in: ' + err.message,
                 'danger',
                 '/',
                 3000
@@ -216,7 +217,7 @@ export class SignupPage implements OnInit {
           console.error(err);
           this.loadingService.dismissLoading();
           this.toastService.showToast(
-            'Error signing up: ' + err.error.detail,
+            'Error signing up: ' + err.message,
             'danger',
             '/',
             3000
@@ -247,6 +248,12 @@ export class SignupPage implements OnInit {
         },
         error: (err: any) => {
           console.error(err);
+          this.toastService.showToast(
+            `Error getting athlete list: ${err.message}`,
+            'danger',
+            null,
+            5000
+          );
         },
       });
   }
