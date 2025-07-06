@@ -24,16 +24,17 @@
           {{ authService.user()?.displayName }}
         </ion-list-header>
         <ion-item>
-          {{ authService.user()?.email }}
-        </ion-item>
-        <ion-item>
-          {{`CF ID: ${ authService.userCustomClaims()?.crossfit_id }`}}
+          <ion-label>
+            {{ authService.user()?.email }}
+          </ion-label>
+          <ion-label slot="end">
+            {{`CF ID: ${ authService.userCustomClaims()?.crossfit_id }`}}
+          </ion-label>
         </ion-item>
         <ion-item>
           {{ authService.userCustomClaims()?.affiliate_name }}
         </ion-item>
-        @if (authService.user()?.emailVerified) {
-
+        @if (authService.athlete()) {
         <ion-item>
           {{`Team: ${ authService.athlete()!.team_name  | teamName}`}}
         </ion-item>
@@ -43,22 +44,31 @@
         <ion-item>
           {{`Age Category: ${ authService.athlete()?.age_category }`}}
         </ion-item>
-        @if (authService.userCustomClaims()?.admin) {
+        } @if (authService.userCustomClaims()?.admin) {
         <ion-item>Admin Bitch!</ion-item>
-        } }
+        }
+        <ion-button fill="clear" (click)="onClickRefreshAthlete()"
+          >Refresh athlete info</ion-button
+        >
       </ion-list>
-      @if (! authService.user()?.emailVerified) {
-      <ion-list class="ion-margin">
+      <ion-list class="ion-margin" [inset]="true">
+        @if (! authService.user()?.emailVerified) {
         <ion-list-header>Email not verified</ion-list-header>
         <ion-item>Check your spam folder</ion-item>
-        <ion-button fill="clear" (click)="onClickResendVerificationEmail()"
-          >Resend verification email</ion-button
-        >
-        <ion-button fill="clear" (click)="onClickRefresh()"
+        <ion-button
+          fill="outline"
+          expand="block"
+          (click)="onClickResendVerificationEmail()"
           >Refresh verification status</ion-button
         >
+        <ion-button
+          fill="outline"
+          expand="block"
+          (click)="onClickRefreshVerification()"
+          >Resend verification email</ion-button
+        >
+        }
       </ion-list>
-      }
       <ion-button expand="block" class="ion-margin" (click)="onClickSignOut()"
         >Sign Out</ion-button
       >

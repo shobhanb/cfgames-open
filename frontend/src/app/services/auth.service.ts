@@ -5,30 +5,20 @@ import {
   Injectable,
   signal,
 } from '@angular/core';
-import { apiAthleteService, apiFireauthService } from '../api/services';
+import { apiAthleteService } from '../api/services';
 import {
-  ActionCodeSettings,
   Auth,
   idToken,
   IdTokenResult,
   sendEmailVerification,
-  signInWithEmailAndPassword,
   signOut,
   User,
   user,
-  UserCredential,
 } from '@angular/fire/auth';
 import { Subscription } from 'rxjs';
-import {
-  apiAthleteDetail,
-  apiFirebaseCustomClaims,
-  apiFirebaseUserRecord,
-} from '../api/models';
+import { apiAthleteDetail, apiFirebaseCustomClaims } from '../api/models';
 import { FirebaseError } from '@angular/fire/app';
 import { ToastService } from '../shared/toast/toast.service';
-import { environment } from 'src/environments/environment';
-import { CreateUserFireauthSignupPost$Params } from '../api/fn/fireauth/create-user-fireauth-signup-post';
-import { LoadingService } from './loading.service';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +26,6 @@ import { LoadingService } from './loading.service';
 export class AuthService {
   private destroyRef = inject(DestroyRef);
   private apiAthlete = inject(apiAthleteService);
-  private apiFireAuth = inject(apiFireauthService);
   private toastService = inject(ToastService);
 
   private auth = inject(Auth);
@@ -127,39 +116,13 @@ export class AuthService {
     });
   }
 
-  // loginWithEmailAndPassword(email: string, password: string) {
-  //   signInWithEmailAndPassword(this.auth, email, password)
-  //     .then((value: UserCredential) => {
-  //       this.toastService.showToast('Logged in', 'success', '/', 1000);
-  //     })
-  //     .catch((err: FirebaseError) => {
-  //       console.error(err);
-  //       this.toastService.showToast(err.message, 'danger');
-  //     });
-  // }
-
-  logout() {
-    signOut(this.auth).then(() =>
+  async logout() {
+    await signOut(this.auth).then(() =>
       this.toastService.showToast('Logged out', 'primary', '/', 1000)
     );
   }
 
-  // async signup(params: CreateUserFireauthSignupPost$Params) {
-  //   this.apiFireAuth.createUserFireauthSignupPost(params).subscribe({
-  //     next: (value: apiFirebaseUserRecord) => {
-  //       this.toastService.showToast('Signed up!', 'success', null, 1000);
-  //       this.loginWithEmailAndPassword(params.body.email, params.body.password);
-  //       this.sendVerificationEmail();
-  //     },
-  //     error: (err: any) => {
-  //       console.error(err.error.detail);
-  //       this.toastService.showToast(err.error.detail, 'danger', '/', 3000);
-  //     },
-  //   });
-  // }
-
-  // Yes
-  getMyAthleteInfo(): Promise<boolean> {
+  async getMyAthleteInfo(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.apiAthlete.getMyAthleteDataAthleteMeGet().subscribe({
         next: (data: apiAthleteDetail) => {
@@ -195,7 +158,7 @@ export class AuthService {
       });
   }
 
-  refreshTokenAfterVerification() {
+  async refreshTokenAfterVerification() {
     this.auth.currentUser?.reload().then(() => {
       this.auth.currentUser
         ?.getIdToken(true)

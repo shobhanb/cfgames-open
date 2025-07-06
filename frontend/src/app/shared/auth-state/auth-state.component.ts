@@ -12,6 +12,7 @@ import {
   IonToolbar,
   IonListHeader,
   IonIcon,
+  IonNote,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { personCircleOutline } from 'ionicons/icons';
@@ -23,6 +24,7 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './auth-state.component.html',
   styleUrls: ['./auth-state.component.scss'],
   imports: [
+    IonNote,
     IonIcon,
     IonListHeader,
     IonToolbar,
@@ -55,16 +57,21 @@ export class AuthStateComponent implements OnInit {
     this.isModalOpen = true;
   }
 
-  onClickResendVerificationEmail() {
-    this.authService.sendVerificationEmail();
+  async onClickResendVerificationEmail() {
+    await this.authService.sendVerificationEmail();
   }
 
-  onClickRefresh() {
-    this.authService.refreshTokenAfterVerification();
+  async onClickRefreshVerification() {
+    await this.authService.refreshTokenAfterVerification();
   }
 
-  onClickSignOut() {
-    this.authService.logout();
+  async onClickRefreshAthlete() {
+    await this.authService.refreshTokenAfterVerification();
+    await this.authService.getMyAthleteInfo();
+  }
+
+  async onClickSignOut() {
+    await this.authService.logout();
   }
 
   onClickCancel() {
