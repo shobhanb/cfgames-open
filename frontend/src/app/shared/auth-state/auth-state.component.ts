@@ -12,7 +12,6 @@ import {
   IonToolbar,
   IonListHeader,
   IonIcon,
-  IonNote,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { personCircleOutline } from 'ionicons/icons';
@@ -24,7 +23,6 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './auth-state.component.html',
   styleUrls: ['./auth-state.component.scss'],
   imports: [
-    IonNote,
     IonIcon,
     IonListHeader,
     IonToolbar,
