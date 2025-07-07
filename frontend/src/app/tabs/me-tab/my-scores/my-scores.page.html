@@ -3,10 +3,91 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/me"></ion-back-button>
     </ion-buttons>
-    <ion-title>My Scores</ion-title>
+    <ion-title>{{ authService.user()?.displayName + ' Scores' }}</ion-title>
     <app-theme slot="end"></app-theme>
     <app-auth-state slot="end"></app-auth-state>
   </ion-toolbar>
 </ion-header>
 
-<p>My Scores</p>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if ( dataLoaded) { @for (item of groupedScores(); track $index) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle
+        >{{ item.scores[0].team_name | teamName }}</ion-card-subtitle
+      >
+      <ion-card-title>{{ item.year }}</ion-card-title>
+    </ion-card-header>
+    <ion-list>
+      @for (score of item.scores; track $index) {
+      <ion-item class="leaderboard-row">
+        <div class="" slot="start">
+          <ion-button
+            fill="clear"
+            [href]=" eventService.baseURL + '/' + score.year + '/' + score.ordinal"
+            target="_blank"
+          >
+            <span
+              >{{ eventService.getEventName(score.year, score.ordinal)}}</span
+            >
+            <ion-icon slot="end" name="open-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <ion-label>
+          <ion-label>{{ 'Rank ' + score.affiliate_rank }}</ion-label>
+          <ion-note class="leaderboard-name">
+            {{ score.affiliate_scaled }}<br />
+          </ion-note>
+        </ion-label>
+        <div slot="end">
+          <ion-label class="ion-text-end">{{ score.score_display }}</ion-label>
+          @if (score.tiebreak_ms) {
+          <ion-note>{{ 'Tiebreak ' + score.tiebreak_ms }}</ion-note>
+          }
+        </div>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card>
+  } } @else { @for (item of [0,1,2]; track $index) {
+  <ion-card>
+    <ion-card-header>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 100px; height: 15px"
+      ></ion-skeleton-text>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 80px; height: 30px"
+      ></ion-skeleton-text>
+    </ion-card-header>
+    <ion-list>
+      @for (listItem of [1,2,3]; track $index) {
+      <ion-item>
+        <div class="" slot="start">
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 20px; height: 20px"
+          ></ion-skeleton-text>
+        </div>
+        <ion-label>
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 150px; height: 40px"
+          ></ion-skeleton-text>
+        </ion-label>
+        <div slot="end">
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 80px; height: 30px"
+          ></ion-skeleton-text>
+        </div> </ion-item
+      >}
+    </ion-list>
+  </ion-card>
+  } }
+</ion-content>

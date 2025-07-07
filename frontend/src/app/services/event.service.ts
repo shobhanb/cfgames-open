@@ -11,6 +11,8 @@ export class EventService {
   private apiEvents = inject(apiCfeventsService);
   private events = signal<apiEventsModel[]>([]);
 
+  readonly baseURL = 'https://games.crossfit.com/workouts/open';
+
   readonly eventsLoaded = computed<boolean>(() => this.events().length > 0);
 
   readonly groupedEvents = computed(() => {
@@ -46,11 +48,10 @@ export class EventService {
   }
 
   getEventCrossfitLink(event: string) {
-    const baseURL = 'https://games.crossfit.com/workouts/open';
     const [year, eventNum] = event.split('.');
     const fullYear = '20' + year;
     const cleanEventNum = eventNum.replace(/[a-zA-Z]/g, '');
-    return `${baseURL}/${fullYear}/${cleanEventNum}`;
+    return `${this.baseURL}/${fullYear}/${cleanEventNum}`;
   }
 
   getData() {
