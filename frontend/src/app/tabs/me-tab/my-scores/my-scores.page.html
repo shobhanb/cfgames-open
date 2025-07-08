@@ -25,22 +25,23 @@
     <ion-list>
       @for (score of item.scores; track $index) {
       <ion-item class="leaderboard-row">
-        <div class="">
+        <div class="" slot="start">
           <span>{{ eventService.getEventName(score.year, score.ordinal)}}</span>
         </div>
         <ion-button
           [href]=" eventService.baseURL + '/' + score.year + '/' + score.ordinal"
           fill="clear"
           target="_blank"
+          slot="start"
           class="ion-margin-end"
         >
-          <ion-icon slot="end" name="open-outline"></ion-icon>
+          <ion-icon name="open-outline"></ion-icon>
         </ion-button>
         <ion-label>
-          <ion-label>{{ 'Rank ' + score.affiliate_rank }}</ion-label>
-          <ion-note class="leaderboard-name">
+          <ion-label class="leaderboard-name">
             {{ score.affiliate_scaled }}<br />
-          </ion-note>
+          </ion-label>
+          <ion-note>{{ 'Rank ' + score.affiliate_rank }}</ion-note>
         </ion-label>
         <div slot="end">
           <ion-label class="ion-text-end">{{ score.score_display }}</ion-label>

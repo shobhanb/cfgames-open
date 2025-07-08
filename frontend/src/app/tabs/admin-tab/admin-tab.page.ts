@@ -10,6 +10,7 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
+  IonCardSubtitle,
 } from '@ionic/angular/standalone';
 import { AuthStateComponent } from '../../shared/auth-state/auth-state.component';
 import { ThemeComponent } from '../../shared/theme/theme.component';
@@ -20,6 +21,7 @@ import { ThemeComponent } from '../../shared/theme/theme.component';
   styleUrls: ['./admin-tab.page.scss'],
   standalone: true,
   imports: [
+    IonCardSubtitle,
     IonToolbar,
     IonTitle,
     IonHeader,
