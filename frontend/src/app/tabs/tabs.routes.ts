@@ -70,6 +70,12 @@ export const tabsRoutes: Routes = [
         canActivate: [userGuard],
       },
       {
+        path: 'me/my-team',
+        loadComponent: () =>
+          import('./me-tab/my-team/my-team.page').then((c) => c.MyTeamPage),
+        canActivate: [userGuard],
+      },
+      {
         path: 'me/appreciation',
         loadComponent: () =>
           import('./me-tab/appreciation/appreciation.page').then(
