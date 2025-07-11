@@ -102,9 +102,11 @@ export const tabsRoutes: Routes = [
         canActivate: [adminGuard],
       },
       {
-        path: 'admin/teams',
+        path: 'admin/edit-teams',
         loadComponent: () =>
-          import('./admin-tab/teams/teams.page').then((c) => c.TeamsPage),
+          import('./admin-tab/edit-teams/edit-teams.page').then(
+            (c) => c.EditTeamsPage
+          ),
         canActivate: [adminGuard],
       },
       {

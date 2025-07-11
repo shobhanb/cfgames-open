@@ -8,6 +8,7 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { apiAthleteDetail } from '../../models/api-athlete-detail';
 
 export interface AssignAthleteToTeamAthleteTeamAssignPut$Params {
   crossfit_id: number;
@@ -16,7 +17,7 @@ export interface AssignAthleteToTeamAthleteTeamAssignPut$Params {
   team_role: number;
 }
 
-export function assignAthleteToTeamAthleteTeamAssignPut(http: HttpClient, rootUrl: string, params: AssignAthleteToTeamAthleteTeamAssignPut$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+export function assignAthleteToTeamAthleteTeamAssignPut(http: HttpClient, rootUrl: string, params: AssignAthleteToTeamAthleteTeamAssignPut$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAthleteDetail>> {
   const rb = new RequestBuilder(rootUrl, assignAthleteToTeamAthleteTeamAssignPut.PATH, 'put');
   if (params) {
     rb.query('crossfit_id', params.crossfit_id, {});
@@ -30,7 +31,7 @@ export function assignAthleteToTeamAthleteTeamAssignPut(http: HttpClient, rootUr
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<any>;
+      return r as StrictHttpResponse<apiAthleteDetail>;
     })
   );
 }

@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Teams</ion-title>
+    <app-theme slot="end"></app-theme>
+    <app-auth-state slot="end"></app-auth-state>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-toolbar>
+    <ion-searchbar
+      [debounce]="500"
+      (ionInput)="onSearchBarInput($event)"
+    ></ion-searchbar>
+  </ion-toolbar>
+
+  @if (dataLoaded) {
+  <ion-list>
+    @for (athlete of filteredAthleteData(); track athlete.crossfit_id) {
+    <ion-item-sliding [id]="'sliding-team-' + athlete.crossfit_id">
+      <ion-item>
+        @if (athlete.team_role === 1) {
+        <ion-icon slot="start" name="diamond-outline"></ion-icon>
+        } @else if (athlete.team_role === 2) {
+        <ion-icon slot="start" name="ribbon-outline"></ion-icon>
+        }
+        <ion-label> {{ athlete.name }} </ion-label>
+        <ion-label slot="end"> {{ athlete.team_name }} </ion-label>
+      </ion-item>
+      <ion-item-options side="start">
+        <ion-item-option
+          [color]="athlete.team_role===2 ? 'danger' : 'primary'"
+          (click)="onClickTeamLeader(athlete)"
+          ><ion-icon name="ribbon-outline"></ion-icon
+        ></ion-item-option>
+        <ion-item-option
+          [color]="athlete.team_role===1 ? 'danger' : 'warning'"
+          (click)="onClickCoach(athlete)"
+          ><ion-icon name="diamond-outline"></ion-icon
+        ></ion-item-option>
+      </ion-item-options>
+      <ion-item-options side="end">
+        <ion-item-option (click)="onClickEditTeam(athlete)"
+          >Edit Team</ion-item-option
+        >
+      </ion-item-options>
+    </ion-item-sliding>
+    }
+  </ion-list>
+  } @else {
+  <ion-list>
+    @for (item of [0,1,2,3,4,5,6]; track $index) {
+    <ion-item>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 150px; height: 20px"
+      ></ion-skeleton-text>
+      <ion-skeleton-text
+        slot="end"
+        [animated]="true"
+        style="width: 120px; height: 20px"
+      ></ion-skeleton-text>
+    </ion-item>
+    }
+  </ion-list>
+  }
+</ion-content>

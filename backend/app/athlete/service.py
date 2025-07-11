@@ -51,7 +51,7 @@ async def get_affiliate_athletes_list_unassigned(
     return [dict(x) for x in results]
 
 
-async def get_db_athlete_detail(  # noqa: PLR0913
+async def get_db_athlete_detail_all(  # noqa: PLR0913
     db_session: AsyncSession,
     affiliate_id: int,
     year: int,
@@ -81,18 +81,40 @@ async def get_db_athlete_detail(  # noqa: PLR0913
     return [dict(x) for x in results]
 
 
+async def get_db_athlete_detail(
+    db_session: AsyncSession,
+    crossfit_id: int,
+    year: int,
+) -> dict[str, Any]:
+    stmt = select(
+        Athlete.affiliate_name,
+        Athlete.affiliate_id,
+        Athlete.year,
+        Athlete.name,
+        Athlete.crossfit_id,
+        Athlete.team_name,
+        Athlete.team_role,
+        Athlete.age_category,
+        Athlete.gender,
+    ).where((Athlete.crossfit_id == crossfit_id) & (Athlete.year == year))
+    ret = await db_session.execute(stmt)
+    results = ret.mappings().one()
+    return dict(results)
+
+
 async def assign_db_athlete_to_team(
     db_session: AsyncSession,
     crossfit_id: int,
     year: int,
     team_name: str,
     team_role: int,
-) -> None:
+) -> dict[str, Any]:
     athlete = await Athlete.find_or_raise(async_session=db_session, crossfit_id=crossfit_id, year=year)
     athlete.team_name = team_name
     athlete.team_role = team_role
     db_session.add(athlete)
     await db_session.commit()
+    return await get_db_athlete_detail(db_session=db_session, crossfit_id=crossfit_id, year=year)
 
 
 async def random_assign_db_athletes(

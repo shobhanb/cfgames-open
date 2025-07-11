@@ -11,21 +11,15 @@ import { RequestBuilder } from '../../request-builder';
 import { apiAthleteDetail } from '../../models/api-athlete-detail';
 
 export interface GetAthleteDetailAthleteDetailGet$Params {
-  affiliate_id: number;
+  crossfit_id: number;
   year: number;
-  team_name?: (string | null);
-  age_category?: ('Open' | 'Masters' | 'Masters 55+' | null);
-  gender?: ('F' | 'M' | null);
 }
 
-export function getAthleteDetailAthleteDetailGet(http: HttpClient, rootUrl: string, params: GetAthleteDetailAthleteDetailGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthleteDetail>>> {
+export function getAthleteDetailAthleteDetailGet(http: HttpClient, rootUrl: string, params: GetAthleteDetailAthleteDetailGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAthleteDetail>> {
   const rb = new RequestBuilder(rootUrl, getAthleteDetailAthleteDetailGet.PATH, 'get');
   if (params) {
-    rb.query('affiliate_id', params.affiliate_id, {});
+    rb.query('crossfit_id', params.crossfit_id, {});
     rb.query('year', params.year, {});
-    rb.query('team_name', params.team_name, {});
-    rb.query('age_category', params.age_category, {});
-    rb.query('gender', params.gender, {});
   }
 
   return http.request(
@@ -33,7 +27,7 @@ export function getAthleteDetailAthleteDetailGet(http: HttpClient, rootUrl: stri
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<apiAthleteDetail>>;
+      return r as StrictHttpResponse<apiAthleteDetail>;
     })
   );
 }

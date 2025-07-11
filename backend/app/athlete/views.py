@@ -11,6 +11,7 @@ from .service import (
     assign_db_athlete_to_team,
     get_affiliate_athletes_list_unassigned,
     get_db_athlete_detail,
+    get_db_athlete_detail_all,
     get_user_data,
     random_assign_db_athletes,
 )
@@ -35,8 +36,8 @@ async def get_athlete_list(
     return await get_affiliate_athletes_list_unassigned(db_session=db_session, affiliate_id=affiliate_id, year=year)
 
 
-@athlete_router.get("/detail", status_code=status.HTTP_200_OK, response_model=list[AthleteDetail])
-async def get_athlete_detail(  # noqa: PLR0913
+@athlete_router.get("/detail/all", status_code=status.HTTP_200_OK, response_model=list[AthleteDetail])
+async def get_athlete_detail_all(  # noqa: PLR0913
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
@@ -44,7 +45,7 @@ async def get_athlete_detail(  # noqa: PLR0913
     age_category: Literal["Open", "Masters", "Masters 55+"] | None = None,
     gender: Literal["F", "M"] | None = None,
 ) -> list[dict[str, Any]]:
-    return await get_db_athlete_detail(
+    return await get_db_athlete_detail_all(
         db_session=db_session,
         affiliate_id=affiliate_id,
         year=year,
@@ -54,7 +55,20 @@ async def get_athlete_detail(  # noqa: PLR0913
     )
 
 
-@athlete_router.put("/team/assign", status_code=status.HTTP_202_ACCEPTED)
+@athlete_router.get("/detail", status_code=status.HTTP_200_OK, response_model=AthleteDetail)
+async def get_athlete_detail(
+    db_session: db_dependency,
+    crossfit_id: int,
+    year: int,
+) -> dict[str, Any]:
+    return await get_db_athlete_detail(
+        db_session=db_session,
+        crossfit_id=crossfit_id,
+        year=year,
+    )
+
+
+@athlete_router.put("/team/assign", status_code=status.HTTP_202_ACCEPTED, response_model=AthleteDetail)
 async def assign_athlete_to_team(
     db_session: db_dependency,
     crossfit_id: int,
@@ -62,7 +76,7 @@ async def assign_athlete_to_team(
     team_name: str,
     team_role: int,
     _: admin_user_dependency,
-) -> None:
+) -> dict[str, Any]:
     return await assign_db_athlete_to_team(
         db_session=db_session,
         crossfit_id=crossfit_id,

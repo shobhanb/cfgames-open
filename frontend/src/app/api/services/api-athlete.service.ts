@@ -15,6 +15,8 @@ import { apiAffiliateAthlete } from '../models/api-affiliate-athlete';
 import { assignAthleteToTeamAthleteTeamAssignPut } from '../fn/athlete/assign-athlete-to-team-athlete-team-assign-put';
 import { AssignAthleteToTeamAthleteTeamAssignPut$Params } from '../fn/athlete/assign-athlete-to-team-athlete-team-assign-put';
 import { apiAthleteDetail } from '../models/api-athlete-detail';
+import { getAthleteDetailAllAthleteDetailAllGet } from '../fn/athlete/get-athlete-detail-all-athlete-detail-all-get';
+import { GetAthleteDetailAllAthleteDetailAllGet$Params } from '../fn/athlete/get-athlete-detail-all-athlete-detail-all-get';
 import { getAthleteDetailAthleteDetailGet } from '../fn/athlete/get-athlete-detail-athlete-detail-get';
 import { GetAthleteDetailAthleteDetailGet$Params } from '../fn/athlete/get-athlete-detail-athlete-detail-get';
 import { getAthleteListAthleteListGet } from '../fn/athlete/get-athlete-list-athlete-list-get';
@@ -96,6 +98,39 @@ export class apiAthleteService extends BaseService {
     );
   }
 
+  /** Path part for operation `getAthleteDetailAllAthleteDetailAllGet()` */
+  static readonly GetAthleteDetailAllAthleteDetailAllGetPath = '/athlete/detail/all';
+
+  /**
+   * Get Athlete Detail All.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAthleteDetailAllAthleteDetailAllGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAthleteDetailAllAthleteDetailAllGet$Response(params: GetAthleteDetailAllAthleteDetailAllGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthleteDetail>>> {
+    return getAthleteDetailAllAthleteDetailAllGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get Athlete Detail All.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAthleteDetailAllAthleteDetailAllGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAthleteDetailAllAthleteDetailAllGet(params: GetAthleteDetailAllAthleteDetailAllGet$Params, context?: HttpContext): Observable<Array<apiAthleteDetail>> {
+    return this.getAthleteDetailAllAthleteDetailAllGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiAthleteDetail>>): Array<apiAthleteDetail> => r.body)
+    );
+  }
+
   /** Path part for operation `getAthleteDetailAthleteDetailGet()` */
   static readonly GetAthleteDetailAthleteDetailGetPath = '/athlete/detail';
 
@@ -109,7 +144,7 @@ export class apiAthleteService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAthleteDetailAthleteDetailGet$Response(params: GetAthleteDetailAthleteDetailGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthleteDetail>>> {
+  getAthleteDetailAthleteDetailGet$Response(params: GetAthleteDetailAthleteDetailGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAthleteDetail>> {
     return getAthleteDetailAthleteDetailGet(this.http, this.rootUrl, params, context);
   }
 
@@ -123,9 +158,9 @@ export class apiAthleteService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAthleteDetailAthleteDetailGet(params: GetAthleteDetailAthleteDetailGet$Params, context?: HttpContext): Observable<Array<apiAthleteDetail>> {
+  getAthleteDetailAthleteDetailGet(params: GetAthleteDetailAthleteDetailGet$Params, context?: HttpContext): Observable<apiAthleteDetail> {
     return this.getAthleteDetailAthleteDetailGet$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<apiAthleteDetail>>): Array<apiAthleteDetail> => r.body)
+      map((r: StrictHttpResponse<apiAthleteDetail>): apiAthleteDetail => r.body)
     );
   }
 
@@ -142,7 +177,7 @@ export class apiAthleteService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  assignAthleteToTeamAthleteTeamAssignPut$Response(params: AssignAthleteToTeamAthleteTeamAssignPut$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+  assignAthleteToTeamAthleteTeamAssignPut$Response(params: AssignAthleteToTeamAthleteTeamAssignPut$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAthleteDetail>> {
     return assignAthleteToTeamAthleteTeamAssignPut(this.http, this.rootUrl, params, context);
   }
 
@@ -156,9 +191,9 @@ export class apiAthleteService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  assignAthleteToTeamAthleteTeamAssignPut(params: AssignAthleteToTeamAthleteTeamAssignPut$Params, context?: HttpContext): Observable<any> {
+  assignAthleteToTeamAthleteTeamAssignPut(params: AssignAthleteToTeamAthleteTeamAssignPut$Params, context?: HttpContext): Observable<apiAthleteDetail> {
     return this.assignAthleteToTeamAthleteTeamAssignPut$Response(params, context).pipe(
-      map((r: StrictHttpResponse<any>): any => r.body)
+      map((r: StrictHttpResponse<apiAthleteDetail>): apiAthleteDetail => r.body)
     );
   }
 
