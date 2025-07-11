@@ -18,6 +18,7 @@ export type { apiHttpValidationError } from './models/api-http-validation-error'
 export type { apiIndividualScoreModel } from './models/api-individual-score-model';
 export type { apiLeaderboardScoreModel } from './models/api-leaderboard-score-model';
 export type { apiSideScoreModel } from './models/api-side-score-model';
+export type { apiTeamName } from './models/api-team-name';
 export type { apiTeamScoreModel } from './models/api-team-score-model';
 export type { apiTeamsModel } from './models/api-teams-model';
 export type { apiUserScoreModel } from './models/api-user-score-model';

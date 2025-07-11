@@ -23,8 +23,13 @@ import { getAthleteListAthleteListGet } from '../fn/athlete/get-athlete-list-ath
 import { GetAthleteListAthleteListGet$Params } from '../fn/athlete/get-athlete-list-athlete-list-get';
 import { getMyAthleteDataAthleteMeGet } from '../fn/athlete/get-my-athlete-data-athlete-me-get';
 import { GetMyAthleteDataAthleteMeGet$Params } from '../fn/athlete/get-my-athlete-data-athlete-me-get';
+import { getTeamNamesAthleteTeamNamesGet } from '../fn/athlete/get-team-names-athlete-team-names-get';
+import { GetTeamNamesAthleteTeamNamesGet$Params } from '../fn/athlete/get-team-names-athlete-team-names-get';
 import { randomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet } from '../fn/athlete/random-assign-athletes-athlete-team-assign-random-affiliate-id-year-get';
 import { RandomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet$Params } from '../fn/athlete/random-assign-athletes-athlete-team-assign-random-affiliate-id-year-get';
+import { renameTeamsAthleteRenameTeamsPut } from '../fn/athlete/rename-teams-athlete-rename-teams-put';
+import { RenameTeamsAthleteRenameTeamsPut$Params } from '../fn/athlete/rename-teams-athlete-rename-teams-put';
+import { apiTeamName } from '../models/api-team-name';
 
 @Injectable({ providedIn: 'root' })
 export class apiAthleteService extends BaseService {
@@ -227,6 +232,72 @@ export class apiAthleteService extends BaseService {
   randomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet(params: RandomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet$Params, context?: HttpContext): Observable<any> {
     return this.randomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<any>): any => r.body)
+    );
+  }
+
+  /** Path part for operation `getTeamNamesAthleteTeamNamesGet()` */
+  static readonly GetTeamNamesAthleteTeamNamesGetPath = '/athlete/team_names';
+
+  /**
+   * Get Team Names.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getTeamNamesAthleteTeamNamesGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getTeamNamesAthleteTeamNamesGet$Response(params: GetTeamNamesAthleteTeamNamesGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiTeamName>>> {
+    return getTeamNamesAthleteTeamNamesGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get Team Names.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getTeamNamesAthleteTeamNamesGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getTeamNamesAthleteTeamNamesGet(params: GetTeamNamesAthleteTeamNamesGet$Params, context?: HttpContext): Observable<Array<apiTeamName>> {
+    return this.getTeamNamesAthleteTeamNamesGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiTeamName>>): Array<apiTeamName> => r.body)
+    );
+  }
+
+  /** Path part for operation `renameTeamsAthleteRenameTeamsPut()` */
+  static readonly RenameTeamsAthleteRenameTeamsPutPath = '/athlete/rename_teams';
+
+  /**
+   * Rename Teams.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `renameTeamsAthleteRenameTeamsPut()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  renameTeamsAthleteRenameTeamsPut$Response(params: RenameTeamsAthleteRenameTeamsPut$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiTeamName>>> {
+    return renameTeamsAthleteRenameTeamsPut(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Rename Teams.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `renameTeamsAthleteRenameTeamsPut$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  renameTeamsAthleteRenameTeamsPut(params: RenameTeamsAthleteRenameTeamsPut$Params, context?: HttpContext): Observable<Array<apiTeamName>> {
+    return this.renameTeamsAthleteRenameTeamsPut$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiTeamName>>): Array<apiTeamName> => r.body)
     );
   }
 

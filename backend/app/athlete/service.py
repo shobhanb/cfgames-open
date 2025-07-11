@@ -5,7 +5,7 @@ from itertools import product
 from random import choice
 from typing import Any
 
-from sqlalchemy import func, select, text
+from sqlalchemy import func, select, text, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.cf_games.constants import DEFAULT_TEAM_NAME, IGNORE_TEAMS
@@ -180,3 +180,31 @@ async def random_assign_db_athletes(
 
             else:
                 break
+
+
+async def get_db_team_names(db_session: AsyncSession, affiliate_id: int, year: int) -> list[dict[str, Any]]:
+    stmt = select(Athlete.team_name).where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year)).distinct()
+    ret = await db_session.execute(stmt)
+    results = ret.mappings().all()
+    return [dict(x) for x in results]
+
+
+async def rename_db_team_names(
+    db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
+    old_team_name: str,
+    new_team_name: str,
+) -> list[dict[str, Any]]:
+    stmt = (
+        update(Athlete)
+        .where(
+            (Athlete.affiliate_id == affiliate_id) & (Athlete.year == year) & (Athlete.team_name == old_team_name),
+        )
+        .values(team_name=new_team_name)
+    )
+    await db_session.execute(stmt)
+
+    await db_session.commit()
+
+    return await get_db_team_names(db_session=db_session, affiliate_id=affiliate_id, year=year)

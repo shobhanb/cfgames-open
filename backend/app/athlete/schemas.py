@@ -16,3 +16,12 @@ class AthleteDetail(AffiliateAthlete):
     team_role: int
     age_category: Literal["Open", "Masters", "Masters 55+"]
     gender: Literal["F", "M"]
+
+
+class TeamName(CustomBaseModel):
+    team_name: str
+
+
+class UpdateTeamName(CustomBaseModel):
+    old_team_name: str
+    new_team_name: str

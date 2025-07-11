@@ -110,6 +110,14 @@ export const tabsRoutes: Routes = [
         canActivate: [adminGuard],
       },
       {
+        path: 'admin/rename-teams',
+        loadComponent: () =>
+          import('./admin-tab/rename-teams/rename-teams.page').then(
+            (c) => c.RenameTeamsPage
+          ),
+        canActivate: [adminGuard],
+      },
+      {
         path: 'admin/scheduling',
         loadComponent: () =>
           import('./admin-tab/scheduling/scheduling.page').then(
