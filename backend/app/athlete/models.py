@@ -44,6 +44,6 @@ class Athlete(Base):
     age: Mapped[int] = mapped_column(Integer)
 
     # Affiliate columns
-    age_category: Mapped[str] = mapped_column(String, default=apply_age_category, onupdate=apply_age_category)
+    age_category: Mapped[str] = mapped_column(String, default=apply_age_category)
     team_name: Mapped[str] = mapped_column(String, default=DEFAULT_TEAM_NAME)
     team_role: Mapped[int] = mapped_column(Integer, default=0)
