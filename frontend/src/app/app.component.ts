@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { IonApp, IonRouterOutlet, IonLoading } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -9,7 +9,7 @@ import { ToastComponent } from './shared/toast/toast.component';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
-  imports: [IonLoading, IonApp, IonRouterOutlet, ToastComponent],
+  imports: [IonApp, IonRouterOutlet, ToastComponent],
 })
 export class AppComponent {
   private swUpdate = inject(SwUpdate);

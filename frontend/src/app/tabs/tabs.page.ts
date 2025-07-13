@@ -16,7 +16,6 @@ import {
   lockOpen,
   home,
 } from 'ionicons/icons';
-import { ToastComponent } from '../shared/toast/toast.component';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -24,14 +23,7 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './tabs.page.html',
   styleUrls: ['./tabs.page.scss'],
   standalone: true,
-  imports: [
-    IonTabBar,
-    IonIcon,
-    IonTabs,
-    IonTabButton,
-    IonLabel,
-    ToastComponent,
-  ],
+  imports: [IonTabBar, IonIcon, IonTabs, IonTabButton, IonLabel],
 })
 export class TabsPage implements OnInit {
   authService = inject(AuthService);

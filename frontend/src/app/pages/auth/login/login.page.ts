@@ -91,7 +91,7 @@ export class LoginPage implements OnInit {
               .then(() => {
                 this.loadingService.dismissLoading();
                 this.toastService.showToast(
-                  `LFGGGGG ${value.user.displayName}`,
+                  `Logged in as ${value.user.displayName}`,
                   'success',
                   '/',
                   1000

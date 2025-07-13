@@ -1,21 +1,12 @@
-import {
-  computed,
-  DestroyRef,
-  inject,
-  Injectable,
-  signal,
-} from '@angular/core';
+import { computed, inject, Injectable, linkedSignal } from '@angular/core';
 import { apiAthleteService } from '../api/services';
 import {
   Auth,
-  idToken,
   IdTokenResult,
   sendEmailVerification,
   signOut,
   User,
-  user,
 } from '@angular/fire/auth';
-import { Subscription } from 'rxjs';
 import { apiAthleteDetail, apiFirebaseCustomClaims } from '../api/models';
 import { FirebaseError } from '@angular/fire/app';
 import { ToastService } from './toast.service';
@@ -24,25 +15,42 @@ import { ToastService } from './toast.service';
   providedIn: 'root',
 })
 export class AuthService {
-  private destroyRef = inject(DestroyRef);
   private apiAthlete = inject(apiAthleteService);
   private toastService = inject(ToastService);
 
   private auth = inject(Auth);
 
-  // Signin, signout, token refresh
-  private user$ = user(this.auth);
-  private userSubscription: Subscription;
+  readonly user = linkedSignal<User | null>(() => null, {
+    equal: (a, b) =>
+      a?.uid === b?.uid &&
+      a?.emailVerified === b?.emailVerified &&
+      a?.displayName === b?.displayName,
+  });
 
-  // Signin, signout, token refresh
-  private idToken$ = idToken(this.auth);
-  private idTokenSubscription: Subscription;
+  readonly userCustomClaims = linkedSignal<apiFirebaseCustomClaims | null>(
+    () => null,
+    {
+      equal: (a, b) =>
+        a?.admin === b?.admin &&
+        a?.affiliate_id === b?.affiliate_id &&
+        a?.affiliate_name === b?.affiliate_name &&
+        a?.crossfit_id === b?.crossfit_id,
+    }
+  );
 
-  readonly user = signal<User | null>(null);
-  readonly userCustomClaims = signal<apiFirebaseCustomClaims | null>(null);
-  readonly token = signal<string | null>(null);
-  readonly loggedIn = computed<boolean>(() => !!this.user() && !!this.token());
-  readonly athlete = signal<apiAthleteDetail | null>(null);
+  readonly athlete = linkedSignal<apiAthleteDetail | null>(() => null, {
+    equal: (a, b) =>
+      a?.affiliate_id === b?.affiliate_id &&
+      a?.affiliate_name === b?.affiliate_name &&
+      a?.age_category === b?.age_category &&
+      a?.crossfit_id === b?.crossfit_id &&
+      a?.gender === b?.gender &&
+      a?.name === b?.name &&
+      a?.team_name === b?.team_name &&
+      a?.team_role === b?.team_role &&
+      a?.year === b?.year,
+  });
+
   readonly userNameInitials = computed<string | null>(() => {
     const currentUser = this.user();
     if (currentUser && currentUser.displayName) {
@@ -67,11 +75,11 @@ export class AuthService {
   );
 
   constructor() {
-    this.userSubscription = this.user$.subscribe((aUser: User | null) => {
-      this.user.set(aUser);
+    this.auth.onAuthStateChanged((user: User | null) => {
+      this.user.set(user);
 
-      if (aUser) {
-        aUser.getIdTokenResult().then((value: IdTokenResult) => {
+      if (user) {
+        user.getIdTokenResult().then((value: IdTokenResult) => {
           const customClaims = value.claims;
           this.userCustomClaims.set({
             admin: customClaims['admin'] ? true : false,
@@ -89,30 +97,14 @@ export class AuthService {
                 : null,
           });
         });
+
+        if (!this.athlete()) {
+          this.getMyAthleteInfo();
+        }
       } else {
         this.userCustomClaims.set(null);
+        this.athlete.set(null);
       }
-    });
-
-    this.idTokenSubscription = this.idToken$.subscribe(
-      (token: string | null) => {
-        this.token.set(token);
-        if (
-          !!token &&
-          !this.athlete() &&
-          this.user() &&
-          this.user()!.emailVerified
-        ) {
-          this.getMyAthleteInfo();
-        } else {
-          this.token.set(null);
-        }
-      }
-    );
-
-    this.destroyRef.onDestroy(() => {
-      this.userSubscription.unsubscribe();
-      this.idTokenSubscription.unsubscribe();
     });
   }
 
@@ -130,7 +122,6 @@ export class AuthService {
           resolve(true);
         },
         error: (err: Error) => {
-          console.error('Error getting my athlete info', err);
           this.athlete.set(null);
           reject(err);
         },
@@ -160,9 +151,7 @@ export class AuthService {
 
   async refreshTokenAfterVerification() {
     this.auth.currentUser?.reload().then(() => {
-      this.auth.currentUser
-        ?.getIdToken(true)
-        .then((idToken: string) => this.token.set(idToken));
+      this.auth.currentUser?.getIdToken(true);
     });
   }
 }
