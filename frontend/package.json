@@ -1,8 +1,8 @@
 {
   "name": "frontend",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "Shobhan",
+  "homepage": "https://cfmf.cfgames.site",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
