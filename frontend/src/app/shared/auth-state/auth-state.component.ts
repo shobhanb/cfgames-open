@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import {
   IonButtons,
-  IonChip,
   IonLabel,
   IonContent,
   IonButton,
@@ -12,7 +11,6 @@ import {
   IonToolbar,
   IonListHeader,
   IonIcon,
-  IonAvatar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { personCircleOutline } from 'ionicons/icons';
@@ -24,7 +22,6 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './auth-state.component.html',
   styleUrls: ['./auth-state.component.scss'],
   imports: [
-    IonAvatar,
     IonIcon,
     IonListHeader,
     IonToolbar,
@@ -33,7 +30,6 @@ import { AuthService } from 'src/app/services/auth.service';
     IonList,
     IonButton,
     IonButtons,
-    IonChip,
     IonLabel,
     IonItem,
     IonContent,
