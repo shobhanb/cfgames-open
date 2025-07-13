@@ -2,9 +2,6 @@
 <div class="year-title">
   {{ year.year }}
 </div>
-<!-- <ion-card-header> -->
-<!-- <ion-card-title>{{ year.year }}</ion-card-title> -->
-<!-- </ion-card-header> -->
 <ion-list [inset]="true">
   @if (showTotals()) {
   <ion-item [routerLink]="[link(), year.year, 0]" class="">
