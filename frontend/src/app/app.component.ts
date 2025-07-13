@@ -2,15 +2,8 @@ import { Component, inject } from '@angular/core';
 import { IonApp, IonRouterOutlet, IonLoading } from '@ionic/angular/standalone';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs/operators';
-import {
-  Router,
-  NavigationStart,
-  NavigationEnd,
-  NavigationCancel,
-  NavigationError,
-} from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastComponent } from './shared/toast/toast.component';
-import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -20,8 +13,6 @@ import { ThemeService } from './services/theme.service';
 })
 export class AppComponent {
   private swUpdate = inject(SwUpdate);
-
-  loading = false;
 
   constructor(private router: Router) {
     // Listen for service worker updates
@@ -38,22 +29,5 @@ export class AppComponent {
           }
         });
     }
-
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        // Disable loading spinner for /auth routes
-        if (event.url.startsWith('/auth')) {
-          this.loading = false;
-        } else {
-          this.loading = true;
-        }
-      } else if (
-        event instanceof NavigationEnd ||
-        event instanceof NavigationCancel ||
-        event instanceof NavigationError
-      ) {
-        this.loading = false;
-      }
-    });
   }
 }
