@@ -1,27 +1,19 @@
 @for (year of eventService.groupedEvents(); track $index) {
-<ion-card>
-  <ion-list>
-    <ion-item-group>
-      <br />
-      <ion-item-divider>
-        <ion-label>{{ year.year }}</ion-label>
-      </ion-item-divider>
-      @if (showTotals()) {
-      <ion-item
-        [routerLink]="[link(), year.year, 0]"
-        class="ion-margin-vertical"
-      >
-        <ion-label>{{ year.year + " Total" }}</ion-label>
-      </ion-item>
-      } @for (event of year.events; track $index) {
-      <ion-item
-        [routerLink]="[link(), event.year, event.ordinal]"
-        class="ion-margin-vertical"
-      >
-        <ion-label>{{ event.event }}</ion-label>
-      </ion-item>
-      }
-    </ion-item-group>
-  </ion-list>
-</ion-card>
+<div class="year-title">
+  {{ year.year }}
+</div>
+<!-- <ion-card-header> -->
+<!-- <ion-card-title>{{ year.year }}</ion-card-title> -->
+<!-- </ion-card-header> -->
+<ion-list [inset]="true">
+  @if (showTotals()) {
+  <ion-item [routerLink]="[link(), year.year, 0]" class="">
+    <ion-label>{{ year.year + " Total" }}</ion-label>
+  </ion-item>
+  } @for (event of year.events; track $index) {
+  <ion-item [routerLink]="[link(), event.year, event.ordinal]" class="">
+    <ion-label>{{ event.event }}</ion-label>
+  </ion-item>
+  }
+</ion-list>
 }
