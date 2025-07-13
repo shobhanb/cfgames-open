@@ -6,8 +6,6 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import {
   IonContent,
   IonToolbar,
@@ -36,9 +34,8 @@ import { GetIndividualScoresScoreIndividualGet$Params } from 'src/app/api/fn/sco
 import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
 import { TeamNamePipe } from '../../../pipes/team-name.pipe';
 import { AuthService } from 'src/app/services/auth.service';
-import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
-import { ToastService } from 'src/app/shared/toast/toast.service';
-import { ThemeComponent } from '../../../shared/theme/theme.component';
+import { ToastService } from 'src/app/services/toast.service';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
   selector: 'app-individual-scores',
@@ -62,12 +59,9 @@ import { ThemeComponent } from '../../../shared/theme/theme.component';
     IonAccordion,
     IonAccordionGroup,
     IonToolbar,
-    CommonModule,
-    FormsModule,
     TeamNamePipe,
     IonSkeletonText,
-    AuthStateComponent,
-    ThemeComponent,
+    ToolbarButtonsComponent,
   ],
 })
 export class IndividualScoresPage implements OnInit {

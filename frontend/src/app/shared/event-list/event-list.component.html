@@ -5,7 +5,7 @@
 <ion-list [inset]="true">
   @if (showTotals()) {
   <ion-item [routerLink]="[link(), year.year, 0]" class="">
-    <ion-label>{{ year.year + " Total" }}</ion-label>
+    <ion-label>Total</ion-label>
   </ion-item>
   } @for (event of year.events; track $index) {
   <ion-item [routerLink]="[link(), event.year, event.ordinal]" class="">

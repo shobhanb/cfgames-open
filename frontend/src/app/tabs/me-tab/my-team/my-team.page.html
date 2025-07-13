@@ -1,13 +1,76 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>my-team</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/me"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ authService.user()?.displayName + ' Scores' }}</ion-title>
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">my-team</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if ( dataLoaded) { @for (item of athletes(); track $index) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle></ion-card-subtitle>
+      <ion-card-title>{{ item.year }}</ion-card-title>
+    </ion-card-header>
+    <ion-list>
+      <ion-item class="leaderboard-row">
+        <div class="" slot="start">
+          <span></span>
+        </div>
+
+        <ion-label>
+          <ion-label class="leaderboard-name"> </ion-label>
+          <ion-note></ion-note>
+        </ion-label>
+        <div slot="end">
+          <ion-label class="ion-text-end"></ion-label>
+          <ion-note></ion-note>
+        </div>
+      </ion-item>
+    </ion-list>
+  </ion-card>
+  } } @else { @for (item of [0,1,2]; track $index) {
+  <ion-card>
+    <ion-card-header>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 100px; height: 15px"
+      ></ion-skeleton-text>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 80px; height: 30px"
+      ></ion-skeleton-text>
+    </ion-card-header>
+    <ion-list>
+      @for (listItem of [1,2,3]; track $index) {
+      <ion-item>
+        <div class="" slot="start">
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 20px; height: 20px"
+          ></ion-skeleton-text>
+        </div>
+        <ion-label>
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 150px; height: 40px"
+          ></ion-skeleton-text>
+        </ion-label>
+        <div slot="end">
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 80px; height: 30px"
+          ></ion-skeleton-text>
+        </div> </ion-item
+      >}
+    </ion-list>
+  </ion-card>
+  } }
 </ion-content>

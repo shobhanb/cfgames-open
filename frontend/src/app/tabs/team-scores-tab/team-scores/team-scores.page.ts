@@ -6,8 +6,6 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import {
   IonContent,
   IonLabel,
@@ -33,9 +31,8 @@ import { apiTeamScoreModel } from 'src/app/api/models';
 import { TeamNamePipe } from '../../../pipes/team-name.pipe';
 import { AuthService } from 'src/app/services/auth.service';
 import { GetTeamScoresScoreTeamGet$Params } from 'src/app/api/fn/score/get-team-scores-score-team-get';
-import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
-import { ToastService } from 'src/app/shared/toast/toast.service';
-import { ThemeComponent } from '../../../shared/theme/theme.component';
+import { ToastService } from 'src/app/services/toast.service';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
   selector: 'app-team-scores',
@@ -57,12 +54,9 @@ import { ThemeComponent } from '../../../shared/theme/theme.component';
     IonContent,
     IonAccordion,
     IonAccordionGroup,
-    CommonModule,
     IonSkeletonText,
-    FormsModule,
     TeamNamePipe,
-    AuthStateComponent,
-    ThemeComponent,
+    ToolbarButtonsComponent,
   ],
 })
 export class TeamScoresPage implements OnInit {

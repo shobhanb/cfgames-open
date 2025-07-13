@@ -23,15 +23,14 @@ import {
   IonButton,
   PopoverController,
 } from '@ionic/angular/standalone';
-import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
 import { apiFireauthService } from 'src/app/api/services';
 import { apiFirebaseUserRecord } from 'src/app/api/models';
 import { AuthService } from 'src/app/services/auth.service';
 import { addIcons } from 'ionicons';
 import { ellipsisHorizontalOutline } from 'ionicons/icons';
 import { AlertService } from 'src/app/services/alert.service';
-import { ToastService } from 'src/app/shared/toast/toast.service';
-import { ThemeComponent } from '../../../shared/theme/theme.component';
+import { ToastService } from 'src/app/services/toast.service';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
   selector: 'app-users',
@@ -60,8 +59,7 @@ import { ThemeComponent } from '../../../shared/theme/theme.component';
     IonToolbar,
     CommonModule,
     FormsModule,
-    AuthStateComponent,
-    ThemeComponent,
+    ToolbarButtonsComponent,
   ],
 })
 export class UsersPage implements OnInit {
@@ -118,7 +116,7 @@ export class UsersPage implements OnInit {
     const result = await this.alertService.showAlert(alertText);
     this.popoverController.dismiss();
 
-    if (result === 'confirm') {
+    if (result.role === 'confirm') {
       this.apiFireAuth
         .updateUserAdminRightsFireauthChangeAdminUidPost({
           uid: uid,
@@ -149,7 +147,7 @@ export class UsersPage implements OnInit {
     const result = await this.alertService.showAlert(`Delete ${user}?`);
     this.popoverController.dismiss();
 
-    if (result === 'confirm') {
+    if (result.role === 'confirm') {
       this.apiFireAuth.deleteUserFireauthUserUidDelete({ uid: uid }).subscribe({
         next: () => {
           const currentUser = this.authService.user();

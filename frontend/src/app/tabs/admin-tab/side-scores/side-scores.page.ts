@@ -9,8 +9,7 @@ import {
   IonButtons,
   IonBackButton,
 } from '@ionic/angular/standalone';
-import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
-import { ThemeComponent } from '../../../shared/theme/theme.component';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
   selector: 'app-side-scores',
@@ -26,8 +25,7 @@ import { ThemeComponent } from '../../../shared/theme/theme.component';
     IonToolbar,
     CommonModule,
     FormsModule,
-    AuthStateComponent,
-    ThemeComponent,
+    ToolbarButtonsComponent,
   ],
 })
 export class SideScoresPage implements OnInit {

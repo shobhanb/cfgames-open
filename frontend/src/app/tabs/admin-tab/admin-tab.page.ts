@@ -1,18 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import {
   IonContent,
-  IonCard,
-  IonCardHeader,
-  IonCardContent,
-  IonCardTitle,
   IonHeader,
   IonTitle,
   IonToolbar,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonIcon,
 } from '@ionic/angular/standalone';
-import { AuthStateComponent } from '../../shared/auth-state/auth-state.component';
-import { ThemeComponent } from '../../shared/theme/theme.component';
+import { addIcons } from 'ionicons';
+import {
+  codeOutline,
+  bodyOutline,
+  codeWorkingOutline,
+  codeSlashOutline,
+  clipboardOutline,
+  golfOutline,
+  calendarNumberOutline,
+} from 'ionicons/icons';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
   selector: 'app-admin-tab',
@@ -20,22 +27,29 @@ import { ThemeComponent } from '../../shared/theme/theme.component';
   styleUrls: ['./admin-tab.page.scss'],
   standalone: true,
   imports: [
+    IonIcon,
+    IonLabel,
+    IonItem,
+    IonList,
     IonToolbar,
     IonTitle,
     IonHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonCardHeader,
-    IonCard,
     IonContent,
-    CommonModule,
-    FormsModule,
-    AuthStateComponent,
-    ThemeComponent,
+    ToolbarButtonsComponent,
   ],
 })
 export class AdminTabPage implements OnInit {
-  constructor() {}
+  constructor() {
+    addIcons({
+      bodyOutline,
+      codeOutline,
+      codeWorkingOutline,
+      codeSlashOutline,
+      clipboardOutline,
+      golfOutline,
+      calendarNumberOutline,
+    });
+  }
 
   ngOnInit() {}
 }

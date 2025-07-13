@@ -1,6 +1,4 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import {
   IonContent,
   IonRefresher,
@@ -11,8 +9,7 @@ import {
 } from '@ionic/angular/standalone';
 import { EventListComponent } from '../../shared/event-list/event-list.component';
 import { EventService } from 'src/app/services/event.service';
-import { AuthStateComponent } from '../../shared/auth-state/auth-state.component';
-import { ThemeComponent } from '../../shared/theme/theme.component';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
   selector: 'app-leaderboard-tab',
@@ -26,11 +23,8 @@ import { ThemeComponent } from '../../shared/theme/theme.component';
     IonRefresherContent,
     IonRefresher,
     IonContent,
-    CommonModule,
-    FormsModule,
     EventListComponent,
-    AuthStateComponent,
-    ThemeComponent,
+    ToolbarButtonsComponent,
   ],
 })
 export class LeaderboardTabPage implements OnInit {

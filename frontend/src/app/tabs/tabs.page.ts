@@ -1,6 +1,4 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import {
   IonTabs,
   IonIcon,
@@ -19,7 +17,6 @@ import {
   home,
 } from 'ionicons/icons';
 import { ToastComponent } from '../shared/toast/toast.component';
-import { Auth } from '@angular/fire/auth';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -33,8 +30,6 @@ import { AuthService } from '../services/auth.service';
     IonTabs,
     IonTabButton,
     IonLabel,
-    CommonModule,
-    FormsModule,
     ToastComponent,
   ],
 })

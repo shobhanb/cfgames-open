@@ -1,6 +1,4 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import {
   IonContent,
   IonHeader,
@@ -22,9 +20,7 @@ import {
   IonIcon,
   IonCardSubtitle,
 } from '@ionic/angular/standalone';
-import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
-import { ThemeComponent } from '../../../shared/theme/theme.component';
-import { ToastService } from 'src/app/shared/toast/toast.service';
+import { ToastService } from 'src/app/services/toast.service';
 import { apiScoreService } from 'src/app/api/services';
 import { AuthService } from 'src/app/services/auth.service';
 import { apiUserScoreModel } from 'src/app/api/models';
@@ -32,6 +28,7 @@ import { EventService } from 'src/app/services/event.service';
 import { TeamNamePipe } from '../../../pipes/team-name.pipe';
 import { addIcons } from 'ionicons';
 import { openOutline } from 'ionicons/icons';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
   selector: 'app-my-scores',
@@ -58,11 +55,8 @@ import { openOutline } from 'ionicons/icons';
     IonHeader,
     IonTitle,
     IonToolbar,
-    CommonModule,
-    FormsModule,
-    AuthStateComponent,
-    ThemeComponent,
     TeamNamePipe,
+    ToolbarButtonsComponent,
   ],
 })
 export class MyScoresPage implements OnInit {

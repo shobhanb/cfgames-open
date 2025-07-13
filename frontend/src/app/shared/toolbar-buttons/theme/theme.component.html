@@ -1,8 +1,7 @@
-<ion-buttons>
+<ion-button (click)="onToggleClick()" color="medium">
   <ion-icon
     [name]="themeService.themeToggle() ? 'moon-outline' : 'sunny-outline'"
-    (click)="onToggleClick()"
-    style="font-size: 24px; cursor: pointer"
+    slot="icon-only"
     aria-label="Toggle theme"
   ></ion-icon>
-</ion-buttons>
+</ion-button>

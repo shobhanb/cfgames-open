@@ -1,52 +1,52 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Admin</ion-title>
-    <app-theme slot="end"></app-theme>
-    <app-auth-state slot="end"></app-auth-state>
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-card [button]="true" type="button" href="/admin/users">
-    <ion-card-header>
-      <ion-card-title>Users</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>Clone Shubham?</ion-card-content>
-  </ion-card>
-  <ion-card [button]="true" type="button" href="/admin/edit-teams">
-    <ion-card-header>
-      <ion-card-title>Manual Team Edit</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>Swipe left/right like Tinder</ion-card-content>
-  </ion-card>
-  <ion-card [button]="true" type="button" href="/admin/auto-assign-teams">
-    <ion-card-header>
-      <ion-card-title>Auto assign teams</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>They will cry</ion-card-content>
-  </ion-card>
-  <ion-card [button]="true" type="button" href="/admin/rename-teams">
-    <ion-card-header>
-      <ion-card-title>Rename Teams</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>Better be good names</ion-card-content>
-  </ion-card>
-  <ion-card [button]="true" type="button" href="/admin/scheduling">
-    <ion-card-header>
-      <ion-card-title>Scheduling</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>You are Shubham</ion-card-content>
-  </ion-card>
-  <ion-card [button]="true" type="button" href="/admin/attendance">
-    <ion-card-header>
-      <ion-card-title>Attendance</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>Reward the good bois and gals</ion-card-content>
-  </ion-card>
-  <ion-card [button]="true" type="button" href="/admin/side-scores">
-    <ion-card-header>
-      <ion-card-title>Side Scores</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>Other score stuff</ion-card-content>
-  </ion-card>
+  <div class="section-title">Account Management</div>
+  <ion-list [inset]="true">
+    <ion-item [button]="true" type="button" href="/admin/users">
+      <ion-icon slot="start" name="body-outline"></ion-icon>
+      <ion-label>Users</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div class="section-title">Athletes & Teams</div>
+  <ion-list [inset]="true">
+    <ion-item [button]="true" type="button" href="/admin/edit-teams">
+      <ion-icon slot="start" name="code-outline"></ion-icon>
+      <ion-label>Manual Team Edit</ion-label>
+    </ion-item>
+    <ion-item [button]="true" type="button" href="/admin/auto-assign-teams">
+      <ion-icon slot="start" name="code-working-outline"></ion-icon>
+      <ion-label>Auto Assign Teams</ion-label>
+    </ion-item>
+    <ion-item [button]="true" type="button" href="/admin/rename-teams">
+      <ion-icon slot="start" name="code-slash-outline"></ion-icon>
+      <ion-label>Rename Teams</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div class="section-title">Community Cup Scores</div>
+  <ion-list [inset]="true">
+    <ion-item [button]="true" type="button" href="/admin/attendanc">
+      <ion-icon slot="start" name="clipboard-outline"></ion-icon>
+      <ion-label>Attendance</ion-label>
+    </ion-item>
+    <ion-item [button]="true" type="button" href="/admin/side-scores">
+      <ion-icon slot="start" name="golf-outline"></ion-icon>
+      <ion-label>Side Scores</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div class="section-title">Heat Management</div>
+  <ion-list [inset]="true">
+    <ion-item [button]="true" type="button" href="/admin/scheduling">
+      <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
+      <ion-label>Scheduling</ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

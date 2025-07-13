@@ -1,18 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import {
   IonContent,
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonCard,
-  IonCardTitle,
-  IonCardContent,
-  IonCardHeader,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonIcon,
 } from '@ionic/angular/standalone';
-import { AuthStateComponent } from '../../shared/auth-state/auth-state.component';
-import { ThemeComponent } from '../../shared/theme/theme.component';
+import { addIcons } from 'ionicons';
+import {
+  cogOutline,
+  barChartOutline,
+  calendarOutline,
+  heartOutline,
+  peopleCircleOutline,
+} from 'ionicons/icons';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
   selector: 'app-me-tab',
@@ -20,22 +25,27 @@ import { ThemeComponent } from '../../shared/theme/theme.component';
   styleUrls: ['./me-tab.page.scss'],
   standalone: true,
   imports: [
-    IonCardHeader,
-    IonCardContent,
-    IonCardTitle,
-    IonCard,
+    IonIcon,
+    IonLabel,
+    IonItem,
+    IonList,
     IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,
-    CommonModule,
-    FormsModule,
-    AuthStateComponent,
-    ThemeComponent,
+    ToolbarButtonsComponent,
   ],
 })
 export class MeTabPage implements OnInit {
-  constructor() {}
+  constructor() {
+    addIcons({
+      peopleCircleOutline,
+      heartOutline,
+      calendarOutline,
+      barChartOutline,
+      cogOutline,
+    });
+  }
 
   ngOnInit() {}
 }

@@ -3,9 +3,8 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/me"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ authService.user()?.displayName + ' Scores' }}</ion-title>
-    <app-theme slot="end"></app-theme>
-    <app-auth-state slot="end"></app-auth-state>
+    <ion-title>{{ authService.user()?.displayName + "'s Scores" }}</ion-title>
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -17,38 +16,31 @@
   @if ( dataLoaded) { @for (item of groupedScores(); track $index) {
   <ion-card>
     <ion-card-header>
+      <ion-card-title>{{ item.year }}</ion-card-title>
       <ion-card-subtitle
         >{{ item.scores[0].team_name | teamName }}</ion-card-subtitle
       >
-      <ion-card-title>{{ item.year }}</ion-card-title>
     </ion-card-header>
     <ion-list>
       @for (score of item.scores; track $index) {
-      <ion-item class="leaderboard-row">
-        <div class="" slot="start">
+      <ion-item class="ion-margin-vertical">
+        <div class="event-name" slot="start">
           <span>{{ eventService.getEventName(score.year, score.ordinal)}}</span>
         </div>
-        <ion-button
-          [href]=" eventService.baseURL + '/' + score.year + '/' + score.ordinal"
-          fill="clear"
-          target="_blank"
-          slot="start"
-          class="ion-margin-end"
-        >
-          <ion-icon name="open-outline"></ion-icon>
-        </ion-button>
-        <ion-label>
-          <ion-label class="leaderboard-name">
-            {{ score.affiliate_scaled }}<br />
-          </ion-label>
-          <ion-note>{{ 'Rank ' + score.affiliate_rank }}</ion-note>
-        </ion-label>
-        <div slot="end">
+        <ion-label> {{ score.affiliate_scaled }} </ion-label>
+        <div>
           <ion-label class="ion-text-end">{{ score.score_display }}</ion-label>
           @if (score.tiebreak_ms) {
           <ion-note>{{ 'Tiebreak ' + score.tiebreak_ms }}</ion-note>
           }
         </div>
+        <ion-button
+          [href]=" eventService.baseURL + '/' + score.year + '/' + score.ordinal"
+          fill="clear"
+          target="_blank"
+        >
+          <ion-icon name="open-outline"></ion-icon>
+        </ion-button>
       </ion-item>
       }
     </ion-list>

@@ -27,7 +27,7 @@ import { environment } from 'src/environments/environment';
 import { apiAffiliateAthlete, apiFirebaseUserRecord } from 'src/app/api/models';
 import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
 import { CreateUserFireauthSignupPost$Params } from 'src/app/api/fn/fireauth/create-user-fireauth-signup-post';
-import { ToastService } from 'src/app/shared/toast/toast.service';
+import { ToastService } from 'src/app/services/toast.service';
 import {
   Auth,
   sendEmailVerification,
@@ -37,8 +37,7 @@ import {
 import { LoadingService } from 'src/app/services/loading.service';
 import { AthleteNameComponent } from './athlete-name/athlete-name.component';
 import { FirebaseError } from '@angular/fire/app';
-import { ThemeComponent } from '../../../shared/theme/theme.component';
-import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
   selector: 'app-signup',
@@ -61,8 +60,7 @@ import { AuthStateComponent } from '../../../shared/auth-state/auth-state.compon
     IonSelect,
     IonSelectOption,
     ReactiveFormsModule,
-    ThemeComponent,
-    AuthStateComponent,
+    ToolbarButtonsComponent,
   ],
 })
 export class SignupPage implements OnInit {

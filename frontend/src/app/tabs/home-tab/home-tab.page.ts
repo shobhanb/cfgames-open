@@ -7,8 +7,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { AuthStateComponent } from 'src/app/shared/auth-state/auth-state.component';
-import { ThemeComponent } from '../../shared/theme/theme.component';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
   selector: 'app-home-tab',
@@ -22,8 +21,7 @@ import { ThemeComponent } from '../../shared/theme/theme.component';
     IonToolbar,
     CommonModule,
     FormsModule,
-    AuthStateComponent,
-    ThemeComponent,
+    ToolbarButtonsComponent,
   ],
 })
 export class HomeTabPage implements OnInit {

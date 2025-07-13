@@ -31,7 +31,7 @@ import {
   IonTitle,
 } from '@ionic/angular/standalone';
 import { EventService } from 'src/app/services/event.service';
-import { ToastService } from 'src/app/shared/toast/toast.service';
+import { ToastService } from 'src/app/services/toast.service';
 import { apiLeaderboardScoreModel } from 'src/app/api/models';
 import { apiScoreService } from 'src/app/api/services';
 import { environment } from 'src/environments/environment';
@@ -40,8 +40,7 @@ import { TeamNamePipe } from 'src/app/pipes/team-name.pipe';
 import { addIcons } from 'ionicons';
 import { openOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/services/auth.service';
-import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
-import { ThemeComponent } from '../../../shared/theme/theme.component';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
   selector: 'app-leaderboard',
@@ -71,8 +70,7 @@ import { ThemeComponent } from '../../../shared/theme/theme.component';
     IonContent,
     TeamNamePipe,
     IonSkeletonText,
-    AuthStateComponent,
-    ThemeComponent,
+    ToolbarButtonsComponent,
   ],
 })
 export class LeaderboardPage implements OnInit {

@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import {
   IonContent,
   IonHeader,
@@ -9,8 +7,7 @@ import {
   IonBackButton,
   IonButtons,
 } from '@ionic/angular/standalone';
-import { AuthStateComponent } from '../../../shared/auth-state/auth-state.component';
-import { ThemeComponent } from '../../../shared/theme/theme.component';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
   selector: 'app-attendance',
@@ -24,10 +21,7 @@ import { ThemeComponent } from '../../../shared/theme/theme.component';
     IonHeader,
     IonTitle,
     IonToolbar,
-    CommonModule,
-    FormsModule,
-    AuthStateComponent,
-    ThemeComponent,
+    ToolbarButtonsComponent,
   ],
 })
 export class AttendancePage implements OnInit {

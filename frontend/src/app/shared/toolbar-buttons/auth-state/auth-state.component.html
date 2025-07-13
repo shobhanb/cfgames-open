@@ -1,9 +1,7 @@
 @if (authService.user()) {
-<ion-buttons>
-  <ion-button shape="round" fill="outline" (click)="openModal()">
-    {{ authService.userNameInitials() }}
-  </ion-button>
-</ion-buttons>
+<ion-button shape="round" fill="outline" (click)="openModal()">
+  {{ authService.userNameInitials() }}
+</ion-button>
 <ion-modal
   [isOpen]="isModalOpen"
   (didDismiss)="isModalOpen = false"
@@ -76,9 +74,7 @@
   </ng-template>
 </ion-modal>
 } @else {
-<ion-buttons>
-  <ion-button shape="round" href="/auth/login">
-    <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
-  </ion-button>
-</ion-buttons>
+<ion-button shape="round" href="/auth/login">
+  <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+</ion-button>
 }

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import {
   IonContent,
   IonHeader,
@@ -10,26 +10,17 @@ import {
   IonBackButton,
   IonRefresher,
   IonRefresherContent,
-  IonSearchbar,
   IonList,
-  IonItemOption,
   IonItem,
-  IonLabel,
-  IonIcon,
-  IonItemSliding,
-  IonItemOptions,
   IonSkeletonText,
-  IonInput,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
+  IonNote,
 } from '@ionic/angular/standalone';
-import { ThemeComponent } from 'src/app/shared/theme/theme.component';
-import { AuthStateComponent } from 'src/app/shared/auth-state/auth-state.component';
 import { apiAthleteService } from 'src/app/api/services';
 import { environment } from 'src/environments/environment';
-import { ToastService } from 'src/app/shared/toast/toast.service';
+import { ToastService } from 'src/app/services/toast.service';
 import { apiTeamName } from 'src/app/api/models';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-rename-teams',
@@ -37,19 +28,10 @@ import { apiTeamName } from 'src/app/api/models';
   styleUrls: ['./rename-teams.page.scss'],
   standalone: true,
   imports: [
-    IonCardTitle,
-    IonCardHeader,
-    IonCard,
-    IonInput,
+    IonNote,
     IonSkeletonText,
-    IonItemOptions,
-    IonItemSliding,
-    IonIcon,
-    IonLabel,
     IonItem,
-    IonItemOption,
     IonList,
-    IonSearchbar,
     IonRefresherContent,
     IonRefresher,
     IonBackButton,
@@ -60,13 +42,13 @@ import { apiTeamName } from 'src/app/api/models';
     IonToolbar,
     CommonModule,
     ReactiveFormsModule,
-    ThemeComponent,
-    AuthStateComponent,
+    ToolbarButtonsComponent,
   ],
 })
 export class RenameTeamsPage implements OnInit {
   private apiAthlete = inject(apiAthleteService);
   private toastService = inject(ToastService);
+  private alertService = inject(AlertService);
 
   constructor() {}
 
@@ -100,15 +82,20 @@ export class RenameTeamsPage implements OnInit {
       });
   }
 
-  onClickRenameTeam(teamName: string) {
-    const newTeamName = prompt('Enter new team name:', teamName);
-    if (newTeamName && newTeamName.trim() !== '') {
+  async onClickRenameTeam(teamName: string) {
+    const result = await this.alertService.showAlert('Rename Team', {
+      inputLabel: teamName,
+    });
+
+    if (result.role === 'confirm' && result.inputValue) {
+      const newTeamName = result.inputValue;
+
       this.apiAthlete
         .renameTeamsAthleteRenameTeamsPut({
           affiliate_id: environment.affiliateId,
           year: environment.year,
           old_team_name: teamName,
-          new_team_name: newTeamName.trim(),
+          new_team_name: newTeamName,
         })
         .subscribe({
           next: () => {

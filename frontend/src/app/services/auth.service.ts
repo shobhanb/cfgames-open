@@ -18,7 +18,7 @@ import {
 import { Subscription } from 'rxjs';
 import { apiAthleteDetail, apiFirebaseCustomClaims } from '../api/models';
 import { FirebaseError } from '@angular/fire/app';
-import { ToastService } from '../shared/toast/toast.service';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
