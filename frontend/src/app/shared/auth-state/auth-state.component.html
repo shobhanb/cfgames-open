@@ -1,8 +1,8 @@
 @if (authService.user()) {
 <ion-buttons>
-  <ion-chip id="user-chip" color="primary" (click)="openModal()">
-    <ion-label>{{ authService.userNameInitials() }}</ion-label>
-  </ion-chip>
+  <ion-button shape="round" fill="outline" (click)="openModal()">
+    {{ authService.userNameInitials() }}
+  </ion-button>
 </ion-buttons>
 <ion-modal
   [isOpen]="isModalOpen"
@@ -77,8 +77,8 @@
 </ion-modal>
 } @else {
 <ion-buttons>
-  <ion-button href="/auth/login">
-    <ion-icon color="dark" name="person-circle-outline"></ion-icon>
+  <ion-button shape="round" href="/auth/login">
+    <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
   </ion-button>
 </ion-buttons>
 }
