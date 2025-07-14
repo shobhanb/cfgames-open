@@ -55,33 +55,9 @@
       } @if (!user.email_verified) {
       <ion-label slot="end" color="medium">Not Verified</ion-label>
       }
-      <ion-icon
-        slot="end"
-        name="ellipsis-horizontal-outline"
-        [id]="'item-popover-trigger-' + user.uid"
-      ></ion-icon>
-      <ion-popover
-        [trigger]="'item-popover-trigger-' + user.uid"
-        triggerAction="click"
-      >
-        <ng-template>
-          @if (user.custom_claims?.admin) {
-          <ion-button type="button" (click)="onClickAdmin(user.uid, false)"
-            >Revoke Admin Rights</ion-button
-          >
-          } @else {
-          <ion-button type="button" (click)="onClickAdmin(user.uid, true)"
-            >Make Admin</ion-button
-          >
-          }
-          <ion-button
-            type="button"
-            color="danger"
-            (click)="onClickDelete(user.uid)"
-            >Delete</ion-button
-          >
-        </ng-template>
-      </ion-popover>
+      <ion-button slot="end" fill="clear" (click)="presentActionSheet(user)">
+        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+      </ion-button>
     </ion-item>
 
     }
