@@ -11,11 +11,11 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { apiAppreciationModelOutput } from '../models/api-appreciation-model-output';
-import { getAppreciationAppreciationAffiliateIdYearOrdinalGet } from '../fn/appreciation/get-appreciation-appreciation-affiliate-id-year-ordinal-get';
-import { GetAppreciationAppreciationAffiliateIdYearOrdinalGet$Params } from '../fn/appreciation/get-appreciation-appreciation-affiliate-id-year-ordinal-get';
-import { updateAppreciationAppreciationCrossfitIdOrdinalPost } from '../fn/appreciation/update-appreciation-appreciation-crossfit-id-ordinal-post';
-import { UpdateAppreciationAppreciationCrossfitIdOrdinalPost$Params } from '../fn/appreciation/update-appreciation-appreciation-crossfit-id-ordinal-post';
+import { apiAppreciationModel } from '../models/api-appreciation-model';
+import { getMyAppreciationAppreciationGet } from '../fn/appreciation/get-my-appreciation-appreciation-get';
+import { GetMyAppreciationAppreciationGet$Params } from '../fn/appreciation/get-my-appreciation-appreciation-get';
+import { updateMyAppreciationAppreciationPost } from '../fn/appreciation/update-my-appreciation-appreciation-post';
+import { UpdateMyAppreciationAppreciationPost$Params } from '../fn/appreciation/update-my-appreciation-appreciation-post';
 
 @Injectable({ providedIn: 'root' })
 export class apiAppreciationService extends BaseService {
@@ -23,69 +23,69 @@ export class apiAppreciationService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getAppreciationAppreciationAffiliateIdYearOrdinalGet()` */
-  static readonly GetAppreciationAppreciationAffiliateIdYearOrdinalGetPath = '/appreciation/{affiliate_id}/{year}/{ordinal}';
+  /** Path part for operation `getMyAppreciationAppreciationGet()` */
+  static readonly GetMyAppreciationAppreciationGetPath = '/appreciation/';
 
   /**
-   * Get Appreciation.
+   * Get My Appreciation.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAppreciationAppreciationAffiliateIdYearOrdinalGet()` instead.
+   * To access only the response body, use `getMyAppreciationAppreciationGet()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAppreciationAppreciationAffiliateIdYearOrdinalGet$Response(params: GetAppreciationAppreciationAffiliateIdYearOrdinalGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAppreciationModelOutput>>> {
-    return getAppreciationAppreciationAffiliateIdYearOrdinalGet(this.http, this.rootUrl, params, context);
+  getMyAppreciationAppreciationGet$Response(params?: GetMyAppreciationAppreciationGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAppreciationModel>>> {
+    return getMyAppreciationAppreciationGet(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Get Appreciation.
+   * Get My Appreciation.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAppreciationAppreciationAffiliateIdYearOrdinalGet$Response()` instead.
+   * To access the full response (for headers, for example), `getMyAppreciationAppreciationGet$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAppreciationAppreciationAffiliateIdYearOrdinalGet(params: GetAppreciationAppreciationAffiliateIdYearOrdinalGet$Params, context?: HttpContext): Observable<Array<apiAppreciationModelOutput>> {
-    return this.getAppreciationAppreciationAffiliateIdYearOrdinalGet$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<apiAppreciationModelOutput>>): Array<apiAppreciationModelOutput> => r.body)
+  getMyAppreciationAppreciationGet(params?: GetMyAppreciationAppreciationGet$Params, context?: HttpContext): Observable<Array<apiAppreciationModel>> {
+    return this.getMyAppreciationAppreciationGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiAppreciationModel>>): Array<apiAppreciationModel> => r.body)
     );
   }
 
-  /** Path part for operation `updateAppreciationAppreciationCrossfitIdOrdinalPost()` */
-  static readonly UpdateAppreciationAppreciationCrossfitIdOrdinalPostPath = '/appreciation/{crossfit_id}/{ordinal}';
+  /** Path part for operation `updateMyAppreciationAppreciationPost()` */
+  static readonly UpdateMyAppreciationAppreciationPostPath = '/appreciation/';
 
   /**
-   * Update Appreciation.
+   * Update My Appreciation.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateAppreciationAppreciationCrossfitIdOrdinalPost()` instead.
+   * To access only the response body, use `updateMyAppreciationAppreciationPost()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateAppreciationAppreciationCrossfitIdOrdinalPost$Response(params: UpdateAppreciationAppreciationCrossfitIdOrdinalPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAppreciationModelOutput>> {
-    return updateAppreciationAppreciationCrossfitIdOrdinalPost(this.http, this.rootUrl, params, context);
+  updateMyAppreciationAppreciationPost$Response(params: UpdateMyAppreciationAppreciationPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAppreciationModel>> {
+    return updateMyAppreciationAppreciationPost(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Update Appreciation.
+   * Update My Appreciation.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updateAppreciationAppreciationCrossfitIdOrdinalPost$Response()` instead.
+   * To access the full response (for headers, for example), `updateMyAppreciationAppreciationPost$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateAppreciationAppreciationCrossfitIdOrdinalPost(params: UpdateAppreciationAppreciationCrossfitIdOrdinalPost$Params, context?: HttpContext): Observable<apiAppreciationModelOutput> {
-    return this.updateAppreciationAppreciationCrossfitIdOrdinalPost$Response(params, context).pipe(
-      map((r: StrictHttpResponse<apiAppreciationModelOutput>): apiAppreciationModelOutput => r.body)
+  updateMyAppreciationAppreciationPost(params: UpdateMyAppreciationAppreciationPost$Params, context?: HttpContext): Observable<apiAppreciationModel> {
+    return this.updateMyAppreciationAppreciationPost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiAppreciationModel>): apiAppreciationModel => r.body)
     );
   }
 

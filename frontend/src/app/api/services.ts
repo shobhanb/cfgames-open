@@ -9,6 +9,7 @@ export { apiScoreService } from './services/api-score.service';
 export { apiAttendanceService } from './services/api-attendance.service';
 export { apiAppreciationScoreService } from './services/api-appreciation-score.service';
 export { apiAppreciationService } from './services/api-appreciation.service';
+export { apiAppreciationStatusService } from './services/api-appreciation-status.service';
 export { apiSidescoreService } from './services/api-sidescore.service';
 export { apiTeamsService } from './services/api-teams.service';
 export { apiAthletePrefsService } from './services/api-athlete-prefs.service';

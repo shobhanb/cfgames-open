@@ -1,17 +1,12 @@
 from app.schemas import CustomBaseModel
 
 
-class AppreciationModelBase(CustomBaseModel):
+class AppreciationModel(CustomBaseModel):
+    crossfit_id: int
+    affiliate_id: int
+    year: int
+    ordinal: int
     team_vote_crossfit_id: int
     team_vote_text: str | None
     non_team_vote_crossfit_id: int
     non_team_vote_text: str | None
-
-
-class AppreciationModelOutput(AppreciationModelBase):
-    crossfit_id: int
-    ordinal: int
-
-
-class AppreciationModelInput(AppreciationModelBase):
-    pass

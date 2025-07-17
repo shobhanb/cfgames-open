@@ -39,7 +39,6 @@ import {
 export class AthleteNameComponent implements OnInit {
   modalController = inject(ModalController);
   athleteNames = input.required<string[]>();
-  selectedName = output<string>();
 
   searchText = signal<string | null>(null);
 
@@ -57,7 +56,6 @@ export class AthleteNameComponent implements OnInit {
   }
 
   selectName(name: string) {
-    this.selectedName.emit(name);
     this.modalController.dismiss(name);
   }
 

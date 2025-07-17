@@ -32,3 +32,12 @@ def not_found_exception(detail: str | None = None) -> HTTPException:
         status_code=status.HTTP_404_NOT_FOUND,
         detail=detail,
     )
+
+
+def conflict_exception(detail: str | None = None) -> HTTPException:
+    if not detail:
+        detail = "Resource already exists"
+    return HTTPException(
+        status_code=status.HTTP_409_CONFLICT,
+        detail=detail,
+    )

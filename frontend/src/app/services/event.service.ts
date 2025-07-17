@@ -11,6 +11,10 @@ export class EventService {
   private apiEvents = inject(apiCfeventsService);
   private events = signal<apiEventsModel[]>([]);
 
+  readonly currentYearEvents = computed(() =>
+    this.events().filter((event) => event.year === environment.year)
+  );
+
   readonly baseURL = 'https://games.crossfit.com/workouts/open';
 
   readonly eventsLoaded = computed<boolean>(() => this.events().length > 0);
@@ -40,11 +44,22 @@ export class EventService {
     return map;
   });
 
-  getEventName(year: number, ordinal: number): string | null {
+  getEventName(ordinal: number, year?: number | null): string | null {
+    if (year === null) {
+      year = environment.year;
+    }
     const event = this.events().find(
       (e: apiEventsModel) => e.year === year && e.ordinal === ordinal
     );
     return event ? event.event : null;
+  }
+
+  getOrdinalFromEvent(event: string): number | null {
+    const [year, ordinal] = event.split('.');
+    const eventModel = this.events().find(
+      (e: apiEventsModel) => e.year === +year && e.event === event
+    );
+    return eventModel ? eventModel.ordinal : null;
   }
 
   getEventCrossfitLink(event: string) {

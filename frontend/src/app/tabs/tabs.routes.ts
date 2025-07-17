@@ -126,6 +126,14 @@ export const tabsRoutes: Routes = [
         canActivate: [adminGuard],
       },
       {
+        path: 'admin/appreciation-status',
+        loadComponent: () =>
+          import(
+            './admin-tab/appreciation-status/appreciation-status.page'
+          ).then((c) => c.AppreciationStatusPage),
+        canActivate: [adminGuard],
+      },
+      {
         path: 'admin/attendance',
         loadComponent: () =>
           import('./admin-tab/attendance/attendance.page').then(

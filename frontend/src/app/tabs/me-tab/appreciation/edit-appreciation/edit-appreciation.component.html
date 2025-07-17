@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Edit Appreciation</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="section-title">Team Vote</div>
+  <ion-list [inset]="true">
+    <ion-item>
+      <ion-nav-link></ion-nav-link>
+      <ion-label>
+        {{ getAthleteName(appreciation.team_vote_crossfit_id) }}
+      </ion-label>
+      <ion-label slot="end">Click to change</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-input
+        label="Comment"
+        labelPlacement="floating"
+        inputmode="text"
+        [value]="appreciation.team_vote_text"
+      ></ion-input>
+    </ion-item>
+  </ion-list>
+  <div class="section-title">Non Team Vote</div>
+  <ion-list [inset]="true">
+    <ion-item>
+      <ion-label>
+        {{ getAthleteName(appreciation.non_team_vote_crossfit_id) }}
+      </ion-label>
+      <ion-label slot="end">Click to change</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-input
+        label="Comment"
+        labelPlacement="floating"
+        inputmode="text"
+        [value]="appreciation.non_team_vote_text"
+      ></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" class="ion-margin">Submit</ion-button>
+</ion-content>

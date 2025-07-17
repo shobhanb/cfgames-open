@@ -7,9 +7,11 @@ from app.database.base import Base
 
 
 class Appreciation(Base):
-    __table_args__ = (UniqueConstraint("crossfit_id", "ordinal"),)
+    __table_args__ = (UniqueConstraint("crossfit_id", "year", "ordinal"),)
 
     crossfit_id: Mapped[int] = mapped_column(Integer)
+    affiliate_id: Mapped[int] = mapped_column(Integer)
+    year: Mapped[int] = mapped_column(Integer)
     ordinal: Mapped[int] = mapped_column(Integer)
     team_vote_crossfit_id: Mapped[int] = mapped_column(Integer)
     team_vote_text: Mapped[str | None] = mapped_column(Text, nullable=True)

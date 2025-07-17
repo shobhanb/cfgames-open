@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Appreciation Form</ion-title>
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (dataLoaded) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Appreciation Form</ion-card-title>
+      @if (appreciationStatus().length === 0) {
+      <ion-card-subtitle>Currently Disabled</ion-card-subtitle>
+      } @else {
+      <ion-card-subtitle>Enabled</ion-card-subtitle>
+      }
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text>
+        Use the + button to enable the appreciation form for a specific event.
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  @if (appreciationStatus().length > 0) {
+  <div class="section-title">Appreciation Form active for events</div>
+  <ion-list [inset]="true">
+    @for (item of appreciationStatus(); track $index) {
+    <ion-item>
+      <ion-label
+        >{{ eventService.getEventName(item.ordinal, item.year) }}</ion-label
+      >
+      <ion-button
+        fill="clear"
+        color="danger"
+        slot="end"
+        (click)="deleteEvent(item)"
+      >
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+    }
+  </ion-list>
+  } } @else {
+  <ion-list [inset]="true">
+    @for (item of [0,1,2]; track $index) {
+    <ion-item>
+      <ion-skeleton-text
+        [animated]="true"
+        class="ion-margin-vertical"
+        style="width: 180px; height: 20px"
+      ></ion-skeleton-text>
+    </ion-item>
+    }
+  </ion-list>
+  }
+
+  <!-- FAB button for adding new events -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="isAddModalOpen.set(true)">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- Add Event Modal -->
+  <ion-modal
+    [breakpoints]="[0, 0.25, 0.5, 0.75]"
+    [isOpen]="isAddModalOpen()"
+    (didDismiss)="isAddModalOpen.set(false)"
+    [initialBreakpoint]="0.5"
+  >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Enable Appreciation Form</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="section-title">Choose event</div>
+        <ion-list [inset]="true">
+          @for (event of availableEvents(); track $index) {
+          <ion-item fill="outline" expand="block" (click)="addEvent(event)"
+            >{{ eventService.getEventName(event.ordinal, event.year)
+            }}</ion-item
+          >
+          }
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

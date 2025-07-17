@@ -25,7 +25,7 @@
       @for (score of item.scores; track $index) {
       <ion-item class="ion-margin-vertical">
         <div class="event-name" slot="start">
-          <span>{{ eventService.getEventName(score.year, score.ordinal)}}</span>
+          <span>{{ eventService.getEventName(score.ordinal, score.year)}}</span>
         </div>
         <ion-label> {{ score.affiliate_scaled }} </ion-label>
         <div>

@@ -8,4 +8,115 @@
   </ion-toolbar>
 </ion-header>
 
-<p>Appreciation</p>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Display existing appreciations -->
+  @if ( dataLoaded) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Appreciation Form</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text
+        >Each event will have two votes. One for teammates, and one for
+        non-teammates</ion-text
+      >
+    </ion-card-content>
+  </ion-card>
+  @for (appreciation of appreciations(); track $index) {
+  <!-- View Mode -->
+  <ion-card>
+    <ion-card-content>
+      <ion-card-header>
+        <ion-card-title>
+          {{ eventService.getEventName(appreciation.ordinal,
+          appreciation.year)}}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-accordion-group [multiple]="true">
+        <ion-accordion>
+          <ion-item slot="header">
+            <ion-icon name="people-circle-outline" slot="start"></ion-icon>
+            <span>
+              {{ getAthleteName(appreciation.team_vote_crossfit_id) }}
+            </span>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            {{ appreciation.team_vote_text || 'No comment provided'}}
+          </div>
+        </ion-accordion>
+        <ion-accordion>
+          <ion-item slot="header">
+            <ion-icon name="globe-outline" slot="start"></ion-icon>
+            <span>
+              {{ getAthleteName(appreciation.non_team_vote_crossfit_id) }}
+            </span>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            {{ appreciation.non_team_vote_text || 'No comment provided'}}
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+      @if (checkIfAppreciationStatusOpen(appreciation.ordinal,
+      appreciation.year)) {
+      <ion-button
+        fill="clear"
+        (click)="editAppreciation(appreciation)"
+        class="ion-margin-top"
+        >Edit</ion-button
+      >
+      }
+    </ion-card-content>
+  </ion-card>
+
+  } } @else {
+  <!-- Loading skeleton -->
+  <ion-card>
+    <ion-card-header>
+      <ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-accordion-group>
+        <ion-accordion>
+          <ion-item slot="header">
+            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </div>
+        </ion-accordion>
+        <ion-accordion>
+          <ion-item slot="header">
+            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+      <div class="buttons-container">
+        <ion-skeleton-text animated style="width: 15%"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 15%"></ion-skeleton-text>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  } @if (availableEvents().length > 0) {
+  <!-- FAB button for adding new events -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      @for (item of availableEvents(); track $index) {
+      <ion-fab-button color="primary"
+        >{{ eventService.getEventName(item.ordinal, item.year)}}</ion-fab-button
+      >
+      }
+    </ion-fab-list>
+  </ion-fab>
+  }
+</ion-content>
