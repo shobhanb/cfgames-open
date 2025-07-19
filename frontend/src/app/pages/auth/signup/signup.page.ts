@@ -35,9 +35,10 @@ import {
   UserCredential,
 } from '@angular/fire/auth';
 import { LoadingService } from 'src/app/services/loading.service';
-import { AthleteNameComponent } from './athlete-name/athlete-name.component';
 import { FirebaseError } from '@angular/fire/app';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
+import { AthleteNameModalComponent } from 'src/app/shared/athlete-name-modal/athlete-name-modal.component';
+import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
 
 @Component({
   selector: 'app-signup',
@@ -70,7 +71,7 @@ export class SignupPage implements OnInit {
   private loadingService = inject(LoadingService);
   private toastService = inject(ToastService);
   private helperFunctions = inject(HelperFunctionsService);
-  private modalController = inject(ModalController);
+  private athleteNameModalService = inject(AthleteNameModalService);
 
   // Controls the UI - show assign athlete form, or show signup email/password form
   readonly showAssignAthleteForm = signal<boolean>(true);
@@ -111,15 +112,13 @@ export class SignupPage implements OnInit {
   );
 
   async openAthleteSelectModal() {
-    const modal = await this.modalController.create({
-      component: AthleteNameComponent,
-      componentProps: { athleteNames: this.athleteNames },
-    });
+    const selectedName =
+      await this.athleteNameModalService.openAthleteSelectModal(
+        this.athleteNames
+      );
 
-    await modal.present();
-    const { data } = await modal.onDidDismiss();
-    if (data) {
-      this.selectedAthleteName.set(data);
+    if (selectedName) {
+      this.selectedAthleteName.set(selectedName);
 
       this.selectedCrossfitId.set(
         this.athleteCrossfitIds().length === 1

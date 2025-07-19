@@ -13,18 +13,13 @@ import {
   IonList,
   IonItem,
   IonSkeletonText,
-  IonButton,
-  IonIcon,
-  IonModal,
-  IonLabel,
-  IonFab,
-  IonFabButton,
   IonCard,
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
   IonCardSubtitle,
   IonText,
+  IonToggle,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addOutline, trashOutline, closeOutline } from 'ionicons/icons';
@@ -41,6 +36,7 @@ import { EventService } from 'src/app/services/event.service';
   styleUrls: ['./appreciation-status.page.scss'],
   standalone: true,
   imports: [
+    IonToggle,
     IonText,
     IonCardSubtitle,
     IonCardContent,
@@ -58,12 +54,6 @@ import { EventService } from 'src/app/services/event.service';
     IonHeader,
     IonTitle,
     IonToolbar,
-    IonButton,
-    IonIcon,
-    IonModal,
-    IonLabel,
-    IonFab,
-    IonFabButton,
     CommonModule,
     FormsModule,
     ToolbarButtonsComponent,
@@ -75,6 +65,17 @@ export class AppreciationStatusPage implements OnInit {
   eventService = inject(EventService);
 
   appreciationStatus = signal<apiAppreciationStatusModel[]>([]);
+
+  readonly eventStatus = computed(() =>
+    this.eventService.currentYearEvents().map((event) => ({
+      event,
+      isEnabled: this.appreciationStatus().some(
+        (status) =>
+          status.year === event.year && status.ordinal === event.ordinal
+      ),
+      name: this.eventService.getEventName(event.ordinal, event.year),
+    }))
+  );
 
   readonly availableEvents = computed<apiEventsModel[]>(() =>
     this.eventService
@@ -155,7 +156,7 @@ export class AppreciationStatusPage implements OnInit {
         next: () => {
           this.getData();
           this.toastService.showToast(
-            'Appreciation event added successfully',
+            `Form ${event.event} enabled successfully`,
             'success',
             null,
             1000
@@ -165,7 +166,7 @@ export class AppreciationStatusPage implements OnInit {
         error: (error) => {
           console.error('Error adding appreciation event:', error);
           this.toastService.showToast(
-            'Failed to add appreciation event',
+            `Failed to enable form ${event.event}`,
             'danger',
             null,
             3000
@@ -174,16 +175,20 @@ export class AppreciationStatusPage implements OnInit {
       });
   }
 
-  deleteEvent(event: apiAppreciationStatusModel) {
+  deleteEvent(event: apiEventsModel) {
     this.apiAppreciationStatus
       .deleteOpenAppreciationStatusAppreciationStatusDelete({
-        body: event,
+        body: {
+          affiliate_id: environment.affiliateId,
+          year: event.year,
+          ordinal: event.ordinal,
+        },
       })
       .subscribe({
         next: () => {
           this.getData();
           this.toastService.showToast(
-            'Appreciation event removed successfully',
+            `Form ${event.event} disabled successfully`,
             'success',
             null,
             1000
@@ -192,12 +197,21 @@ export class AppreciationStatusPage implements OnInit {
         error: (error) => {
           console.error('Error deleting appreciation event:', error);
           this.toastService.showToast(
-            'Failed to delete appreciation event',
+            `Failed to disable form ${event.event}`,
             'danger',
             null,
             3000
           );
         },
       });
+  }
+
+  handleEventToggle(data: apiEventsModel, event: CustomEvent) {
+    const isChecked = event.detail.checked;
+    if (isChecked) {
+      this.addEvent(data);
+    } else {
+      this.deleteEvent(data);
+    }
   }
 }

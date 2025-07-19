@@ -20,7 +20,7 @@
     ></ion-searchbar>
   </ion-toolbar>
 
-  @if (dataLoaded) {
+  @if (!loading) {
   <ion-list>
     @for (athlete of filteredAthleteData(); track athlete.crossfit_id) {
     <ion-item-sliding [id]="'sliding-team-' + athlete.crossfit_id">

@@ -1,47 +1,128 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Edit Appreciation</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="close()">Cancel</ion-button>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/me/appreciation"></ion-back-button>
     </ion-buttons>
+    <ion-title>Appreciation Form</ion-title>
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content>
-  <div class="section-title">Team Vote</div>
-  <ion-list [inset]="true">
-    <ion-item>
-      <ion-nav-link></ion-nav-link>
-      <ion-label>
-        {{ getAthleteName(appreciation.team_vote_crossfit_id) }}
-      </ion-label>
-      <ion-label slot="end">Click to change</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-input
-        label="Comment"
-        labelPlacement="floating"
-        inputmode="text"
-        [value]="appreciation.team_vote_text"
-      ></ion-input>
-    </ion-item>
-  </ion-list>
-  <div class="section-title">Non Team Vote</div>
-  <ion-list [inset]="true">
-    <ion-item>
-      <ion-label>
-        {{ getAthleteName(appreciation.non_team_vote_crossfit_id) }}
-      </ion-label>
-      <ion-label slot="end">Click to change</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-input
-        label="Comment"
-        labelPlacement="floating"
-        inputmode="text"
-        [value]="appreciation.non_team_vote_text"
-      ></ion-input>
-    </ion-item>
-  </ion-list>
 
-  <ion-button expand="block" class="ion-margin">Submit</ion-button>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if ( dataLoaded) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{
+        eventService.getEventName(ordinal, year)
+      }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text
+        >Please cast two votes. One for teammates, and one for
+        non-teammates</ion-text
+      >
+    </ion-card-content>
+  </ion-card>
+
+  <form [formGroup]="appreciationForm">
+    <div class="section-title">Team Vote</div>
+    <ion-list [inset]="true">
+      <ion-item (click)="onClickTeamVoteName()">
+        <ion-label>
+          {{ selectedTeamVoteName() }}
+        </ion-label>
+        <ion-note slot="end">{{
+          appreciation() ? "Click to Change" : "Click to Select"
+        }}</ion-note>
+      </ion-item>
+      <ion-item>
+        <ion-textarea
+          type="text"
+          label="Comment"
+          labelPlacement="floating"
+          inputmode="text"
+          [autoGrow]="true"
+          formControlName="teamVoteText"
+        >
+        </ion-textarea>
+      </ion-item>
+    </ion-list>
+
+    <div class="section-title">Non-Team Vote</div>
+    <ion-list [inset]="true">
+      <ion-item (click)="onClickNonTeamVoteName()">
+        <ion-label>
+          {{ selectedNonTeamVoteName() }}
+        </ion-label>
+        <ion-note slot="end">{{
+          appreciation() ? "Click to Change" : "Click to Select"
+        }}</ion-note>
+      </ion-item>
+      <ion-item>
+        <ion-textarea
+          type="text"
+          label="Comment"
+          labelPlacement="floating"
+          inputmode="text"
+          [autoGrow]="true"
+          formControlName="nonTeamVoteText"
+        >
+        </ion-textarea>
+      </ion-item>
+    </ion-list>
+  </form>
+
+  <ion-button
+    expand="block"
+    class="ion-margin"
+    type="button"
+    (click)="onClickSubmit()"
+    [disabled]="!isFormValid()"
+    >Submit</ion-button
+  >
+  <ion-button
+    expand="block"
+    fill="outline"
+    class="ion-margin"
+    type="button"
+    href="/me/appreciation"
+    >Cancel</ion-button
+  >
+  }@else {
+  <!-- Loading skeleton -->
+  <ion-card>
+    <ion-card-header>
+      <ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-accordion-group>
+        <ion-accordion>
+          <ion-item slot="header">
+            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </div>
+        </ion-accordion>
+        <ion-accordion>
+          <ion-item slot="header">
+            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+      <div class="buttons-container">
+        <ion-skeleton-text animated style="width: 15%"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 15%"></ion-skeleton-text>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  }
 </ion-content>

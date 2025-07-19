@@ -1,4 +1,13 @@
-import { Component, computed, inject, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  Input,
+  linkedSignal,
+  numberAttribute,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { apiAppreciationModel, apiAthleteDetail } from 'src/app/api/models';
 import {
   IonCard,
@@ -8,42 +17,52 @@ import {
   IonAccordionGroup,
   IonAccordion,
   IonItem,
-  IonIcon,
   IonButton,
   IonHeader,
   IonToolbar,
   IonTitle,
   IonButtons,
   IonContent,
-  IonSearchbar,
   IonList,
-  ModalController,
   IonText,
   IonLabel,
-  IonInput,
-  IonNavLink,
+  IonBackButton,
+  IonRefresher,
+  IonRefresherContent,
+  IonSkeletonText,
+  IonTextarea,
+  IonNote,
 } from '@ionic/angular/standalone';
 import { EventService } from 'src/app/services/event.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { AthleteDataService } from 'src/app/services/athlete-data.service';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
+import { apiAppreciationService } from 'src/app/api/services';
+import { ToastService } from 'src/app/services/toast.service';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-edit-appreciation',
   templateUrl: './edit-appreciation.component.html',
   styleUrls: ['./edit-appreciation.component.scss'],
   imports: [
-    IonNavLink,
-    IonInput,
+    IonNote,
+    IonTextarea,
+    IonSkeletonText,
+    IonRefresherContent,
+    IonRefresher,
+    IonBackButton,
     IonLabel,
     IonText,
     IonList,
-    IonSearchbar,
     IonContent,
     IonButtons,
     IonTitle,
     IonToolbar,
     IonHeader,
     IonButton,
-    IonIcon,
     IonItem,
     IonAccordion,
     IonAccordionGroup,
@@ -51,28 +70,192 @@ import { AuthService } from 'src/app/services/auth.service';
     IonCardHeader,
     IonCardTitle,
     IonCard,
+    ToolbarButtonsComponent,
+    ReactiveFormsModule,
   ],
 })
 export class EditAppreciationComponent implements OnInit {
   private authService = inject(AuthService);
-  private modalController = inject(ModalController);
+  private apiAppreciationService = inject(apiAppreciationService);
+  private toastService = inject(ToastService);
+  private athleteNameModalService = inject(AthleteNameModalService);
+  private athleteDataService = inject(AthleteDataService);
   eventService = inject(EventService);
 
-  @Input({ required: true }) appreciation!: apiAppreciationModel;
-  @Input({ required: true }) allAthletes!: apiAthleteDetail[];
-  @Input({ required: true }) teamAthletes!: apiAthleteDetail[];
-  @Input({ required: true }) nonTeamAthletes!: apiAthleteDetail[];
+  appreciation = signal<apiAppreciationModel | null>(null);
+
+  @Input({ required: true, transform: numberAttribute }) year!: number;
+  @Input({ required: true, transform: numberAttribute }) ordinal!: number;
+
+  appreciationForm = new FormGroup({
+    teamVoteText: new FormControl<string | null>(null),
+    nonTeamVoteText: new FormControl<string | null>(null),
+  });
+
+  selectedTeamVoteName = linkedSignal<string | null>(() =>
+    this.athleteDataService.getAthleteName(
+      this.appreciation()?.team_vote_crossfit_id ?? 0
+    )
+  );
+
+  selectedTeamVoteCrossfitId = linkedSignal<number | null>(() =>
+    this.athleteDataService.getCrossfitId(this.selectedTeamVoteName() ?? '')
+  );
+
+  selectedNonTeamVoteName = linkedSignal<string | null>(() =>
+    this.athleteDataService.getAthleteName(
+      this.appreciation()?.non_team_vote_crossfit_id ?? 0
+    )
+  );
+
+  selectedNonTeamVoteCrossfitId = linkedSignal<number | null>(() =>
+    this.athleteDataService.getCrossfitId(this.selectedNonTeamVoteName() ?? '')
+  );
+
+  teamVoteText = computed(
+    () => this.appreciationForm.get('teamVoteText')?.value ?? null
+  );
+  nonTeamVoteText = computed(
+    () => this.appreciationForm.get('nonTeamVoteText')?.value ?? null
+  );
+
+  onClickTeamVoteName() {
+    this.athleteNameModalService
+      .openAthleteSelectModal(this.teamAthleteNames)
+      .then((selectedAthlete) => {
+        if (selectedAthlete) {
+          this.selectedTeamVoteName.set(selectedAthlete);
+        }
+      });
+  }
+
+  onClickNonTeamVoteName() {
+    this.athleteNameModalService
+      .openAthleteSelectModal(this.nonTeamAthleteNames)
+      .then((selectedAthlete) => {
+        if (selectedAthlete) {
+          this.selectedNonTeamVoteName.set(selectedAthlete);
+        }
+      });
+  }
+
+  isFormValid() {
+    return (
+      this.selectedNonTeamVoteCrossfitId() !== null &&
+      this.selectedNonTeamVoteCrossfitId() !== 0 &&
+      this.selectedTeamVoteName() !== null &&
+      this.selectedTeamVoteName() !== '' &&
+      this.selectedNonTeamVoteName() !== null &&
+      this.selectedNonTeamVoteName() !== ''
+    );
+  }
+
+  onClickSubmit() {
+    if (!this.isFormValid()) {
+      this.toastService.showToast(
+        'Please select both team and non-team athletes',
+        'warning',
+        null,
+        3000
+      );
+      return;
+    }
+    this.apiAppreciationService
+      .updateMyAppreciationAppreciationPost({
+        body: {
+          affiliate_id: environment.affiliateId,
+          year: this.year,
+          ordinal: this.ordinal,
+          crossfit_id: this.authService.athlete()?.crossfit_id!,
+          team_vote_crossfit_id: this.selectedTeamVoteCrossfitId()!,
+          team_vote_text: this.teamVoteText(),
+          non_team_vote_crossfit_id: this.selectedNonTeamVoteCrossfitId()!,
+          non_team_vote_text: this.nonTeamVoteText(),
+        },
+      })
+      .subscribe({
+        next: () => {
+          this.toastService.showToast(
+            'Appreciation form submitted successfully',
+            'success',
+            '/me/appreciation',
+            1000
+          );
+        },
+        error: (error) => {
+          console.error('Error submitting appreciation form:', error);
+          this.toastService.showToast(
+            'Failed to submit appreciation form',
+            'danger',
+            null,
+            3000
+          );
+        },
+      });
+  }
+
+  readonly teamAthleteNames = computed(() =>
+    this.athleteDataService
+      .athleteData()
+      .filter(
+        (a: apiAthleteDetail) =>
+          a.team_name === this.authService.athlete()?.team_name
+      )
+      .map((a) => a.name)
+  );
+
+  readonly nonTeamAthleteNames = computed(() =>
+    this.athleteDataService
+      .athleteData()
+      .filter(
+        (a: apiAthleteDetail) =>
+          a.team_name !== this.authService.athlete()?.team_name
+      )
+      .map((a) => a.name)
+  );
+
+  getData() {
+    this.apiAppreciationService
+      .getMyAppreciationAppreciationGet({
+        year: this.year,
+        ordinal: this.ordinal,
+      })
+      .subscribe({
+        next: (data: apiAppreciationModel[]) => {
+          const appreciationData = data[0] || null;
+          this.appreciation.set(appreciationData);
+
+          // Initialize form controls with fetched data
+          this.appreciationForm.patchValue({
+            teamVoteText: appreciationData?.team_vote_text || null,
+            nonTeamVoteText: appreciationData?.non_team_vote_text || null,
+          });
+
+          this.dataLoaded = true;
+        },
+        error: (error) => {
+          console.error('Error fetching appreciation data:', error);
+          this.toastService.showToast(
+            'Failed to load appreciation data',
+            'danger',
+            null,
+            3000
+          );
+        },
+      });
+  }
+
+  dataLoaded = false;
+
+  handleRefresh(event: CustomEvent) {
+    this.dataLoaded = false;
+    this.getData();
+    (event.target as HTMLIonRefresherElement).complete();
+  }
 
   constructor() {}
 
-  ngOnInit() {}
-
-  close() {
-    this.modalController.dismiss();
-  }
-
-  getAthleteName(crossfitId: number): string {
-    const athlete = this.allAthletes.find((a) => a.crossfit_id === crossfitId);
-    return athlete?.name || `Athlete ${crossfitId}`;
+  ngOnInit() {
+    this.getData();
   }
 }

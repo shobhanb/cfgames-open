@@ -12,6 +12,8 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
 import { apiAppreciationModel } from '../models/api-appreciation-model';
+import { deleteMyAppreciationAppreciationDelete } from '../fn/appreciation/delete-my-appreciation-appreciation-delete';
+import { DeleteMyAppreciationAppreciationDelete$Params } from '../fn/appreciation/delete-my-appreciation-appreciation-delete';
 import { getMyAppreciationAppreciationGet } from '../fn/appreciation/get-my-appreciation-appreciation-get';
 import { GetMyAppreciationAppreciationGet$Params } from '../fn/appreciation/get-my-appreciation-appreciation-get';
 import { updateMyAppreciationAppreciationPost } from '../fn/appreciation/update-my-appreciation-appreciation-post';
@@ -86,6 +88,39 @@ export class apiAppreciationService extends BaseService {
   updateMyAppreciationAppreciationPost(params: UpdateMyAppreciationAppreciationPost$Params, context?: HttpContext): Observable<apiAppreciationModel> {
     return this.updateMyAppreciationAppreciationPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<apiAppreciationModel>): apiAppreciationModel => r.body)
+    );
+  }
+
+  /** Path part for operation `deleteMyAppreciationAppreciationDelete()` */
+  static readonly DeleteMyAppreciationAppreciationDeletePath = '/appreciation/';
+
+  /**
+   * Delete My Appreciation.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deleteMyAppreciationAppreciationDelete()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteMyAppreciationAppreciationDelete$Response(params: DeleteMyAppreciationAppreciationDelete$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+    return deleteMyAppreciationAppreciationDelete(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Delete My Appreciation.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deleteMyAppreciationAppreciationDelete$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteMyAppreciationAppreciationDelete(params: DeleteMyAppreciationAppreciationDelete$Params, context?: HttpContext): Observable<any> {
+    return this.deleteMyAppreciationAppreciationDelete$Response(params, context).pipe(
+      map((r: StrictHttpResponse<any>): any => r.body)
     );
   }
 

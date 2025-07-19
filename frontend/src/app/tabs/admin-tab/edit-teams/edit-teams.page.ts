@@ -26,6 +26,7 @@ import { diamondOutline, ribbonOutline } from 'ionicons/icons';
 import { ToastService } from 'src/app/services/toast.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { AlertService } from 'src/app/services/alert.service';
+import { AthleteDataService } from 'src/app/services/athlete-data.service';
 
 @Component({
   selector: 'app-teams',
@@ -57,12 +58,11 @@ export class EditTeamsPage implements OnInit {
   private apiAthlete = inject(apiAthleteService);
   private toastService = inject(ToastService);
   private alertService = inject(AlertService);
-
-  private athleteData = signal<apiAthleteDetail[]>([]);
+  private athleteDataService = inject(AthleteDataService);
 
   filteredAthleteData = computed<apiAthleteDetail[]>(() => {
     const search = this.searchText();
-    const athletes = this.athleteData();
+    const athletes = this.athleteDataService.athleteData();
     if (search) {
       return athletes.filter(
         (value: apiAthleteDetail) =>
@@ -74,7 +74,10 @@ export class EditTeamsPage implements OnInit {
     }
   });
 
-  dataLoaded = false;
+  get loading() {
+    return this.athleteDataService.loading();
+  }
+
   searchText = signal<string | null>(null);
 
   constructor() {
@@ -82,34 +85,20 @@ export class EditTeamsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.getData();
-  }
-
-  private getData() {
-    this.apiAthlete
-      .getAthleteDetailAllAthleteDetailAllGet({
-        affiliate_id: environment.affiliateId,
-        year: environment.year,
-      })
-      .subscribe({
-        next: (data: apiAthleteDetail[]) => {
-          this.athleteData.set(
-            data.sort((a: apiAthleteDetail, b: apiAthleteDetail) =>
-              a.name > b.name ? 1 : -1
-            )
-          );
-          this.dataLoaded = true;
-        },
-        error: (err: any) => {
-          console.error(err.message);
-        },
-      });
+    this.athleteDataService.getData().catch((error) => {
+      this.toastService.showToast(
+        'Failed to load athlete data',
+        'danger',
+        null,
+        3000
+      );
+    });
   }
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
-    this.getData();
-    (event.target as HTMLIonRefresherElement).complete();
+    this.athleteDataService.getData().finally(() => {
+      (event.target as HTMLIonRefresherElement).complete();
+    });
   }
 
   async onSearchBarInput(event: Event) {
@@ -127,12 +116,13 @@ export class EditTeamsPage implements OnInit {
       })
       .subscribe({
         next: (data: apiAthleteDetail) => {
-          this.athleteData.update((athletes) =>
-            athletes.map((a) =>
-              a.crossfit_id === data.crossfit_id && a.year === data.year
-                ? { ...a, team_role: data.team_role }
-                : a
-            )
+          this.athleteDataService.athleteData.update(
+            (athletes: apiAthleteDetail[]) =>
+              athletes.map((a: apiAthleteDetail) =>
+                a.crossfit_id === data.crossfit_id && a.year === data.year
+                  ? { ...a, team_role: data.team_role }
+                  : a
+              )
           );
           this.toastService.showToast(
             `Assigned ${data.name} as coach of team ${data.team_name}`,
@@ -164,12 +154,13 @@ export class EditTeamsPage implements OnInit {
       })
       .subscribe({
         next: (data: apiAthleteDetail) => {
-          this.athleteData.update((athletes) =>
-            athletes.map((a) =>
-              a.crossfit_id === data.crossfit_id && a.year === data.year
-                ? { ...a, team_role: data.team_role }
-                : a
-            )
+          this.athleteDataService.athleteData.update(
+            (athletes: apiAthleteDetail[]) =>
+              athletes.map((a: apiAthleteDetail) =>
+                a.crossfit_id === data.crossfit_id && a.year === data.year
+                  ? { ...a, team_role: data.team_role }
+                  : a
+              )
           );
           this.toastService.showToast(
             `Assigned ${data.name} as Team Leader of team ${data.team_name}`,
@@ -208,13 +199,14 @@ export class EditTeamsPage implements OnInit {
         })
         .subscribe({
           next: (updatedAthlete) => {
-            this.athleteData.update((athletes) =>
-              athletes.map((a) =>
-                a.crossfit_id === updatedAthlete.crossfit_id &&
-                a.year === updatedAthlete.year
-                  ? { ...a, team_name: updatedAthlete.team_name }
-                  : a
-              )
+            this.athleteDataService.athleteData.update(
+              (athletes: apiAthleteDetail[]) =>
+                athletes.map((a: apiAthleteDetail) =>
+                  a.crossfit_id === updatedAthlete.crossfit_id &&
+                  a.year === updatedAthlete.year
+                    ? { ...a, team_name: updatedAthlete.team_name }
+                    : a
+                )
             );
             this.toastService.showToast(
               `Updated team name to ${updatedAthlete.team_name}`,

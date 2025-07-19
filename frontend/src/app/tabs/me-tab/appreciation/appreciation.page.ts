@@ -9,33 +9,24 @@ import {
   IonCard,
   IonCardHeader,
   IonCardTitle,
-  IonList,
   IonItem,
-  IonLabel,
   IonButton,
   IonIcon,
   IonRefresher,
   IonRefresherContent,
   IonSkeletonText,
-  IonText,
   IonCardContent,
   IonAccordionGroup,
   IonAccordion,
-  IonModal,
-  IonSelect,
-  IonSelectOption,
-  IonTextarea,
-  IonInput,
   IonFab,
   IonFabButton,
   IonCardSubtitle,
   IonFabList,
-  ModalController,
+  IonText,
 } from '@ionic/angular/standalone';
 import {
   apiAppreciationService,
   apiAppreciationStatusService,
-  apiAthleteService,
 } from 'src/app/api/services';
 import { ToastService } from 'src/app/services/toast.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
@@ -46,21 +37,11 @@ import {
   apiAthleteDetail,
 } from 'src/app/api/models';
 import { addIcons } from 'ionicons';
-import {
-  addOutline,
-  createOutline,
-  saveOutline,
-  closeOutline,
-  peopleOutline,
-  personOutline,
-  personCircleOutline,
-  peopleCircleOutline,
-  globeOutline,
-} from 'ionicons/icons';
+import { addOutline, peopleCircleOutline, globeOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 import { EventService } from 'src/app/services/event.service';
-import { EditAppreciationComponent } from './edit-appreciation/edit-appreciation.component';
+import { AthleteDataService } from 'src/app/services/athlete-data.service';
 
 @Component({
   selector: 'app-appreciation',
@@ -68,6 +49,7 @@ import { EditAppreciationComponent } from './edit-appreciation/edit-appreciation
   styleUrls: ['./appreciation.page.scss'],
   standalone: true,
   imports: [
+    IonText,
     IonFabList,
     IonCardSubtitle,
     IonFabButton,
@@ -85,19 +67,12 @@ import { EditAppreciationComponent } from './edit-appreciation/edit-appreciation
     IonCardHeader,
     IonCardTitle,
     IonItem,
-    IonLabel,
-    IonList,
     IonButton,
     IonIcon,
     IonRefresher,
     IonRefresherContent,
     IonSkeletonText,
-    IonText,
     IonCardContent,
-    IonModal,
-    IonSelect,
-    IonSelectOption,
-    IonTextarea,
     ToolbarButtonsComponent,
     ReactiveFormsModule,
   ],
@@ -105,29 +80,35 @@ import { EditAppreciationComponent } from './edit-appreciation/edit-appreciation
 export class AppreciationPage implements OnInit {
   private apiAppreciation = inject(apiAppreciationService);
   private apiAppreciationStatus = inject(apiAppreciationStatusService);
-  private apiAthlete = inject(apiAthleteService);
   private toastService = inject(ToastService);
-  private modalController = inject(ModalController);
+  private authService = inject(AuthService);
   eventService = inject(EventService);
-  authService = inject(AuthService);
+  athleteDataService = inject(AthleteDataService);
 
   dataLoaded = false;
   readonly appreciations = signal<apiAppreciationModel[]>([]);
   private readonly appreciationStatus = signal<apiAppreciationStatusModel[]>(
     []
   );
-  private readonly allAthletes = signal<apiAthleteDetail[]>([]);
+
+  headerContent = computed(() => {
+    if (this.availableEvents().length > 0) {
+      return 'Click the + button to cast your appreciation for an athlete';
+    } else {
+      return 'No available events for appreciation. Please check back later.';
+    }
+  });
 
   private readonly teamAthletes = computed<apiAthleteDetail[]>(() =>
-    this.allAthletes().filter(
-      (a) => a.team_name === this.authService.athlete()?.team_name
-    )
+    this.athleteDataService
+      .athleteData()
+      .filter((a) => a.team_name === this.authService.athlete()?.team_name)
   );
 
   private readonly nonTeamAthletes = computed<apiAthleteDetail[]>(() =>
-    this.allAthletes().filter(
-      (a) => a.team_name != this.authService.athlete()?.team_name
-    )
+    this.athleteDataService
+      .athleteData()
+      .filter((a) => a.team_name != this.authService.athlete()?.team_name)
   );
 
   readonly availableEvents = computed<apiAppreciationStatusModel[]>(() =>
@@ -146,12 +127,6 @@ export class AppreciationPage implements OnInit {
       peopleCircleOutline,
       globeOutline,
       addOutline,
-      personCircleOutline,
-      createOutline,
-      saveOutline,
-      closeOutline,
-      peopleOutline,
-      personOutline,
     });
   }
 
@@ -164,7 +139,6 @@ export class AppreciationPage implements OnInit {
 
     let appreciationDataLoaded = false;
     let appreciationStatusDataLoaded = false;
-    let athleteDataLoaded = false;
 
     this.apiAppreciation
       .getMyAppreciationAppreciationGet({
@@ -182,9 +156,7 @@ export class AppreciationPage implements OnInit {
           );
           appreciationDataLoaded = true;
           this.dataLoaded =
-            appreciationDataLoaded &&
-            appreciationStatusDataLoaded &&
-            athleteDataLoaded;
+            appreciationDataLoaded && appreciationStatusDataLoaded;
         },
         error: (error) => {
           console.error('Error fetching appreciations:', error);
@@ -207,38 +179,12 @@ export class AppreciationPage implements OnInit {
           this.appreciationStatus.set(data);
           appreciationStatusDataLoaded = true;
           this.dataLoaded =
-            appreciationDataLoaded &&
-            appreciationStatusDataLoaded &&
-            athleteDataLoaded;
+            appreciationDataLoaded && appreciationStatusDataLoaded;
         },
         error: (error) => {
           console.error('Error fetching appreciation status:', error);
           this.toastService.showToast(
             'Failed to load appreciation status',
-            'danger',
-            null,
-            3000
-          );
-        },
-      });
-
-    this.apiAthlete
-      .getAthleteDetailAllAthleteDetailAllGet({
-        year: environment.year,
-        affiliate_id: environment.affiliateId,
-      })
-      .subscribe({
-        next: (data: apiAthleteDetail[]) => {
-          this.allAthletes.set(data);
-          athleteDataLoaded = true;
-          this.dataLoaded =
-            appreciationDataLoaded &&
-            appreciationStatusDataLoaded &&
-            athleteDataLoaded;
-        },
-        error: (err: any) => {
-          this.toastService.showToast(
-            'Failed to load athlete data',
             'danger',
             null,
             3000
@@ -260,38 +206,37 @@ export class AppreciationPage implements OnInit {
     return status ? true : false;
   }
 
-  async editAppreciation(appreciation: apiAppreciationModel) {
-    const modal = await this.modalController.create({
-      component: EditAppreciationComponent,
-      componentProps: {
-        appreciation: appreciation,
-        allAthletes: this.allAthletes(),
-        teamAthletes: this.teamAthletes(),
-        nonTeamAthletes: this.nonTeamAthletes(),
-      },
-      breakpoints: [0.5, 0.75],
-      initialBreakpoint: 0.75,
-    });
-
-    await modal.present();
-    const { data } = await modal.onWillDismiss();
-    if (data) {
-      console.log(data);
-    }
-  }
-
-  cancelEdit() {}
-
-  addNewAppreciation() {}
-
-  resetForm() {}
-
-  saveAppreciation() {}
-
-  getAthleteName(crossfitId: number): string {
-    const athlete = this.allAthletes().find(
-      (a) => a.crossfit_id === crossfitId
-    );
-    return athlete?.name || `Athlete ${crossfitId}`;
+  onClickDelete(appreciation: apiAppreciationModel) {
+    this.apiAppreciation
+      .deleteMyAppreciationAppreciationDelete({
+        year: appreciation.year,
+        ordinal: appreciation.ordinal,
+      })
+      .subscribe({
+        next: () => {
+          this.appreciations.update((appreciations) =>
+            appreciations.filter(
+              (a) =>
+                a.year !== appreciation.year ||
+                a.ordinal !== appreciation.ordinal
+            )
+          );
+          this.toastService.showToast(
+            'Appreciation deleted successfully',
+            'success',
+            null,
+            3000
+          );
+        },
+        error: (error) => {
+          console.error('Error deleting appreciation:', error);
+          this.toastService.showToast(
+            'Failed to delete appreciation',
+            'danger',
+            null,
+            3000
+          );
+        },
+      });
   }
 }

@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/me"></ion-back-button>
     </ion-buttons>
-    <ion-title>Appreciation</ion-title>
+    <ion-title>Appreciation Form</ion-title>
     <app-toolbar-buttons slot="end"></app-toolbar-buttons>
   </ion-toolbar>
 </ion-header>
@@ -13,35 +13,38 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <!-- Display existing appreciations -->
   @if ( dataLoaded) {
+
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Appreciation Form</ion-card-title>
+      <ion-card-title>Appreciation Forms</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-text
-        >Each event will have two votes. One for teammates, and one for
-        non-teammates</ion-text
-      >
+      <ion-text>{{ headerContent() }}</ion-text>
     </ion-card-content>
   </ion-card>
   @for (appreciation of appreciations(); track $index) {
-  <!-- View Mode -->
   <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        {{ eventService.getEventName(appreciation.ordinal, appreciation.year)}}
+      </ion-card-title>
+      @if (checkIfAppreciationStatusOpen(appreciation.ordinal,
+      appreciation.year)) {
+      <ion-card-subtitle>Open</ion-card-subtitle>
+      } @else {
+      <ion-card-subtitle>Closed</ion-card-subtitle>
+      }
+    </ion-card-header>
     <ion-card-content>
-      <ion-card-header>
-        <ion-card-title>
-          {{ eventService.getEventName(appreciation.ordinal,
-          appreciation.year)}}
-        </ion-card-title>
-      </ion-card-header>
       <ion-accordion-group [multiple]="true">
         <ion-accordion>
           <ion-item slot="header">
             <ion-icon name="people-circle-outline" slot="start"></ion-icon>
             <span>
-              {{ getAthleteName(appreciation.team_vote_crossfit_id) }}
+              {{
+              athleteDataService.getAthleteName(appreciation.team_vote_crossfit_id)
+              }}
             </span>
           </ion-item>
           <div class="ion-padding" slot="content">
@@ -52,7 +55,9 @@
           <ion-item slot="header">
             <ion-icon name="globe-outline" slot="start"></ion-icon>
             <span>
-              {{ getAthleteName(appreciation.non_team_vote_crossfit_id) }}
+              {{
+              athleteDataService.getAthleteName(appreciation.non_team_vote_crossfit_id)
+              }}
             </span>
           </ion-item>
           <div class="ion-padding" slot="content">
@@ -62,12 +67,21 @@
       </ion-accordion-group>
       @if (checkIfAppreciationStatusOpen(appreciation.ordinal,
       appreciation.year)) {
-      <ion-button
-        fill="clear"
-        (click)="editAppreciation(appreciation)"
-        class="ion-margin-top"
-        >Edit</ion-button
-      >
+      <div class="button-container">
+        <ion-button
+          fill="clear"
+          [href]="'/me/appreciation/' + appreciation.year + '/' + appreciation.ordinal"
+          class="ion-margin-top"
+          >Edit</ion-button
+        >
+        <ion-button
+          fill="clear"
+          color="danger"
+          class="ion-margin-top"
+          (click)="onClickDelete(appreciation)"
+          >Delete</ion-button
+        >
+      </div>
       }
     </ion-card-content>
   </ion-card>
@@ -112,7 +126,9 @@
     </ion-fab-button>
     <ion-fab-list side="top">
       @for (item of availableEvents(); track $index) {
-      <ion-fab-button color="primary"
+      <ion-fab-button
+        color="primary"
+        [href]="'/me/appreciation/' + item.year + '/' + item.ordinal"
         >{{ eventService.getEventName(item.ordinal, item.year)}}</ion-fab-button
       >
       }

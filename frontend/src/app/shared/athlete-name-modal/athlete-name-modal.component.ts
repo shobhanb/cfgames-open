@@ -4,39 +4,39 @@ import {
   inject,
   input,
   OnInit,
-  output,
   signal,
 } from '@angular/core';
+
 import {
+  ModalController,
   IonHeader,
   IonToolbar,
-  IonButtons,
   IonTitle,
+  IonButtons,
   IonButton,
   IonContent,
   IonSearchbar,
   IonList,
   IonItem,
-  ModalController,
 } from '@ionic/angular/standalone';
 
 @Component({
-  selector: 'app-athlete-name',
-  templateUrl: './athlete-name.component.html',
-  styleUrls: ['./athlete-name.component.scss'],
+  selector: 'app-athlete-name-modal',
+  templateUrl: './athlete-name-modal.component.html',
+  styleUrls: ['./athlete-name-modal.component.scss'],
   imports: [
     IonItem,
     IonList,
     IonSearchbar,
-    IonHeader,
-    IonToolbar,
+    IonContent,
+    IonButton,
     IonButtons,
     IonTitle,
-    IonButton,
-    IonContent,
+    IonToolbar,
+    IonHeader,
   ],
 })
-export class AthleteNameComponent implements OnInit {
+export class AthleteNameModalComponent implements OnInit {
   modalController = inject(ModalController);
   athleteNames = input.required<string[]>();
 

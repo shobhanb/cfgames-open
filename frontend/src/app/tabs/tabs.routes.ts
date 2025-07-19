@@ -84,6 +84,14 @@ export const tabsRoutes: Routes = [
         canActivate: [userGuard],
       },
       {
+        path: 'me/appreciation/:year/:ordinal',
+        loadComponent: () =>
+          import(
+            './me-tab/appreciation/edit-appreciation/edit-appreciation.component'
+          ).then((c) => c.EditAppreciationComponent),
+        canActivate: [userGuard],
+      },
+      {
         path: 'me/schedule',
         loadComponent: () =>
           import('./me-tab/schedule/schedule.page').then((c) => c.SchedulePage),
