@@ -14,6 +14,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { apiAppreciationModel } from '../models/api-appreciation-model';
 import { deleteMyAppreciationAppreciationDelete } from '../fn/appreciation/delete-my-appreciation-appreciation-delete';
 import { DeleteMyAppreciationAppreciationDelete$Params } from '../fn/appreciation/delete-my-appreciation-appreciation-delete';
+import { getAllAppreciationAppreciationAllGet } from '../fn/appreciation/get-all-appreciation-appreciation-all-get';
+import { GetAllAppreciationAppreciationAllGet$Params } from '../fn/appreciation/get-all-appreciation-appreciation-all-get';
 import { getMyAppreciationAppreciationGet } from '../fn/appreciation/get-my-appreciation-appreciation-get';
 import { GetMyAppreciationAppreciationGet$Params } from '../fn/appreciation/get-my-appreciation-appreciation-get';
 import { updateMyAppreciationAppreciationPost } from '../fn/appreciation/update-my-appreciation-appreciation-post';
@@ -121,6 +123,39 @@ export class apiAppreciationService extends BaseService {
   deleteMyAppreciationAppreciationDelete(params: DeleteMyAppreciationAppreciationDelete$Params, context?: HttpContext): Observable<any> {
     return this.deleteMyAppreciationAppreciationDelete$Response(params, context).pipe(
       map((r: StrictHttpResponse<any>): any => r.body)
+    );
+  }
+
+  /** Path part for operation `getAllAppreciationAppreciationAllGet()` */
+  static readonly GetAllAppreciationAppreciationAllGetPath = '/appreciation/all';
+
+  /**
+   * Get All Appreciation.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllAppreciationAppreciationAllGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllAppreciationAppreciationAllGet$Response(params: GetAllAppreciationAppreciationAllGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAppreciationModel>>> {
+    return getAllAppreciationAppreciationAllGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get All Appreciation.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllAppreciationAppreciationAllGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllAppreciationAppreciationAllGet(params: GetAllAppreciationAppreciationAllGet$Params, context?: HttpContext): Observable<Array<apiAppreciationModel>> {
+    return this.getAllAppreciationAppreciationAllGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiAppreciationModel>>): Array<apiAppreciationModel> => r.body)
     );
   }
 

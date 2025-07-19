@@ -10,3 +10,10 @@ class AppreciationModel(CustomBaseModel):
     team_vote_text: str | None
     non_team_vote_crossfit_id: int
     non_team_vote_text: str | None
+
+
+class AppreciationCountsModel(CustomBaseModel):
+    affiliate_id: int
+    year: int
+    ordinal: int
+    count: int

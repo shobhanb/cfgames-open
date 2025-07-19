@@ -1,13 +1,16 @@
+from collections.abc import Sequence
+from typing import Any
+
 from fastapi import APIRouter, status
 
 from app.appreciation_status.models import AppreciationStatus
 from app.database.dependencies import db_dependency
 from app.exceptions import unauthorised_exception
-from app.firebase_auth.dependencies import verified_user_dependency
+from app.firebase_auth.dependencies import admin_user_dependency, verified_user_dependency
 
 from .models import Appreciation
-from .schemas import AppreciationModel
-from .service import get_db_appreciation, update_db_appreciation
+from .schemas import AppreciationCountsModel, AppreciationModel
+from .service import get_db_appreciation, get_db_appreciation_counts, update_db_appreciation
 
 appreciation_router = APIRouter(prefix="/appreciation", tags=["appreciation"])
 
@@ -80,3 +83,38 @@ async def delete_my_appreciation(
         ordinal=ordinal,
     )
     await appreciation.delete(async_session=db_session)
+
+
+@appreciation_router.get(
+    "/all",
+    status_code=status.HTTP_200_OK,
+    response_model=list[AppreciationModel],
+)
+async def get_all_appreciation(
+    db_session: db_dependency,
+    _: admin_user_dependency,
+    affiliate_id: int,
+    year: int,
+    ordinal: int,
+) -> Sequence[Appreciation]:
+    return await Appreciation.find_all(async_session=db_session, affiliate_id=affiliate_id, year=year, ordinal=ordinal)
+
+
+@appreciation_router.get(
+    "/counts",
+    status_code=status.HTTP_200_OK,
+    response_model=list[AppreciationCountsModel],
+)
+async def get_appreciation_counts(
+    db_session: db_dependency,
+    _: admin_user_dependency,
+    affiliate_id: int,
+    year: int,
+    ordinal: int | None = None,
+) -> list[dict[str, Any]]:
+    return await get_db_appreciation_counts(
+        db_session=db_session,
+        affiliate_id=affiliate_id,
+        year=year,
+        ordinal=ordinal,
+    )

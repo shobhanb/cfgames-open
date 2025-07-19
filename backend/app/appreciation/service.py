@@ -1,4 +1,6 @@
-from sqlalchemy import select
+from typing import Any
+
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import Appreciation
@@ -42,3 +44,24 @@ async def update_db_appreciation(
 
     await db_session.commit()
     return appreciation
+
+
+async def get_db_appreciation_counts(
+    db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
+    ordinal: int | None = None,
+) -> list[dict[str, Any]]:
+    stmt = (
+        select(Appreciation.affiliate_id, Appreciation.year, Appreciation.ordinal, func.count().label("count"))
+        .where(
+            (Appreciation.affiliate_id == affiliate_id) & (Appreciation.year == year),
+        )
+        .group_by(Appreciation.affiliate_id, Appreciation.year, Appreciation.ordinal)
+    )
+    if ordinal:
+        stmt = stmt.where(Appreciation.ordinal == ordinal)
+
+    ret = await db_session.execute(stmt)
+    results = ret.mappings().all()
+    return [dict(x) for x in results]
