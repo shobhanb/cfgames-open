@@ -9,8 +9,14 @@ from app.exceptions import unauthorised_exception
 from app.firebase_auth.dependencies import admin_user_dependency, verified_user_dependency
 
 from .models import Appreciation
-from .schemas import AppreciationCountsModel, AppreciationModel
-from .service import get_db_appreciation, get_db_appreciation_counts, update_db_appreciation
+from .schemas import AppreciationCountsModel, AppreciationModel, AppreciationResultDetail, AppreciationResults
+from .service import (
+    get_db_appreciation,
+    get_db_appreciation_counts,
+    get_db_appreciation_results,
+    get_db_appreciation_results_detail,
+    update_db_appreciation,
+)
 
 appreciation_router = APIRouter(prefix="/appreciation", tags=["appreciation"])
 
@@ -117,4 +123,46 @@ async def get_appreciation_counts(
         affiliate_id=affiliate_id,
         year=year,
         ordinal=ordinal,
+    )
+
+
+@appreciation_router.get(
+    "/results",
+    status_code=status.HTTP_200_OK,
+    response_model=list[AppreciationResults],
+)
+async def get_appreciation_results(
+    db_session: db_dependency,
+    _: admin_user_dependency,
+    affiliate_id: int,
+    year: int,
+    ordinal: int,
+) -> list[dict[str, Any]]:
+    return await get_db_appreciation_results(
+        db_session=db_session,
+        affiliate_id=affiliate_id,
+        year=year,
+        ordinal=ordinal,
+    )
+
+
+@appreciation_router.get(
+    "/detail",
+    status_code=status.HTTP_200_OK,
+    response_model=AppreciationResultDetail,
+)
+async def get_appreciation_results_detail(
+    db_session: db_dependency,
+    _: admin_user_dependency,
+    affiliate_id: int,
+    year: int,
+    ordinal: int,
+    crossfit_id: int,
+) -> dict[str, list[dict[str, Any]]]:
+    return await get_db_appreciation_results_detail(
+        db_session=db_session,
+        affiliate_id=affiliate_id,
+        year=year,
+        ordinal=ordinal,
+        crossfit_id=crossfit_id,
     )

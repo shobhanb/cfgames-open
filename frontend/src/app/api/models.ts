@@ -5,7 +5,10 @@
 export type { apiAffiliateAthlete } from './models/api-affiliate-athlete';
 export type { apiAppreciationCountsModel } from './models/api-appreciation-counts-model';
 export type { apiAppreciationModel } from './models/api-appreciation-model';
+export type { apiAppreciationResultDetail } from './models/api-appreciation-result-detail';
+export type { apiAppreciationResults } from './models/api-appreciation-results';
 export type { apiAppreciationScoreModel } from './models/api-appreciation-score-model';
+export type { apiAppreciationSource } from './models/api-appreciation-source';
 export type { apiAppreciationStatusModel } from './models/api-appreciation-status-model';
 export type { apiAthleteDetail } from './models/api-athlete-detail';
 export type { apiAthletePrefsModel } from './models/api-athlete-prefs-model';

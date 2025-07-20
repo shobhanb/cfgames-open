@@ -1,0 +1,121 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        [defaultHref]="'/admin/appreciation-results' + year + '/' + ordinal"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title
+      >{{ athleteDataService.getAthleteName(crossfitId) + ' - ' +
+      eventService.getEventName(ordinal, year) }}</ion-title
+    >
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if ( dataLoaded) {
+
+  <div class="section-title">Different Team Votes</div>
+  <ion-list [inset]="true">
+    @if (appreciationDetail()?.non_team_votes?.length === 0) {
+    <ion-item>None</ion-item>
+    } @for (item of appreciationDetail()?.non_team_votes; track $index) {
+    <ion-item>
+      <ion-label>
+        <ion-text>
+          {{ athleteDataService.getAthleteName(item.crossfit_id) }}
+        </ion-text>
+        <ion-note class="ion-text-wrap">
+          {{ item.comment || 'No Comment' }}
+        </ion-note>
+      </ion-label>
+    </ion-item>
+    }
+  </ion-list>
+
+  <div class="section-title">Same Team Votes</div>
+  <ion-list [inset]="true">
+    @if (appreciationDetail()?.team_votes?.length === 0) {
+    <ion-item>None</ion-item>
+    } @for (item of appreciationDetail()?.team_votes; track $index) {
+    <ion-item>
+      <ion-label>
+        <ion-text>
+          {{ athleteDataService.getAthleteName(item.crossfit_id) }}
+        </ion-text>
+        <ion-note class="ion-text-wrap">
+          {{ item.comment || 'No Comment' }}
+        </ion-note>
+      </ion-label>
+    </ion-item>
+    }
+  </ion-list>
+
+  } @else {
+  <!-- Skeleton loader -->
+  <div class="section-title">
+    <ion-skeleton-text
+      [animated]="true"
+      style="width: 120px; height: 18px"
+    ></ion-skeleton-text>
+  </div>
+
+  <ion-list [inset]="true">
+    @for (item of [1, 2, 3]; track $index) {
+    <ion-item>
+      <ion-label>
+        <!-- Name skeleton -->
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 60%; height: 18px; margin-bottom: 8px"
+        ></ion-skeleton-text>
+        <!-- Comment skeleton -->
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 90%; height: 14px"
+        ></ion-skeleton-text>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 75%; height: 14px"
+        ></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+    }
+  </ion-list>
+
+  <div class="section-title">
+    <ion-skeleton-text
+      [animated]="true"
+      style="width: 130px; height: 18px"
+    ></ion-skeleton-text>
+  </div>
+
+  <ion-list [inset]="true">
+    @for (item of [1, 2, 3]; track $index) {
+    <ion-item>
+      <ion-label>
+        <!-- Name skeleton -->
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 60%; height: 18px; margin-bottom: 8px"
+        ></ion-skeleton-text>
+        <!-- Comment skeleton -->
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 85%; height: 14px"
+        ></ion-skeleton-text>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 70%; height: 14px"
+        ></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+    }
+  </ion-list>
+  }
+</ion-content>

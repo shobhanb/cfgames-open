@@ -3,6 +3,7 @@ import {
   computed,
   inject,
   Input,
+  numberAttribute,
   OnInit,
   signal,
 } from '@angular/core';
@@ -73,8 +74,8 @@ export class IndividualScoresPage implements OnInit {
   scoreFilter = inject(ScoreFilterService);
   authService = inject(AuthService);
 
-  @Input({ required: true }) year: number = 0;
-  @Input({ required: true }) ordinal: number = 0;
+  @Input({ required: true, transform: numberAttribute }) year!: number;
+  @Input({ required: true, transform: numberAttribute }) ordinal!: number;
 
   private event = computed<string | undefined>(() => {
     if (this.ordinal == 0) {

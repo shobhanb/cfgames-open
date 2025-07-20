@@ -1,6 +1,5 @@
 import {
   Component,
-  computed,
   inject,
   Input,
   numberAttribute,
@@ -14,45 +13,41 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonRefresher,
-  IonRefresherContent,
   IonButtons,
   IonBackButton,
+  IonRefresher,
+  IonRefresherContent,
   IonList,
   IonItem,
   IonLabel,
-  IonSkeletonText,
-  IonSelect,
-  IonSelectOption,
   IonNote,
-  IonRouterLink,
+  IonSkeletonText,
+  IonText,
 } from '@ionic/angular/standalone';
 import { apiAppreciationService } from 'src/app/api/services';
+import { apiAppreciationResultDetail } from 'src/app/api/models';
 import { environment } from 'src/environments/environment';
-import { apiAppreciationResults } from 'src/app/api/models';
 import { ToastService } from 'src/app/services/toast.service';
-import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { EventService } from 'src/app/services/event.service';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
-import { RouterLink } from '@angular/router';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
-  selector: 'app-appreciation-result',
-  templateUrl: './appreciation-result.page.html',
-  styleUrls: ['./appreciation-result.page.scss'],
+  selector: 'app-appreciation-detail',
+  templateUrl: './appreciation-detail.page.html',
+  styleUrls: ['./appreciation-detail.page.scss'],
   standalone: true,
   imports: [
-    IonNote,
-    IonSelect,
-    IonSelectOption,
+    IonText,
     IonSkeletonText,
+    IonNote,
     IonLabel,
     IonItem,
     IonList,
-    IonBackButton,
-    IonButtons,
     IonRefresherContent,
     IonRefresher,
+    IonBackButton,
+    IonButtons,
     IonContent,
     IonHeader,
     IonTitle,
@@ -60,36 +55,21 @@ import { RouterLink } from '@angular/router';
     CommonModule,
     FormsModule,
     ToolbarButtonsComponent,
-    RouterLink,
-    IonRouterLink,
   ],
 })
-export class AppreciationResultPage implements OnInit {
+export class AppreciationDetailPage implements OnInit {
   private apiAppreciation = inject(apiAppreciationService);
   private toastService = inject(ToastService);
+  eventService = inject(EventService);
   athleteDataService = inject(AthleteDataService);
 
-  eventService = inject(EventService);
+  appreciationDetail = signal<apiAppreciationResultDetail | null>(null);
+
+  dataLoaded = false;
 
   @Input({ required: true, transform: numberAttribute }) year!: number;
   @Input({ required: true, transform: numberAttribute }) ordinal!: number;
-
-  private appreciationResults = signal<apiAppreciationResults[]>([]);
-
-  sortBy = signal<'total_votes' | 'team_votes' | 'non_team_votes'>(
-    'total_votes'
-  );
-
-  readonly sortedResults = computed(() => {
-    return this.appreciationResults().sort(
-      (a: apiAppreciationResults, b: apiAppreciationResults) => {
-        const sortKey = this.sortBy();
-        return b[sortKey] - a[sortKey];
-      }
-    );
-  });
-
-  dataLoaded = false;
+  @Input({ required: true, transform: numberAttribute }) crossfitId!: number;
 
   constructor() {}
 
@@ -105,33 +85,26 @@ export class AppreciationResultPage implements OnInit {
 
   getData() {
     this.apiAppreciation
-      .getAppreciationResultsAppreciationResultsGet({
+      .getAppreciationResultsDetailAppreciationDetailGet({
         affiliate_id: environment.affiliateId,
         year: this.year,
         ordinal: this.ordinal,
+        crossfit_id: this.crossfitId,
       })
       .subscribe({
-        next: (data: apiAppreciationResults[]) => {
-          this.appreciationResults.set(data);
+        next: (data) => {
+          this.appreciationDetail.set(data);
           this.dataLoaded = true;
         },
         error: (error) => {
-          console.error('Error fetching appreciation results:', error);
+          console.error('Error fetching appreciation detail:', error);
           this.toastService.showToast(
-            'Failed to load appreciation results',
+            'Error fetching appreciation detail. Please try again later.',
             'danger',
             null,
-            3000
+            2000
           );
         },
       });
-  }
-
-  handleSortChange(event: CustomEvent) {
-    const selectedValue = event.detail.value as
-      | 'total_votes'
-      | 'team_votes'
-      | 'non_team_votes';
-    this.sortBy.set(selectedValue);
   }
 }

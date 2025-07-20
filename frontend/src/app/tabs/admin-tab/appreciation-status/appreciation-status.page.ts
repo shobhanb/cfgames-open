@@ -17,7 +17,6 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonCardSubtitle,
   IonText,
   IonToggle,
 } from '@ionic/angular/standalone';
@@ -38,7 +37,6 @@ import { EventService } from 'src/app/services/event.service';
   imports: [
     IonToggle,
     IonText,
-    IonCardSubtitle,
     IonCardContent,
     IonCardTitle,
     IonCardHeader,

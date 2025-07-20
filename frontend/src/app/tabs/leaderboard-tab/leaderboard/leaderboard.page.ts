@@ -6,6 +6,7 @@ import {
   effect,
   computed,
   signal,
+  numberAttribute,
 } from '@angular/core';
 import {
   IonContent,
@@ -82,8 +83,8 @@ export class LeaderboardPage implements OnInit {
 
   dataLoaded = false;
 
-  @Input({ required: true }) year: number = 0;
-  @Input({ required: true }) ordinal: number = 0;
+  @Input({ required: true, transform: numberAttribute }) year!: number;
+  @Input({ required: true, transform: numberAttribute }) ordinal!: number;
 
   selectedTop3 = signal<boolean>(true);
 

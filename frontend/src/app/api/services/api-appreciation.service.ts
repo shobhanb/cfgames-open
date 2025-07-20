@@ -13,12 +13,18 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { apiAppreciationCountsModel } from '../models/api-appreciation-counts-model';
 import { apiAppreciationModel } from '../models/api-appreciation-model';
+import { apiAppreciationResultDetail } from '../models/api-appreciation-result-detail';
+import { apiAppreciationResults } from '../models/api-appreciation-results';
 import { deleteMyAppreciationAppreciationDelete } from '../fn/appreciation/delete-my-appreciation-appreciation-delete';
 import { DeleteMyAppreciationAppreciationDelete$Params } from '../fn/appreciation/delete-my-appreciation-appreciation-delete';
 import { getAllAppreciationAppreciationAllGet } from '../fn/appreciation/get-all-appreciation-appreciation-all-get';
 import { GetAllAppreciationAppreciationAllGet$Params } from '../fn/appreciation/get-all-appreciation-appreciation-all-get';
 import { getAppreciationCountsAppreciationCountsGet } from '../fn/appreciation/get-appreciation-counts-appreciation-counts-get';
 import { GetAppreciationCountsAppreciationCountsGet$Params } from '../fn/appreciation/get-appreciation-counts-appreciation-counts-get';
+import { getAppreciationResultsAppreciationResultsGet } from '../fn/appreciation/get-appreciation-results-appreciation-results-get';
+import { GetAppreciationResultsAppreciationResultsGet$Params } from '../fn/appreciation/get-appreciation-results-appreciation-results-get';
+import { getAppreciationResultsDetailAppreciationDetailGet } from '../fn/appreciation/get-appreciation-results-detail-appreciation-detail-get';
+import { GetAppreciationResultsDetailAppreciationDetailGet$Params } from '../fn/appreciation/get-appreciation-results-detail-appreciation-detail-get';
 import { getMyAppreciationAppreciationGet } from '../fn/appreciation/get-my-appreciation-appreciation-get';
 import { GetMyAppreciationAppreciationGet$Params } from '../fn/appreciation/get-my-appreciation-appreciation-get';
 import { updateMyAppreciationAppreciationPost } from '../fn/appreciation/update-my-appreciation-appreciation-post';
@@ -192,6 +198,72 @@ export class apiAppreciationService extends BaseService {
   getAppreciationCountsAppreciationCountsGet(params: GetAppreciationCountsAppreciationCountsGet$Params, context?: HttpContext): Observable<Array<apiAppreciationCountsModel>> {
     return this.getAppreciationCountsAppreciationCountsGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<apiAppreciationCountsModel>>): Array<apiAppreciationCountsModel> => r.body)
+    );
+  }
+
+  /** Path part for operation `getAppreciationResultsAppreciationResultsGet()` */
+  static readonly GetAppreciationResultsAppreciationResultsGetPath = '/appreciation/results';
+
+  /**
+   * Get Appreciation Results.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAppreciationResultsAppreciationResultsGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAppreciationResultsAppreciationResultsGet$Response(params: GetAppreciationResultsAppreciationResultsGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAppreciationResults>>> {
+    return getAppreciationResultsAppreciationResultsGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get Appreciation Results.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAppreciationResultsAppreciationResultsGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAppreciationResultsAppreciationResultsGet(params: GetAppreciationResultsAppreciationResultsGet$Params, context?: HttpContext): Observable<Array<apiAppreciationResults>> {
+    return this.getAppreciationResultsAppreciationResultsGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiAppreciationResults>>): Array<apiAppreciationResults> => r.body)
+    );
+  }
+
+  /** Path part for operation `getAppreciationResultsDetailAppreciationDetailGet()` */
+  static readonly GetAppreciationResultsDetailAppreciationDetailGetPath = '/appreciation/detail';
+
+  /**
+   * Get Appreciation Results Detail.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAppreciationResultsDetailAppreciationDetailGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAppreciationResultsDetailAppreciationDetailGet$Response(params: GetAppreciationResultsDetailAppreciationDetailGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAppreciationResultDetail>> {
+    return getAppreciationResultsDetailAppreciationDetailGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get Appreciation Results Detail.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAppreciationResultsDetailAppreciationDetailGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAppreciationResultsDetailAppreciationDetailGet(params: GetAppreciationResultsDetailAppreciationDetailGet$Params, context?: HttpContext): Observable<apiAppreciationResultDetail> {
+    return this.getAppreciationResultsDetailAppreciationDetailGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiAppreciationResultDetail>): apiAppreciationResultDetail => r.body)
     );
   }
 

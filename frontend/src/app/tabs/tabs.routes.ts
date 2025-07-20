@@ -158,6 +158,14 @@ export const tabsRoutes: Routes = [
         canActivate: [adminGuard],
       },
       {
+        path: 'admin/appreciation-results/:year/:ordinal/:crossfitId',
+        loadComponent: () =>
+          import(
+            './admin-tab/appreciation-results/appreciation-result/appreciation-detail/appreciation-detail.page'
+          ).then((c) => c.AppreciationDetailPage),
+        canActivate: [adminGuard],
+      },
+      {
         path: 'admin/attendance',
         loadComponent: () =>
           import('./admin-tab/attendance/attendance.page').then(

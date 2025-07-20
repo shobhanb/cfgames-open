@@ -1,13 +1,175 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>appreciationResult</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/admin/appreciation-results"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title
+      >{{ eventService.getEventName(ordinal, year) + '
+      Appreciation'}}</ion-title
+    >
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">appreciationResult</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if ( dataLoaded) {
+
+  <div class="section-title">Legend - Scores from</div>
+
+  <div class="medal-legend">
+    <div class="legend-item">
+      <div class="medal-circle team mini"></div>
+      <span>Same Team</span>
+    </div>
+    <div class="legend-item">
+      <div class="medal-circle non-team mini"></div>
+      <span>Different Team</span>
+    </div>
+    <div class="legend-item">
+      <div class="medal-circle total mini"></div>
+      <span>Total</span>
+    </div>
+  </div>
+
+  <div class="section-title">Sort by (Descending)</div>
+  <ion-list [inset]="true">
+    <ion-item>
+      <ion-select
+        [value]="sortBy()"
+        (ionChange)="handleSortChange($event)"
+        interface="popover"
+        labelPlacement="stacked"
+      >
+        <ion-select-option value="total_votes">Total Votes</ion-select-option>
+        <ion-select-option value="team_votes">Team Votes</ion-select-option>
+        <ion-select-option value="non_team_votes"
+          >Different Team Votes</ion-select-option
+        >
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+  <div class="section-title">Vote Results</div>
+  <ion-list [inset]="true" class="results-list">
+    @for (item of sortedResults(); track $index) {
+    <ion-item
+      class="result-item"
+      [button]="true"
+      [routerLink]="'/admin/appreciation-results/' + year + '/' + ordinal + '/' + item.crossfit_id"
+    >
+      <ion-note slot="start">{{ $index + 1 }}</ion-note>
+      <ion-label
+        >{{ athleteDataService.getAthleteName(item.crossfit_id) }}</ion-label
+      >
+      <div slot="end" class="scores-container">
+        <div class="medal-circle team">{{ item.team_votes }}</div>
+        <div class="medal-circle non-team">{{ item.non_team_votes }}</div>
+        <div class="medal-circle total">{{ item.total_votes }}</div>
+      </div>
+    </ion-item>
+    }
+  </ion-list>
+  } @else {
+  <!-- Skeleton loader -->
+  <div class="section-title">
+    <ion-skeleton-text
+      [animated]="true"
+      style="width: 120px; height: 18px"
+    ></ion-skeleton-text>
+  </div>
+
+  <div class="medal-legend">
+    <div class="legend-item">
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 18px; height: 18px; border-radius: 4px"
+      ></ion-skeleton-text>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 60px; height: 12px"
+      ></ion-skeleton-text>
+    </div>
+    <div class="legend-item">
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 18px; height: 18px; border-radius: 4px"
+      ></ion-skeleton-text>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 80px; height: 12px"
+      ></ion-skeleton-text>
+    </div>
+    <div class="legend-item">
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 18px; height: 18px; border-radius: 4px"
+      ></ion-skeleton-text>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 70px; height: 12px"
+      ></ion-skeleton-text>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <ion-skeleton-text
+      [animated]="true"
+      style="width: 150px; height: 18px"
+    ></ion-skeleton-text>
+  </div>
+
+  <ion-list [inset]="true">
+    <ion-item>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 80%; height: 40px; border-radius: 4px"
+      ></ion-skeleton-text>
+    </ion-item>
+  </ion-list>
+
+  <div class="section-title">
+    <ion-skeleton-text
+      [animated]="true"
+      style="width: 100px; height: 18px"
+    ></ion-skeleton-text>
+  </div>
+
+  <ion-list [inset]="true">
+    @for (item of [1, 2, 3, 4, 5]; track $index) {
+    <ion-item>
+      <ion-skeleton-text
+        slot="start"
+        [animated]="true"
+        style="width: 20px; height: 16px"
+      ></ion-skeleton-text>
+      <ion-label>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 70%; height: 16px"
+        ></ion-skeleton-text>
+      </ion-label>
+      <div slot="end" class="scores-container">
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 36px; height: 36px; border-radius: 8px"
+        ></ion-skeleton-text>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 36px; height: 36px; border-radius: 8px"
+        ></ion-skeleton-text>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 36px; height: 36px; border-radius: 8px"
+        ></ion-skeleton-text>
+      </div>
+    </ion-item>
+    }
+  </ion-list>
+  }
 </ion-content>

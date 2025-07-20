@@ -17,3 +17,23 @@ class AppreciationCountsModel(CustomBaseModel):
     year: int
     ordinal: int
     count: int
+
+
+class AppreciationResults(CustomBaseModel):
+    affiliate_id: int
+    year: int
+    ordinal: int
+    crossfit_id: int
+    team_votes: int
+    non_team_votes: int
+    total_votes: int
+
+
+class AppreciationSource(CustomBaseModel):
+    crossfit_id: int
+    comment: str | None
+
+
+class AppreciationResultDetail(CustomBaseModel):
+    team_votes: list[AppreciationSource]
+    non_team_votes: list[AppreciationSource]

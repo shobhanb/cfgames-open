@@ -65,3 +65,68 @@ async def get_db_appreciation_counts(
     ret = await db_session.execute(stmt)
     results = ret.mappings().all()
     return [dict(x) for x in results]
+
+
+async def get_db_appreciation_results(
+    db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
+    ordinal: int,
+) -> list[dict[str, Any]]:
+    stmt = select(Appreciation.team_vote_crossfit_id, Appreciation.non_team_vote_crossfit_id).where(
+        (Appreciation.affiliate_id == affiliate_id) & (Appreciation.year == year) & (Appreciation.ordinal == ordinal),
+    )
+    result = await db_session.execute(stmt)
+    appreciations = result.mappings().all()
+
+    if not appreciations:
+        return []
+
+    team_votes: list[int] = [x["team_vote_crossfit_id"] for x in appreciations]
+    non_team_votes: list[int] = [x["non_team_vote_crossfit_id"] for x in appreciations]
+    all_votes: list[int] = [*team_votes, *non_team_votes]
+
+    all_crossfit_ids = set(all_votes)
+
+    return [
+        {
+            "affiliate_id": affiliate_id,
+            "year": year,
+            "ordinal": ordinal,
+            "crossfit_id": crossfit_id,
+            "team_votes": team_votes.count(crossfit_id),
+            "non_team_votes": non_team_votes.count(crossfit_id),
+            "total_votes": all_votes.count(crossfit_id),
+        }
+        for crossfit_id in all_crossfit_ids
+    ]
+
+
+async def get_db_appreciation_results_detail(
+    db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
+    ordinal: int,
+    crossfit_id: int,
+) -> dict[str, list[dict[str, Any]]]:
+    team_stmt = select(Appreciation.crossfit_id, Appreciation.team_vote_text.label("comment")).where(
+        (Appreciation.affiliate_id == affiliate_id)
+        & (Appreciation.year == year)
+        & (Appreciation.ordinal == ordinal)
+        & (Appreciation.team_vote_crossfit_id == crossfit_id),
+    )
+    non_team_stmt = select(Appreciation.crossfit_id, Appreciation.non_team_vote_text.label("comment")).where(
+        (Appreciation.affiliate_id == affiliate_id)
+        & (Appreciation.year == year)
+        & (Appreciation.ordinal == ordinal)
+        & (Appreciation.non_team_vote_crossfit_id == crossfit_id),
+    )
+    result = await db_session.execute(team_stmt)
+    team_results = result.mappings().all()
+    result = await db_session.execute(non_team_stmt)
+    non_team_results = result.mappings().all()
+
+    return {
+        "team_votes": [dict(x) for x in team_results],
+        "non_team_votes": [dict(x) for x in non_team_results],
+    }
