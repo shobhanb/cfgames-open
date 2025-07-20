@@ -8,6 +8,11 @@ import {
   IonToolbar,
   IonButtons,
   IonBackButton,
+  IonRefresher,
+  IonRefresherContent,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
 } from '@ionic/angular/standalone';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
@@ -17,6 +22,11 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
   styleUrls: ['./schedule.page.scss'],
   standalone: true,
   imports: [
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
+    IonRefresherContent,
+    IonRefresher,
     IonBackButton,
     IonButtons,
     IonContent,
