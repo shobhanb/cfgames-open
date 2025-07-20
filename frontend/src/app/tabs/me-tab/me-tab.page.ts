@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -8,6 +9,7 @@ import {
   IonItem,
   IonLabel,
   IonIcon,
+  IonRouterLink,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -34,6 +36,8 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
     IonTitle,
     IonToolbar,
     ToolbarButtonsComponent,
+    RouterLink,
+    IonRouterLink,
   ],
 })
 export class MeTabPage implements OnInit {

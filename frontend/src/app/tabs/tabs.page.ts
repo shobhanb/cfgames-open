@@ -5,6 +5,7 @@ import {
   IonTabBar,
   IonTabButton,
   IonLabel,
+  IonRouterLink,
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -17,13 +18,22 @@ import {
   home,
 } from 'ionicons/icons';
 import { AuthService } from '../services/auth.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-tabs',
   templateUrl: './tabs.page.html',
   styleUrls: ['./tabs.page.scss'],
   standalone: true,
-  imports: [IonTabBar, IonIcon, IonTabs, IonTabButton, IonLabel],
+  imports: [
+    IonTabBar,
+    IonIcon,
+    IonTabs,
+    IonTabButton,
+    IonLabel,
+    RouterLink,
+    IonRouterLink,
+  ],
 })
 export class TabsPage implements OnInit {
   authService = inject(AuthService);

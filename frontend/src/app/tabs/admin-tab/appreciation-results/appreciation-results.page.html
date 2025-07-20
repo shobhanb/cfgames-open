@@ -1,13 +1,77 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>appreciationResults</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Appreciation Results</ion-title>
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">appreciationResults</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (dataLoaded) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Appreciation Results</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text
+        >Select an event to see the appreciation voting results.</ion-text
+      >
+    </ion-card-content>
+  </ion-card>
+
+  <div class="section-title">Events & Vote counts</div>
+  <ion-list [inset]="true">
+    @for (item of appreciationCounts(); track $index) {
+    <ion-item
+      [routerLink]="'/admin/appreciation-results/' + item.year + '/' + item.ordinal"
+    >
+      <ion-label
+        >{{ eventService.getEventName(item.ordinal, item.year) }}</ion-label
+      >
+      <ion-note>{{ item.count }}</ion-note>
+    </ion-item>
+    }
+  </ion-list>
+  } @else {
+  <!-- Skeleton loading state -->
+  <ion-card>
+    <ion-card-header>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 60%; height: 20px"
+      ></ion-skeleton-text>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 80%; height: 15px"
+      ></ion-skeleton-text>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list [inset]="true">
+    @for (item of [0,1,2]; track $index) {
+    <ion-item>
+      <ion-label>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 180px; height: 20px"
+        ></ion-skeleton-text>
+      </ion-label>
+      <ion-note slot="end">
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 30px; height: 20px"
+        ></ion-skeleton-text>
+      </ion-note>
+    </ion-item>
+    }
+  </ion-list>
+  }
 </ion-content>

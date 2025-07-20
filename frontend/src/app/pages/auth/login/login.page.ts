@@ -47,8 +47,8 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
     IonInputPasswordToggle,
     CommonModule,
     ReactiveFormsModule,
-    RouterLink,
     IonRouterLink,
+    RouterLink,
     ToolbarButtonsComponent,
   ],
 })

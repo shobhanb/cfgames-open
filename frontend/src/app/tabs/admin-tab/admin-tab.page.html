@@ -8,15 +8,19 @@
 <ion-content>
   <div class="section-title">Athletes & Teams</div>
   <ion-list [inset]="true">
-    <ion-item [button]="true" type="button" href="/admin/edit-teams">
+    <ion-item [button]="true" type="button" routerLink="/admin/edit-teams">
       <ion-icon slot="start" name="code-outline"></ion-icon>
       <ion-label>Manual Team Edit</ion-label>
     </ion-item>
-    <ion-item [button]="true" type="button" href="/admin/auto-assign-teams">
+    <ion-item
+      [button]="true"
+      type="button"
+      routerLink="/admin/auto-assign-teams"
+    >
       <ion-icon slot="start" name="code-working-outline"></ion-icon>
       <ion-label>Auto Assign Teams</ion-label>
     </ion-item>
-    <ion-item [button]="true" type="button" href="/admin/rename-teams">
+    <ion-item [button]="true" type="button" routerLink="/admin/rename-teams">
       <ion-icon slot="start" name="code-slash-outline"></ion-icon>
       <ion-label>Rename Teams</ion-label>
     </ion-item>
@@ -24,11 +28,19 @@
 
   <div class="section-title">Appreciation Form</div>
   <ion-list [inset]="true">
-    <ion-item [button]="true" type="button" href="/admin/appreciation-status">
+    <ion-item
+      [button]="true"
+      type="button"
+      routerLink="/admin/appreciation-status"
+    >
       <ion-icon slot="start" name="heart-circle-outline"></ion-icon>
       <ion-label>Enable / Disable Forms</ion-label>
     </ion-item>
-    <ion-item [button]="true" type="button" href="/admin/appreciation-status">
+    <ion-item
+      [button]="true"
+      type="button"
+      routerLink="/admin/appreciation-results"
+    >
       <ion-icon slot="start" name="heart-outline"></ion-icon>
       <ion-label>Appreciation Results</ion-label>
     </ion-item>
@@ -36,11 +48,11 @@
 
   <div class="section-title">Community Cup Scores</div>
   <ion-list [inset]="true">
-    <ion-item [button]="true" type="button" href="/admin/attendance">
+    <ion-item [button]="true" type="button" routerLink="/admin/attendance">
       <ion-icon slot="start" name="clipboard-outline"></ion-icon>
       <ion-label>Attendance</ion-label>
     </ion-item>
-    <ion-item [button]="true" type="button" href="/admin/side-scores">
+    <ion-item [button]="true" type="button" routerLink="/admin/side-scores">
       <ion-icon slot="start" name="golf-outline"></ion-icon>
       <ion-label>Side Scores</ion-label>
     </ion-item>
@@ -48,7 +60,7 @@
 
   <div class="section-title">Heat Management</div>
   <ion-list [inset]="true">
-    <ion-item [button]="true" type="button" href="/admin/scheduling">
+    <ion-item [button]="true" type="button" routerLink="/admin/scheduling">
       <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
       <ion-label>Scheduling</ion-label>
     </ion-item>
@@ -56,7 +68,7 @@
 
   <div class="section-title">Account Management</div>
   <ion-list [inset]="true">
-    <ion-item [button]="true" type="button" href="/admin/users">
+    <ion-item [button]="true" type="button" routerLink="/admin/users">
       <ion-icon slot="start" name="body-outline"></ion-icon>
       <ion-label>Users</ion-label>
     </ion-item>

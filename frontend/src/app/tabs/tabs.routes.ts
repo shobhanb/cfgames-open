@@ -142,6 +142,22 @@ export const tabsRoutes: Routes = [
         canActivate: [adminGuard],
       },
       {
+        path: 'admin/appreciation-results',
+        loadComponent: () =>
+          import(
+            './admin-tab/appreciation-results/appreciation-results.page'
+          ).then((c) => c.AppreciationResultsPage),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'admin/appreciation-results/:year/:ordinal',
+        loadComponent: () =>
+          import(
+            './admin-tab/appreciation-results/appreciation-result/appreciation-result.page'
+          ).then((c) => c.AppreciationResultPage),
+        canActivate: [adminGuard],
+      },
+      {
         path: 'admin/attendance',
         loadComponent: () =>
           import('./admin-tab/attendance/attendance.page').then(

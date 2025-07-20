@@ -31,6 +31,7 @@ import {
   IonRefresherContent,
   IonSkeletonText,
   IonTextarea,
+  IonRouterLink,
   IonNote,
 } from '@ionic/angular/standalone';
 import { EventService } from 'src/app/services/event.service';
@@ -42,6 +43,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
 import { environment } from 'src/environments/environment';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-edit-appreciation',
@@ -72,6 +74,8 @@ import { environment } from 'src/environments/environment';
     IonCard,
     ToolbarButtonsComponent,
     ReactiveFormsModule,
+    RouterLink,
+    IonRouterLink,
   ],
 })
 export class EditAppreciationComponent implements OnInit {

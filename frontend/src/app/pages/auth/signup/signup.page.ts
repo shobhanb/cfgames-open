@@ -17,8 +17,8 @@ import {
   IonLabel,
   IonNote,
   IonListHeader,
-  ModalController,
   IonHeader,
+  IonRouterLink,
   IonToolbar,
   IonTitle,
 } from '@ionic/angular/standalone';
@@ -39,6 +39,7 @@ import { FirebaseError } from '@angular/fire/app';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { AthleteNameModalComponent } from 'src/app/shared/athlete-name-modal/athlete-name-modal.component';
 import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -62,6 +63,8 @@ import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.ser
     IonSelectOption,
     ReactiveFormsModule,
     ToolbarButtonsComponent,
+    RouterLink,
+    IonRouterLink,
   ],
 })
 export class SignupPage implements OnInit {

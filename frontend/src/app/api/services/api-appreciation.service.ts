@@ -11,11 +11,14 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { apiAppreciationCountsModel } from '../models/api-appreciation-counts-model';
 import { apiAppreciationModel } from '../models/api-appreciation-model';
 import { deleteMyAppreciationAppreciationDelete } from '../fn/appreciation/delete-my-appreciation-appreciation-delete';
 import { DeleteMyAppreciationAppreciationDelete$Params } from '../fn/appreciation/delete-my-appreciation-appreciation-delete';
 import { getAllAppreciationAppreciationAllGet } from '../fn/appreciation/get-all-appreciation-appreciation-all-get';
 import { GetAllAppreciationAppreciationAllGet$Params } from '../fn/appreciation/get-all-appreciation-appreciation-all-get';
+import { getAppreciationCountsAppreciationCountsGet } from '../fn/appreciation/get-appreciation-counts-appreciation-counts-get';
+import { GetAppreciationCountsAppreciationCountsGet$Params } from '../fn/appreciation/get-appreciation-counts-appreciation-counts-get';
 import { getMyAppreciationAppreciationGet } from '../fn/appreciation/get-my-appreciation-appreciation-get';
 import { GetMyAppreciationAppreciationGet$Params } from '../fn/appreciation/get-my-appreciation-appreciation-get';
 import { updateMyAppreciationAppreciationPost } from '../fn/appreciation/update-my-appreciation-appreciation-post';
@@ -156,6 +159,39 @@ export class apiAppreciationService extends BaseService {
   getAllAppreciationAppreciationAllGet(params: GetAllAppreciationAppreciationAllGet$Params, context?: HttpContext): Observable<Array<apiAppreciationModel>> {
     return this.getAllAppreciationAppreciationAllGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<apiAppreciationModel>>): Array<apiAppreciationModel> => r.body)
+    );
+  }
+
+  /** Path part for operation `getAppreciationCountsAppreciationCountsGet()` */
+  static readonly GetAppreciationCountsAppreciationCountsGetPath = '/appreciation/counts';
+
+  /**
+   * Get Appreciation Counts.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAppreciationCountsAppreciationCountsGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAppreciationCountsAppreciationCountsGet$Response(params: GetAppreciationCountsAppreciationCountsGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAppreciationCountsModel>>> {
+    return getAppreciationCountsAppreciationCountsGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get Appreciation Counts.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAppreciationCountsAppreciationCountsGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAppreciationCountsAppreciationCountsGet(params: GetAppreciationCountsAppreciationCountsGet$Params, context?: HttpContext): Observable<Array<apiAppreciationCountsModel>> {
+    return this.getAppreciationCountsAppreciationCountsGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiAppreciationCountsModel>>): Array<apiAppreciationCountsModel> => r.body)
     );
   }
 

@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   IonButtons,
   IonLabel,
@@ -11,6 +12,7 @@ import {
   IonToolbar,
   IonListHeader,
   IonIcon,
+  IonRouterLink,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { personCircleOutline } from 'ionicons/icons';
@@ -34,6 +36,8 @@ import { AuthService } from 'src/app/services/auth.service';
     IonItem,
     IonContent,
     TeamNamePipe,
+    RouterLink,
+    IonRouterLink,
   ],
 })
 export class AuthStateComponent implements OnInit {

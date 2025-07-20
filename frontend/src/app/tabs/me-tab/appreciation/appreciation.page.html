@@ -70,7 +70,7 @@
       <div class="button-container">
         <ion-button
           fill="clear"
-          [href]="'/me/appreciation/' + appreciation.year + '/' + appreciation.ordinal"
+          [routerLink]="'/me/appreciation/' + appreciation.year + '/' + appreciation.ordinal"
           class="ion-margin-top"
           >Edit</ion-button
         >
@@ -128,7 +128,7 @@
       @for (item of availableEvents(); track $index) {
       <ion-fab-button
         color="primary"
-        [href]="'/me/appreciation/' + item.year + '/' + item.ordinal"
+        [routerLink]="'/me/appreciation/' + item.year + '/' + item.ordinal"
         >{{ eventService.getEventName(item.ordinal, item.year)}}</ion-fab-button
       >
       }

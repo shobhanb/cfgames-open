@@ -22,6 +22,7 @@ import {
   IonFabButton,
   IonCardSubtitle,
   IonFabList,
+  IonRouterLink,
   IonText,
 } from '@ionic/angular/standalone';
 import {
@@ -42,6 +43,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 import { EventService } from 'src/app/services/event.service';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-appreciation',
@@ -75,6 +77,8 @@ import { AthleteDataService } from 'src/app/services/athlete-data.service';
     IonCardContent,
     ToolbarButtonsComponent,
     ReactiveFormsModule,
+    RouterLink,
+    IonRouterLink,
   ],
 })
 export class AppreciationPage implements OnInit {
