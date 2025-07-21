@@ -57,7 +57,8 @@
     </ion-segment></ion-toolbar
   >
 
-  <div class="section-title">Athletes</div>
+  @if ( dataLoaded) {
+  <div class="section-title">{{ teamSectionTitle() }}</div>
   <ion-list [inset]="true">
     @for (athlete of filteredAthletes(); track $index) {
     <ion-item>
@@ -65,4 +66,24 @@
     </ion-item>
     }
   </ion-list>
+  } @else {
+  <div class="section-title">
+    <ion-skeleton-text
+      [animated]="true"
+      style="width: 120px; height: 18px"
+    ></ion-skeleton-text>
+  </div>
+  <ion-list [inset]="true">
+    @for (item of [1,2,3,4,5]; track $index) {
+    <ion-item>
+      <ion-label>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 80%; height: 18px; margin-bottom: 8px"
+        ></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+    }
+  </ion-list>
+  }
 </ion-content>

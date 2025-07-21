@@ -15,6 +15,7 @@ import {
   IonLabel,
   IonSegment,
   IonSegmentButton,
+  IonSkeletonText,
 } from '@ionic/angular/standalone';
 import { apiAthleteService } from 'src/app/api/services';
 import { environment } from 'src/environments/environment';
@@ -33,6 +34,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./my-team.page.scss'],
   standalone: true,
   imports: [
+    IonSkeletonText,
     IonSegmentButton,
     IonSegment,
     IonLabel,
@@ -64,6 +66,16 @@ export class MyTeamPage implements OnInit {
 
   dataLoaded = false;
   myTeamName = this.authService.athlete()?.team_name || '';
+  myCrossfitId = this.authService.userCustomClaims()?.crossfit_id;
+
+  teamSectionTitle = computed(
+    () =>
+      this.scoreFilter.filter().team.replace(/^\s*\d+\.?\s*/, '') +
+      ' - ' +
+      this.scoreFilter.filter().gender +
+      ' - ' +
+      this.scoreFilter.filter().ageCategory
+  );
 
   athletes = signal<apiAthleteDetail[]>([]);
 
@@ -99,6 +111,7 @@ export class MyTeamPage implements OnInit {
   }
 
   private async getData() {
+    this.dataLoaded = false;
     await this.apiAthlete
       .getAthleteDetailAllAthleteDetailAllGet({
         affiliate_id: environment.affiliateId,
@@ -108,6 +121,13 @@ export class MyTeamPage implements OnInit {
         next: (data: apiAthleteDetail[]) => {
           this.athletes.set(data);
           this.dataLoaded = true;
+
+          const myTeamName = data.find(
+            (athlete) => athlete.crossfit_id === this.myCrossfitId
+          )?.team_name;
+          if (myTeamName) {
+            this.scoreFilter.setFilter({ team: myTeamName });
+          }
         },
         error: (err: any) => {
           this.toastService.showToast(err.message, 'danger', null, 3000);
