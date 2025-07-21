@@ -24,11 +24,11 @@ export class ToastService {
     this.color.set(color);
     this.isOpen.set(true);
 
+    if (redirectUrl) {
+      this.router.navigateByUrl(redirectUrl);
+    }
     timer(duration).subscribe(() => {
       this.isOpen.set(false);
-      if (redirectUrl) {
-        this.router.navigateByUrl(redirectUrl);
-      }
     });
   }
 
