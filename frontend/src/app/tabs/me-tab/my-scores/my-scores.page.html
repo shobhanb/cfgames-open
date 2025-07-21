@@ -26,6 +26,13 @@
       <ion-item class="ion-margin-vertical">
         <div class="event-name" slot="start">
           <span>{{ eventService.getEventName(score.ordinal, score.year)}}</span>
+          <ion-button
+            [href]=" eventService.baseURL + '/' + score.year + '/' + score.ordinal"
+            fill="clear"
+            target="_blank"
+          >
+            <ion-icon name="open-outline"></ion-icon>
+          </ion-button>
         </div>
         <ion-label> {{ score.affiliate_scaled }} </ion-label>
         <div>
@@ -34,13 +41,6 @@
           <ion-note>{{ 'Tiebreak ' + score.tiebreak_ms }}</ion-note>
           }
         </div>
-        <ion-button
-          [href]=" eventService.baseURL + '/' + score.year + '/' + score.ordinal"
-          fill="clear"
-          target="_blank"
-        >
-          <ion-icon name="open-outline"></ion-icon>
-        </ion-button>
       </ion-item>
       }
     </ion-list>

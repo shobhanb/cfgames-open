@@ -1,4 +1,9 @@
 
 .event-name {
-    width: 45px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  min-width: 45px;
 }
