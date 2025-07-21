@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -10,22 +10,22 @@ import {
   IonBackButton,
   IonRefresher,
   IonRefresherContent,
-  IonCard,
-  IonCardSubtitle,
-  IonCardHeader,
-  IonCardTitle,
   IonList,
   IonItem,
   IonLabel,
-  IonNote,
-  IonSkeletonText,
+  IonSegment,
+  IonSegmentButton,
 } from '@ionic/angular/standalone';
-import { AuthService } from 'src/app/services/auth.service';
 import { apiAthleteService } from 'src/app/api/services';
 import { environment } from 'src/environments/environment';
 import { ToastService } from 'src/app/services/toast.service';
 import { apiAthleteDetail } from 'src/app/api/models';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
+import { TeamNamePipe } from 'src/app/pipes/team-name.pipe';
+import { ScoreFilterService } from 'src/app/services/score-filter.service';
+import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
+import { AthleteDataService } from 'src/app/services/athlete-data.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-my-team',
@@ -33,15 +33,11 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
   styleUrls: ['./my-team.page.scss'],
   standalone: true,
   imports: [
-    IonSkeletonText,
-    IonNote,
+    IonSegmentButton,
+    IonSegment,
     IonLabel,
     IonItem,
     IonList,
-    IonCardTitle,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonCard,
     IonRefresherContent,
     IonRefresher,
     IonBackButton,
@@ -53,18 +49,44 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
     CommonModule,
     FormsModule,
     ToolbarButtonsComponent,
+    TeamNamePipe,
   ],
 })
 export class MyTeamPage implements OnInit {
-  authService = inject(AuthService);
   private apiAthlete = inject(apiAthleteService);
   private toastService = inject(ToastService);
+  private helperFunctions = inject(HelperFunctionsService);
+  private authService = inject(AuthService);
+  scoreFilter = inject(ScoreFilterService);
+  athleteDataService = inject(AthleteDataService);
 
   constructor() {}
 
   dataLoaded = false;
+  myTeamName = this.authService.athlete()?.team_name || '';
 
   athletes = signal<apiAthleteDetail[]>([]);
+
+  teamsList = computed(() =>
+    this.athleteDataService
+      .athleteData()
+      .map((athlete) => athlete.team_name)
+      .filter(this.helperFunctions.filterUnique)
+  );
+
+  readonly filteredAthletes = computed<apiAthleteDetail[]>(() =>
+    this.athleteDataService
+      .athleteData()
+      .filter(
+        (value: apiAthleteDetail) =>
+          value.gender === this.scoreFilter.filter().gender &&
+          value.age_category === this.scoreFilter.filter().ageCategory &&
+          value.team_name === this.scoreFilter.filter().team
+      )
+      .sort((a: apiAthleteDetail, b: apiAthleteDetail) =>
+        a.name > b.name ? 1 : -1
+      )
+  );
 
   ngOnInit() {
     this.getData();
@@ -81,7 +103,6 @@ export class MyTeamPage implements OnInit {
       .getAthleteDetailAllAthleteDetailAllGet({
         affiliate_id: environment.affiliateId,
         year: environment.year,
-        team_name: this.authService.athlete()?.team_name,
       })
       .subscribe({
         next: (data: apiAthleteDetail[]) => {
@@ -92,5 +113,18 @@ export class MyTeamPage implements OnInit {
           this.toastService.showToast(err.message, 'danger', null, 3000);
         },
       });
+  }
+
+  onSelectionChanged(
+    event: CustomEvent,
+    type: 'gender' | 'ageCategory' | 'team'
+  ) {
+    if (type === 'gender') {
+      this.scoreFilter.setFilter({ gender: event.detail.value });
+    } else if (type === 'ageCategory') {
+      this.scoreFilter.setFilter({ ageCategory: event.detail.value });
+    } else if (type === 'team') {
+      this.scoreFilter.setFilter({ team: event.detail.value });
+    }
   }
 }
