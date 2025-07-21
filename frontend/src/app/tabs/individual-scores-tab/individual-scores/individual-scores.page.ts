@@ -70,9 +70,13 @@ export class IndividualScoresPage implements OnInit {
   private apiScore = inject(apiScoreService);
   private helperFunctions = inject(HelperFunctionsService);
   private toastService = inject(ToastService);
+  private authService = inject(AuthService);
+
+  userCrossfitId = computed(
+    () => this.authService.userCustomClaims()?.crossfit_id
+  );
 
   scoreFilter = inject(ScoreFilterService);
-  authService = inject(AuthService);
 
   @Input({ required: true, transform: numberAttribute }) year!: number;
   @Input({ required: true, transform: numberAttribute }) ordinal!: number;
@@ -169,13 +173,13 @@ export class IndividualScoresPage implements OnInit {
         this.scores.set(value);
         this.dataLoaded = true;
 
-        if (
-          (!this.teamsList().includes(this.scoreFilter.filter().team) &&
-            this.teamsList().length > 0) ||
-          (this.scoreFilter.filter().team === 'zz' &&
-            this.teamsList().length > 1)
-        ) {
-          this.scoreFilter.setFilter({ team: this.teamsList()[0] });
+        const userTeam = value.find(
+          (value: apiIndividualScoreModel) =>
+            value.crossfit_id === this.userCrossfitId()
+        )?.team_name;
+
+        if (userTeam) {
+          this.scoreFilter.setFilter({ team: userTeam });
         }
       },
       error: (err: any) => {

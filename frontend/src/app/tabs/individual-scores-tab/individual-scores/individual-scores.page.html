@@ -63,7 +63,7 @@
         <ion-accordion [value]="score.crossfit_id">
           <ion-item
             slot="header"
-            [color]="score.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'secondary' : 'light'"
+            [color]="score.crossfit_id === userCrossfitId() ? 'secondary' : 'light'"
             class="score-row"
           >
             <ion-label>{{ score.name }}</ion-label>
