@@ -43,7 +43,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
 import { environment } from 'src/environments/environment';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-edit-appreciation',
@@ -84,6 +84,7 @@ export class EditAppreciationComponent implements OnInit {
   private toastService = inject(ToastService);
   private athleteNameModalService = inject(AthleteNameModalService);
   private athleteDataService = inject(AthleteDataService);
+  private router = inject(Router);
   eventService = inject(EventService);
 
   appreciation = signal<apiAppreciationModel | null>(null);
@@ -182,9 +183,10 @@ export class EditAppreciationComponent implements OnInit {
           this.toastService.showToast(
             'Appreciation form submitted successfully',
             'success',
-            '/me/appreciation',
+            null,
             1000
           );
+          this.router.navigate(['/me/appreciation']);
         },
         error: (error) => {
           console.error('Error submitting appreciation form:', error);

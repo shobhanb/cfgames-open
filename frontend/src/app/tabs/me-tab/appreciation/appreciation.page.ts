@@ -134,7 +134,9 @@ export class AppreciationPage implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ionViewWillEnter() {
     this.loadData();
   }
 
