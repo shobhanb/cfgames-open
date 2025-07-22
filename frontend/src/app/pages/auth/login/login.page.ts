@@ -109,9 +109,10 @@ export class LoginPage implements OnInit {
           } else {
             this.loadingService.dismissLoading();
             this.toastService.showToast(
-              'Logged in. Pls verify your email',
+              'Logged in. Please verify your email',
               'warning',
-              '/'
+              '/',
+              5000
             );
           }
         })

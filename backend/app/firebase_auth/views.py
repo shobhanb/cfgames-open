@@ -19,11 +19,11 @@ log = logging.getLogger("uvicorn.error")
 firebase_auth_router = APIRouter(prefix="/fireauth", tags=["fireauth"])
 
 
-@firebase_auth_router.post("/signup", status_code=status.HTTP_201_CREATED, response_model=FirebaseUserRecord)
+@firebase_auth_router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def create_user(
     db_session: db_dependency,
     user_info: CreateUser,
-) -> UserRecord:
+) -> None:
     athlete_assigned = await FirebaseUser.find(async_session=db_session, crossfit_id=user_info.crossfit_id)
     if athlete_assigned:
         raise already_assigned_exception()
@@ -69,8 +69,6 @@ async def create_user(
     db_session.add(firebase_user)
     await db_session.commit()
 
-    return fireauth.get_user(user.uid)
-
 
 @firebase_auth_router.post("/change-admin/{uid}", status_code=status.HTTP_202_ACCEPTED)
 async def update_user_admin_rights(
@@ -108,41 +106,10 @@ async def delete_user(
 
 @firebase_auth_router.get("/all", status_code=status.HTTP_200_OK, response_model=list[FirebaseUserRecord])
 async def get_all_users(
-    db_session: db_dependency,
     _: admin_user_dependency,
 ) -> list[UserRecord]:
     page: ListUsersPage = fireauth.list_users()
-    users: list[UserRecord] = list(page.iterate_all())
-
-    for user in users:
-        db_user = await FirebaseUser.find(async_session=db_session, uid=user.uid)
-        if db_user:
-            # Update record for user
-            if user.email is not None:
-                db_user.email = user.email
-            if user.custom_claims:
-                if user.custom_claims.get("crossfit_id") is not None:
-                    db_user.crossfit_id = user.custom_claims["crossfit_id"]
-                if user.custom_claims.get("affiliate_id") is not None:
-                    db_user.affiliate_id = user.custom_claims["affiliate_id"]
-                if user.custom_claims.get("affiliate_name") is not None:
-                    db_user.affiliate_name = user.custom_claims["affiliate_name"]
-
-            db_session.add(db_user)
-        # Add record for user
-        elif user.custom_claims:
-            db_user = FirebaseUser(
-                email=user.email,
-                uid=user.uid,
-                crossfit_id=user.custom_claims.get("crossfit_id"),
-                affiliate_id=user.custom_claims.get("affiliate_id"),
-                affiliate_name=user.custom_claims.get("affiliate_name"),
-            )
-            db_session.add(db_user)
-
-        await db_session.commit()
-
-    return users
+    return list(page.iterate_all())
 
 
 @firebase_auth_router.post("/refresh_all", status_code=status.HTTP_200_OK)

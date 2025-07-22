@@ -184,7 +184,7 @@ export class SignupPage implements OnInit {
       };
 
       this.apiAuth.createUserFireauthSignupPost(params).subscribe({
-        next: (value: apiFirebaseUserRecord) => {
+        next: () => {
           this.loadingService.showLoading('Signed up. Logging in');
 
           const userCredential = signInWithEmailAndPassword(

@@ -9,13 +9,12 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { apiCreateUser } from '../../models/api-create-user';
-import { apiFirebaseUserRecord } from '../../models/api-firebase-user-record';
 
 export interface CreateUserFireauthSignupPost$Params {
       body: apiCreateUser
 }
 
-export function createUserFireauthSignupPost(http: HttpClient, rootUrl: string, params: CreateUserFireauthSignupPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiFirebaseUserRecord>> {
+export function createUserFireauthSignupPost(http: HttpClient, rootUrl: string, params: CreateUserFireauthSignupPost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
   const rb = new RequestBuilder(rootUrl, createUserFireauthSignupPost.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
@@ -26,7 +25,7 @@ export function createUserFireauthSignupPost(http: HttpClient, rootUrl: string, 
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<apiFirebaseUserRecord>;
+      return r as StrictHttpResponse<any>;
     })
   );
 }

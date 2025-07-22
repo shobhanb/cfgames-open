@@ -11,6 +11,7 @@
   <ng-template>
     <ion-header>
       <ion-toolbar>
+        <ion-title>My Info</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="onClickCancel()">Cancel</ion-button>
         </ion-buttons>
@@ -43,7 +44,7 @@
           {{`Age Category: ${ authService.athlete()?.age_category }`}}
         </ion-item>
         } @if (authService.userCustomClaims()?.admin) {
-        <ion-item>Admin Bitch!</ion-item>
+        <ion-item> <ion-label color="danger">Admin</ion-label></ion-item>
         }
         <ion-button fill="clear" (click)="onClickRefreshAthlete()"
           >Refresh athlete info</ion-button
@@ -56,13 +57,13 @@
         <ion-button
           fill="outline"
           expand="block"
-          (click)="onClickResendVerificationEmail()"
+          (click)="onClickRefreshVerification()"
           >Refresh verification status</ion-button
         >
         <ion-button
           fill="outline"
           expand="block"
-          (click)="onClickRefreshVerification()"
+          (click)="onClickResendVerificationEmail()"
           >Resend verification email</ion-button
         >
         }

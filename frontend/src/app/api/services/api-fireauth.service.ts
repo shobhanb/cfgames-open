@@ -44,7 +44,7 @@ export class apiFireauthService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  createUserFireauthSignupPost$Response(params: CreateUserFireauthSignupPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiFirebaseUserRecord>> {
+  createUserFireauthSignupPost$Response(params: CreateUserFireauthSignupPost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
     return createUserFireauthSignupPost(this.http, this.rootUrl, params, context);
   }
 
@@ -58,9 +58,9 @@ export class apiFireauthService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  createUserFireauthSignupPost(params: CreateUserFireauthSignupPost$Params, context?: HttpContext): Observable<apiFirebaseUserRecord> {
+  createUserFireauthSignupPost(params: CreateUserFireauthSignupPost$Params, context?: HttpContext): Observable<any> {
     return this.createUserFireauthSignupPost$Response(params, context).pipe(
-      map((r: StrictHttpResponse<apiFirebaseUserRecord>): apiFirebaseUserRecord => r.body)
+      map((r: StrictHttpResponse<any>): any => r.body)
     );
   }
 
