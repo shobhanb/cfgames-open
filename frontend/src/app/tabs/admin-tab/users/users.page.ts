@@ -208,7 +208,13 @@ export class UsersPage implements OnInit {
   private getData() {
     this.apiFireAuth.getAllUsersFireauthAllGet().subscribe({
       next: (data: apiFirebaseUserRecord[]) => {
-        this.allUsers.set(data);
+        this.allUsers.set(
+          data.sort((a: apiFirebaseUserRecord, b: apiFirebaseUserRecord) => {
+            const nameA = a.display_name?.toLowerCase() || '';
+            const nameB = b.display_name?.toLowerCase() || '';
+            return nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
+          })
+        );
         this.dataLoaded = true;
       },
       error: (err: any) => {
