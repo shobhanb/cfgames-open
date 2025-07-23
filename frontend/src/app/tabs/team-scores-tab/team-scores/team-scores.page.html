@@ -18,15 +18,14 @@
       @for (score of rankedScores(); track $index) {
       <ion-accordion-group [multiple]="true" [value]="expandedAccordions">
         <ion-accordion [value]="score.team_name">
-          <ion-item
-            slot="header"
-            [color]="score.team_name === authService.athlete()?.team_name ? 'secondary' : 'light'"
-            class="score-row"
-          >
+          <ion-item slot="header" class="score-row">
             <div class="rank-wrapper" slot="start">
               <span>{{ score.rank }}</span>
             </div>
-            <ion-label>{{ score.team_name | teamName }}</ion-label>
+            <ion-label
+              [color]="score.team_name === authService.athlete()?.team_name ? 'tertiary' : ''"
+              >{{ score.team_name | teamName }}</ion-label
+            >
             <ion-label slot="end">{{ score.total_team_score }}</ion-label>
           </ion-item>
           <div class="ion-padding" slot="content">

@@ -36,10 +36,10 @@
   @if (dataLoaded) {
   <ion-list>
     @for (user of filteredUsers(); track user.uid) {
-    <ion-item
-      [color]="user.custom_claims?.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'secondary' : ''"
-    >
-      <ion-label>
+    <ion-item>
+      <ion-label
+        [color]="user.custom_claims?.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'tertiary' : ''"
+      >
         <ion-label><strong> {{ user.display_name }}</strong></ion-label>
         <ion-note>{{ 'CF ID: ' + user.custom_claims?.crossfit_id }}</ion-note>
         <br />
@@ -47,11 +47,7 @@
       </ion-label>
 
       @if (user.custom_claims?.admin) {
-      <ion-label
-        slot="end"
-        [color]="user.custom_claims?.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'warning' : 'danger'"
-        >Admin</ion-label
-      >
+      <ion-label slot="end">Admin</ion-label>
       } @if (!user.email_verified) {
       <ion-label slot="end" color="medium">Not Verified</ion-label>
       }

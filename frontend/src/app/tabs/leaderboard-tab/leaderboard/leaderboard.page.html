@@ -69,15 +69,15 @@
     @if (dataLoaded) {
     <ion-list>
       @for (item of leaderboardRX(); track $index) {
-      <ion-item
-        class="leaderboard-row"
-        [color]="item.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'secondary' : ''"
-      >
+      <ion-item class="leaderboard-row">
         <div class="" slot="start">
           <span>{{ item.affiliate_rank }}</span>
         </div>
         <ion-label>
-          <ion-label class="leaderboard-name">
+          <ion-label
+            class="leaderboard-name"
+            [color]="item.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'tertiary' : ''"
+          >
             <strong>{{ item.name }}</strong><br />
           </ion-label>
           <ion-text>{{ item.team_name | teamName }}</ion-text>
@@ -126,15 +126,15 @@
     @if (dataLoaded) {
     <ion-list>
       @for (item of leaderboardScaled(); track $index) {
-      <ion-item
-        class="leaderboard-row"
-        [color]="item.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'secondary' : ''"
-      >
+      <ion-item class="leaderboard-row">
         <div class="rank-wrapper" slot="start">
           <span>{{ item.affiliate_rank }}</span>
         </div>
         <ion-label>
-          <ion-label class="leaderboard-name">
+          <ion-label
+            class="leaderboard-name"
+            [color]="item.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'tertiary' : ''"
+          >
             <strong>{{ item.name }}</strong><br />
           </ion-label>
           <ion-text>{{ item.team_name | teamName }}</ion-text>
