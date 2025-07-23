@@ -161,15 +161,21 @@ export class SignupPage implements OnInit {
     this.showAssignAthleteForm.set(true);
   }
 
-  async onSubmitSignupForm() {
-    if (
+  isSignupFormValid() {
+    return (
       this.selectedAffiliateId &&
       this.selectedAffiliateName &&
       this.selectedAthleteName() &&
       this.selectedCrossfitId() &&
       this.signupForm.value.email &&
-      this.signupForm.value.password
-    ) {
+      this.signupForm.value.password &&
+      this.signupForm.valid &&
+      this.signupForm.dirty
+    );
+  }
+
+  async onSubmitSignupForm() {
+    if (this.isSignupFormValid()) {
       this.loadingService.showLoading('Signing up');
 
       const params: CreateUserFireauthSignupPost$Params = {
@@ -178,8 +184,8 @@ export class SignupPage implements OnInit {
           affiliate_name: this.selectedAffiliateName,
           display_name: this.selectedAthleteName()!,
           crossfit_id: Number(this.selectedCrossfitId()!),
-          email: this.signupForm.value.email,
-          password: this.signupForm.value.password,
+          email: this.signupForm.value.email!,
+          password: this.signupForm.value.password!,
         },
       };
 

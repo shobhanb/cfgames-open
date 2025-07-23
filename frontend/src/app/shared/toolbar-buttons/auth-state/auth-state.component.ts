@@ -20,6 +20,7 @@ import { addIcons } from 'ionicons';
 import { personCircleOutline } from 'ionicons/icons';
 import { TeamNamePipe } from 'src/app/pipes/team-name.pipe';
 import { AuthService } from 'src/app/services/auth.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-auth-state',
@@ -45,6 +46,7 @@ import { AuthService } from 'src/app/services/auth.service';
   ],
 })
 export class AuthStateComponent implements OnInit {
+  private toastService = inject(ToastService);
   authService = inject(AuthService);
 
   @ViewChild(IonModal) modal!: IonModal;
@@ -65,17 +67,15 @@ export class AuthStateComponent implements OnInit {
     await this.authService.sendVerificationEmail();
   }
 
-  async onClickRefreshVerification() {
+  async onClickRefresh() {
     await this.authService.refreshTokenAfterVerification();
-  }
-
-  async onClickRefreshAthlete() {
-    await this.authService.refreshTokenAfterVerification();
-    await this.authService.getMyAthleteInfo();
   }
 
   async onClickSignOut() {
-    await this.authService.logout();
+    await this.authService.logout().then(() => {
+      this.toastService.showToast('You have been signed out.');
+      this.isModalOpen = false;
+    });
   }
 
   onClickCancel() {

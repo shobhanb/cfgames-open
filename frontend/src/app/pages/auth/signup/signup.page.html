@@ -1,22 +1,18 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Signup</ion-title>
+    <ion-title>Sign up</ion-title>
     <app-toolbar-buttons slot="end"></app-toolbar-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding-horizontal ion-justify-content-center">
-  <div class="ion-padding-top ion-margin-top ion-margin-bottom">
+<ion-content>
+  <div class="ion-margin">
     <h1>CFGames Community Cup</h1>
     <h4>Sign up as a new user</h4>
+    <ion-button type="button" fill="clear" routerLink="/auth/login"
+      >Already have an account? Login!</ion-button
+    >
   </div>
-  <ion-button
-    type="button"
-    fill="clear"
-    routerLink="/auth/login"
-    class="ion-margin-bottom"
-    >Already have an account? Login!</ion-button
-  >
 
   @if (showAssignAthleteForm() ) {
 
@@ -24,10 +20,10 @@
     [formGroup]="assignAthleteForm"
     (ngSubmit)="onSubmitAssignAthleteForm()"
   >
-    <ion-list class="ion-margin-vertical">
-      <ion-item>
+    <ion-list [inset]="true">
+      <ion-item (click)="openAthleteSelectModal()">
         <ion-label>Name</ion-label>
-        <ion-label slot="end" (click)="openAthleteSelectModal()"
+        <ion-label slot="end"
           >{{ selectedAthleteName() || 'Click to select'}}</ion-label
         >
       </ion-item>
@@ -53,11 +49,10 @@
       }
     </ion-list>
 
-    <br />
     <ion-button
       expand="block"
       type="submit"
-      class="ion-margin-top"
+      class="ion-margin-horizontal"
       [disabled]="!assignAthleteFormValid()"
       >That's me!</ion-button
     >
@@ -68,15 +63,17 @@
       color="medium"
       routerLink="/"
       routerDirection="root"
-      class="ion-margin-top"
+      class="ion-margin-horizontal"
       >Cancel</ion-button
     >
   </form>
 
   } @else {
 
-  <ion-list lines="none" class="">
-    <ion-list-header>Signing up as</ion-list-header>
+  <ion-list [inset]="true">
+    <ion-list-header>
+      <ion-label>Signing up as</ion-label>
+    </ion-list-header>
     <ion-item>
       <ion-label>{{ selectedAthleteName() }}</ion-label>
       <ion-note>{{ 'CF ID: ' + selectedCrossfitId() }}</ion-note>
@@ -85,11 +82,13 @@
       <ion-label>{{ selectedAffiliateName }}</ion-label>
       <ion-note>{{ selectedAffiliateId }}</ion-note>
     </ion-item>
+    <ion-item>
+      <ion-button fill="clear" (click)="onClickNotYou()">Not you?</ion-button>
+    </ion-item>
   </ion-list>
-  <ion-button fill="clear" (click)="onClickNotYou()">Not you?</ion-button>
 
   <form [formGroup]="signupForm" (ngSubmit)="onSubmitSignupForm()">
-    <ion-list class="ion-margin-vertical">
+    <ion-list [inset]="true">
       <ion-item>
         <ion-input
           type="email"
@@ -108,6 +107,7 @@
           placeholder="burpees4LYFE"
           formControlName="password"
           minlength="6"
+          errorText="Min 6 chars"
           [required]="true"
         >
           <ion-input-password-toggle slot="end"></ion-input-password-toggle>

@@ -1,7 +1,15 @@
-import { computed, inject, Injectable, linkedSignal } from '@angular/core';
+import {
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  Injectable,
+  signal,
+} from '@angular/core';
 import { apiAthleteService } from '../api/services';
 import {
   Auth,
+  user,
   IdTokenResult,
   sendEmailVerification,
   signOut,
@@ -10,6 +18,7 @@ import {
 import { apiAthleteDetail, apiFirebaseCustomClaims } from '../api/models';
 import { FirebaseError } from '@angular/fire/app';
 import { ToastService } from './toast.service';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,39 +26,15 @@ import { ToastService } from './toast.service';
 export class AuthService {
   private apiAthlete = inject(apiAthleteService);
   private toastService = inject(ToastService);
+  private destroyRef = inject(DestroyRef);
 
   private auth = inject(Auth);
+  private user$ = user(this.auth);
+  private userSubscription: Subscription;
 
-  readonly user = linkedSignal<User | null>(() => null, {
-    equal: (a, b) =>
-      a?.uid === b?.uid &&
-      a?.emailVerified === b?.emailVerified &&
-      a?.displayName === b?.displayName,
-  });
-
-  readonly userCustomClaims = linkedSignal<apiFirebaseCustomClaims | null>(
-    () => null,
-    {
-      equal: (a, b) =>
-        a?.admin === b?.admin &&
-        a?.affiliate_id === b?.affiliate_id &&
-        a?.affiliate_name === b?.affiliate_name &&
-        a?.crossfit_id === b?.crossfit_id,
-    }
-  );
-
-  readonly athlete = linkedSignal<apiAthleteDetail | null>(() => null, {
-    equal: (a, b) =>
-      a?.affiliate_id === b?.affiliate_id &&
-      a?.affiliate_name === b?.affiliate_name &&
-      a?.age_category === b?.age_category &&
-      a?.crossfit_id === b?.crossfit_id &&
-      a?.gender === b?.gender &&
-      a?.name === b?.name &&
-      a?.team_name === b?.team_name &&
-      a?.team_role === b?.team_role &&
-      a?.year === b?.year,
-  });
+  readonly user = signal<User | null>(null);
+  readonly userCustomClaims = signal<apiFirebaseCustomClaims | null>(null);
+  readonly athlete = signal<apiAthleteDetail | null>(null);
 
   readonly userNameInitials = computed<string | null>(() => {
     const currentUser = this.user();
@@ -74,44 +59,62 @@ export class AuthService {
       false
   );
 
+  private getCustomClaims(user: User | null, forceRefresh = false) {
+    if (user) {
+      user.getIdTokenResult(forceRefresh).then((value: IdTokenResult) => {
+        const customClaims = value.claims;
+        this.userCustomClaims.set({
+          admin: customClaims['admin'] ? true : false,
+          affiliate_id:
+            typeof customClaims['affiliate_id'] === 'number'
+              ? customClaims['affiliate_id']
+              : null,
+          affiliate_name:
+            typeof customClaims['affiliate_name'] === 'string'
+              ? customClaims['affiliate_name']
+              : null,
+          crossfit_id:
+            typeof customClaims['crossfit_id'] === 'number'
+              ? customClaims['crossfit_id']
+              : null,
+        });
+      });
+
+      if (user.emailVerified && (!this.athlete() || forceRefresh)) {
+        this.getMyAthleteInfo();
+      }
+    } else {
+      this.userCustomClaims.set(null);
+      this.athlete.set(null);
+    }
+  }
+
   constructor() {
-    this.auth.onAuthStateChanged((user: User | null) => {
+    this.userSubscription = this.user$.subscribe((user) => {
       this.user.set(user);
 
       if (user) {
-        user.getIdTokenResult().then((value: IdTokenResult) => {
-          const customClaims = value.claims;
-          this.userCustomClaims.set({
-            admin: customClaims['admin'] ? true : false,
-            affiliate_id:
-              typeof customClaims['affiliate_id'] === 'number'
-                ? customClaims['affiliate_id']
-                : null,
-            affiliate_name:
-              typeof customClaims['affiliate_name'] === 'string'
-                ? customClaims['affiliate_name']
-                : null,
-            crossfit_id:
-              typeof customClaims['crossfit_id'] === 'number'
-                ? customClaims['crossfit_id']
-                : null,
-          });
-        });
+        this.getCustomClaims(user);
+      }
+    });
 
-        if (!this.athlete()) {
-          this.getMyAthleteInfo();
-        }
-      } else {
-        this.userCustomClaims.set(null);
-        this.athlete.set(null);
+    this.destroyRef.onDestroy(() => {
+      this.userSubscription.unsubscribe();
+    });
+
+    effect(() => {
+      if (this.user() && !this.userCustomClaims()) {
+        this.getCustomClaims(this.user());
       }
     });
   }
 
   async logout() {
-    await signOut(this.auth).then(() =>
-      this.toastService.showToast('Logged out', 'primary', '/', 1000)
-    );
+    await signOut(this.auth).then(() => {
+      this.toastService.showToast('Logged out', 'primary', '/', 1000);
+      this.userCustomClaims.set(null);
+      this.athlete.set(null);
+    });
   }
 
   async getMyAthleteInfo(): Promise<boolean> {
@@ -150,8 +153,18 @@ export class AuthService {
   }
 
   async refreshTokenAfterVerification() {
-    this.auth.currentUser?.reload().then(() => {
-      this.auth.currentUser?.getIdToken(true);
-    });
+    const currentUser = this.auth.currentUser;
+    if (currentUser) {
+      await currentUser.reload().then(() => {
+        currentUser.getIdToken(true).then(() => {
+          this.user.update((user) => {
+            return user
+              ? { ...user, emailVerified: currentUser.emailVerified }
+              : null;
+          });
+          this.getCustomClaims(currentUser, true);
+        });
+      });
+    }
   }
 }
