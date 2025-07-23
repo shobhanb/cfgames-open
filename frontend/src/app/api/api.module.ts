@@ -17,6 +17,7 @@ import { apiAppreciationStatusService } from './services/api-appreciation-status
 import { apiSidescoreService } from './services/api-sidescore.service';
 import { apiTeamsService } from './services/api-teams.service';
 import { apiAthletePrefsService } from './services/api-athlete-prefs.service';
+import { apiHomeBlogService } from './services/api-home-blog.service';
 
 /**
  * Module that provides all services and configuration.
@@ -37,6 +38,7 @@ import { apiAthletePrefsService } from './services/api-athlete-prefs.service';
     apiSidescoreService,
     apiTeamsService,
     apiAthletePrefsService,
+    apiHomeBlogService,
     ApiConfiguration
   ],
 })

@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-toolbar>
+    @if (blog) {
+    <ion-title>Edit Blog Post</ion-title>
+    } @else {
+    <ion-title>Create Blog Post</ion-title>
+    }
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  @if (blog) {
+  <div class="section-title">
+    {{ blog.created_at | date : "d MMM, yyyy h:m a" }}
+  </div>
+  }
+  <form [formGroup]="blogForm" (ngSubmit)="onSubmit()">
+    <ion-list>
+      <ion-item>
+        <ion-input
+          type="text"
+          label="Title (required)"
+          labelPlacement="floating"
+          formControlName="title"
+          [required]="true"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          type="text"
+          label="Subtitle"
+          labelPlacement="floating"
+          formControlName="subtitle"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-textarea
+          label="Content (required)"
+          labelPlacement="floating"
+          formControlName="content"
+          [required]="true"
+        ></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          type="text"
+          label="Image Link"
+          labelPlacement="floating"
+          formControlName="image_link"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          type="text"
+          label="Action Link"
+          labelPlacement="floating"
+          formControlName="action_link"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          type="text"
+          label="Action Text"
+          labelPlacement="floating"
+          formControlName="action_text"
+        ></ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-button
+      type="submit"
+      expand="block"
+      class="ion-margin"
+      [disabled]="!isFormValid()"
+      >Submit</ion-button
+    >
+    <ion-button
+      type="cancel"
+      expand="block"
+      color="danger"
+      fill="outline"
+      class="ion-margin"
+      (click)="onClickCancel()"
+      >Cancel</ion-button
+    >
+  </form>
+</ion-content>

@@ -6,5 +6,43 @@
 </ion-header>
 
 <ion-content>
-  <p>Home works</p>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (blogData().length === 0) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>CF Games</ion-card-title>
+      <ion-card-subtitle>Content coming soon</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>Stay tuned</ion-card-content>
+  </ion-card>
+  } @for (blog of blogData(); track $index) {
+  <div class="section-title">
+    {{ blog.created_at | date:'d MMM, yyyy h:m a' }}
+  </div>
+  <ion-card>
+    @if (blog.image_link) {
+    <img [src]="blog.image_link" />
+    }
+    <ion-card-header>
+      <ion-card-title>{{ blog.title }}</ion-card-title>
+      @if (blog.subtitle) {
+      <ion-card-subtitle>{{ blog.subtitle }}</ion-card-subtitle>
+      }
+    </ion-card-header>
+    <ion-card-content>{{ blog.content }}</ion-card-content>
+
+    @if (blog.action_link?.toLowerCase()?.startsWith('http')) {
+    <ion-button fill="clear" [href]="blog.action_link" target="_blank"
+      >{{ blog.action_text }}</ion-button
+    >
+    } @else if (blog.action_link) {
+    <ion-button fill="clear" [routerLink]="blog.action_link"
+      >{{ blog.action_text }}</ion-button
+    >
+    }
+  </ion-card>
+  }
 </ion-content>

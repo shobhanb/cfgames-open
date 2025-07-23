@@ -13,3 +13,4 @@ export { apiAppreciationStatusService } from './services/api-appreciation-status
 export { apiSidescoreService } from './services/api-sidescore.service';
 export { apiTeamsService } from './services/api-teams.service';
 export { apiAthletePrefsService } from './services/api-athlete-prefs.service';
+export { apiHomeBlogService } from './services/api-home-blog.service';

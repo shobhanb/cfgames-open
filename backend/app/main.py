@@ -20,6 +20,7 @@ from app.database.base import Base
 from app.database.core import session_manager
 from app.events.views import cf_events_router
 from app.firebase_auth.views import firebase_auth_router
+from app.home_blog.views import home_blog_router
 from app.score.views import score_router
 from app.settings import env_settings, url_settings
 from app.sidescore.views import sidescore_router
@@ -65,6 +66,7 @@ app.include_router(appreciation_open_router)
 app.include_router(sidescore_router)
 app.include_router(teams_router)
 app.include_router(athlete_prefs_router)
+app.include_router(home_blog_router)
 
 app.add_middleware(
     CORSMiddleware,

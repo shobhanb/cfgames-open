@@ -104,12 +104,6 @@ export const tabsRoutes: Routes = [
         canActivate: [adminGuard],
       },
       {
-        path: 'admin/users',
-        loadComponent: () =>
-          import('./admin-tab/users/users.page').then((c) => c.UsersPage),
-        canActivate: [adminGuard],
-      },
-      {
         path: 'admin/edit-teams',
         loadComponent: () =>
           import('./admin-tab/edit-teams/edit-teams.page').then(
@@ -179,6 +173,18 @@ export const tabsRoutes: Routes = [
           import('./admin-tab/side-scores/side-scores.page').then(
             (c) => c.SideScoresPage
           ),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'admin/users',
+        loadComponent: () =>
+          import('./admin-tab/users/users.page').then((c) => c.UsersPage),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'admin/blog',
+        loadComponent: () =>
+          import('./admin-tab/blog/blog.page').then((c) => c.BlogPage),
         canActivate: [adminGuard],
       },
       {

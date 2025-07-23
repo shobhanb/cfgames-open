@@ -1,0 +1,95 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Home Blog</ion-title>
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (dataLoaded) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Blog Posts</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text
+        >Manage blog posts for the homepage. These posts will be visible to all
+        users.</ion-text
+      >
+    </ion-card-content>
+  </ion-card>
+
+  @for (blog of blogData(); track blog.id) {
+  <div class="section-title">
+    {{ blog.created_at | date:'d MMM, yyyy h:m a' }}
+  </div>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ blog.title }}</ion-card-title>
+      <ion-card-subtitle>{{ blog.subtitle }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      {{ blog.content.substring(0,10) + '...' }}
+    </ion-card-content>
+
+    <ion-button fill="clear" (click)="onClickEdit(blog)">Edit</ion-button>
+    <ion-button fill="clear" color="danger" (click)="onClickDelete(blog)"
+      >Delete</ion-button
+    >
+  </ion-card>
+  } } @else {
+  <!-- Loading skeleton -->
+  @for (item of [1, 2, 3]; track $index) {
+  <ion-card>
+    <ion-card-header>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 60%; height: 20px"
+      ></ion-skeleton-text>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 40%; height: 15px"
+      ></ion-skeleton-text>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 90%; height: 15px"
+      ></ion-skeleton-text>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 95%; height: 15px"
+      ></ion-skeleton-text>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 60%; height: 15px"
+      ></ion-skeleton-text>
+
+      <div class="button-container ion-margin-top">
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 70px; height: 30px; border-radius: 4px"
+        ></ion-skeleton-text>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 70px; height: 30px; border-radius: 4px"
+        ></ion-skeleton-text>
+      </div>
+    </ion-card-content>
+  </ion-card>
+  } }
+
+  <!-- FAB button for adding new blog post -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="onClickCreate()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
