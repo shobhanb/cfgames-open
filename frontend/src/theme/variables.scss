@@ -36,3 +36,9 @@ ion-item {
     text-transform: uppercase;
     font-size: 0.8rem;
 }
+
+ion-app {
+  max-width: 992px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
