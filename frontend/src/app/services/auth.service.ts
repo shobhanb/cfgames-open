@@ -110,11 +110,20 @@ export class AuthService {
   }
 
   async logout() {
-    await signOut(this.auth).then(() => {
-      this.toastService.showToast('Logged out', 'primary', '/', 1000);
-      this.userCustomClaims.set(null);
-      this.athlete.set(null);
-    });
+    await signOut(this.auth)
+      .then(() => {
+        this.toastService.showToast('Logged out', 'primary', '/', 1000);
+        this.userCustomClaims.set(null);
+        this.athlete.set(null);
+      })
+      .catch((err: FirebaseError) => {
+        this.toastService.showToast(
+          `Error logging out: ${err.message}`,
+          'danger',
+          null,
+          1000
+        );
+      });
   }
 
   async getMyAthleteInfo(): Promise<boolean> {

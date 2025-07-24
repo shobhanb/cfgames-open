@@ -72,10 +72,8 @@ export class AuthStateComponent implements OnInit {
   }
 
   async onClickSignOut() {
-    await this.authService.logout().then(() => {
-      this.toastService.showToast('You have been signed out.');
-      this.isModalOpen = false;
-    });
+    await this.authService.logout();
+    this.isModalOpen = false;
   }
 
   onClickCancel() {
