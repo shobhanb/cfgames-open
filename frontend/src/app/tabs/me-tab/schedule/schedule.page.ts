@@ -22,6 +22,7 @@ import {
   ItemReorderEventDetail,
   IonButton,
   IonNote,
+  IonSkeletonText,
 } from '@ionic/angular/standalone';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { apiAthletePrefsService } from 'src/app/api/services';
@@ -34,6 +35,7 @@ import { ToastService } from 'src/app/services/toast.service';
   styleUrls: ['./schedule.page.scss'],
   standalone: true,
   imports: [
+    IonSkeletonText,
     IonNote,
     IonButton,
     IonReorder,
