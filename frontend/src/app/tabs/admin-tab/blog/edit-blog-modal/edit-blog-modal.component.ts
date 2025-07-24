@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, Input, input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -12,16 +12,13 @@ import {
   IonTitle,
   IonToolbar,
   IonButtons,
-  IonSearchbar,
   IonList,
   IonContent,
   IonItem,
   ModalController,
   IonTextarea,
   IonInput,
-  IonLabel,
 } from '@ionic/angular/standalone';
-import { timer } from 'rxjs';
 import { apiHomeBlogModel, apiCreateHomeBlogModel } from 'src/app/api/models';
 
 @Component({
@@ -29,12 +26,10 @@ import { apiHomeBlogModel, apiCreateHomeBlogModel } from 'src/app/api/models';
   templateUrl: './edit-blog-modal.component.html',
   styleUrls: ['./edit-blog-modal.component.scss'],
   imports: [
-    IonLabel,
     IonInput,
     IonItem,
     IonContent,
     IonList,
-    IonSearchbar,
     IonButtons,
     IonHeader,
     IonButton,

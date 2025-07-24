@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -27,16 +21,7 @@ import {
   IonFab,
   IonFabButton,
   IonSkeletonText,
-  IonAlert,
-  IonModal,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonTextarea,
-  IonRouterLink,
   ModalController,
-  IonList,
-  IonNote,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -60,8 +45,6 @@ import { EditBlogModalComponent } from './edit-blog-modal/edit-blog-modal.compon
   styleUrls: ['./blog.page.scss'],
   standalone: true,
   imports: [
-    IonNote,
-    IonList,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -84,12 +67,6 @@ import { EditBlogModalComponent } from './edit-blog-modal/edit-blog-modal.compon
     IonFab,
     IonFabButton,
     IonSkeletonText,
-    IonAlert,
-    IonModal,
-    IonItem,
-    IonLabel,
-    IonInput,
-    IonTextarea,
     ToolbarButtonsComponent,
     DatePipe,
   ],
@@ -162,46 +139,50 @@ export class BlogPage implements OnInit {
   async onClickEdit(blog: apiHomeBlogModel) {
     const data = await this.presentModal(blog);
 
-    this.apiHomeBlogService
-      .updateHomeBlogHomeBlogPatch({
-        _id: blog.id,
-        body: data as apiCreateHomeBlogModel,
-      })
-      .subscribe({
-        next: () => {
-          this.toastService.showToast(
-            'Blog post updated successfully',
-            'success'
-          );
-          this.getData();
-        },
-        error: (error: any) => {
-          this.toastService.showToast('Failed to update blog post', 'danger');
-        },
-      });
+    if (data) {
+      this.apiHomeBlogService
+        .updateHomeBlogHomeBlogPatch({
+          _id: blog.id,
+          body: data as apiCreateHomeBlogModel,
+        })
+        .subscribe({
+          next: () => {
+            this.toastService.showToast(
+              'Blog post updated successfully',
+              'success'
+            );
+            this.getData();
+          },
+          error: (error: any) => {
+            this.toastService.showToast('Failed to update blog post', 'danger');
+          },
+        });
+    }
   }
 
   async onClickCreate() {
     const data = await this.presentModal();
 
-    this.apiHomeBlogService
-      .addHomeBlogHomeBlogPost({
-        affiliate_id: environment.affiliateId,
-        year: environment.year,
-        body: data as apiCreateHomeBlogModel,
-      })
-      .subscribe({
-        next: () => {
-          this.toastService.showToast(
-            'Blog post created successfully',
-            'success'
-          );
-          this.getData();
-        },
-        error: (error: any) => {
-          this.toastService.showToast('Failed to create blog post', 'danger');
-        },
-      });
+    if (data) {
+      this.apiHomeBlogService
+        .addHomeBlogHomeBlogPost({
+          affiliate_id: environment.affiliateId,
+          year: environment.year,
+          body: data as apiCreateHomeBlogModel,
+        })
+        .subscribe({
+          next: () => {
+            this.toastService.showToast(
+              'Blog post created successfully',
+              'success'
+            );
+            this.getData();
+          },
+          error: (error: any) => {
+            this.toastService.showToast('Failed to create blog post', 'danger');
+          },
+        });
+    }
   }
 
   async onClickDelete(blog: apiHomeBlogModel) {
