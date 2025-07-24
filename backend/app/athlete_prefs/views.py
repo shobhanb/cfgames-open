@@ -4,7 +4,6 @@ from typing import Any
 from fastapi import APIRouter, status
 
 from app.database.dependencies import db_dependency
-from app.exceptions import unauthorised_exception
 from app.firebase_auth.dependencies import admin_user_dependency, verified_user_dependency
 
 from .models import AthleteTimePref
@@ -28,10 +27,6 @@ async def update_my_prefs(
     user: verified_user_dependency,
     prefs: list[AthletePrefsModel],
 ) -> None:
-    for pref in prefs:
-        if pref.crossfit_id != user.crossfit_id:
-            raise unauthorised_exception()
-
     await update_db_user_prefs(db_session=db_session, crossfit_id=user.crossfit_id, prefs=prefs)
 
 
@@ -48,8 +43,8 @@ async def get_athlete_prefs(
 @athlete_prefs_router.post("/{crossfit_id}", status_code=status.HTTP_202_ACCEPTED)
 async def update_athlete_prefs(
     db_session: db_dependency,
-    crossfit_id: int,
     _: admin_user_dependency,
+    crossfit_id: int,
     prefs: list[AthletePrefsModel],
 ) -> None:
     await update_db_user_prefs(db_session=db_session, crossfit_id=crossfit_id, prefs=prefs)

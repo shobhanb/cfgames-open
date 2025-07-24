@@ -9,6 +9,5 @@ class AthletePrefsOutputModel(CustomBaseModel):
 
 
 class AthletePrefsModel(CustomBaseModel):
-    crossfit_id: int
     preference_nbr: int
     preference: str

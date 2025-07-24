@@ -9,13 +9,39 @@
 </ion-header>
 
 <ion-content>
-  <ion-refresher slot="fixed">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
   <ion-card>
     <ion-card-header>
       <ion-card-title>Schedule</ion-card-title>
+      <div class="button-container">
+        @if (editPrefs()) {
+        <ion-button fill="outline" (click)="onClickDone()">Done</ion-button>
+        <ion-button fill="outline" color="danger" (click)="onClickCancel()"
+          >Cancel</ion-button
+        >
+        } @else {
+        <ion-button fill="outline" (click)="onClickEdit()">Edit</ion-button>
+        }
+      </div>
     </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-reorder-group
+          [disabled]="!editPrefs()"
+          (ionItemReorder)="handleReorder($any($event))"
+        >
+          @for (pref of prefs(); track $index) {
+          <ion-item>
+            <ion-note slot="start">{{ 'Pref ' + ($index + 1) }}</ion-note>
+            <ion-label>{{ pref }}</ion-label>
+            <ion-reorder slot="end"></ion-reorder>
+          </ion-item>
+          }
+        </ion-reorder-group>
+      </ion-list>
+    </ion-card-content>
   </ion-card>
 </ion-content>

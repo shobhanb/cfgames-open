@@ -63,6 +63,6 @@ async def update_db_user_prefs(
     await db_session.execute(delete_stmt)
 
     for pref_data in prefs:
-        db_session.add(AthleteTimePref(**pref_data.model_dump()))
+        db_session.add(AthleteTimePref(**pref_data.model_dump(), crossfit_id=crossfit_id))
 
     await db_session.commit()
