@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   ModalController,
   IonHeader,
@@ -8,7 +8,10 @@ import {
   IonButton,
   IonContent,
   IonIcon,
-  IonCheckbox,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonNote,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -22,6 +25,10 @@ import {
   templateUrl: './install-app-modal.component.html',
   styleUrls: ['./install-app-modal.component.scss'],
   imports: [
+    IonNote,
+    IonLabel,
+    IonItem,
+    IonList,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -29,13 +36,10 @@ import {
     IonButton,
     IonContent,
     IonIcon,
-    IonCheckbox,
   ],
 })
 export class InstallAppModalComponent implements OnInit {
   private modalController = inject(ModalController);
-
-  dontShowAgain = signal(false);
 
   constructor() {
     addIcons({
@@ -47,14 +51,7 @@ export class InstallAppModalComponent implements OnInit {
 
   ngOnInit() {}
 
-  toggleDontShowAgain(event: Event) {
-    const checkbox = event.target as HTMLIonCheckboxElement;
-    this.dontShowAgain.set(checkbox.checked);
-  }
-
   closeModal() {
-    this.modalController.dismiss({
-      dontShowAgain: this.dontShowAgain(),
-    });
+    this.modalController.dismiss();
   }
 }

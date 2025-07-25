@@ -15,6 +15,8 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonRouterLink,
+  IonLabel,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { apiHomeBlogService } from 'src/app/api/services';
@@ -22,6 +24,8 @@ import { environment } from 'src/environments/environment';
 import { apiHomeBlogModel } from 'src/app/api/models';
 import { RouterLink } from '@angular/router';
 import { AppInstallService } from 'src/app/services/app-install.service';
+import { addIcons } from 'ionicons';
+import { closeOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-home-tab',
@@ -29,6 +33,8 @@ import { AppInstallService } from 'src/app/services/app-install.service';
   styleUrls: ['./home-tab.page.scss'],
   standalone: true,
   imports: [
+    IonIcon,
+    IonLabel,
     IonRefresherContent,
     IonRefresher,
     IonButton,
@@ -54,7 +60,9 @@ export class HomeTabPage implements OnInit {
 
   blogData = signal<apiHomeBlogModel[]>([]);
 
-  constructor() {}
+  constructor() {
+    addIcons({ closeOutline });
+  }
 
   dataLoaded = false;
 

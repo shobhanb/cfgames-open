@@ -6,10 +6,10 @@ import { InstallAppModalComponent } from '../shared/install-app-modal/install-ap
   providedIn: 'root',
 })
 export class AppInstallService {
-  private readonly STORAGE_KEY = 'cf-games-install-prompt-hidden';
-  showInstallButton = signal(true);
-
   private modalController = inject(ModalController);
+  private readonly STORAGE_KEY = 'cf-games-install-prompt-hidden';
+
+  readonly showInstallButton = signal(true);
 
   constructor() {
     this.checkStoredPreference();
@@ -22,25 +22,18 @@ export class AppInstallService {
     }
   }
 
-  private savePreference(dontShowAgain: boolean): void {
-    if (dontShowAgain) {
-      localStorage.setItem(this.STORAGE_KEY, 'true');
-      this.showInstallButton.set(false);
-    }
+  public dontShowAgain() {
+    localStorage.setItem(this.STORAGE_KEY, 'true');
+    this.showInstallButton.set(false);
   }
 
   async showInstallModal() {
     const modal = await this.modalController.create({
       component: InstallAppModalComponent,
-      breakpoints: [0.5, 0.75],
-      initialBreakpoint: 0.75,
+      breakpoints: [0.5, 0.8],
+      initialBreakpoint: 0.8,
     });
 
     await modal.present();
-    const { data } = await modal.onWillDismiss();
-
-    if (data?.dontShowAgain) {
-      this.savePreference(true);
-    }
   }
 }

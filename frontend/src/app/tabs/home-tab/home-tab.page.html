@@ -11,12 +11,19 @@
   </ion-refresher>
 
   @if (appInstallService.showInstallButton()) {
-  <ion-button
-    class="ion-margin"
-    expand="block"
-    (click)="appInstallService.showInstallModal()"
-    >Install this app on your phone</ion-button
-  >
+  <div class="install-button-container">
+    <ion-button
+      expand="full"
+      color="medium"
+      (click)="appInstallService.showInstallModal()"
+      class="install-button"
+    >
+      <span class="install-button-text">Install this app on your device</span>
+    </ion-button>
+    <ion-button color="medium" (click)="appInstallService.dontShowAgain()">
+      <ion-icon name="close-outline"></ion-icon>
+    </ion-button>
+  </div>
   } @if (blogData().length === 0) {
   <ion-card>
     <ion-card-header>

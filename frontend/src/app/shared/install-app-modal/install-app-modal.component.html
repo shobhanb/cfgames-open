@@ -8,37 +8,34 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content class="ion-padding">
-  <div class="installation-container">
+<ion-content>
+  <div class="installation-container ion-padding">
     <ion-icon name="arrow-down-circle-outline" class="install-icon"></ion-icon>
-
-    <h2>Install CF Games on your device</h2>
-
-    <div class="steps-container">
-      <div class="step">
-        <span class="step-number">1</span>
-        <p>
-          Tap the <ion-icon name="share-outline"></ion-icon> share button in
-          your browser
-        </p>
-      </div>
-
-      <div class="step">
-        <span class="step-number">2</span>
-        <p>Select "Add to Home Screen" from the menu options</p>
-      </div>
-    </div>
-
-    <div class="checkbox-container">
-      <ion-checkbox
-        [checked]="dontShowAgain()"
-        (ionChange)="toggleDontShowAgain($event)"
-        >Do not show me again</ion-checkbox
-      >
-    </div>
-
-    <ion-button expand="block" (click)="closeModal()" class="got-it-button">
-      Got it
-    </ion-button>
+    <h2>Install this app on your device</h2>
   </div>
+  <ion-list [inset]="true" lines="none">
+    <ion-item color="light">
+      <ion-note slot="start">1</ion-note>
+      <ion-label
+        >Tap the <ion-icon name="share-outline"></ion-icon> share button in your
+        browser</ion-label
+      >
+    </ion-item>
+    <ion-item color="light">
+      <ion-note slot="start">2</ion-note>
+      <ion-label>Select "Add to Home Screen" from the menu options</ion-label>
+    </ion-item>
+    <ion-item color="light">
+      <ion-note slot="start">3</ion-note>
+      <ion-label>PR?</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-button
+    expand="block"
+    fill="clear"
+    class="ion-padding-horizontal"
+    (click)="closeModal()"
+    >Close</ion-button
+  >
 </ion-content>
