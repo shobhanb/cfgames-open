@@ -4,10 +4,11 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class ThemeService {
+  private readonly THEME_KEY = 'cf-games-theme';
   themeToggle = signal<boolean>(false);
 
   constructor() {
-    const saved = localStorage.getItem('theme');
+    const saved = localStorage.getItem(this.THEME_KEY);
     if (saved === 'dark' || saved === 'light') {
       this.initializeDarkTheme(saved === 'dark');
     } else {
@@ -24,7 +25,7 @@ export class ThemeService {
     const newValue = !this.themeToggle();
     this.themeToggle.set(newValue);
     this.toggleDarkTheme(newValue);
-    localStorage.setItem('theme', newValue ? 'dark' : 'light');
+    localStorage.setItem(this.THEME_KEY, newValue ? 'dark' : 'light');
   }
 
   private toggleDarkTheme(shouldAdd: boolean) {
