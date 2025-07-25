@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Install this app</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="installation-container">
+    <ion-icon name="arrow-down-circle-outline" class="install-icon"></ion-icon>
+
+    <h2>Install CF Games on your device</h2>
+
+    <div class="steps-container">
+      <div class="step">
+        <span class="step-number">1</span>
+        <p>
+          Tap the <ion-icon name="share-outline"></ion-icon> share button in
+          your browser
+        </p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <p>Select "Add to Home Screen" from the menu options</p>
+      </div>
+    </div>
+
+    <div class="checkbox-container">
+      <ion-checkbox
+        [checked]="dontShowAgain()"
+        (ionChange)="toggleDontShowAgain($event)"
+        >Do not show me again</ion-checkbox
+      >
+    </div>
+
+    <ion-button expand="block" (click)="closeModal()" class="got-it-button">
+      Got it
+    </ion-button>
+  </div>
+</ion-content>

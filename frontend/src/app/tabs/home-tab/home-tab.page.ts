@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
@@ -21,6 +21,7 @@ import { apiHomeBlogService } from 'src/app/api/services';
 import { environment } from 'src/environments/environment';
 import { apiHomeBlogModel } from 'src/app/api/models';
 import { RouterLink } from '@angular/router';
+import { AppInstallService } from 'src/app/services/app-install.service';
 
 @Component({
   selector: 'app-home-tab',
@@ -49,6 +50,7 @@ import { RouterLink } from '@angular/router';
 })
 export class HomeTabPage implements OnInit {
   apiHomeBlog = inject(apiHomeBlogService);
+  appInstallService = inject(AppInstallService);
 
   blogData = signal<apiHomeBlogModel[]>([]);
 

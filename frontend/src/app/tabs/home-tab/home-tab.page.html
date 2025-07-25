@@ -10,7 +10,14 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  @if (blogData().length === 0) {
+  @if (appInstallService.showInstallButton()) {
+  <ion-button
+    class="ion-margin"
+    expand="block"
+    (click)="appInstallService.showInstallModal()"
+    >Install this app on your phone</ion-button
+  >
+  } @if (blogData().length === 0) {
   <ion-card>
     <ion-card-header>
       <ion-card-title>CF Games</ion-card-title>
@@ -19,9 +26,6 @@
     <ion-card-content>Stay tuned</ion-card-content>
   </ion-card>
   } @for (blog of blogData(); track $index) {
-  <div class="section-title">
-    {{ blog.created_at | date:'d MMM, yyyy h:m a' }}
-  </div>
   <ion-card>
     @if (blog.image_link) {
     <img [src]="blog.image_link" />
