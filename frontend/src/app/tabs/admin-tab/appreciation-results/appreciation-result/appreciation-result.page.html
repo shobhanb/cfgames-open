@@ -20,7 +20,7 @@
 
   @if ( dataLoaded) {
 
-  <div class="section-title">Legend - Scores from</div>
+  <div class="section-title">Legend (Votes from)</div>
 
   <div class="medal-legend">
     <div class="legend-item">
@@ -57,7 +57,7 @@
     </ion-item>
   </ion-list>
 
-  <div class="section-title">Vote Results</div>
+  <div class="section-title">Vote Counts</div>
   <ion-list [inset]="true" class="results-list">
     @for (item of sortedResults(); track $index) {
     <ion-item
