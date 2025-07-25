@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, isStandalone, signal } from '@angular/core';
 import { ModalController } from '@ionic/angular/standalone';
 import { InstallAppModalComponent } from '../shared/install-app-modal/install-app-modal.component';
 
@@ -12,7 +12,11 @@ export class AppInstallService {
   readonly showInstallButton = signal(true);
 
   constructor() {
-    this.checkStoredPreference();
+    if (this.isStandalone()) {
+      this.showInstallButton.set(false);
+    } else {
+      this.checkStoredPreference();
+    }
   }
 
   private checkStoredPreference(): void {
@@ -35,5 +39,14 @@ export class AppInstallService {
     });
 
     await modal.present();
+  }
+
+  private isStandalone() {
+    if (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      ('standalone' in navigator && (navigator as any).standalone === true)
+    )
+      return true;
+    return false;
   }
 }
