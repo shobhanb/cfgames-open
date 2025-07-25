@@ -5,6 +5,7 @@ import {
   IonToolbar,
   IonBackButton,
   IonButtons,
+  IonContent,
 } from '@ionic/angular/standalone';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
@@ -14,6 +15,7 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
   styleUrls: ['./scheduling.page.scss'],
   standalone: true,
   imports: [
+    IonContent,
     IonButtons,
     IonBackButton,
     IonHeader,

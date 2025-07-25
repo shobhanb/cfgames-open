@@ -112,6 +112,14 @@ export const tabsRoutes: Routes = [
         canActivate: [adminGuard],
       },
       {
+        path: 'admin/auto-assign-teams',
+        loadComponent: () =>
+          import('./admin-tab/auto-assign-teams/auto-assign-teams.page').then(
+            (c) => c.AutoAssignTeamsPage
+          ),
+        canActivate: [adminGuard],
+      },
+      {
         path: 'admin/rename-teams',
         loadComponent: () =>
           import('./admin-tab/rename-teams/rename-teams.page').then(

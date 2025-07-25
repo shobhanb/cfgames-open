@@ -8,19 +8,15 @@ import {
   IonToolbar,
   IonButtons,
   IonBackButton,
-  IonRefresher,
-  IonItem,
 } from '@ionic/angular/standalone';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
-  selector: 'app-side-scores',
-  templateUrl: './side-scores.page.html',
-  styleUrls: ['./side-scores.page.scss'],
+  selector: 'app-auto-assign-teams',
+  templateUrl: './auto-assign-teams.page.html',
+  styleUrls: ['./auto-assign-teams.page.scss'],
   standalone: true,
   imports: [
-    IonItem,
-    IonRefresher,
     IonBackButton,
     IonButtons,
     IonContent,
@@ -32,7 +28,7 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
     ToolbarButtonsComponent,
   ],
 })
-export class SideScoresPage implements OnInit {
+export class AutoAssignTeamsPage implements OnInit {
   constructor() {}
 
   ngOnInit() {}
