@@ -24,14 +24,6 @@
       <ion-icon name="close-outline"></ion-icon>
     </ion-button>
   </div>
-  } @if (blogData().length === 0) {
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>CF Games</ion-card-title>
-      <ion-card-subtitle>Content coming soon</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>Stay tuned</ion-card-content>
-  </ion-card>
   } @for (blog of blogData(); track $index) {
   <ion-card>
     @if (blog.image_link) {
@@ -56,4 +48,25 @@
     }
   </ion-card>
   }
+  <ion-card>
+    <img src="images/globe.jpeg" alt="Crossfit Games Logo" />
+    <ion-card-header>
+      <ion-card-title> Welcome! </ion-card-title>
+      <ion-card-subtitle>CF Games Community Cup</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Welcome to Crossfit MonkeyFlag's Community Cup for the CF Open.</p>
+    </ion-card-content>
+    @if (!authService.user()) {
+    <ion-button
+      fill="clear"
+      href="https://games.crossfit.com/register/open"
+      target="_blank"
+      >Register on Crossfit.com</ion-button
+    >
+    <ion-button fill="clear" routerLink="/auth/signup"
+      >Then Sign up here</ion-button
+    >
+    }
+  </ion-card>
 </ion-content>
