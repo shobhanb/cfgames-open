@@ -28,7 +28,6 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - **Images:** Use `NgOptimizedImage` for all static images.
 - **API Models:** Always use strict types from `src/app/api/models/`.
 - **Sorting:** Sort lists by year and ordinal for event-based data.
-- **Environment:** Use `environment.year` and `environment.affiliateId` for context-aware features.
 
 ## Integration & Communication Patterns
 - **Services:** Singleton services use `providedIn: 'root'` and `inject()` for dependency injection.

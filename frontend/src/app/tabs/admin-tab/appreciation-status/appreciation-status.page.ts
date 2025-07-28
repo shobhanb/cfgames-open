@@ -24,10 +24,10 @@ import { addIcons } from 'ionicons';
 import { addOutline, trashOutline, closeOutline } from 'ionicons/icons';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { apiAppreciationStatusService } from 'src/app/api/services';
-import { environment } from 'src/environments/environment';
 import { ToastService } from 'src/app/services/toast.service';
 import { apiAppreciationStatusModel, apiEventsModel } from 'src/app/api/models';
 import { EventService } from 'src/app/services/event.service';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-appreciation-status',
@@ -60,6 +60,7 @@ import { EventService } from 'src/app/services/event.service';
 export class AppreciationStatusPage implements OnInit {
   private apiAppreciationStatus = inject(apiAppreciationStatusService);
   private toastService = inject(ToastService);
+  private config = inject(AppConfigService);
   eventService = inject(EventService);
 
   appreciationStatus = signal<apiAppreciationStatusModel[]>([]);
@@ -111,7 +112,7 @@ export class AppreciationStatusPage implements OnInit {
   getData() {
     this.apiAppreciationStatus
       .getOpenAppreciationStatusAppreciationStatusGet({
-        year: environment.year,
+        year: this.config.year,
       })
       .subscribe({
         next: (data) => {
@@ -145,7 +146,7 @@ export class AppreciationStatusPage implements OnInit {
     this.apiAppreciationStatus
       .addOpenAppreciationStatusAppreciationStatusPut({
         body: {
-          affiliate_id: environment.affiliateId,
+          affiliate_id: this.config.affiliateId,
           year: event.year,
           ordinal: event.ordinal,
         },
@@ -177,7 +178,7 @@ export class AppreciationStatusPage implements OnInit {
     this.apiAppreciationStatus
       .deleteOpenAppreciationStatusAppreciationStatusDelete({
         body: {
-          affiliate_id: environment.affiliateId,
+          affiliate_id: this.config.affiliateId,
           year: event.year,
           ordinal: event.ordinal,
         },

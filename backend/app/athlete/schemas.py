@@ -25,3 +25,8 @@ class TeamName(CustomBaseModel):
 class UpdateTeamName(CustomBaseModel):
     old_team_name: str
     new_team_name: str
+
+
+class AutoTeamAssignment(CustomBaseModel):
+    name: str
+    team_name: str

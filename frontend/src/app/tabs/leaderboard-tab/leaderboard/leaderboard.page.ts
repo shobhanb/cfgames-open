@@ -35,13 +35,13 @@ import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { apiLeaderboardScoreModel } from 'src/app/api/models';
 import { apiScoreService } from 'src/app/api/services';
-import { environment } from 'src/environments/environment';
 import { ScoreFilterService } from 'src/app/services/score-filter.service';
 import { TeamNamePipe } from 'src/app/pipes/team-name.pipe';
 import { addIcons } from 'ionicons';
 import { openOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-leaderboard',
@@ -78,6 +78,7 @@ export class LeaderboardPage implements OnInit {
   private eventService = inject(EventService);
   private toastService = inject(ToastService);
   private apiScore = inject(apiScoreService);
+  private config = inject(AppConfigService);
   scoreFilter = inject(ScoreFilterService);
   authService = inject(AuthService);
 
@@ -132,7 +133,7 @@ export class LeaderboardPage implements OnInit {
   private getData() {
     this.apiScore
       .getLeaderboardScoresScoreLeaderboardGet({
-        affiliate_id: environment.affiliateId,
+        affiliate_id: this.config.affiliateId,
         year: this.year,
         ordinal: this.ordinal,
       })

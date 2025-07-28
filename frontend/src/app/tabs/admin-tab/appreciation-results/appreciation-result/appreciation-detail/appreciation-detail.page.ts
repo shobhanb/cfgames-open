@@ -26,11 +26,11 @@ import {
 } from '@ionic/angular/standalone';
 import { apiAppreciationService } from 'src/app/api/services';
 import { apiAppreciationResultDetail } from 'src/app/api/models';
-import { environment } from 'src/environments/environment';
 import { ToastService } from 'src/app/services/toast.service';
 import { EventService } from 'src/app/services/event.service';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-appreciation-detail',
@@ -60,6 +60,7 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
 export class AppreciationDetailPage implements OnInit {
   private apiAppreciation = inject(apiAppreciationService);
   private toastService = inject(ToastService);
+  private config = inject(AppConfigService);
   eventService = inject(EventService);
   athleteDataService = inject(AthleteDataService);
 
@@ -86,7 +87,7 @@ export class AppreciationDetailPage implements OnInit {
   getData() {
     this.apiAppreciation
       .getAppreciationResultsDetailAppreciationDetailGet({
-        affiliate_id: environment.affiliateId,
+        affiliate_id: this.config.affiliateId,
         year: this.year,
         ordinal: this.ordinal,
         crossfit_id: this.crossfitId,

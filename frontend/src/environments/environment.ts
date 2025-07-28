@@ -3,12 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
+  // production: false,
   apiBaseUrl: 'http://localhost:8000',
-  frontendUrl: 'http://localhost:8100',
-  affiliateId: 31316,
-  affiliateName: 'Crossfit Monkey Flag',
-  year: 2025,
+  // affiliateId: 31316,
+  // affiliateName: 'Crossfit Monkey Flag',
+  // year: 2025,
 };
 
 /*

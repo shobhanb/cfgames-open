@@ -19,9 +19,12 @@ import { getMessaging, provideMessaging } from '@angular/fire/messaging';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { httpInterceptor } from './app/providers/http.interceptor';
 import { ApiModule } from './app/api/api.module';
-import { environment } from './environments/environment';
+import { AppConfigService } from './app/services/app-config.service';
 import { isDevMode } from '@angular/core';
 import { provideServiceWorker } from '@angular/service-worker';
+
+// Create config service instance to get dynamic configuration
+const configService = new AppConfigService();
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -32,7 +35,9 @@ bootstrapApplication(AppComponent, {
       withPreloading(PreloadAllModules),
       withComponentInputBinding()
     ),
-    ...(ApiModule.forRoot({ rootUrl: environment.apiBaseUrl }).providers ?? []),
+    // Use dynamic API base URL
+    ...(ApiModule.forRoot({ rootUrl: configService.apiBaseUrl }).providers ??
+      []),
     provideHttpClient(withInterceptors([httpInterceptor])),
     provideFirebaseApp(() =>
       initializeApp({

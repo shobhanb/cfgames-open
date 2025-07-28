@@ -19,13 +19,13 @@ import {
 } from '@ionic/angular/standalone';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { apiHomeBlogService } from 'src/app/api/services';
-import { environment } from 'src/environments/environment';
 import { apiHomeBlogModel } from 'src/app/api/models';
 import { RouterLink } from '@angular/router';
 import { AppInstallService } from 'src/app/services/app-install.service';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/services/auth.service';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-home-tab',
@@ -55,10 +55,13 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class HomeTabPage implements OnInit {
   private apiHomeBlog = inject(apiHomeBlogService);
+  private config = inject(AppConfigService);
   authService = inject(AuthService);
   appInstallService = inject(AppInstallService);
 
   blogData = signal<apiHomeBlogModel[]>([]);
+
+  welcomeMessage = `Welcome to ${this.config.affiliateName}'s Community Cup for the CF Open.`;
 
   constructor() {
     addIcons({ closeOutline });
@@ -79,8 +82,8 @@ export class HomeTabPage implements OnInit {
   getData() {
     this.apiHomeBlog
       .getHomeBlogHomeBlogGet({
-        affiliate_id: environment.affiliateId,
-        year: environment.year,
+        affiliate_id: this.config.affiliateId,
+        year: this.config.year,
       })
       .subscribe({
         next: (data) => {

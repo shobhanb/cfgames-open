@@ -18,7 +18,6 @@ import {
   IonSkeletonText,
 } from '@ionic/angular/standalone';
 import { apiAthleteService } from 'src/app/api/services';
-import { environment } from 'src/environments/environment';
 import { ToastService } from 'src/app/services/toast.service';
 import { apiAthleteDetail } from 'src/app/api/models';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
@@ -27,6 +26,7 @@ import { ScoreFilterService } from 'src/app/services/score-filter.service';
 import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-my-team',
@@ -59,6 +59,7 @@ export class MyTeamPage implements OnInit {
   private toastService = inject(ToastService);
   private helperFunctions = inject(HelperFunctionsService);
   private authService = inject(AuthService);
+  private config = inject(AppConfigService);
   scoreFilter = inject(ScoreFilterService);
   athleteDataService = inject(AthleteDataService);
 
@@ -114,8 +115,8 @@ export class MyTeamPage implements OnInit {
     this.dataLoaded = false;
     await this.apiAthlete
       .getAthleteDetailAllAthleteDetailAllGet({
-        affiliate_id: environment.affiliateId,
-        year: environment.year,
+        affiliate_id: this.config.affiliateId,
+        year: this.config.year,
       })
       .subscribe({
         next: (data: apiAthleteDetail[]) => {

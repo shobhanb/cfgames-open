@@ -23,8 +23,7 @@ import {
   IonTitle,
 } from '@ionic/angular/standalone';
 import { apiAthleteService, apiFireauthService } from 'src/app/api/services';
-import { environment } from 'src/environments/environment';
-import { apiAffiliateAthlete, apiFirebaseUserRecord } from 'src/app/api/models';
+import { apiAffiliateAthlete } from 'src/app/api/models';
 import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
 import { CreateUserFireauthSignupPost$Params } from 'src/app/api/fn/fireauth/create-user-fireauth-signup-post';
 import { ToastService } from 'src/app/services/toast.service';
@@ -37,9 +36,9 @@ import {
 import { LoadingService } from 'src/app/services/loading.service';
 import { FirebaseError } from '@angular/fire/app';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
-import { AthleteNameModalComponent } from 'src/app/shared/athlete-name-modal/athlete-name-modal.component';
 import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
 import { RouterLink } from '@angular/router';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-signup',
@@ -75,6 +74,7 @@ export class SignupPage implements OnInit {
   private toastService = inject(ToastService);
   private helperFunctions = inject(HelperFunctionsService);
   private athleteNameModalService = inject(AthleteNameModalService);
+  private config = inject(AppConfigService);
 
   // Controls the UI - show assign athlete form, or show signup email/password form
   readonly showAssignAthleteForm = signal<boolean>(true);
@@ -101,8 +101,8 @@ export class SignupPage implements OnInit {
   readonly selectedAthleteName = signal<string | null>(null);
   readonly selectedCrossfitId = signal<number | null>(null);
 
-  readonly selectedAffiliateId = environment.affiliateId;
-  readonly selectedAffiliateName = environment.affiliateName;
+  readonly selectedAffiliateId = this.config.affiliateId;
+  readonly selectedAffiliateName = this.config.affiliateName;
 
   // API Data
   private athleteData = signal<apiAffiliateAthlete[]>([]);
@@ -252,7 +252,7 @@ export class SignupPage implements OnInit {
   ngOnInit() {
     this.apiAthlete
       .getAthleteListAthleteListGet({
-        affiliate_id: environment.affiliateId,
+        affiliate_id: this.config.affiliateId,
       })
       .subscribe({
         next: (value: apiAffiliateAthlete[]) => {

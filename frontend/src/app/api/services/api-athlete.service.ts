@@ -15,6 +15,7 @@ import { apiAffiliateAthlete } from '../models/api-affiliate-athlete';
 import { assignAthleteToTeamAthleteTeamAssignPut } from '../fn/athlete/assign-athlete-to-team-athlete-team-assign-put';
 import { AssignAthleteToTeamAthleteTeamAssignPut$Params } from '../fn/athlete/assign-athlete-to-team-athlete-team-assign-put';
 import { apiAthleteDetail } from '../models/api-athlete-detail';
+import { apiAutoTeamAssignment } from '../models/api-auto-team-assignment';
 import { getAthleteDetailAllAthleteDetailAllGet } from '../fn/athlete/get-athlete-detail-all-athlete-detail-all-get';
 import { GetAthleteDetailAllAthleteDetailAllGet$Params } from '../fn/athlete/get-athlete-detail-all-athlete-detail-all-get';
 import { getAthleteDetailAthleteDetailGet } from '../fn/athlete/get-athlete-detail-athlete-detail-get';
@@ -25,8 +26,8 @@ import { getMyAthleteDataAthleteMeGet } from '../fn/athlete/get-my-athlete-data-
 import { GetMyAthleteDataAthleteMeGet$Params } from '../fn/athlete/get-my-athlete-data-athlete-me-get';
 import { getTeamNamesAthleteTeamNamesGet } from '../fn/athlete/get-team-names-athlete-team-names-get';
 import { GetTeamNamesAthleteTeamNamesGet$Params } from '../fn/athlete/get-team-names-athlete-team-names-get';
-import { randomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet } from '../fn/athlete/random-assign-athletes-athlete-team-assign-random-affiliate-id-year-get';
-import { RandomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet$Params } from '../fn/athlete/random-assign-athletes-athlete-team-assign-random-affiliate-id-year-get';
+import { randomAssignAthletesAthleteTeamRandomAssignGet } from '../fn/athlete/random-assign-athletes-athlete-team-random-assign-get';
+import { RandomAssignAthletesAthleteTeamRandomAssignGet$Params } from '../fn/athlete/random-assign-athletes-athlete-team-random-assign-get';
 import { renameTeamsAthleteRenameTeamsPut } from '../fn/athlete/rename-teams-athlete-rename-teams-put';
 import { RenameTeamsAthleteRenameTeamsPut$Params } from '../fn/athlete/rename-teams-athlete-rename-teams-put';
 import { apiTeamName } from '../models/api-team-name';
@@ -202,8 +203,8 @@ export class apiAthleteService extends BaseService {
     );
   }
 
-  /** Path part for operation `randomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet()` */
-  static readonly RandomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGetPath = '/athlete/team/assign/random/{affiliate_id}/{year}';
+  /** Path part for operation `randomAssignAthletesAthleteTeamRandomAssignGet()` */
+  static readonly RandomAssignAthletesAthleteTeamRandomAssignGetPath = '/athlete/team/random_assign';
 
   /**
    * Random Assign Athletes.
@@ -211,12 +212,12 @@ export class apiAthleteService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `randomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet()` instead.
+   * To access only the response body, use `randomAssignAthletesAthleteTeamRandomAssignGet()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  randomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet$Response(params: RandomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
-    return randomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet(this.http, this.rootUrl, params, context);
+  randomAssignAthletesAthleteTeamRandomAssignGet$Response(params: RandomAssignAthletesAthleteTeamRandomAssignGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAutoTeamAssignment>>> {
+    return randomAssignAthletesAthleteTeamRandomAssignGet(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -225,13 +226,13 @@ export class apiAthleteService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `randomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet$Response()` instead.
+   * To access the full response (for headers, for example), `randomAssignAthletesAthleteTeamRandomAssignGet$Response()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  randomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet(params: RandomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet$Params, context?: HttpContext): Observable<any> {
-    return this.randomAssignAthletesAthleteTeamAssignRandomAffiliateIdYearGet$Response(params, context).pipe(
-      map((r: StrictHttpResponse<any>): any => r.body)
+  randomAssignAthletesAthleteTeamRandomAssignGet(params: RandomAssignAthletesAthleteTeamRandomAssignGet$Params, context?: HttpContext): Observable<Array<apiAutoTeamAssignment>> {
+    return this.randomAssignAthletesAthleteTeamRandomAssignGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiAutoTeamAssignment>>): Array<apiAutoTeamAssignment> => r.body)
     );
   }
 

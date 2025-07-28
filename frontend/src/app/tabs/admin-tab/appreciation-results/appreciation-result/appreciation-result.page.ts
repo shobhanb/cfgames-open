@@ -28,13 +28,13 @@ import {
   IonRouterLink,
 } from '@ionic/angular/standalone';
 import { apiAppreciationService } from 'src/app/api/services';
-import { environment } from 'src/environments/environment';
 import { apiAppreciationResults } from 'src/app/api/models';
 import { ToastService } from 'src/app/services/toast.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { EventService } from 'src/app/services/event.service';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
 import { RouterLink } from '@angular/router';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-appreciation-result',
@@ -67,6 +67,7 @@ import { RouterLink } from '@angular/router';
 export class AppreciationResultPage implements OnInit {
   private apiAppreciation = inject(apiAppreciationService);
   private toastService = inject(ToastService);
+  private config = inject(AppConfigService);
   athleteDataService = inject(AthleteDataService);
 
   eventService = inject(EventService);
@@ -106,7 +107,7 @@ export class AppreciationResultPage implements OnInit {
   getData() {
     this.apiAppreciation
       .getAppreciationResultsAppreciationResultsGet({
-        affiliate_id: environment.affiliateId,
+        affiliate_id: this.config.affiliateId,
         year: this.year,
         ordinal: this.ordinal,
       })

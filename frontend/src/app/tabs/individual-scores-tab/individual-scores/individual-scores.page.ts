@@ -29,7 +29,6 @@ import {
 import { EventService } from 'src/app/services/event.service';
 import { apiScoreService } from 'src/app/api/services';
 import { ScoreFilterService } from 'src/app/services/score-filter.service';
-import { environment } from 'src/environments/environment';
 import { apiIndividualScoreModel } from 'src/app/api/models';
 import { GetIndividualScoresScoreIndividualGet$Params } from 'src/app/api/fn/score/get-individual-scores-score-individual-get';
 import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
@@ -37,6 +36,7 @@ import { TeamNamePipe } from '../../../pipes/team-name.pipe';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-individual-scores',
@@ -71,6 +71,7 @@ export class IndividualScoresPage implements OnInit {
   private helperFunctions = inject(HelperFunctionsService);
   private toastService = inject(ToastService);
   private authService = inject(AuthService);
+  private config = inject(AppConfigService);
 
   userCrossfitId = computed(
     () => this.authService.userCustomClaims()?.crossfit_id
@@ -164,7 +165,7 @@ export class IndividualScoresPage implements OnInit {
 
   getData() {
     const params: GetIndividualScoresScoreIndividualGet$Params = {
-      affiliate_id: environment.affiliateId,
+      affiliate_id: this.config.affiliateId,
       year: this.year,
       ordinal: this.ordinal > 0 ? this.ordinal : null,
     };

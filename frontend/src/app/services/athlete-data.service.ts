@@ -1,11 +1,12 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { apiAthleteService } from '../api/services';
-import { environment } from 'src/environments/environment';
 import { apiAthleteDetail } from '../api/models';
+import { AppConfigService } from './app-config.service';
 
 @Injectable({ providedIn: 'root' })
 export class AthleteDataService {
   private apiAthlete = inject(apiAthleteService);
+  private config = inject(AppConfigService);
 
   readonly athleteData = signal<apiAthleteDetail[]>([]);
   readonly loading = signal<boolean>(false);
@@ -15,8 +16,8 @@ export class AthleteDataService {
     return new Promise((resolve, reject) => {
       this.apiAthlete
         .getAthleteDetailAllAthleteDetailAllGet({
-          affiliate_id: environment.affiliateId,
-          year: environment.year,
+          affiliate_id: this.config.affiliateId,
+          year: this.config.year,
         })
         .subscribe({
           next: (data: apiAthleteDetail[]) => {

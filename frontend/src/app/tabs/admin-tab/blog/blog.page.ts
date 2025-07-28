@@ -34,10 +34,10 @@ import {
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { apiHomeBlogService } from 'src/app/api/services';
 import { apiHomeBlogModel } from 'src/app/api/models/api-home-blog-model';
-import { environment } from 'src/environments/environment';
 import { apiCreateHomeBlogModel } from 'src/app/api/models';
 import { ToastService } from 'src/app/services/toast.service';
 import { EditBlogModalComponent } from './edit-blog-modal/edit-blog-modal.component';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-blog',
@@ -75,6 +75,7 @@ export class BlogPage implements OnInit {
   private apiHomeBlogService = inject(apiHomeBlogService);
   private toastService = inject(ToastService);
   private modalController = inject(ModalController);
+  private config = inject(AppConfigService);
 
   dataLoaded = false;
   blogData = signal<apiHomeBlogModel[]>([]);
@@ -103,8 +104,8 @@ export class BlogPage implements OnInit {
 
     this.apiHomeBlogService
       .getHomeBlogHomeBlogGet({
-        affiliate_id: environment.affiliateId,
-        year: environment.year,
+        affiliate_id: this.config.affiliateId,
+        year: this.config.year,
       })
       .subscribe({
         next: (data: apiHomeBlogModel[]) => {
@@ -166,8 +167,8 @@ export class BlogPage implements OnInit {
     if (data) {
       this.apiHomeBlogService
         .addHomeBlogHomeBlogPost({
-          affiliate_id: environment.affiliateId,
-          year: environment.year,
+          affiliate_id: this.config.affiliateId,
+          year: this.config.year,
           body: data as apiCreateHomeBlogModel,
         })
         .subscribe({

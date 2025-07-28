@@ -8,11 +8,11 @@ from typing import Any
 from sqlalchemy import func, select, text, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.cf_games.constants import DEFAULT_TEAM_NAME, IGNORE_TEAMS
 from app.firebase_auth.models import FirebaseUser
 from app.score.models import Score
 
 from .models import Athlete
+from .schemas import AutoTeamAssignment
 
 log = logging.getLogger("uvicorn.error")
 
@@ -121,9 +121,13 @@ async def random_assign_db_athletes(
     db_session: AsyncSession,
     affiliate_id: int,
     year: int,
-) -> None:
+    assign_from_team_name: str,
+    ignore_team_names: list[str],
+) -> list[AutoTeamAssignment]:
     genders = ["F", "M"]
     age_categories = ["Masters 55+", "Masters", "Open"]
+
+    assignments = []
 
     for age_cat, gender in product(*[age_categories, genders]):
         while True:
@@ -131,7 +135,7 @@ async def random_assign_db_athletes(
             athlete_stmt = select(Athlete).where(
                 (Athlete.affiliate_id == affiliate_id)
                 & (Athlete.year == year)
-                & (Athlete.team_name == DEFAULT_TEAM_NAME)
+                & (Athlete.team_name == assign_from_team_name)
                 & (Athlete.gender == gender)
                 & (Athlete.age_category == age_cat),
             )
@@ -151,7 +155,7 @@ async def random_assign_db_athletes(
                 # Pick team that should get a person next
                 select_team_stmt = (
                     select(Athlete.team_name, func.count().label("count"))
-                    .where(Athlete.team_name.not_in(IGNORE_TEAMS))
+                    .where(Athlete.team_name.not_in(ignore_team_names))
                     .group_by(Athlete.team_name)
                     .order_by(text("count ASC"), Athlete.team_name)
                 ).limit(1)
@@ -165,6 +169,7 @@ async def random_assign_db_athletes(
                 team = await get_next_team(db_session=db_session)
                 log.info("Category %s-%s: Team %s: Assigning judge %s", gender, age_cat, team, athlete.name)
                 athlete.team_name = team
+                assignments.append(AutoTeamAssignment(name=athlete.name, team_name=team))
                 db_session.add(athlete)
                 await db_session.commit()
 
@@ -175,11 +180,14 @@ async def random_assign_db_athletes(
                 team = await get_next_team(db_session=db_session)
                 log.info("Category %s-%s: Team %s: Assigning %s", gender, age_cat, team, athlete.name)
                 athlete.team_name = team
+                assignments.append(AutoTeamAssignment(name=athlete.name, team_name=team))
                 db_session.add(athlete)
                 await db_session.commit()
 
             else:
                 break
+
+    return assignments
 
 
 async def get_db_team_names(db_session: AsyncSession, affiliate_id: int, year: int) -> list[dict[str, Any]]:

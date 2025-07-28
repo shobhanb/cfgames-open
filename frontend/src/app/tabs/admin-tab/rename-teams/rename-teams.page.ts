@@ -16,11 +16,11 @@ import {
   IonNote,
 } from '@ionic/angular/standalone';
 import { apiAthleteService } from 'src/app/api/services';
-import { environment } from 'src/environments/environment';
 import { ToastService } from 'src/app/services/toast.service';
 import { apiTeamName } from 'src/app/api/models';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { AlertService } from 'src/app/services/alert.service';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-rename-teams',
@@ -49,6 +49,7 @@ export class RenameTeamsPage implements OnInit {
   private apiAthlete = inject(apiAthleteService);
   private toastService = inject(ToastService);
   private alertService = inject(AlertService);
+  private config = inject(AppConfigService);
 
   constructor() {}
 
@@ -68,8 +69,8 @@ export class RenameTeamsPage implements OnInit {
   private getData() {
     this.apiAthlete
       .getTeamNamesAthleteTeamNamesGet({
-        affiliate_id: environment.affiliateId,
-        year: environment.year,
+        affiliate_id: this.config.affiliateId,
+        year: this.config.year,
       })
       .subscribe({
         next: (data: apiTeamName[]) => {
@@ -92,8 +93,8 @@ export class RenameTeamsPage implements OnInit {
 
       this.apiAthlete
         .renameTeamsAthleteRenameTeamsPut({
-          affiliate_id: environment.affiliateId,
-          year: environment.year,
+          affiliate_id: this.config.affiliateId,
+          year: this.config.year,
           old_team_name: teamName,
           new_team_name: newTeamName,
         })

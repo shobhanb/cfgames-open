@@ -19,7 +19,6 @@ import {
   IonItemOption,
 } from '@ionic/angular/standalone';
 import { apiAthleteService } from 'src/app/api/services';
-import { environment } from 'src/environments/environment';
 import { apiAthleteDetail } from 'src/app/api/models';
 import { addIcons } from 'ionicons';
 import { diamondOutline, ribbonOutline } from 'ionicons/icons';

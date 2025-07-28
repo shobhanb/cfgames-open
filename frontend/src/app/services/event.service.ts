@@ -1,8 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { apiCfeventsService } from '../api/services';
 import { apiEventsModel } from '../api/models';
-import { environment } from '../../environments/environment';
-import { map } from 'rxjs/operators';
+import { AppConfigService } from './app-config.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,9 +9,10 @@ import { map } from 'rxjs/operators';
 export class EventService {
   private apiEvents = inject(apiCfeventsService);
   private events = signal<apiEventsModel[]>([]);
+  private config = inject(AppConfigService);
 
   readonly currentYearEvents = computed(() =>
-    this.events().filter((event) => event.year === environment.year)
+    this.events().filter((event) => event.year === this.config.year)
   );
 
   readonly baseURL = 'https://games.crossfit.com/workouts/open';
@@ -46,7 +46,7 @@ export class EventService {
 
   getEventName(ordinal: number, year?: number | null): string | null {
     if (year === null) {
-      year = environment.year;
+      year = this.config.year;
     }
     const event = this.events().find(
       (e: apiEventsModel) => e.year === year && e.ordinal === ordinal

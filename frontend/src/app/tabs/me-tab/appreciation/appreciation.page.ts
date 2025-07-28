@@ -40,10 +40,10 @@ import {
 import { addIcons } from 'ionicons';
 import { addOutline, peopleCircleOutline, globeOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/services/auth.service';
-import { environment } from 'src/environments/environment';
 import { EventService } from 'src/app/services/event.service';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
 import { RouterLink } from '@angular/router';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-appreciation',
@@ -86,6 +86,7 @@ export class AppreciationPage implements OnInit {
   private apiAppreciationStatus = inject(apiAppreciationStatusService);
   private toastService = inject(ToastService);
   private authService = inject(AuthService);
+  private config = inject(AppConfigService);
   eventService = inject(EventService);
   athleteDataService = inject(AthleteDataService);
 
@@ -148,7 +149,7 @@ export class AppreciationPage implements OnInit {
 
     this.apiAppreciation
       .getMyAppreciationAppreciationGet({
-        year: environment.year,
+        year: this.config.year,
       })
       .subscribe({
         next: (data) => {
@@ -178,7 +179,7 @@ export class AppreciationPage implements OnInit {
 
     this.apiAppreciationStatus
       .getOpenAppreciationStatusAppreciationStatusGet({
-        year: environment.year,
+        year: this.config.year,
       })
       .subscribe({
         next: (data) => {

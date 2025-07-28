@@ -24,11 +24,11 @@ import {
 } from '@ionic/angular/standalone';
 import { apiAppreciationService } from 'src/app/api/services';
 import { apiAppreciationCountsModel } from 'src/app/api/models';
-import { environment } from 'src/environments/environment';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { ToastService } from 'src/app/services/toast.service';
 import { EventService } from 'src/app/services/event.service';
 import { RouterLink } from '@angular/router';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-appreciation-results',
@@ -64,6 +64,7 @@ import { RouterLink } from '@angular/router';
 export class AppreciationResultsPage implements OnInit {
   private apiAppreciationService = inject(apiAppreciationService);
   private toastService = inject(ToastService);
+  private config = inject(AppConfigService);
   eventService = inject(EventService);
 
   appreciationCounts = signal<apiAppreciationCountsModel[]>([]);
@@ -85,8 +86,8 @@ export class AppreciationResultsPage implements OnInit {
   getData() {
     this.apiAppreciationService
       .getAppreciationCountsAppreciationCountsGet({
-        affiliate_id: environment.affiliateId,
-        year: environment.year,
+        affiliate_id: this.config.affiliateId,
+        year: this.config.year,
       })
       .subscribe({
         next: (data: apiAppreciationCountsModel[]) => {

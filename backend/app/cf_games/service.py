@@ -25,6 +25,7 @@ from .constants import (
     CF_LEADERBOARD_URL,
     HTTPX_MAX_RATE_LIMIT_PER_SECOND,
     HTTPX_TIMEOUT,
+    IGNORE_TEAMS,
     JUDGE_SCORE,
     PARTICIPATION_SCORE,
     TOP3_SCORE,
@@ -199,7 +200,7 @@ async def apply_participation_score(
         .where(
             (Athlete.year == year)
             & (Athlete.affiliate_id == affiliate_id)
-            # & (Athlete.team_name.not_in(IGNORE_TEAMS))
+            & (Athlete.team_name.not_in(IGNORE_TEAMS))
             & (Score.score > 0),
         )
     )
@@ -229,7 +230,7 @@ async def apply_ranks(
         .where(
             (Athlete.year == year)
             & (Athlete.affiliate_id == affiliate_id)
-            # & (Athlete.team_name.not_in(IGNORE_TEAMS))
+            & (Athlete.team_name.not_in(IGNORE_TEAMS))
             & (Score.score > 0),
         )
     )
@@ -251,7 +252,7 @@ async def apply_top3_score(
         .where(
             (Athlete.year == year)
             & (Athlete.affiliate_id == affiliate_id)
-            # & (Athlete.team_name.not_in(IGNORE_TEAMS))
+            & (Athlete.team_name.not_in(IGNORE_TEAMS))
             & (Score.affiliate_rank <= rank_cutoff),
         )
     )

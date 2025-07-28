@@ -30,7 +30,6 @@ DEFAULT_SIDE_SCORE = 25
 DEFAULT_TEAM_NAME = "zz"
 IGNORE_TEAMS = [
     "Short-put Bai-kar",
-    "zz",
 ]
 
 CF_DIVISION_MAP = {

@@ -42,8 +42,8 @@ import { apiAppreciationService } from 'src/app/api/services';
 import { ToastService } from 'src/app/services/toast.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
-import { environment } from 'src/environments/environment';
 import { Router, RouterLink } from '@angular/router';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-edit-appreciation',
@@ -85,6 +85,7 @@ export class EditAppreciationComponent implements OnInit {
   private athleteNameModalService = inject(AthleteNameModalService);
   private athleteDataService = inject(AthleteDataService);
   private router = inject(Router);
+  private config = inject(AppConfigService);
   eventService = inject(EventService);
 
   appreciation = signal<apiAppreciationModel | null>(null);
@@ -168,7 +169,7 @@ export class EditAppreciationComponent implements OnInit {
     this.apiAppreciationService
       .updateMyAppreciationAppreciationPost({
         body: {
-          affiliate_id: environment.affiliateId,
+          affiliate_id: this.config.affiliateId,
           year: this.year,
           ordinal: this.ordinal,
           crossfit_id: this.authService.athlete()?.crossfit_id!,
