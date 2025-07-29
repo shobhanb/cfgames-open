@@ -9,13 +9,13 @@
   "start_url": "./",
   "icons": [
     {
-      "src": "icons/cfmf/cfmf_logo_192.jpg",
+      "src": "icons/logo_192.jpg",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "icons/cfmf/cfmf_logo_512.jpg",
+      "src": "icons/logo_512.jpg",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
@@ -44,5 +44,5 @@
   ],
   "launch_handler": {
     "client_mode": ["navigate-existing", "auto"]
-}
+  }
 }
