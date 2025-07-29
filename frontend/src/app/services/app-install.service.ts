@@ -14,7 +14,9 @@ export class AppInstallService {
   readonly showInstallButton = signal(false);
 
   constructor() {
-    if (this.platform.is('ios') || this.platform.is('android')) {
+    if (this.platform.is('pwa')) {
+      this.showInstallButton.set(false);
+    } else if (this.platform.is('ios') || this.platform.is('android')) {
       this.checkStoredPreference();
     }
   }
@@ -39,8 +41,7 @@ export class AppInstallService {
       componentProps: {
         platformType: this.platform.is('ios') ? 'ios' : 'android',
       },
-      breakpoints: [0.5, 0.8],
-      initialBreakpoint: 0.8,
+      initialBreakpoint: 0.75,
     });
 
     await modal.present();
