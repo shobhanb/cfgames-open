@@ -31,10 +31,10 @@ mkdir -p certbot/www
 docker compose down
 
 # Start nginx
-docker compose up -d nginx
+docker compose -f docker-compose.initial.yaml up -d nginx
 
 # Request the wildcard certificate using DNS challenge
-docker compose run --rm certbot certonly \
+docker compose -f docker-compose.initial.yaml run --rm certbot certonly \
     --webroot \
     --webroot-path /var/www/certbot \
     --email "$1" \
