@@ -18,4 +18,10 @@ export const configs: { [key: string]: AppConfig } = {
     apiBaseUrl: 'https://itcf.cfgames.site/api',
     year: 2025,
   },
+  localhost: {
+    affiliateId: 31316,
+    affiliateName: 'Crossfit Monkey Flag',
+    apiBaseUrl: 'http://localhost:8000/api',
+    year: 2025,
+  },
 };

@@ -8,7 +8,6 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - API models are defined in `src/app/api/models/` and are used for strict typing throughout the app.
 - The app is organized by feature folders (e.g. `tabs/`, `pages/`, `services/`, `guards/`).
 - Routing is configured for lazy loading and feature isolation. Guards use signals and inject for state.
-- Environment variables (year, affiliateId, etc.) are accessed via `src/environments/environment.ts`.
 - External dependencies: Ionic (UI), RxJS (API calls), Firebase (auth), Ionicons (icons).
 
 ## Developer Workflows
@@ -37,7 +36,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 ## Examples
 - See `src/app/tabs/me-tab/appreciation/appreciation.page.ts` for signal-based state, API usage, and modal patterns.
-- See `src/app/services/event.service.ts` for event data management and environment usage.
+- See `src/app/services/event.service.ts` for event data management .
 - See `src/app/tabs/admin-tab/edit-teams/edit-teams.page.ts` for feature folder structure and service integration.
 
 ---
