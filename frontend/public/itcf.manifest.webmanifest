@@ -1,8 +1,8 @@
 {
-  "name": "CF Games",
-  "short_name": "CF Games",
-  "id": "cfgames-open",
-  "description": "CF Games Community Cup",
+  "name": "ITCF Games",
+  "short_name": "ITCF Games",
+  "id": "itcf-cfgames-open",
+  "description": "I Think Crossfit Community Cup",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "./",
