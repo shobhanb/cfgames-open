@@ -7,4 +7,5 @@ export interface apiFirebaseCustomClaims {
   affiliate_id: (number | null);
   affiliate_name: (string | null);
   crossfit_id: (number | null);
+  super_admin?: boolean;
 }

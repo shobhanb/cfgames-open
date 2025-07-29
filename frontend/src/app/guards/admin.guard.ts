@@ -6,10 +6,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const authService = inject(AuthService);
 
-  const user = authService.user();
-  const customClaims = authService.userCustomClaims();
-
-  if (!!user && user.emailVerified && !!customClaims && customClaims.admin) {
+  if (authService.adminUser?.()) {
     return true;
   }
   return router.createUrlTree(['/home']);

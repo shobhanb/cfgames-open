@@ -54,6 +54,9 @@
         @if (authService.userCustomClaims()?.admin) {
         <ion-item>
           <ion-label color="danger">Admin</ion-label>
+          @if (authService.userCustomClaims()?.super_admin) {
+          <ion-label slot="end" color="danger">Super Admin!!!</ion-label>
+          }
         </ion-item>
         }
         <ion-item>

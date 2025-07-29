@@ -8,6 +8,7 @@ class FirebaseCustomClaims(CustomBaseModel):
     affiliate_id: int | None
     affiliate_name: str | None
     admin: bool = False
+    super_admin: bool = False
 
 
 class FirebaseUserRecord(CustomBaseModel):

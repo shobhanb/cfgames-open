@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppConfig, configs } from '../config/app.config';
+import { AppConfig, configs, defaultConfig } from '../config/app.config';
 
 @Injectable({
   providedIn: 'root',
@@ -11,10 +11,10 @@ export class AppConfigService {
     const subdomain = window.location.hostname.split('.')[0];
     const isProduction = window.location.hostname !== 'localhost';
 
-    if (isProduction) {
-      this.config = configs[subdomain] || configs['cfmf'];
-    } else {
-      this.config = configs['localhost'];
+    this.config = configs[subdomain] || configs[defaultConfig];
+
+    if (!isProduction) {
+      this.config.apiBaseUrl = 'http://localhost:8000';
     }
   }
 

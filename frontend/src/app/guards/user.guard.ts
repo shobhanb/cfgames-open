@@ -6,9 +6,7 @@ export const userGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const authService = inject(AuthService);
 
-  const user = authService.user();
-
-  if (!!user && user.emailVerified) {
+  if (authService.verifiedUser()) {
     return true;
   }
   return router.createUrlTree(['/home']);

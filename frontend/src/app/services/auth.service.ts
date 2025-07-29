@@ -50,14 +50,17 @@ export class AuthService {
   });
 
   readonly verifiedUser = computed<boolean>(
-    () => (!!this.user() && this.user()?.emailVerified) || false
+    () =>
+      (!!this.user() &&
+        this.user()?.emailVerified &&
+        this.userCustomClaims()?.affiliate_id === this.config.affiliateId) ||
+      false
   );
 
   readonly adminUser = computed<boolean>(
     () =>
-      (!!this.user() &&
-        this.user()?.emailVerified &&
-        this.userCustomClaims()?.admin) ||
+      (this.verifiedUser() && this.userCustomClaims()?.admin) ||
+      this.userCustomClaims()?.super_admin ||
       false
   );
 
@@ -71,6 +74,7 @@ export class AuthService {
         const customClaims = value.claims;
         this.userCustomClaims.set({
           admin: customClaims['admin'] ? true : false,
+          super_admin: customClaims['super_admin'] ? true : false,
           affiliate_id:
             typeof customClaims['affiliate_id'] === 'number'
               ? customClaims['affiliate_id']

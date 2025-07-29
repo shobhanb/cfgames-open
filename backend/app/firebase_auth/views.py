@@ -48,8 +48,10 @@ async def create_user(
 
     if user.email == admin_user_settings.admin_user_email:
         user_custom_claims.admin = True
+        user_custom_claims.super_admin = True
     else:
         user_custom_claims.admin = False
+        user_custom_claims.super_admin = False
 
     try:
         fireauth.set_custom_user_claims(uid=user.uid, custom_claims=user_custom_claims.model_dump_json())

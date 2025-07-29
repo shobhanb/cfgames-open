@@ -46,7 +46,9 @@
         <ion-note>{{ user.email }}</ion-note>
       </ion-label>
 
-      @if (user.custom_claims?.admin) {
+      @if (user.custom_claims?.super_admin) {
+      <ion-label slot="end">Super Admin</ion-label>
+      } @if (user.custom_claims?.admin) {
       <ion-label slot="end">Admin</ion-label>
       } @if (!user.email_verified) {
       <ion-label slot="end" color="medium">Not Verified</ion-label>
