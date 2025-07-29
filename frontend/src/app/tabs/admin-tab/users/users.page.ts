@@ -30,6 +30,7 @@ import { ellipsisHorizontalOutline } from 'ionicons/icons';
 import { AlertService } from 'src/app/services/alert.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-users',
@@ -65,6 +66,7 @@ export class UsersPage implements OnInit {
   private alertService = inject(AlertService);
   private toastService = inject(ToastService);
   private actionSheetController = inject(ActionSheetController);
+  private config = inject(AppConfigService);
   authService = inject(AuthService);
 
   dataLoaded = false;
@@ -209,11 +211,16 @@ export class UsersPage implements OnInit {
     this.apiFireAuth.getAllUsersFireauthAllGet().subscribe({
       next: (data: apiFirebaseUserRecord[]) => {
         this.allUsers.set(
-          data.sort((a: apiFirebaseUserRecord, b: apiFirebaseUserRecord) => {
-            const nameA = a.display_name?.toLowerCase() || '';
-            const nameB = b.display_name?.toLowerCase() || '';
-            return nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
-          })
+          data
+            .filter(
+              (user: apiFirebaseUserRecord) =>
+                user.custom_claims?.affiliate_id === this.config.affiliateId
+            )
+            .sort((a: apiFirebaseUserRecord, b: apiFirebaseUserRecord) => {
+              const nameA = a.display_name?.toLowerCase() || '';
+              const nameB = b.display_name?.toLowerCase() || '';
+              return nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
+            })
         );
         this.dataLoaded = true;
       },

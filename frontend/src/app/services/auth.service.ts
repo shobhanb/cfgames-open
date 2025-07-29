@@ -19,6 +19,7 @@ import { apiAthleteDetail, apiFirebaseCustomClaims } from '../api/models';
 import { FirebaseError } from '@angular/fire/app';
 import { ToastService } from './toast.service';
 import { Subscription } from 'rxjs';
+import { AppConfigService } from './app-config.service';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +28,7 @@ export class AuthService {
   private apiAthlete = inject(apiAthleteService);
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
+  private config = inject(AppConfigService);
 
   private auth = inject(Auth);
   private user$ = user(this.auth);
@@ -57,6 +59,10 @@ export class AuthService {
         this.user()?.emailVerified &&
         this.userCustomClaims()?.admin) ||
       false
+  );
+
+  readonly thisAffiliateUser = computed<boolean>(
+    () => this.userCustomClaims()?.affiliate_id === this.config.affiliateId
   );
 
   private getCustomClaims(user: User | null, forceRefresh = false) {

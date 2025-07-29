@@ -19,10 +19,11 @@ appreciation_open_router = APIRouter(prefix="/appreciation_status", tags=["appre
 )
 async def get_open_appreciation_status(
     db_session: db_dependency,
-    user: verified_user_dependency,
+    _: verified_user_dependency,
+    affiliate_id: int,
     year: int,
 ) -> Sequence[AppreciationStatus]:
-    return await AppreciationStatus.find_all(async_session=db_session, affiliate_id=user.affiliate_id, year=year)
+    return await AppreciationStatus.find_all(async_session=db_session, affiliate_id=affiliate_id, year=year)
 
 
 @appreciation_open_router.put(

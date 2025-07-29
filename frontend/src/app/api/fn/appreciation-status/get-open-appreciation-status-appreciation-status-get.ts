@@ -11,12 +11,14 @@ import { RequestBuilder } from '../../request-builder';
 import { apiAppreciationStatusModel } from '../../models/api-appreciation-status-model';
 
 export interface GetOpenAppreciationStatusAppreciationStatusGet$Params {
+  affiliate_id: number;
   year: number;
 }
 
 export function getOpenAppreciationStatusAppreciationStatusGet(http: HttpClient, rootUrl: string, params: GetOpenAppreciationStatusAppreciationStatusGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAppreciationStatusModel>>> {
   const rb = new RequestBuilder(rootUrl, getOpenAppreciationStatusAppreciationStatusGet.PATH, 'get');
   if (params) {
+    rb.query('affiliate_id', params.affiliate_id, {});
     rb.query('year', params.year, {});
   }
 

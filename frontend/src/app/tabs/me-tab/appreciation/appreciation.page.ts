@@ -179,6 +179,7 @@ export class AppreciationPage implements OnInit {
 
     this.apiAppreciationStatus
       .getOpenAppreciationStatusAppreciationStatusGet({
+        affiliate_id: this.config.affiliateId,
         year: this.config.year,
       })
       .subscribe({
