@@ -1,16 +1,25 @@
 #!/bin/bash
 
-# Check if email argument is provided
-if [ -z "$1" ]; then
-    echo "Error: Email address is required"
-    echo "Usage: $0 your-email@example.com"
+# Check if email and subdomain arguments are provided
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Error: Both email address and subdomain are required"
+    echo "Usage: $0 your-email@example.com subdomain"
+    echo "Example: $0 admin@example.com cfmf"
+    echo "Example: $0 admin@example.com itcf"
     exit 1
 fi
 
 # Validate email format using regex
 if ! echo "$1" | grep -E "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" > /dev/null; then
     echo "Error: Invalid email format"
-    echo "Usage: $0 your-email@example.com"
+    echo "Usage: $0 your-email@example.com subdomain"
+    exit 1
+fi
+
+# Validate subdomain format (alphanumeric and hyphens only)
+if ! echo "$2" | grep -E "^[a-zA-Z0-9-]+$" > /dev/null; then
+    echo "Error: Invalid subdomain format. Use only letters, numbers, and hyphens"
+    echo "Usage: $0 your-email@example.com subdomain"
     exit 1
 fi
 
@@ -32,10 +41,10 @@ docker compose run --rm certbot certonly \
     --agree-tos \
     --no-eff-email \
     --force-renewal \
-    -d "cfmf.cfgames.site"
+    -d "$2.cfgames.site"
 
 # Restart nginx to load the new certificates
 docker compose restart nginx
 
-echo "SSL certificate initialization completed!"
+echo "SSL certificate initialization completed for $2.cfgames.site!"
 echo "Important: You'll need to add DNS TXT records during the certificate request process"
