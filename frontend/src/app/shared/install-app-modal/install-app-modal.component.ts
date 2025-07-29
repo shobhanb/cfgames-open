@@ -18,7 +18,9 @@ import {
   closeOutline,
   arrowDownCircleOutline,
   shareOutline,
+  ellipsisVerticalOutline,
 } from 'ionicons/icons';
+import { AppInstallService } from 'src/app/services/app-install.service';
 
 @Component({
   selector: 'app-install-app-modal',
@@ -40,12 +42,14 @@ import {
 })
 export class InstallAppModalComponent implements OnInit {
   private modalController = inject(ModalController);
+  appInstallService = inject(AppInstallService);
 
   constructor() {
     addIcons({
       closeOutline,
       arrowDownCircleOutline,
       shareOutline,
+      ellipsisVerticalOutline,
     });
   }
 

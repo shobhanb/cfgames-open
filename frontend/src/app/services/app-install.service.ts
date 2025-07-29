@@ -1,18 +1,31 @@
-import { inject, Injectable, isStandalone, signal } from '@angular/core';
+import { inject, Injectable, signal, linkedSignal } from '@angular/core';
 import { ModalController } from '@ionic/angular/standalone';
 import { InstallAppModalComponent } from '../shared/install-app-modal/install-app-modal.component';
+import { Platform } from '@ionic/angular/standalone';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppInstallService {
   private modalController = inject(ModalController);
+  private platform = inject(Platform);
   private readonly STORAGE_KEY = 'cf-games-install-prompt-hidden';
 
   readonly showInstallButton = signal(true);
+  readonly platformType = linkedSignal(() => {
+    if (this.platform.is('ios')) {
+      return 'ios' as const;
+    } else if (this.platform.is('android')) {
+      return 'android' as const;
+    } else if (this.platform.is('pwa')) {
+      return 'pwa' as const;
+    } else {
+      return 'web' as const;
+    }
+  });
 
   constructor() {
-    if (this.isStandalone()) {
+    if (this.platformType() === 'pwa' || this.platformType() === 'web') {
       this.showInstallButton.set(false);
     } else {
       this.checkStoredPreference();
@@ -39,14 +52,5 @@ export class AppInstallService {
     });
 
     await modal.present();
-  }
-
-  private isStandalone() {
-    if (
-      window.matchMedia('(display-mode: standalone)').matches ||
-      ('standalone' in navigator && (navigator as any).standalone === true)
-    )
-      return true;
-    return false;
   }
 }

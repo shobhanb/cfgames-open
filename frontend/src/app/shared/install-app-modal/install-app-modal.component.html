@@ -11,8 +11,15 @@
 <ion-content>
   <div class="installation-container ion-padding">
     <ion-icon name="arrow-down-circle-outline" class="install-icon"></ion-icon>
-    <h2>Install this app on your device</h2>
+    <h3>
+      {{
+        "Install this app on your " +
+          appInstallService.platformType() +
+          " device"
+      }}
+    </h3>
   </div>
+  @if (appInstallService.platformType() === 'ios') {
   <ion-list [inset]="true" lines="none">
     <ion-item color="light">
       <ion-note slot="start">1</ion-note>
@@ -25,11 +32,36 @@
       <ion-note slot="start">2</ion-note>
       <ion-label>Select "Add to Home Screen" from the menu options</ion-label>
     </ion-item>
+
     <ion-item color="light">
-      <ion-note slot="start">3</ion-note>
+      <ion-note slot="start">4</ion-note>
       <ion-label>PR?</ion-label>
     </ion-item>
   </ion-list>
+  } @else if (appInstallService.platformType() === 'android') {
+  <ion-list [inset]="true" lines="none">
+    <ion-item color="light">
+      <ion-note slot="start">1</ion-note>
+      <ion-label
+        >Tap the <ion-icon name="ellipsis-vertical-outline"></ion-icon> button
+        in your browser</ion-label
+      >
+    </ion-item>
+    <ion-item color="light">
+      <ion-note slot="start">2</ion-note>
+      <ion-label>Select "Add to Home Screen" from the menu options</ion-label>
+    </ion-item>
+    <ion-item color="light">
+      <ion-note slot="start">3</ion-note>
+      <ion-label>Select "Install"</ion-label>
+    </ion-item>
+
+    <ion-item color="light">
+      <ion-note slot="start">4</ion-note>
+      <ion-label>PR?</ion-label>
+    </ion-item>
+  </ion-list>
+  }
 
   <ion-button
     expand="block"
