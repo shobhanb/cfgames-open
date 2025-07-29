@@ -11,23 +11,10 @@ export class AppInstallService {
   private platform = inject(Platform);
   private readonly STORAGE_KEY = 'cf-games-install-prompt-hidden';
 
-  readonly showInstallButton = signal(true);
-  readonly platformType = linkedSignal(() => {
-    if (this.platform.is('ios')) {
-      return 'ios' as const;
-    } else if (this.platform.is('android')) {
-      return 'android' as const;
-    } else if (this.platform.is('pwa')) {
-      return 'pwa' as const;
-    } else {
-      return 'web' as const;
-    }
-  });
+  readonly showInstallButton = signal(false);
 
   constructor() {
-    if (this.platformType() === 'pwa' || this.platformType() === 'web') {
-      this.showInstallButton.set(false);
-    } else {
+    if (this.platform.is('ios') || this.platform.is('android')) {
       this.checkStoredPreference();
     }
   }
@@ -36,6 +23,8 @@ export class AppInstallService {
     const storedPreference = localStorage.getItem(this.STORAGE_KEY);
     if (storedPreference === 'true') {
       this.showInstallButton.set(false);
+    } else {
+      this.showInstallButton.set(true);
     }
   }
 
@@ -47,6 +36,9 @@ export class AppInstallService {
   async showInstallModal() {
     const modal = await this.modalController.create({
       component: InstallAppModalComponent,
+      componentProps: {
+        platformType: this.platform.is('ios') ? 'ios' : 'android',
+      },
       breakpoints: [0.5, 0.8],
       initialBreakpoint: 0.8,
     });

@@ -12,14 +12,10 @@
   <div class="installation-container ion-padding">
     <ion-icon name="arrow-down-circle-outline" class="install-icon"></ion-icon>
     <h3>
-      {{
-        "Install this app on your " +
-          appInstallService.platformType() +
-          " device"
-      }}
+      {{ "Install this app on your " + platformType + " device" }}
     </h3>
   </div>
-  @if (appInstallService.platformType() === 'ios') {
+  @if (platformType === 'ios') {
   <ion-list [inset]="true" lines="none">
     <ion-item color="light">
       <ion-note slot="start">1</ion-note>
@@ -38,7 +34,7 @@
       <ion-label>PR?</ion-label>
     </ion-item>
   </ion-list>
-  } @else if (appInstallService.platformType() === 'android') {
+  } @else {
   <ion-list [inset]="true" lines="none">
     <ion-item color="light">
       <ion-note slot="start">1</ion-note>

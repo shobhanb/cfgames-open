@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import {
   ModalController,
   IonHeader,
@@ -20,7 +20,6 @@ import {
   shareOutline,
   ellipsisVerticalOutline,
 } from 'ionicons/icons';
-import { AppInstallService } from 'src/app/services/app-install.service';
 
 @Component({
   selector: 'app-install-app-modal',
@@ -42,7 +41,8 @@ import { AppInstallService } from 'src/app/services/app-install.service';
 })
 export class InstallAppModalComponent implements OnInit {
   private modalController = inject(ModalController);
-  appInstallService = inject(AppInstallService);
+
+  @Input() platformType: 'ios' | 'android' = 'ios';
 
   constructor() {
     addIcons({
