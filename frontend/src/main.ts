@@ -29,7 +29,7 @@ const configService = new AppConfigService();
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular({ mode: 'ios', swipeBackEnabled: false }),
+    provideIonicAngular({ mode: 'ios' }),
     provideRouter(
       routes,
       withPreloading(PreloadAllModules),
