@@ -27,6 +27,13 @@ class UpdateTeamName(CustomBaseModel):
     new_team_name: str
 
 
-class AutoTeamAssignment(CustomBaseModel):
+class AutoTeamAssignmentOutput(CustomBaseModel):
     name: str
     team_name: str
+
+
+class AutoTeamAssignmentInput(CustomBaseModel):
+    affiliate_id: int
+    year: int
+    assign_from_team_name: str
+    assign_to_team_names: list[str]

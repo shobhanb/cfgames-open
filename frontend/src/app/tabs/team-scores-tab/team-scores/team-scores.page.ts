@@ -33,7 +33,6 @@ import { AuthService } from 'src/app/services/auth.service';
 import { GetTeamScoresScoreTeamGet$Params } from 'src/app/api/fn/score/get-team-scores-score-team-get';
 import { ToastService } from 'src/app/services/toast.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
-import { App } from '@capacitor/app';
 import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({

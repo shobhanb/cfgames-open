@@ -12,7 +12,7 @@ from app.firebase_auth.models import FirebaseUser
 from app.score.models import Score
 
 from .models import Athlete
-from .schemas import AutoTeamAssignment
+from .schemas import AutoTeamAssignmentOutput
 
 log = logging.getLogger("uvicorn.error")
 
@@ -122,8 +122,8 @@ async def random_assign_db_athletes(
     affiliate_id: int,
     year: int,
     assign_from_team_name: str,
-    ignore_team_names: list[str],
-) -> list[AutoTeamAssignment]:
+    assign_to_team_names: list[str],
+) -> list[AutoTeamAssignmentOutput]:
     genders = ["F", "M"]
     age_categories = ["Masters 55+", "Masters", "Open"]
 
@@ -143,19 +143,18 @@ async def random_assign_db_athletes(
             judge_stmt = select(Score.judge_user_id).distinct()
 
             athlete_judge_stmt = athlete_stmt.where(Athlete.crossfit_id.in_(judge_stmt.scalar_subquery()))
-            athlete_non_judge_stmt = athlete_stmt.where(Athlete.crossfit_id.not_in(judge_stmt.scalar_subquery()))
 
             judge_result = await db_session.execute(athlete_judge_stmt)
             judges = judge_result.scalars().all()
 
-            athlete_result = await db_session.execute(athlete_non_judge_stmt)
-            non_judge_athletes = athlete_result.scalars().all()
+            athlete_result = await db_session.execute(athlete_stmt)
+            athletes = athlete_result.scalars().all()
 
             async def get_next_team(db_session: AsyncSession) -> str:
                 # Pick team that should get a person next
                 select_team_stmt = (
                     select(Athlete.team_name, func.count().label("count"))
-                    .where(Athlete.team_name.not_in(ignore_team_names))
+                    .where(Athlete.team_name.in_(assign_to_team_names))
                     .group_by(Athlete.team_name)
                     .order_by(text("count ASC"), Athlete.team_name)
                 ).limit(1)
@@ -169,18 +168,18 @@ async def random_assign_db_athletes(
                 team = await get_next_team(db_session=db_session)
                 log.info("Category %s-%s: Team %s: Assigning judge %s", gender, age_cat, team, athlete.name)
                 athlete.team_name = team
-                assignments.append(AutoTeamAssignment(name=athlete.name, team_name=team))
+                assignments.append(AutoTeamAssignmentOutput(name=athlete.name, team_name=team))
                 db_session.add(athlete)
                 await db_session.commit()
 
-            elif len(non_judge_athletes) > 0:
+            elif len(athletes) > 0:
                 # Randomly choose one athlete
-                athlete = choice(non_judge_athletes)  # noqa: S311
+                athlete = choice(athletes)  # noqa: S311
 
                 team = await get_next_team(db_session=db_session)
                 log.info("Category %s-%s: Team %s: Assigning %s", gender, age_cat, team, athlete.name)
                 athlete.team_name = team
-                assignments.append(AutoTeamAssignment(name=athlete.name, team_name=team))
+                assignments.append(AutoTeamAssignmentOutput(name=athlete.name, team_name=team))
                 db_session.add(athlete)
                 await db_session.commit()
 

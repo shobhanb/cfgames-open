@@ -6,7 +6,7 @@ from app.athlete.models import Athlete
 from app.database.dependencies import db_dependency
 from app.firebase_auth.dependencies import admin_user_dependency, verified_user_dependency
 
-from .schemas import AffiliateAthlete, AthleteDetail, AutoTeamAssignment, TeamName
+from .schemas import AffiliateAthlete, AthleteDetail, AutoTeamAssignmentInput, AutoTeamAssignmentOutput, TeamName
 from .service import (
     assign_db_athlete_to_team,
     get_affiliate_athletes_list_unassigned,
@@ -88,21 +88,18 @@ async def assign_athlete_to_team(
     )
 
 
-@athlete_router.get("/team/random_assign", status_code=status.HTTP_202_ACCEPTED)
+@athlete_router.post("/team/random_assign", status_code=status.HTTP_202_ACCEPTED)
 async def random_assign_athletes(
     db_session: db_dependency,
     _: admin_user_dependency,
-    affiliate_id: int,
-    year: int,
-    assign_from_team_name: str,
-    ignore_team_names: list[str],
-) -> list[AutoTeamAssignment]:
+    data: AutoTeamAssignmentInput,
+) -> list[AutoTeamAssignmentOutput]:
     return await random_assign_db_athletes(
         db_session=db_session,
-        affiliate_id=affiliate_id,
-        year=year,
-        assign_from_team_name=assign_from_team_name,
-        ignore_team_names=ignore_team_names,
+        affiliate_id=data.affiliate_id,
+        year=data.year,
+        assign_from_team_name=data.assign_from_team_name,
+        assign_to_team_names=data.assign_to_team_names,
     )
 
 

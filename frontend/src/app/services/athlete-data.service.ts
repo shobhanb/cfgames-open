@@ -1,14 +1,34 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { apiAthleteService } from '../api/services';
 import { apiAthleteDetail } from '../api/models';
 import { AppConfigService } from './app-config.service';
+import { HelperFunctionsService } from './helper-functions.service';
 
 @Injectable({ providedIn: 'root' })
 export class AthleteDataService {
   private apiAthlete = inject(apiAthleteService);
+  private helperFunctions = inject(HelperFunctionsService);
   private config = inject(AppConfigService);
 
   readonly athleteData = signal<apiAthleteDetail[]>([]);
+
+  readonly teamNames = computed(() =>
+    this.athleteData()
+      .map((data: apiAthleteDetail) => data.team_name)
+      .filter(this.helperFunctions.filterUnique)
+      .sort()
+  );
+
+  readonly teamCounts = computed(() => {
+    const counts = new Map<string, number>();
+    this.athleteData().forEach((athlete) => {
+      const teamName = athlete.team_name;
+      counts.set(teamName, (counts.get(teamName) || 0) + 1);
+    });
+    return Array.from(counts.entries())
+      .map(([teamName, count]) => ({ teamName, count }))
+      .sort((a, b) => a.teamName.localeCompare(b.teamName));
+  });
   readonly loading = signal<boolean>(false);
 
   getData(): Promise<void> {

@@ -9,5 +9,101 @@
 </ion-header>
 
 <ion-content>
-  <p>Coming soon!</p>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Auto Assign Teams</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text>
+        <p>
+          This will randomly assign athletes from the default team to the
+          selected teams. Athlete distribution will be random, but evenly
+          distributed by category. (Gender, Age Category, etc.)
+        </p>
+        @if (fromTeamsList().length < 2) {
+        <p>You need at least two teams to perform auto assignment.</p>
+        <p>
+          Go to the manual assign teams page and create teams with team leaders
+          / coaches there first, then come back here to auto assign other
+          athletes.
+        </p>
+        }
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="section-title">Current Team Distribution</div>
+  <ion-list [inset]="true">
+    @for (team of athleteDataService.teamCounts(); track $index) {
+    <ion-item>
+      <ion-label>{{ team.teamName }}</ion-label>
+      <ion-note slot="end">{{ team.count }}</ion-note>
+    </ion-item>
+    }
+  </ion-list>
+
+  <div class="section-title">Choose team to assign from</div>
+  <ion-list [inset]="true">
+    <ion-item>
+      <ion-select
+        placeholder="Pick Team"
+        label="Assign From Team"
+        (ionChange)="handleFromTeamChange($event)"
+      >
+        @for (team of fromTeamsList(); track $index) {
+        <ion-select-option>{{ team }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+  <div class="section-title">Choose teams to assign to</div>
+  <ion-list [inset]="true">
+    <ion-item>
+      <ion-select
+        placeholder="Pick Teams"
+        label="Assign To Teams"
+        [multiple]="true"
+        (ionChange)="selectedToTeams.set($event.detail.value)"
+      >
+        @for (team of toTeamsList(); track $index) {
+        <ion-select-option>{{ team }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  <ion-button
+    class="ion-margin"
+    expand="block"
+    color="primary"
+    (click)="handleAutoAssign()"
+    [disabled]="!selectedFromTeam() || selectedToTeams().length === 0"
+  >
+    Auto Assign Teams
+  </ion-button>
+
+  <ion-modal [isOpen]="openResultsModal()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Assignment Results</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="onDismissResultsModal()">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="section-title">Team Assignments results</div>
+        <ion-list [inset]="true">
+          @for (item of teamAssignmentResults(); track $index) {
+          <ion-item>
+            <ion-note slot="start">{{ $index + 1 }} </ion-note>
+            <ion-label>{{ item.name }}</ion-label>
+            <ion-label slot="end">{{ item.team_name }}</ion-label>
+          </ion-item>
+          }
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

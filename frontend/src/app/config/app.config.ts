@@ -20,4 +20,4 @@ export const configs: { [key: string]: AppConfig } = {
   },
 };
 
-export const defaultConfig = 'cfmf';
+export const defaultConfig = 'itcf';
