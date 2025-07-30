@@ -28,6 +28,8 @@ import {
   IonCardContent,
   IonText,
   IonModal,
+  IonRefresher,
+  IonRefresherContent,
 } from '@ionic/angular/standalone';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { ToastService } from 'src/app/services/toast.service';
@@ -42,6 +44,8 @@ import { apiAutoTeamAssignmentOutput } from 'src/app/api/models';
   styleUrls: ['./auto-assign-teams.page.scss'],
   standalone: true,
   imports: [
+    IonRefresherContent,
+    IonRefresher,
     IonModal,
     IonText,
     IonCardContent,
