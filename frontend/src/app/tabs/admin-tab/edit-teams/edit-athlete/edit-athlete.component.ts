@@ -1,4 +1,4 @@
-import { Component, inject, Input, input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -12,12 +12,8 @@ import {
   IonButtons,
   IonButton,
   IonContent,
-  IonSearchbar,
   IonList,
   ModalController,
-  IonSegment,
-  IonSegmentButton,
-  IonLabel,
   IonRadioGroup,
   IonItem,
   IonRadio,
@@ -36,11 +32,7 @@ import { ToastService } from 'src/app/services/toast.service';
     IonRadio,
     IonItem,
     IonRadioGroup,
-    IonLabel,
-    IonSegmentButton,
-    IonSegment,
     IonList,
-    IonSearchbar,
     IonContent,
     IonButton,
     IonButtons,

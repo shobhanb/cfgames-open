@@ -14,10 +14,6 @@ import {
   IonLabel,
   IonIcon,
   IonSkeletonText,
-  IonItemSliding,
-  IonItemOptions,
-  IonItemOption,
-  IonNote,
   IonButton,
   ModalController,
 } from '@ionic/angular/standalone';
@@ -43,10 +39,6 @@ import { EditAthleteComponent } from './edit-athlete/edit-athlete.component';
   standalone: true,
   imports: [
     IonButton,
-    IonNote,
-    IonItemOption,
-    IonItemOptions,
-    IonItemSliding,
     IonSkeletonText,
     IonIcon,
     IonLabel,
