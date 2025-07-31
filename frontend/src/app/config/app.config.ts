@@ -18,6 +18,12 @@ export const configs: { [key: string]: AppConfig } = {
     apiBaseUrl: 'https://itcf.cfgames.site/api',
     year: 2025,
   },
+  enduro: {
+    affiliateId: 2539,
+    affiliateName: 'Crossfit Enduro',
+    apiBaseUrl: 'https://enduro.cfgames.site/api',
+    year: 2025,
+  },
 };
 
 export const defaultConfig = 'itcf';
