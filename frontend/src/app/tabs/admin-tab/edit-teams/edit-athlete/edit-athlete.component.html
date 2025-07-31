@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ "Edit " + athlete!.name }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="section-title">Select Athlete Type</div>
+    <ion-list [inset]="true">
+      <ion-radio-group formControlName="athleteType">
+        <ion-item>
+          <ion-radio [value]="2">Team Leader</ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-radio [value]="1">Coach</ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-radio [value]="0">Athlete</ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
+
+    <div class="section-title">Edit Team Name</div>
+    <ion-list [inset]="true">
+      <ion-item>
+        <ion-input formControlName="teamName" type="text"></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <ion-button
+      class="ion-margin"
+      expand="block"
+      type="submit"
+      [disabled]="!formValid()"
+      >Submit</ion-button
+    >
+    <ion-button
+      class="ion-margin"
+      expand="block"
+      fill="outline"
+      color="danger"
+      type="cancel"
+      (click)="onCancel()"
+      >Cancel</ion-button
+    >
+  </form>
+</ion-content>

@@ -134,14 +134,12 @@ export class UsersPage implements OnInit {
       ],
     });
 
-    await actionSheet.present().then(() => {});
+    await actionSheet.present();
 
     const result = await actionSheet.onDidDismiss();
     if (result.data.action === 'delete') {
-      console.log('Delete ', user.display_name);
       await this.onClickDelete(user);
     } else if (result.data.action === 'admin') {
-      console.log('Admin toggle ', user.display_name);
       await this.onClickAdmin(user);
     }
   }

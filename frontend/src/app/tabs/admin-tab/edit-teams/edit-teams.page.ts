@@ -17,15 +17,24 @@ import {
   IonItemSliding,
   IonItemOptions,
   IonItemOption,
+  IonNote,
+  IonButton,
+  ModalController,
 } from '@ionic/angular/standalone';
 import { apiAthleteService } from 'src/app/api/services';
 import { apiAthleteDetail } from 'src/app/api/models';
 import { addIcons } from 'ionicons';
-import { diamondOutline, ribbonOutline } from 'ionicons/icons';
+import {
+  diamondOutline,
+  ribbonOutline,
+  ellipsisHorizontalOutline,
+  bodyOutline,
+} from 'ionicons/icons';
 import { ToastService } from 'src/app/services/toast.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
+import { EditAthleteComponent } from './edit-athlete/edit-athlete.component';
 
 @Component({
   selector: 'app-teams',
@@ -33,6 +42,8 @@ import { AthleteDataService } from 'src/app/services/athlete-data.service';
   styleUrls: ['./edit-teams.page.scss'],
   standalone: true,
   imports: [
+    IonButton,
+    IonNote,
     IonItemOption,
     IonItemOptions,
     IonItemSliding,
@@ -58,6 +69,7 @@ export class EditTeamsPage implements OnInit {
   private toastService = inject(ToastService);
   private alertService = inject(AlertService);
   private athleteDataService = inject(AthleteDataService);
+  private modalController = inject(ModalController);
 
   filteredAthleteData = computed<apiAthleteDetail[]>(() => {
     const search = this.searchText();
@@ -80,7 +92,12 @@ export class EditTeamsPage implements OnInit {
   searchText = signal<string | null>(null);
 
   constructor() {
-    addIcons({ diamondOutline, ribbonOutline });
+    addIcons({
+      diamondOutline,
+      ribbonOutline,
+      bodyOutline,
+      ellipsisHorizontalOutline,
+    });
   }
 
   ngOnInit() {
@@ -105,124 +122,31 @@ export class EditTeamsPage implements OnInit {
     this.searchText.set(target.value?.toLowerCase() || null);
   }
 
-  async onClickCoach(athlete: apiAthleteDetail) {
-    await this.apiAthlete
-      .assignAthleteToTeamAthleteTeamAssignPut({
-        crossfit_id: athlete.crossfit_id,
-        year: athlete.year,
-        team_name: athlete.team_name,
-        team_role: athlete.team_role === 1 ? 0 : 1,
-      })
-      .subscribe({
-        next: (data: apiAthleteDetail) => {
-          this.athleteDataService.athleteData.update(
-            (athletes: apiAthleteDetail[]) =>
-              athletes.map((a: apiAthleteDetail) =>
-                a.crossfit_id === data.crossfit_id && a.year === data.year
-                  ? { ...a, team_role: data.team_role }
-                  : a
-              )
-          );
-          this.toastService.showToast(
-            `Assigned ${data.name} as coach of team ${data.team_name}`,
-            'success',
-            null,
-            1000
-          );
-          const item = document.getElementById(
-            `sliding-team-${athlete.crossfit_id}`
-          );
-          if (item) {
-            const slidingItem = item as HTMLIonItemSlidingElement;
-            slidingItem.close();
-          }
-        },
-        error: (err: any) => {
-          this.toastService.showToast(err.message, 'danger', null, 3000);
-        },
-      });
-  }
-
-  async onClickTeamLeader(athlete: apiAthleteDetail) {
-    await this.apiAthlete
-      .assignAthleteToTeamAthleteTeamAssignPut({
-        crossfit_id: athlete.crossfit_id,
-        year: athlete.year,
-        team_name: athlete.team_name,
-        team_role: athlete.team_role === 2 ? 0 : 2,
-      })
-      .subscribe({
-        next: (data: apiAthleteDetail) => {
-          this.athleteDataService.athleteData.update(
-            (athletes: apiAthleteDetail[]) =>
-              athletes.map((a: apiAthleteDetail) =>
-                a.crossfit_id === data.crossfit_id && a.year === data.year
-                  ? { ...a, team_role: data.team_role }
-                  : a
-              )
-          );
-          this.toastService.showToast(
-            `Assigned ${data.name} as Team Leader of team ${data.team_name}`,
-            'success',
-            null,
-            1000
-          );
-          const item = document.getElementById(
-            `sliding-team-${athlete.crossfit_id}`
-          );
-          if (item) {
-            const slidingItem = item as HTMLIonItemSlidingElement;
-            slidingItem.close();
-          }
-        },
-        error: (err: any) => {
-          this.toastService.showToast(err.message, 'danger', null, 3000);
-        },
-      });
-  }
-
-  async onClickEditTeam(athlete: apiAthleteDetail) {
-    const result = await this.alertService.showAlert('Edit Team', {
-      inputLabel: athlete.team_name,
+  async onClickAthlete(athlete: apiAthleteDetail) {
+    const modal = await this.modalController.create({
+      component: EditAthleteComponent,
+      componentProps: {
+        athlete,
+      },
+      initialBreakpoint: 0.75,
     });
-
-    if (result.role === 'confirm' && result.inputValue) {
-      const newTeamName = result.inputValue;
-
-      this.apiAthlete
-        .assignAthleteToTeamAthleteTeamAssignPut({
-          crossfit_id: athlete.crossfit_id,
-          year: athlete.year,
-          team_name: newTeamName,
-          team_role: athlete.team_role,
-        })
-        .subscribe({
-          next: (updatedAthlete) => {
-            this.athleteDataService.athleteData.update(
-              (athletes: apiAthleteDetail[]) =>
-                athletes.map((a: apiAthleteDetail) =>
-                  a.crossfit_id === updatedAthlete.crossfit_id &&
-                  a.year === updatedAthlete.year
-                    ? { ...a, team_name: updatedAthlete.team_name }
-                    : a
-                )
-            );
-            this.toastService.showToast(
-              `Updated team name to ${updatedAthlete.team_name}`,
-              'success',
-              null,
-              1000
-            );
-          },
-          error: (err) => {
-            this.toastService.showToast(err.message, 'danger', null, 3000);
-          },
-        });
-    }
-    const item = document.getElementById(`sliding-team-${athlete.crossfit_id}`);
-    if (item) {
-      const slidingItem = item as HTMLIonItemSlidingElement;
-      slidingItem.close();
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+      this.athleteDataService.athleteData.update(
+        (athletes: apiAthleteDetail[]) =>
+          athletes.map((a: apiAthleteDetail) =>
+            a.crossfit_id === data.crossfit_id && a.year === data.year
+              ? { ...a, ...data }
+              : a
+          )
+      );
+      this.toastService.showToast(
+        `Updated athlete ${data.name}`,
+        'success',
+        null,
+        1000
+      );
     }
   }
 }
