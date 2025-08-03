@@ -57,6 +57,9 @@
     <ion-card-content>
       <p>{{ welcomeMessage }}</p>
     </ion-card-content>
+    <ion-button fill="clear" (click)="onClickLearnMore()"
+      >Learn more about this app</ion-button
+    >
     @if (!authService.user()) {
     <ion-button
       fill="clear"

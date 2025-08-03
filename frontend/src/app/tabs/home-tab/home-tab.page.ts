@@ -16,6 +16,7 @@ import {
   IonRefresherContent,
   IonRouterLink,
   IonIcon,
+  ModalController,
 } from '@ionic/angular/standalone';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { apiHomeBlogService } from 'src/app/api/services';
@@ -26,6 +27,7 @@ import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/services/auth.service';
 import { AppConfigService } from 'src/app/services/app-config.service';
+import { LearnComponent } from './learn/learn.component';
 
 @Component({
   selector: 'app-home-tab',
@@ -56,6 +58,7 @@ import { AppConfigService } from 'src/app/services/app-config.service';
 export class HomeTabPage implements OnInit {
   private apiHomeBlog = inject(apiHomeBlogService);
   private config = inject(AppConfigService);
+  private modalController = inject(ModalController);
   authService = inject(AuthService);
   appInstallService = inject(AppInstallService);
 
@@ -97,5 +100,13 @@ export class HomeTabPage implements OnInit {
           this.dataLoaded = true;
         },
       });
+  }
+
+  async onClickLearnMore() {
+    const modal = await this.modalController.create({
+      component: LearnComponent,
+    });
+
+    await modal.present();
   }
 }
