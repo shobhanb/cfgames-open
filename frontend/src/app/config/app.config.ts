@@ -24,6 +24,24 @@ export const configs: { [key: string]: AppConfig } = {
     apiBaseUrl: 'https://enduro.cfgames.site/api',
     year: 2025,
   },
+  '9one': {
+    affiliateId: 29255,
+    affiliateName: 'Crossfit 9 One',
+    apiBaseUrl: 'https://9one.cfgames.site/api',
+    year: 2025,
+  },
+  kaali: {
+    affiliateId: 27414,
+    affiliateName: 'Crossfit Kaali',
+    apiBaseUrl: 'https://kaali.cfgames.site/api',
+    year: 2025,
+  },
+  blackfire: {
+    affiliateId: 13774,
+    affiliateName: 'Crossfit Blackfire',
+    apiBaseUrl: 'https://blackfire.cfgames.site/api',
+    year: 2025,
+  },
 };
 
 export const defaultConfig = 'itcf';
