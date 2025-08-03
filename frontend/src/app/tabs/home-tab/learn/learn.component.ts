@@ -12,15 +12,29 @@ import {
   IonNote,
   IonItem,
   IonList,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { add, closeOutline } from 'ionicons/icons';
+import {
+  closeOutline,
+  syncOutline,
+  settingsOutline,
+  archiveOutline,
+} from 'ionicons/icons';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-learn',
   templateUrl: './learn.component.html',
   styleUrls: ['./learn.component.scss'],
   imports: [
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
     IonList,
     IonItem,
     IonNote,
@@ -36,9 +50,15 @@ import { add, closeOutline } from 'ionicons/icons';
 })
 export class LearnComponent implements OnInit {
   private modalController = inject(ModalController);
+  config = inject(AppConfigService);
 
   constructor() {
-    addIcons({ closeOutline });
+    addIcons({
+      closeOutline,
+      syncOutline,
+      settingsOutline,
+      archiveOutline,
+    });
   }
 
   ngOnInit() {}
