@@ -57,7 +57,7 @@
     </ion-segment></ion-toolbar
   >
 
-  @if ( dataLoaded) {
+  @if ( dataLoaded()) {
   <div class="section-title">{{ teamSectionTitle() }}</div>
   <ion-list [inset]="true">
     @for (athlete of filteredAthletes(); track $index) {

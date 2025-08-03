@@ -65,7 +65,7 @@ export class MyTeamPage implements OnInit {
 
   constructor() {}
 
-  dataLoaded = false;
+  dataLoaded = computed(() => !this.athleteDataService.loading());
   myTeamName = this.authService.athlete()?.team_name || '';
   myCrossfitId = this.authService.userCustomClaims()?.crossfit_id;
 
@@ -77,8 +77,6 @@ export class MyTeamPage implements OnInit {
       ' - ' +
       this.scoreFilter.filter().ageCategory
   );
-
-  athletes = signal<apiAthleteDetail[]>([]);
 
   teamsList = computed(() =>
     this.athleteDataService
@@ -106,34 +104,12 @@ export class MyTeamPage implements OnInit {
   }
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
     this.getData();
     (event.target as HTMLIonRefresherElement).complete();
   }
 
   private async getData() {
-    this.dataLoaded = false;
-    await this.apiAthlete
-      .getAthleteDetailAllAthleteDetailAllGet({
-        affiliate_id: this.config.affiliateId,
-        year: this.config.year,
-      })
-      .subscribe({
-        next: (data: apiAthleteDetail[]) => {
-          this.athletes.set(data);
-          this.dataLoaded = true;
-
-          const myTeamName = data.find(
-            (athlete) => athlete.crossfit_id === this.myCrossfitId
-          )?.team_name;
-          if (myTeamName) {
-            this.scoreFilter.setFilter({ team: myTeamName });
-          }
-        },
-        error: (err: any) => {
-          this.toastService.showToast(err.message, 'danger', null, 3000);
-        },
-      });
+    this.athleteDataService.getData();
   }
 
   onSelectionChanged(
