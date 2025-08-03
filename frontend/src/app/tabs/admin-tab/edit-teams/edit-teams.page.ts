@@ -120,7 +120,8 @@ export class EditTeamsPage implements OnInit {
       componentProps: {
         athlete,
       },
-      initialBreakpoint: 0.75,
+      breakpoints: [0.75, 0.9],
+      initialBreakpoint: 0.9,
     });
     await modal.present();
     const { data } = await modal.onWillDismiss();

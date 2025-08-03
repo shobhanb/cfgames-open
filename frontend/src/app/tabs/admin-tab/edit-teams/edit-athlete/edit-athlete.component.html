@@ -8,6 +8,13 @@
 </ion-header>
 <ion-content>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="section-title">Edit Team Name</div>
+    <ion-list [inset]="true">
+      <ion-item>
+        <ion-input formControlName="teamName" type="text"></ion-input>
+      </ion-item>
+    </ion-list>
+
     <div class="section-title">Select Athlete Type</div>
     <ion-list [inset]="true">
       <ion-radio-group formControlName="athleteType">
@@ -21,13 +28,6 @@
           <ion-radio [value]="0">Athlete</ion-radio>
         </ion-item>
       </ion-radio-group>
-    </ion-list>
-
-    <div class="section-title">Edit Team Name</div>
-    <ion-list [inset]="true">
-      <ion-item>
-        <ion-input formControlName="teamName" type="text"></ion-input>
-      </ion-item>
     </ion-list>
 
     <ion-button
