@@ -71,7 +71,9 @@ async def get_cf_data(affiliate_code: int, year: int) -> tuple[int, list[dict], 
     scores_list = []
 
     api_url = CF_LEADERBOARD_URL.replace("YYYY", str(year))
-    transport = AsyncRateLimitedTransport.create(rate=Rate.create(magnitude=HTTPX_MAX_RATE_LIMIT_PER_SECOND))
+    transport = AsyncRateLimitedTransport.create(
+        rate=Rate.create(magnitude=1, duration=1 / HTTPX_MAX_RATE_LIMIT_PER_SECOND),
+    )
 
     start_time = time.time()
     try:
