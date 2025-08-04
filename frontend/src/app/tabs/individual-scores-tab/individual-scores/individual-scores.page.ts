@@ -91,6 +91,15 @@ export class IndividualScoresPage implements OnInit {
   });
   readonly title = computed<string>(() => `${this.event()} Scores`);
 
+  teamSectionTitle = computed(
+    () =>
+      this.scoreFilter.filter().team.replace(/^\s*\d+\.?\s*/, '') +
+      ' - ' +
+      this.scoreFilter.filter().gender +
+      ' - ' +
+      this.scoreFilter.filter().ageCategory
+  );
+
   readonly teamsList = computed<string[]>(() =>
     this.scores()
       .map((value: apiIndividualScoreModel) => value.team_name)

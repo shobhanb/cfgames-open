@@ -109,7 +109,8 @@ export class MyTeamPage implements OnInit {
   }
 
   private async getData() {
-    this.athleteDataService.getData();
+    await this.athleteDataService.getData();
+    this.scoreFilter.setFilter({ team: this.myTeamName });
   }
 
   onSelectionChanged(
