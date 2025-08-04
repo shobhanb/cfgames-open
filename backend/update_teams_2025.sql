@@ -6,5 +6,5 @@ team_role = query.team_role
 from (
     select * from team_names_2025
 ) as query
-where athlete.crossfit_id = query.crossfit_id and athlete.year = 2025
+where athlete.crossfit_id = query.crossfit_id and athlete.year = 2025 and athlete.affiliate_id=31316
 ;
