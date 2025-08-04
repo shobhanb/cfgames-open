@@ -1,14 +1,12 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { apiCfeventsService } from '../api/services';
-import { apiEventsModel } from '../api/models';
 import { AppConfigService } from './app-config.service';
+import { EventModel, events } from '../config/events';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventService {
-  private apiEvents = inject(apiCfeventsService);
-  private events = signal<apiEventsModel[]>([]);
+  private events = signal<EventModel[]>([]);
   private config = inject(AppConfigService);
 
   readonly currentYearEvents = computed(() =>
@@ -21,7 +19,7 @@ export class EventService {
 
   readonly groupedEvents = computed(() => {
     const events = this.events();
-    const groups: { [year: number]: apiEventsModel[] } = {};
+    const groups: { [year: number]: EventModel[] } = {};
     events.forEach((event) => {
       if (!groups[event.year]) {
         groups[event.year] = [];
@@ -49,7 +47,7 @@ export class EventService {
       year = this.config.year;
     }
     const event = this.events().find(
-      (e: apiEventsModel) => e.year === year && e.ordinal === ordinal
+      (e: EventModel) => e.year === year && e.ordinal === ordinal
     );
     return event ? event.event : null;
   }
@@ -57,7 +55,7 @@ export class EventService {
   getOrdinalFromEvent(event: string): number | null {
     const [year, ordinal] = event.split('.');
     const eventModel = this.events().find(
-      (e: apiEventsModel) => e.year === +year && e.event === event
+      (e: EventModel) => e.year === +year && e.event === event
     );
     return eventModel ? eventModel.ordinal : null;
   }
@@ -70,16 +68,7 @@ export class EventService {
   }
 
   getData() {
-    this.apiEvents.getCfeventsCfeventsGet().subscribe({
-      next: (events) => {
-        this.events.set(
-          events.sort((a: apiEventsModel, b: apiEventsModel) => {
-            return b.event > a.event ? 1 : -1;
-          })
-        );
-      },
-      error: (err) => console.error('Error loading events:', err),
-    });
+    this.events.set(events);
   }
 
   constructor() {

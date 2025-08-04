@@ -25,9 +25,10 @@ import { addOutline, trashOutline, closeOutline } from 'ionicons/icons';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { apiAppreciationStatusService } from 'src/app/api/services';
 import { ToastService } from 'src/app/services/toast.service';
-import { apiAppreciationStatusModel, apiEventsModel } from 'src/app/api/models';
+import { apiAppreciationStatusModel } from 'src/app/api/models';
 import { EventService } from 'src/app/services/event.service';
 import { AppConfigService } from 'src/app/services/app-config.service';
+import { EventModel } from 'src/app/config/events';
 
 @Component({
   selector: 'app-appreciation-status',
@@ -76,11 +77,11 @@ export class AppreciationStatusPage implements OnInit {
     }))
   );
 
-  readonly availableEvents = computed<apiEventsModel[]>(() =>
+  readonly availableEvents = computed<EventModel[]>(() =>
     this.eventService
       .currentYearEvents()
       .filter(
-        (event: apiEventsModel) =>
+        (event: EventModel) =>
           !this.appreciationStatus().some(
             (status) =>
               status.year === event.year && status.ordinal === event.ordinal
@@ -143,7 +144,7 @@ export class AppreciationStatusPage implements OnInit {
     this.isAddModalOpen.set(false);
   }
 
-  addEvent(event: apiEventsModel) {
+  addEvent(event: EventModel) {
     this.apiAppreciationStatus
       .addOpenAppreciationStatusAppreciationStatusPut({
         body: {
@@ -175,7 +176,7 @@ export class AppreciationStatusPage implements OnInit {
       });
   }
 
-  deleteEvent(event: apiEventsModel) {
+  deleteEvent(event: EventModel) {
     this.apiAppreciationStatus
       .deleteOpenAppreciationStatusAppreciationStatusDelete({
         body: {
@@ -206,7 +207,7 @@ export class AppreciationStatusPage implements OnInit {
       });
   }
 
-  handleEventToggle(data: apiEventsModel, event: CustomEvent) {
+  handleEventToggle(data: EventModel, event: CustomEvent) {
     const isChecked = event.detail.checked;
     if (isChecked) {
       this.addEvent(data);
