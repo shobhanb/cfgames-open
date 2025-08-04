@@ -179,8 +179,10 @@ export class IndividualScoresPage implements OnInit {
             value.crossfit_id === this.userCrossfitId()
         )?.team_name;
 
-        if (userTeam) {
+        if (!!userTeam && this.teamsList().includes(userTeam)) {
           this.scoreFilter.setFilter({ team: userTeam });
+        } else {
+          this.scoreFilter.setFilter({ team: this.teamsList()[0] });
         }
       },
       error: (err: any) => {
