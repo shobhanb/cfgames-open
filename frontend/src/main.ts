@@ -54,7 +54,7 @@ bootstrapApplication(AppComponent, {
     provideMessaging(() => getMessaging()),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
-      registrationStrategy: 'registerWhenStable:30000',
+      registrationStrategy: 'registerImmediately',
     }),
   ],
 });
