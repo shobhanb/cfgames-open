@@ -23,8 +23,9 @@ cf_events_router = APIRouter(prefix="/cfevents", tags=["cfevents"])
 )
 async def get_cfevents(
     db_session: db_dependency,
+    affiliate_id: int,
 ) -> Sequence[Events]:
-    return await get_events_with_data(db_session=db_session)
+    return await get_events_with_data(db_session=db_session, affiliate_id=affiliate_id)
 
 
 @cf_events_router.post(
