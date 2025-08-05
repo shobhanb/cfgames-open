@@ -43,14 +43,6 @@
             {{`Team: ${ authService.athlete()!.team_name  | teamName}`}}
           </ion-label>
         </ion-item>
-        <ion-item>
-          <ion-label>
-            {{`Age Category: ${ authService.athlete()?.age_category }`}}
-          </ion-label>
-          <ion-label slot="end">
-            {{`Gender: ${ authService.athlete()?.gender }`}}
-          </ion-label>
-        </ion-item>
         @if (authService.userCustomClaims()?.admin) {
         <ion-item>
           <ion-label color="danger">Admin</ion-label>
@@ -58,13 +50,7 @@
           <ion-label slot="end" color="danger">Super Admin!!!</ion-label>
           }
         </ion-item>
-        }
-        <ion-item>
-          <ion-button fill="outline" (click)="onClickRefresh()"
-            >Refresh Athlete Info</ion-button
-          >
-        </ion-item>
-        }
+        } }
       </ion-list>
       @if (! authService.user()?.emailVerified) {
       <ion-list [inset]="true">
