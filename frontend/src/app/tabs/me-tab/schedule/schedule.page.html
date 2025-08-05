@@ -9,11 +9,11 @@
 </ion-header>
 
 <ion-content>
+  @if (! editPrefs()) {
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
-  @if ( dataLoaded()) {
+  } @if ( dataLoaded()) {
 
   <ion-card>
     <ion-card-header>
