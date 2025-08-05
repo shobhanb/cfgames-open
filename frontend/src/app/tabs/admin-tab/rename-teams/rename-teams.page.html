@@ -13,7 +13,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  @if ( dataLoaded) {
+  @if ( dataLoaded()) {
   <div class="section-title">Click to Edit Names</div>
   <ion-list [inset]="true">
     @for (name of teamNames(); track $index) {

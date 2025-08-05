@@ -90,7 +90,7 @@ export class AppreciationResultPage implements OnInit {
     );
   });
 
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
 
   constructor() {}
 
@@ -99,7 +99,7 @@ export class AppreciationResultPage implements OnInit {
   }
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this.getData();
     (event.target as HTMLIonRefresherElement).complete();
   }
@@ -114,7 +114,7 @@ export class AppreciationResultPage implements OnInit {
       .subscribe({
         next: (data: apiAppreciationResults[]) => {
           this.appreciationResults.set(data);
-          this.dataLoaded = true;
+          this.dataLoaded.set(true);
         },
         error: (error) => {
           console.error('Error fetching appreciation results:', error);

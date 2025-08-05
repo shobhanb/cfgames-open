@@ -71,14 +71,14 @@ export class AppreciationResultsPage implements OnInit {
 
   constructor() {}
 
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
 
   ngOnInit() {
     this.getData();
   }
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this.getData();
     (event.target as HTMLIonRefresherElement).complete();
   }
@@ -92,7 +92,7 @@ export class AppreciationResultsPage implements OnInit {
       .subscribe({
         next: (data: apiAppreciationCountsModel[]) => {
           this.appreciationCounts.set(data);
-          this.dataLoaded = true;
+          this.dataLoaded.set(true);
         },
         error: (error) => {
           this.toastService.showToast(

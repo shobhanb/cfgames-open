@@ -90,7 +90,7 @@ export class AppreciationPage implements OnInit {
   eventService = inject(EventService);
   athleteDataService = inject(AthleteDataService);
 
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
   readonly appreciations = signal<apiAppreciationModel[]>([]);
   private readonly appreciationStatus = signal<apiAppreciationStatusModel[]>(
     []
@@ -142,7 +142,7 @@ export class AppreciationPage implements OnInit {
   }
 
   loadData() {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
 
     let appreciationDataLoaded = false;
     let appreciationStatusDataLoaded = false;
@@ -162,8 +162,9 @@ export class AppreciationPage implements OnInit {
             })
           );
           appreciationDataLoaded = true;
-          this.dataLoaded =
-            appreciationDataLoaded && appreciationStatusDataLoaded;
+          this.dataLoaded.set(
+            appreciationDataLoaded && appreciationStatusDataLoaded
+          );
         },
         error: (error) => {
           console.error('Error fetching appreciations:', error);
@@ -173,7 +174,7 @@ export class AppreciationPage implements OnInit {
             null,
             3000
           );
-          this.dataLoaded = true;
+          this.dataLoaded.set(true);
         },
       });
 
@@ -186,8 +187,9 @@ export class AppreciationPage implements OnInit {
         next: (data) => {
           this.appreciationStatus.set(data);
           appreciationStatusDataLoaded = true;
-          this.dataLoaded =
-            appreciationDataLoaded && appreciationStatusDataLoaded;
+          this.dataLoaded.set(
+            appreciationDataLoaded && appreciationStatusDataLoaded
+          );
         },
         error: (error) => {
           console.error('Error fetching appreciation status:', error);
@@ -202,7 +204,7 @@ export class AppreciationPage implements OnInit {
   }
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this.loadData();
     (event.target as HTMLIonRefresherElement).complete();
   }

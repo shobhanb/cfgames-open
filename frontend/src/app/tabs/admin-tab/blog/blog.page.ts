@@ -77,7 +77,7 @@ export class BlogPage implements OnInit {
   private modalController = inject(ModalController);
   private config = inject(AppConfigService);
 
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
   blogData = signal<apiHomeBlogModel[]>([]);
 
   constructor() {
@@ -100,7 +100,7 @@ export class BlogPage implements OnInit {
   }
 
   getData() {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
 
     this.apiHomeBlogService
       .getHomeBlogHomeBlogGet({
@@ -117,7 +117,7 @@ export class BlogPage implements OnInit {
               );
             })
           );
-          this.dataLoaded = true;
+          this.dataLoaded.set(true);
         },
         error: (error: any) => {
           this.toastService.showToast('Failed to load blog posts', 'danger');

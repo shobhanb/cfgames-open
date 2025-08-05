@@ -170,7 +170,7 @@ export class IndividualScoresPage implements OnInit {
   });
 
   expandedAccordions: string[] = [];
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
 
   getData() {
     const params: GetIndividualScoresScoreIndividualGet$Params = {
@@ -181,7 +181,7 @@ export class IndividualScoresPage implements OnInit {
     this.apiScore.getIndividualScoresScoreIndividualGet(params).subscribe({
       next: (value: apiIndividualScoreModel[]) => {
         this.scores.set(value);
-        this.dataLoaded = true;
+        this.dataLoaded.set(true);
 
         const userTeam = value.find(
           (value: apiIndividualScoreModel) =>
@@ -202,7 +202,7 @@ export class IndividualScoresPage implements OnInit {
   }
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this.getData();
     (event.target as HTMLIonRefresherElement).complete();
   }

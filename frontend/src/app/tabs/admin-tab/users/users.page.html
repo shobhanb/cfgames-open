@@ -33,7 +33,7 @@
     ></ion-searchbar>
   </ion-toolbar>
 
-  @if (dataLoaded) {
+  @if (dataLoaded()) {
   <ion-list>
     @for (user of filteredUsers(); track user.uid) {
     <ion-item>

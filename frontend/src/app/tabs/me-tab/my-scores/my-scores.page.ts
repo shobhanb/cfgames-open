@@ -65,7 +65,7 @@ export class MyScoresPage implements OnInit {
   authService = inject(AuthService);
   eventService = inject(EventService);
 
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
 
   private scores = signal<apiUserScoreModel[]>([]);
 
@@ -90,7 +90,7 @@ export class MyScoresPage implements OnInit {
     this.apiScore.getMyScoresScoreMeGet().subscribe({
       next: (data: apiUserScoreModel[]) => {
         this.scores.set(data);
-        this.dataLoaded = true;
+        this.dataLoaded.set(true);
       },
       error: (err: any) => {
         console.error(err);
@@ -100,7 +100,7 @@ export class MyScoresPage implements OnInit {
   }
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this.getData();
     (event.target as HTMLIonRefresherElement).complete();
   }

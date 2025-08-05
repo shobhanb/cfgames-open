@@ -13,7 +13,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-card>
-    @if (dataLoaded) {
+    @if (dataLoaded()) {
     <ion-list>
       @for (score of rankedScores(); track $index) {
       <ion-accordion-group [multiple]="true" [value]="expandedAccordions">

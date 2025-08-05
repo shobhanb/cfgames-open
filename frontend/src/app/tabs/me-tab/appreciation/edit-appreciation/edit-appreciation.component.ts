@@ -238,7 +238,7 @@ export class EditAppreciationComponent implements OnInit {
             nonTeamVoteText: appreciationData?.non_team_vote_text || null,
           });
 
-          this.dataLoaded = true;
+          this.dataLoaded.set(true);
         },
         error: (error) => {
           console.error('Error fetching appreciation data:', error);
@@ -252,10 +252,10 @@ export class EditAppreciationComponent implements OnInit {
       });
   }
 
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this.getData();
     (event.target as HTMLIonRefresherElement).complete();
   }

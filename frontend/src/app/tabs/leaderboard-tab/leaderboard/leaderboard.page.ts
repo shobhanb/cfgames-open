@@ -82,7 +82,7 @@ export class LeaderboardPage implements OnInit {
   scoreFilter = inject(ScoreFilterService);
   authService = inject(AuthService);
 
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
 
   @Input({ required: true, transform: numberAttribute }) year!: number;
   @Input({ required: true, transform: numberAttribute }) ordinal!: number;
@@ -140,7 +140,7 @@ export class LeaderboardPage implements OnInit {
       .subscribe({
         next: (data: apiLeaderboardScoreModel[]) => {
           this.leaderboard.set(data);
-          this.dataLoaded = true;
+          this.dataLoaded.set(true);
         },
         error: (err: any) => {
           console.error(err);
@@ -150,7 +150,7 @@ export class LeaderboardPage implements OnInit {
   }
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this.getData();
     (event.target as HTMLIonRefresherElement).complete();
   }

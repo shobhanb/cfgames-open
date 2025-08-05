@@ -90,7 +90,7 @@ export class AppreciationStatusPage implements OnInit {
   );
 
   isAddModalOpen = signal(false);
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
 
   constructor() {
     addIcons({
@@ -105,7 +105,7 @@ export class AppreciationStatusPage implements OnInit {
   }
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this.getData();
     (event.target as HTMLIonRefresherElement).complete();
   }
@@ -126,7 +126,7 @@ export class AppreciationStatusPage implements OnInit {
               return a.ordinal - b.ordinal; // Sort by ordinal ascending
             })
           );
-          this.dataLoaded = true;
+          this.dataLoaded.set(true);
         },
         error: (error) => {
           console.error('Error fetching appreciation status:', error);

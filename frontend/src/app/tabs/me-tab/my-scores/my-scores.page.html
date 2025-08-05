@@ -13,7 +13,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  @if ( dataLoaded) { @for (item of groupedScores(); track $index) {
+  @if ( dataLoaded()) { @for (item of groupedScores(); track $index) {
   <ion-card>
     <ion-card-header>
       <ion-card-title>{{ item.year }}</ion-card-title>

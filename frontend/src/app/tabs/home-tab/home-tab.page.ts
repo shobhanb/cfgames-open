@@ -70,14 +70,14 @@ export class HomeTabPage implements OnInit {
     addIcons({ closeOutline });
   }
 
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
 
   ngOnInit() {
     this.getData();
   }
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this.getData();
     (event.target as HTMLIonRefresherElement).complete();
   }
@@ -97,7 +97,7 @@ export class HomeTabPage implements OnInit {
                 new Date(a.created_at).getTime()
             )
           );
-          this.dataLoaded = true;
+          this.dataLoaded.set(true);
         },
       });
   }

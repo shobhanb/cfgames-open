@@ -57,11 +57,11 @@ export class RenameTeamsPage implements OnInit {
     this.getData();
   }
 
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
   teamNames = signal<string[]>([]);
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this.getData();
     (event.target as HTMLIonRefresherElement).complete();
   }
@@ -75,7 +75,7 @@ export class RenameTeamsPage implements OnInit {
       .subscribe({
         next: (data: apiTeamName[]) => {
           this.teamNames.set(data.map((team) => team.team_name).sort());
-          this.dataLoaded = true;
+          this.dataLoaded.set(true);
         },
         error: (err: any) => {
           this.toastService.showToast(err.message, 'danger', null, 3000);

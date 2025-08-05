@@ -66,7 +66,7 @@ export class AppreciationDetailPage implements OnInit {
 
   appreciationDetail = signal<apiAppreciationResultDetail | null>(null);
 
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
 
   @Input({ required: true, transform: numberAttribute }) year!: number;
   @Input({ required: true, transform: numberAttribute }) ordinal!: number;
@@ -79,7 +79,7 @@ export class AppreciationDetailPage implements OnInit {
   }
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this.getData();
     (event.target as HTMLIonRefresherElement).complete();
   }
@@ -95,7 +95,7 @@ export class AppreciationDetailPage implements OnInit {
       .subscribe({
         next: (data) => {
           this.appreciationDetail.set(data);
-          this.dataLoaded = true;
+          this.dataLoaded.set(true);
         },
         error: (error) => {
           console.error('Error fetching appreciation detail:', error);

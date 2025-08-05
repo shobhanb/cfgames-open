@@ -128,10 +128,10 @@ export class TeamScoresPage implements OnInit {
   });
 
   expandedAccordions: string[] = [];
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this.getData();
     this.expandedAccordions = [];
     (event.target as HTMLIonRefresherElement).complete();
@@ -146,7 +146,7 @@ export class TeamScoresPage implements OnInit {
     this.apiScore.getTeamScoresScoreTeamGet(params).subscribe({
       next: (value: apiTeamScoreModel[]) => {
         this.teamScores.set(value);
-        this.dataLoaded = true;
+        this.dataLoaded.set(true);
       },
       error: (err: any) => {
         console.error(err);

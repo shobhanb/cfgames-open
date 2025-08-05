@@ -69,7 +69,7 @@ export class UsersPage implements OnInit {
   private config = inject(AppConfigService);
   authService = inject(AuthService);
 
-  dataLoaded = false;
+  dataLoaded = signal<boolean>(false);
 
   private allUsers = signal<apiFirebaseUserRecord[]>([]);
 
@@ -220,7 +220,7 @@ export class UsersPage implements OnInit {
               return nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
             })
         );
-        this.dataLoaded = true;
+        this.dataLoaded.set(true);
       },
       error: (err: any) => {
         console.error(err);
@@ -230,7 +230,7 @@ export class UsersPage implements OnInit {
   }
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this.getData();
     (event.target as HTMLIonRefresherElement).complete();
   }

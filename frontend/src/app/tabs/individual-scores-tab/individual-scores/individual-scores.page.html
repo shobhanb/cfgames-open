@@ -57,7 +57,7 @@
 
   <div class="section-title">{{ teamSectionTitle() }}</div>
   <ion-card>
-    @if (dataLoaded) {
+    @if (dataLoaded()) {
     <ion-list>
       @for (score of aggregatedScores(); track $index) {
       <ion-accordion-group [value]="expandedAccordions" [multiple]="true">
