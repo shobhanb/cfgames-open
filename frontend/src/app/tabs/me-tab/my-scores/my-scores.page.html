@@ -50,35 +50,44 @@
     <ion-card-header>
       <ion-skeleton-text
         [animated]="true"
-        style="width: 100px; height: 15px"
+        style="width: 60px; height: 24px"
       ></ion-skeleton-text>
       <ion-skeleton-text
         [animated]="true"
-        style="width: 80px; height: 30px"
+        style="width: 100px; height: 18px"
       ></ion-skeleton-text>
     </ion-card-header>
     <ion-list>
       @for (listItem of [1,2,3]; track $index) {
-      <ion-item>
-        <div class="" slot="start">
+      <ion-item class="ion-margin-vertical">
+        <div class="event-name" slot="start">
           <ion-skeleton-text
             [animated]="true"
-            style="width: 20px; height: 20px"
+            style="width: 40px; height: 16px"
+          ></ion-skeleton-text>
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 24px; height: 24px; border-radius: 12px"
           ></ion-skeleton-text>
         </div>
         <ion-label>
           <ion-skeleton-text
             [animated]="true"
-            style="width: 150px; height: 40px"
+            style="width: 60px; height: 16px"
           ></ion-skeleton-text>
         </ion-label>
         <div slot="end">
           <ion-skeleton-text
             [animated]="true"
-            style="width: 80px; height: 30px"
+            style="width: 80px; height: 16px; margin-bottom: 4px"
           ></ion-skeleton-text>
-        </div> </ion-item
-      >}
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 60px; height: 12px"
+          ></ion-skeleton-text>
+        </div>
+      </ion-item>
+      }
     </ion-list>
   </ion-card>
   } }

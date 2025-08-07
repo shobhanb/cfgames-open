@@ -41,13 +41,14 @@
 
   } @else {
   <ion-list [inset]="true">
-    @for (item of [0,1,2]; track $index) {
+    @for (item of [0,1,2,3]; track $index) {
     <ion-item>
-      <ion-skeleton-text
-        [animated]="true"
-        class="ion-margin-vertical"
-        style="width: 180px; height: 20px"
-      ></ion-skeleton-text>
+      <ion-toggle disabled>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 100px; height: 16px"
+        ></ion-skeleton-text>
+      </ion-toggle>
     </ion-item>
     }
   </ion-list>

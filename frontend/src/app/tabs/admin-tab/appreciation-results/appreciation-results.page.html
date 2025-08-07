@@ -44,30 +44,36 @@
     <ion-card-header>
       <ion-skeleton-text
         [animated]="true"
-        style="width: 60%; height: 20px"
+        style="width: 180px; height: 20px"
       ></ion-skeleton-text>
     </ion-card-header>
     <ion-card-content>
       <ion-skeleton-text
         [animated]="true"
-        style="width: 80%; height: 15px"
+        style="width: 250px; height: 15px"
       ></ion-skeleton-text>
     </ion-card-content>
   </ion-card>
 
+  <div class="section-title">
+    <ion-skeleton-text
+      [animated]="true"
+      style="width: 140px; height: 16px"
+    ></ion-skeleton-text>
+  </div>
   <ion-list [inset]="true">
-    @for (item of [0,1,2]; track $index) {
+    @for (item of [0,1,2,3]; track $index) {
     <ion-item>
       <ion-label>
         <ion-skeleton-text
           [animated]="true"
-          style="width: 180px; height: 20px"
+          style="width: 120px; height: 16px"
         ></ion-skeleton-text>
       </ion-label>
       <ion-note slot="end">
         <ion-skeleton-text
           [animated]="true"
-          style="width: 30px; height: 20px"
+          style="width: 30px; height: 16px"
         ></ion-skeleton-text>
       </ion-note>
     </ion-item>

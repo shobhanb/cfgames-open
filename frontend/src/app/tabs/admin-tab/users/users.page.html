@@ -62,26 +62,33 @@
   </ion-list>
   } @else {
   <ion-list>
-    @for (item of [0,1,2]; track $index) {
+    @for (item of [0,1,2,3,4]; track $index) {
     <ion-item>
-      <div class="" slot="start">
-        <ion-skeleton-text
-          [animated]="true"
-          style="width: 20px; height: 20px"
-        ></ion-skeleton-text>
-      </div>
       <ion-label>
         <ion-skeleton-text
           [animated]="true"
-          style="width: 150px; height: 40px"
+          style="width: 140px; height: 16px; margin-bottom: 4px"
         ></ion-skeleton-text>
-      </ion-label>
-      <div slot="end">
         <ion-skeleton-text
           [animated]="true"
-          style="width: 80px; height: 30px"
+          style="width: 80px; height: 12px; margin-bottom: 2px"
         ></ion-skeleton-text>
-      </div>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 180px; height: 12px"
+        ></ion-skeleton-text>
+      </ion-label>
+      <ion-skeleton-text
+        slot="end"
+        [animated]="true"
+        style="width: 60px; height: 16px"
+      ></ion-skeleton-text>
+      <ion-button slot="end" fill="clear">
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 24px; height: 24px; border-radius: 12px"
+        ></ion-skeleton-text>
+      </ion-button>
     </ion-item>
     }
   </ion-list>

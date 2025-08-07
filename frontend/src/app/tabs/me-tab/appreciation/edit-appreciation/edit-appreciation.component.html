@@ -92,33 +92,84 @@
   <!-- Loading skeleton -->
   <ion-card>
     <ion-card-header>
-      <ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 120px; height: 20px"
+      ></ion-skeleton-text>
     </ion-card-header>
     <ion-card-content>
-      <ion-accordion-group>
-        <ion-accordion>
-          <ion-item slot="header">
-            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
-          </ion-item>
-          <div class="ion-padding" slot="content">
-            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
-          </div>
-        </ion-accordion>
-        <ion-accordion>
-          <ion-item slot="header">
-            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
-          </ion-item>
-          <div class="ion-padding" slot="content">
-            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
-          </div>
-        </ion-accordion>
-      </ion-accordion-group>
-      <div class="buttons-container">
-        <ion-skeleton-text animated style="width: 15%"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width: 15%"></ion-skeleton-text>
-      </div>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 200px; height: 15px"
+      ></ion-skeleton-text>
     </ion-card-content>
   </ion-card>
 
+  <div class="section-title">
+    <ion-skeleton-text
+      [animated]="true"
+      style="width: 80px; height: 16px"
+    ></ion-skeleton-text>
+  </div>
+  <ion-list [inset]="true">
+    <ion-item>
+      <ion-label>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 140px; height: 16px"
+        ></ion-skeleton-text>
+      </ion-label>
+      <ion-note slot="end">
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 90px; height: 12px"
+        ></ion-skeleton-text>
+      </ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 200px; height: 40px; border-radius: 4px"
+      ></ion-skeleton-text>
+    </ion-item>
+  </ion-list>
+
+  <div class="section-title">
+    <ion-skeleton-text
+      [animated]="true"
+      style="width: 100px; height: 16px"
+    ></ion-skeleton-text>
+  </div>
+  <ion-list [inset]="true">
+    <ion-item>
+      <ion-label>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 140px; height: 16px"
+        ></ion-skeleton-text>
+      </ion-label>
+      <ion-note slot="end">
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 90px; height: 12px"
+        ></ion-skeleton-text>
+      </ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 200px; height: 40px; border-radius: 4px"
+      ></ion-skeleton-text>
+    </ion-item>
+  </ion-list>
+
+  <ion-skeleton-text
+    [animated]="true"
+    style="width: 100%; height: 44px; border-radius: 4px; margin: 16px 0"
+  ></ion-skeleton-text>
+  <ion-skeleton-text
+    [animated]="true"
+    style="width: 100%; height: 44px; border-radius: 4px; margin: 16px 0"
+  ></ion-skeleton-text>
   }
 </ion-content>

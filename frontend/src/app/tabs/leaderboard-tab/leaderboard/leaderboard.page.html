@@ -94,7 +94,7 @@
     } @else {
     <ion-list>
       @for (item of [0,1,2]; track $index) {
-      <ion-item>
+      <ion-item class="leaderboard-row">
         <div class="" slot="start">
           <ion-skeleton-text
             [animated]="true"
@@ -104,13 +104,21 @@
         <ion-label>
           <ion-skeleton-text
             [animated]="true"
-            style="width: 150px; height: 40px"
+            style="width: 120px; height: 16px; margin-bottom: 4px"
+          ></ion-skeleton-text>
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 80px; height: 14px"
           ></ion-skeleton-text>
         </ion-label>
         <div slot="end">
           <ion-skeleton-text
             [animated]="true"
-            style="width: 80px; height: 30px"
+            style="width: 60px; height: 16px; margin-bottom: 4px"
+          ></ion-skeleton-text>
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 40px; height: 12px"
           ></ion-skeleton-text>
         </div>
       </ion-item>
@@ -151,8 +159,8 @@
     } @else {
     <ion-list>
       @for (item of [0,1,2]; track $index) {
-      <ion-item>
-        <div class="" slot="start">
+      <ion-item class="leaderboard-row">
+        <div class="rank-wrapper" slot="start">
           <ion-skeleton-text
             [animated]="true"
             style="width: 20px; height: 20px"
@@ -161,13 +169,21 @@
         <ion-label>
           <ion-skeleton-text
             [animated]="true"
-            style="width: 150px; height: 40px"
+            style="width: 120px; height: 16px; margin-bottom: 4px"
           ></ion-skeleton-text>
-        </ion-label>
-        <div slot="end">
           <ion-skeleton-text
             [animated]="true"
-            style="width: 80px; height: 30px"
+            style="width: 80px; height: 14px"
+          ></ion-skeleton-text>
+        </ion-label>
+        <div class="score-wrapper" slot="end">
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 60px; height: 16px; margin-bottom: 4px"
+          ></ion-skeleton-text>
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 40px; height: 12px"
           ></ion-skeleton-text>
         </div>
       </ion-item>
