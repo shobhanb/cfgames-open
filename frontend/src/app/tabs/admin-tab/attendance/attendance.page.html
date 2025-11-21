@@ -9,5 +9,25 @@
 </ion-header>
 
 <ion-content>
-  <p>Coming soon!</p>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Attendance</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text>Manage attendance for events.</ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="section-title">Select Event</div>
+  <ion-list [inset]="true">
+    @for (event of eventService.currentYearEvents(); track $index) {
+    <ion-item (click)="openAttendanceModal(event)">
+      <ion-label>{{ event.event }}</ion-label>
+    </ion-item>
+    }
+  </ion-list>
 </ion-content>

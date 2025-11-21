@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ event.event + " Attendance" }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-searchbar
+    debounce="500"
+    placeholder="Search name"
+    (ionInput)="onSearchBarInput($event)"
+  ></ion-searchbar>
+  <ion-list>
+    @for (item of filteredAttendanceData(); track $index) {
+    <ion-item> {{ item.name }} </ion-item>
+    }
+  </ion-list>
+</ion-content>
