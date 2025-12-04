@@ -6,16 +6,29 @@
 </ion-header>
 
 <ion-content>
-  <div class="ion-margin">
-    <h1>CFGames Community Cup</h1>
-    <h4>Sign up as a new user</h4>
-    <ion-button type="button" fill="clear" routerLink="/auth/login"
-      >Already have an account? Login!</ion-button
-    >
-  </div>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Signup</ion-card-title>
+      <ion-card-subtitle
+        >{{ config.affiliateName + ' Community Cup' }}</ion-card-subtitle
+      >
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text
+        >Sign up on the CFGames website first before signing up here.</ion-text
+      >
+    </ion-card-content>
+  </ion-card>
 
   @if (showAssignAthleteForm() ) {
 
+  <ion-button
+    type="button"
+    fill="clear"
+    routerLink="/auth/login"
+    class="ion-margin-horizontal"
+    >Already have an account? Login!</ion-button
+  >
   <form
     [formGroup]="assignAthleteForm"
     (ngSubmit)="onSubmitAssignAthleteForm()"
@@ -52,7 +65,7 @@
     <ion-button
       expand="block"
       type="submit"
-      class="ion-margin-horizontal"
+      class="ion-margin"
       [disabled]="!assignAthleteFormValid()"
       >That's me!</ion-button
     >
@@ -63,7 +76,7 @@
       color="medium"
       routerLink="/"
       routerDirection="root"
-      class="ion-margin-horizontal"
+      class="ion-margin"
       >Cancel</ion-button
     >
   </form>
@@ -82,9 +95,7 @@
       <ion-label>{{ selectedAffiliateName }}</ion-label>
       <ion-note>{{ selectedAffiliateId }}</ion-note>
     </ion-item>
-    <ion-item>
-      <ion-button fill="clear" (click)="onClickNotYou()">Not you?</ion-button>
-    </ion-item>
+    <ion-button fill="clear" (click)="onClickNotYou()">Not you?</ion-button>
   </ion-list>
 
   <form [formGroup]="signupForm" (ngSubmit)="onSubmitSignupForm()">
@@ -115,8 +126,7 @@
       </ion-item>
     </ion-list>
 
-    <br />
-    <ion-button expand="block" type="submit" class="ion-margin-top"
+    <ion-button expand="block" type="submit" class="ion-margin"
       >Sign Up</ion-button
     >
 
@@ -126,7 +136,7 @@
       color="medium"
       routerLink="/"
       routerDirection="root"
-      class="ion-margin-top"
+      class="ion-margin"
       >Cancel</ion-button
     >
   </form>

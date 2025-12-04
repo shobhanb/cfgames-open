@@ -42,30 +42,33 @@
     </ion-segment>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-segment
-      [scrollable]="true"
+    <ion-select
+      label="Select Team"
+      labelPlacement="floating"
       [value]="scoreFilter.filter().team"
       (ionChange)="onSelectionChanged($event, 'team')"
+      interface="popover"
+      class="ion-margin-horizontal ion-padding-horizontal team-selection-filter"
     >
       @for (team of teamsList(); track $index) {
-      <ion-segment-button [value]="team">
-        <ion-label [attr.color]="team === myTeamName ? 'primary' : null"
-          >{{ team | teamName }}</ion-label
-        >
-      </ion-segment-button>
+      <ion-select-option [value]="team"
+        >{{ team | teamName }}</ion-select-option
+      >
       }
-    </ion-segment></ion-toolbar
-  >
+    </ion-select>
+  </ion-toolbar>
 
   @if ( dataLoaded()) {
   <div class="section-title">{{ teamSectionTitle() }}</div>
-  <ion-list [inset]="true">
-    @for (athlete of filteredAthletes(); track $index) {
-    <ion-item>
-      <ion-label>{{ athlete.name }}</ion-label>
-    </ion-item>
-    }
-  </ion-list>
+  <ion-card>
+    <ion-list [inset]="true">
+      @for (athlete of filteredAthletes(); track $index) {
+      <ion-item>
+        <ion-label>{{ athlete.name }}</ion-label>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card>
   } @else {
   <div class="section-title">
     <ion-skeleton-text

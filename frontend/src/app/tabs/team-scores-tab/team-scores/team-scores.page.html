@@ -13,8 +13,11 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ title() }}</ion-card-title>
+    </ion-card-header>
     @if (dataLoaded()) {
-    <ion-list>
+    <ion-list [inset]="true">
       @for (score of rankedScores(); track $index) {
       <ion-accordion-group [multiple]="true" [value]="expandedAccordions">
         <ion-accordion [value]="score.team_name">

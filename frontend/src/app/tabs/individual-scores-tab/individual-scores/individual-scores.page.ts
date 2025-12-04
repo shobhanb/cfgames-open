@@ -25,6 +25,8 @@ import {
   IonBackButton,
   IonButtons,
   IonTitle,
+  IonSelect,
+  IonSelectOption,
 } from '@ionic/angular/standalone';
 import { EventService } from 'src/app/services/event.service';
 import { apiScoreService } from 'src/app/api/services';
@@ -63,6 +65,8 @@ import { AppConfigService } from 'src/app/services/app-config.service';
     TeamNamePipe,
     IonSkeletonText,
     ToolbarButtonsComponent,
+    IonSelect,
+    IonSelectOption,
   ],
 })
 export class IndividualScoresPage implements OnInit {
@@ -100,12 +104,13 @@ export class IndividualScoresPage implements OnInit {
       this.scoreFilter.filter().ageCategory
   );
 
-  readonly teamsList = computed<string[]>(() =>
-    this.scores()
+  readonly teamsList = computed<string[]>(() => [
+    'All',
+    ...this.scores()
       .map((value: apiIndividualScoreModel) => value.team_name)
       .filter(this.helperFunctions.filterUnique)
-      .sort()
-  );
+      .sort(),
+  ]);
 
   onSelectionChanged(
     event: CustomEvent,
@@ -129,7 +134,8 @@ export class IndividualScoresPage implements OnInit {
         (value: apiIndividualScoreModel) =>
           value.gender === this.scoreFilter.filter().gender &&
           value.age_category === this.scoreFilter.filter().ageCategory &&
-          value.team_name === this.scoreFilter.filter().team
+          (this.scoreFilter.filter().team === 'All' ||
+            value.team_name === this.scoreFilter.filter().team)
       )
       .sort((a: apiIndividualScoreModel, b: apiIndividualScoreModel) => {
         if (a.total_individual_score === b.total_individual_score) {
@@ -191,7 +197,7 @@ export class IndividualScoresPage implements OnInit {
         if (!!userTeam && this.teamsList().includes(userTeam)) {
           this.scoreFilter.setFilter({ team: userTeam });
         } else {
-          this.scoreFilter.setFilter({ team: this.teamsList()[0] });
+          this.scoreFilter.setFilter({ team: 'All' });
         }
       },
       error: (err: any) => {

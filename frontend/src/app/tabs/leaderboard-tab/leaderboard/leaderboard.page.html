@@ -62,11 +62,11 @@
     <ion-icon slot="end" name="open-outline"></ion-icon>
   </ion-button>
 
+  @if (dataLoaded()) { @if (leaderboardRX().length > 0) {
   <ion-card>
     <ion-card-header>
       <ion-card-title>RX</ion-card-title>
     </ion-card-header>
-    @if (dataLoaded()) {
     <ion-list>
       @for (item of leaderboardRX(); track $index) {
       <ion-item class="leaderboard-row">
@@ -91,47 +91,13 @@
       </ion-item>
       }
     </ion-list>
-    } @else {
-    <ion-list>
-      @for (item of [0,1,2]; track $index) {
-      <ion-item class="leaderboard-row">
-        <div class="" slot="start">
-          <ion-skeleton-text
-            [animated]="true"
-            style="width: 20px; height: 20px"
-          ></ion-skeleton-text>
-        </div>
-        <ion-label>
-          <ion-skeleton-text
-            [animated]="true"
-            style="width: 120px; height: 16px; margin-bottom: 4px"
-          ></ion-skeleton-text>
-          <ion-skeleton-text
-            [animated]="true"
-            style="width: 80px; height: 14px"
-          ></ion-skeleton-text>
-        </ion-label>
-        <div slot="end">
-          <ion-skeleton-text
-            [animated]="true"
-            style="width: 60px; height: 16px; margin-bottom: 4px"
-          ></ion-skeleton-text>
-          <ion-skeleton-text
-            [animated]="true"
-            style="width: 40px; height: 12px"
-          ></ion-skeleton-text>
-        </div>
-      </ion-item>
-      }
-    </ion-list>
-    }
   </ion-card>
+  } @if (leaderboardScaled().length > 0) {
 
   <ion-card>
     <ion-card-header>
       <ion-card-title>Scaled</ion-card-title>
     </ion-card-header>
-    @if (dataLoaded()) {
     <ion-list>
       @for (item of leaderboardScaled(); track $index) {
       <ion-item class="leaderboard-row">
@@ -156,39 +122,8 @@
       </ion-item>
       }
     </ion-list>
-    } @else {
-    <ion-list>
-      @for (item of [0,1,2]; track $index) {
-      <ion-item class="leaderboard-row">
-        <div class="rank-wrapper" slot="start">
-          <ion-skeleton-text
-            [animated]="true"
-            style="width: 20px; height: 20px"
-          ></ion-skeleton-text>
-        </div>
-        <ion-label>
-          <ion-skeleton-text
-            [animated]="true"
-            style="width: 120px; height: 16px; margin-bottom: 4px"
-          ></ion-skeleton-text>
-          <ion-skeleton-text
-            [animated]="true"
-            style="width: 80px; height: 14px"
-          ></ion-skeleton-text>
-        </ion-label>
-        <div class="score-wrapper" slot="end">
-          <ion-skeleton-text
-            [animated]="true"
-            style="width: 60px; height: 16px; margin-bottom: 4px"
-          ></ion-skeleton-text>
-          <ion-skeleton-text
-            [animated]="true"
-            style="width: 40px; height: 12px"
-          ></ion-skeleton-text>
-        </div>
-      </ion-item>
-      }
-    </ion-list>
-    }
   </ion-card>
+  } } @else {
+  <!-- Skeleton -->
+  }
 </ion-content>

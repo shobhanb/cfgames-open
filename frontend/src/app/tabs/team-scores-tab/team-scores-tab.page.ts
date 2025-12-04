@@ -6,6 +6,9 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
 } from '@ionic/angular/standalone';
 import { EventListComponent } from '../../shared/event-list/event-list.component';
 import { EventService } from 'src/app/services/event.service';
@@ -17,6 +20,9 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
   styleUrls: ['./team-scores-tab.page.scss'],
   standalone: true,
   imports: [
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
     IonToolbar,
     IonTitle,
     IonHeader,

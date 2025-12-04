@@ -21,6 +21,12 @@ import {
   IonRouterLink,
   IonToolbar,
   IonTitle,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonText,
 } from '@ionic/angular/standalone';
 import { apiAthleteService, apiFireauthService } from 'src/app/api/services';
 import { apiAffiliateAthlete } from 'src/app/api/models';
@@ -46,6 +52,12 @@ import { AppConfigService } from 'src/app/services/app-config.service';
   styleUrls: ['./signup.page.scss'],
   standalone: true,
   imports: [
+    IonText,
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
     IonTitle,
     IonToolbar,
     IonHeader,
@@ -74,7 +86,7 @@ export class SignupPage implements OnInit {
   private toastService = inject(ToastService);
   private helperFunctions = inject(HelperFunctionsService);
   private athleteNameModalService = inject(AthleteNameModalService);
-  private config = inject(AppConfigService);
+  config = inject(AppConfigService);
 
   // Controls the UI - show assign athlete form, or show signup email/password form
   readonly showAssignAthleteForm = signal<boolean>(true);

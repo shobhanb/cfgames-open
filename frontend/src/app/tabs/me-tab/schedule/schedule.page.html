@@ -17,20 +17,41 @@
 
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Schedule</ion-card-title>
+      <ion-card-title>Schedule Preferences</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-note>
+        NOTE: These are just your scheduling preferences. You will be assigned a
+        time slot based on your preferences, heat/gear planning, luck, and
+        several other factors.
+      </ion-note>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
       <div class="button-container">
         @if (editPrefs()) {
-        <ion-button fill="outline" (click)="onClickDone()">Done</ion-button>
-        <ion-button fill="outline" color="danger" (click)="onClickCancel()"
-          >Cancel</ion-button
+        <ion-button size="small" fill="solid" (click)="onClickDone()">
+          Done
+        </ion-button>
+        <ion-button
+          size="small"
+          fill="clear"
+          color="danger"
+          (click)="onClickCancel()"
         >
+          Cancel
+        </ion-button>
         } @else {
-        <ion-button fill="outline" (click)="onClickEdit()">Edit</ion-button>
+        <ion-button size="small" fill="clear" (click)="onClickEdit()">
+          Edit
+        </ion-button>
         }
       </div>
     </ion-card-header>
     <ion-card-content>
-      <ion-list>
+      <ion-list [inset]="true">
         <ion-reorder-group
           [disabled]="!editPrefs()"
           (ionItemReorder)="handleReorder($any($event))"

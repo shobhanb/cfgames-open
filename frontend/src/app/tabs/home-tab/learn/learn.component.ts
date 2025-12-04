@@ -16,6 +16,7 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
+  IonText,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -23,6 +24,8 @@ import {
   syncOutline,
   settingsOutline,
   archiveOutline,
+  heartOutline,
+  calendarOutline,
 } from 'ionicons/icons';
 import { AppConfigService } from 'src/app/services/app-config.service';
 
@@ -31,6 +34,7 @@ import { AppConfigService } from 'src/app/services/app-config.service';
   templateUrl: './learn.component.html',
   styleUrls: ['./learn.component.scss'],
   imports: [
+    IonText,
     IonCard,
     IonCardHeader,
     IonCardTitle,
@@ -58,6 +62,8 @@ export class LearnComponent implements OnInit {
       syncOutline,
       settingsOutline,
       archiveOutline,
+      heartOutline,
+      calendarOutline,
     });
   }
 

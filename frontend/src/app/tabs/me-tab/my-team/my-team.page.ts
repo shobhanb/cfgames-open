@@ -16,6 +16,9 @@ import {
   IonSegment,
   IonSegmentButton,
   IonSkeletonText,
+  IonSelect,
+  IonSelectOption,
+  IonCard,
 } from '@ionic/angular/standalone';
 import { apiAthleteService } from 'src/app/api/services';
 import { ToastService } from 'src/app/services/toast.service';
@@ -34,6 +37,7 @@ import { AppConfigService } from 'src/app/services/app-config.service';
   styleUrls: ['./my-team.page.scss'],
   standalone: true,
   imports: [
+    IonCard,
     IonSkeletonText,
     IonSegmentButton,
     IonSegment,
@@ -52,6 +56,8 @@ import { AppConfigService } from 'src/app/services/app-config.service';
     FormsModule,
     ToolbarButtonsComponent,
     TeamNamePipe,
+    IonSelect,
+    IonSelectOption,
   ],
 })
 export class MyTeamPage implements OnInit {
@@ -78,12 +84,13 @@ export class MyTeamPage implements OnInit {
       this.scoreFilter.filter().ageCategory
   );
 
-  teamsList = computed(() =>
-    this.athleteDataService
+  teamsList = computed<string[]>(() => [
+    'All',
+    ...this.athleteDataService
       .athleteData()
       .map((athlete) => athlete.team_name)
-      .filter(this.helperFunctions.filterUnique)
-  );
+      .filter(this.helperFunctions.filterUnique),
+  ]);
 
   readonly filteredAthletes = computed<apiAthleteDetail[]>(() =>
     this.athleteDataService
@@ -92,7 +99,8 @@ export class MyTeamPage implements OnInit {
         (value: apiAthleteDetail) =>
           value.gender === this.scoreFilter.filter().gender &&
           value.age_category === this.scoreFilter.filter().ageCategory &&
-          value.team_name === this.scoreFilter.filter().team
+          (this.scoreFilter.filter().team === 'All' ||
+            value.team_name === this.scoreFilter.filter().team)
       )
       .sort((a: apiAthleteDetail, b: apiAthleteDetail) =>
         a.name > b.name ? 1 : -1

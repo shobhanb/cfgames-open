@@ -17,6 +17,12 @@ import {
   IonHeader,
   IonToolbar,
   IonTitle,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonText,
 } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/services/auth.service';
 import { RouterLink } from '@angular/router';
@@ -29,6 +35,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { FirebaseError } from '@angular/fire/app';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-login',
@@ -36,6 +43,12 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
+    IonText,
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
     IonTitle,
     IonToolbar,
     IonHeader,
@@ -57,6 +70,7 @@ export class LoginPage implements OnInit {
   private authService = inject(AuthService);
   private loadingService = inject(LoadingService);
   private toastService = inject(ToastService);
+  public config = inject(AppConfigService);
 
   constructor() {}
 

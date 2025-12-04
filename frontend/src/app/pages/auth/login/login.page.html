@@ -5,21 +5,29 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding-horizontal ion-justify-content-center">
-  <div class="ion-padding-top ion-margin-top ion-margin-bottom">
-    <h1>CFGames Community Cup</h1>
-    <h4>Login as an existing user</h4>
-  </div>
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Login</ion-card-title>
+      <ion-card-subtitle
+        >{{ config.affiliateName + ' Community Cup' }}</ion-card-subtitle
+      >
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text>Login as an existing user</ion-text>
+    </ion-card-content>
+  </ion-card>
+
   <ion-button
     type="button"
     fill="clear"
     routerLink="/auth/signup"
-    class="ion-margin-bottom"
+    class="ion-margin-horizontal"
     >Don't have an account? Sign up!</ion-button
   >
 
   <form [formGroup]="loginForm" (ngSubmit)="onClickLogin()">
-    <ion-list class="ion-margin-vertical">
+    <ion-list [inset]="true">
       <ion-item>
         <ion-input
           type="email"
@@ -47,7 +55,7 @@
 
     <ion-button
       fill="clear"
-      class="ion-margin-bottom"
+      class="ion-margin-horizontal"
       type="button"
       routerLink="/auth/forgot-password"
     >
@@ -57,7 +65,7 @@
     <ion-button
       expand="block"
       type="submit"
-      class="ion-margin-top"
+      class="ion-margin"
       [disabled]="loginForm.invalid"
       >Login</ion-button
     >
@@ -67,7 +75,8 @@
       color="medium"
       routerLink="/"
       routerDirection="root"
-      class="ion-margin-top"
+      [replaceUrl]="true"
+      class="ion-margin"
       >Cancel</ion-button
     >
   </form>

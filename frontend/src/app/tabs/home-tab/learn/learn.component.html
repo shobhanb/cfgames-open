@@ -11,17 +11,18 @@
 <ion-content class="ion-padding">
   <div class="intro-section">
     <h2>CF Games Community Cup</h2>
-    <p>
+    <h3>2026 edition</h3>
+    <ion-note>
       {{
         "This app tracks the team scores and related info for " +
           config.affiliateName +
           "'s community cup for the CrossFit Games."
       }}
+    </ion-note>
+    <p>
+      The CrossFit leaderboard is not enough to win the Community Cup! Here are
+      all the ways to receive points:
     </p>
-    <ion-note
-      >The CrossFit leaderboard is not enough to win the Community Cup! Here are
-      all the ways to receive points:</ion-note
-    >
   </div>
 
   <ion-card>
@@ -79,24 +80,28 @@
 
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Technical Features</ion-card-title>
+      <ion-card-title>App Features</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list>
         <ion-item>
-          <ion-icon name="sync-outline" slot="start"></ion-icon>
+          <ion-icon name="calendar-outline" slot="start"></ion-icon>
           <ion-label>
-            <h3>Automatic Data Pull</h3>
+            <h3>Scheduling</h3>
             <p>
-              Data is automatically pulled in from the CrossFit Games website
+              Scheduling preferences are submitted via this app. This helps the
+              admin team assign you a WOD heat / timeslot
             </p>
           </ion-label>
         </ion-item>
         <ion-item>
-          <ion-icon name="settings-outline" slot="start"></ion-icon>
+          <ion-icon name="heart-outline" slot="start"></ion-icon>
           <ion-label>
-            <h3>Customizable Scoring</h3>
-            <p>The scoring system can be modified for each box's needs</p>
+            <h3>Individual Spirit Award Voting</h3>
+            <p>
+              This app allows you to vote for the individuals that you thought
+              best demonstrated the spirit of the open
+            </p>
           </ion-label>
         </ion-item>
         <ion-item>
@@ -104,8 +109,32 @@
           <ion-label>
             <h3>Historical Data</h3>
             <p>
-              If you have previous years' community cup / teams data, we can
-              bring it in as well
+              {{
+                config.affiliateName +
+                  "'s historical CF Open data has been loaded already."
+              }}
+            </p>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="sync-outline" slot="start"></ion-icon>
+          <ion-label>
+            <h3>Automatic Data Pull</h3>
+            <p>
+              Data is automatically pulled in from the CrossFit Games website.
+              You just submit your score once at the CF Games website, we we'll
+              take care of the rest.
+            </p>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="settings-outline" slot="start"></ion-icon>
+          <ion-label>
+            <h3>Admin features</h3>
+            <p>
+              Tonnes of admin features to enable your coaching and admin team to
+              handle team assignments, side challenge scores, and all kinds of
+              other fun stuff!
             </p>
           </ion-label>
         </ion-item>
@@ -114,6 +143,12 @@
   </ion-card>
 
   <div class="footer-section ion-margin-top">
-    <ion-button expand="block" (click)="closeModal()"> Got it! </ion-button>
+    <ion-button
+      expand="block"
+      class="ion-margin-horizontal"
+      (click)="closeModal()"
+    >
+      Got it!
+    </ion-button>
   </div>
 </ion-content>

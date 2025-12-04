@@ -17,7 +17,14 @@ import {
   IonHeader,
   IonToolbar,
   IonTitle,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonText,
 } from '@ionic/angular/standalone';
+import { AppConfigService } from 'src/app/services/app-config.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
@@ -27,6 +34,12 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
   styleUrls: ['./forgot-password.page.scss'],
   standalone: true,
   imports: [
+    IonText,
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
     IonTitle,
     IonToolbar,
     IonHeader,
@@ -43,6 +56,7 @@ export class ForgotPasswordPage implements OnInit {
   private toastService = inject(ToastService);
   private fireAuth = inject(Auth);
   private router = inject(Router);
+  config = inject(AppConfigService);
 
   emailForm = new FormGroup({
     email: new FormControl('', {

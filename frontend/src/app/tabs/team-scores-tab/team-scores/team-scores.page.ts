@@ -23,6 +23,8 @@ import {
   IonButtons,
   IonToolbar,
   IonTitle,
+  IonCardHeader,
+  IonCardTitle,
 } from '@ionic/angular/standalone';
 import { EventService } from 'src/app/services/event.service';
 import { apiScoreService } from 'src/app/api/services';
@@ -41,6 +43,8 @@ import { AppConfigService } from 'src/app/services/app-config.service';
   styleUrls: ['./team-scores.page.scss'],
   standalone: true,
   imports: [
+    IonCardTitle,
+    IonCardHeader,
     IonTitle,
     IonToolbar,
     IonButtons,
@@ -79,7 +83,7 @@ export class TeamScoresPage implements OnInit {
       return this.eventService.eventMap().get(`${this.year}-${this.ordinal}`);
     }
   });
-  readonly title = computed<string>(() => `${this.event()} Scores`);
+  readonly title = computed<string>(() => `${this.event()} Team Scores`);
 
   private teamScores = signal<apiTeamScoreModel[]>([]);
 
