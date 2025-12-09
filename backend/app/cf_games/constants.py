@@ -2,15 +2,6 @@
 CF_LEADERBOARD_URL = "https://c3po.crossfit.com/api/leaderboards/v2/competitions/open/YYYY/leaderboards"
 
 
-YEAR = 2025
-AFFILIATE_ID = 31316
-EVENT_NAMES = {
-    1: "25.1",
-    2: "25.2",
-    3: "25.3",
-}
-
-
 TEAM_ROLE_MAP = {
     "TL": 2,
     "C": 1,

@@ -37,3 +37,10 @@ class AutoTeamAssignmentInput(CustomBaseModel):
     year: int
     assign_from_team_name: str
     assign_to_team_names: list[str]
+
+
+class AthleteSummaryCounts(CustomBaseModel):
+    athlete_count: int
+    affiliate_id: int
+    affiliate_name: str
+    year: int

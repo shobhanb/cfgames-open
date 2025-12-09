@@ -6,4 +6,11 @@ class AttendanceModel(CustomBaseModel):
     affiliate_id: int
     name: str
     crossfit_id: int
+    ordinal: int | None = None
+
+
+class AttendanceUpdateModel(CustomBaseModel):
+    year: int
+    crossfit_id: int
     ordinal: int
+    attendance: bool

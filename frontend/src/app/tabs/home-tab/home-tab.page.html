@@ -56,6 +56,14 @@
     </ion-card-header>
     <ion-card-content>
       <p>{{ welcomeMessage }}</p>
+      @if (athleteCountsData()) {
+      <ul>
+        @for (item of athleteCountsData(); track $index) {
+        <li>{{ item.year + ': ' + item.athlete_count + ' athletes'}}</li>
+        }
+      </ul>
+      }
+      <p>#StrongerTogether</p>
     </ion-card-content>
     <ion-button fill="clear" (click)="onClickLearnMore()"
       >Learn more about this app</ion-button

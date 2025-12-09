@@ -36,7 +36,7 @@ export class apiCfeventsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCfeventsCfeventsGet$Response(params?: GetCfeventsCfeventsGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiEventsModel>>> {
+  getCfeventsCfeventsGet$Response(params: GetCfeventsCfeventsGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiEventsModel>>> {
     return getCfeventsCfeventsGet(this.http, this.rootUrl, params, context);
   }
 
@@ -50,7 +50,7 @@ export class apiCfeventsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCfeventsCfeventsGet(params?: GetCfeventsCfeventsGet$Params, context?: HttpContext): Observable<Array<apiEventsModel>> {
+  getCfeventsCfeventsGet(params: GetCfeventsCfeventsGet$Params, context?: HttpContext): Observable<Array<apiEventsModel>> {
     return this.getCfeventsCfeventsGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<apiEventsModel>>): Array<apiEventsModel> => r.body)
     );

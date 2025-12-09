@@ -215,3 +215,27 @@ async def rename_db_team_names(
     await db_session.commit()
 
     return await get_db_team_names(db_session=db_session, affiliate_id=affiliate_id, year=year)
+
+
+async def get_db_counts_summary(
+    db_session: AsyncSession,
+    affiliate_id: int,
+) -> list[dict[str, Any]]:
+    stmt = (
+        select(
+            func.count().label("athlete_count"),
+            Athlete.affiliate_id,
+            Athlete.affiliate_name,
+            Athlete.year,
+        )
+        .where(Athlete.affiliate_id == affiliate_id)
+        .group_by(
+            Athlete.affiliate_id,
+            Athlete.affiliate_name,
+            Athlete.year,
+        )
+        .order_by(Athlete.year.desc())
+    )
+    ret = await db_session.execute(stmt)
+    results = ret.mappings().all()
+    return [dict(x) for x in results]

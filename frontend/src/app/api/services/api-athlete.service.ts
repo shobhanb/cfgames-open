@@ -15,6 +15,7 @@ import { apiAffiliateAthlete } from '../models/api-affiliate-athlete';
 import { assignAthleteToTeamAthleteTeamAssignPut } from '../fn/athlete/assign-athlete-to-team-athlete-team-assign-put';
 import { AssignAthleteToTeamAthleteTeamAssignPut$Params } from '../fn/athlete/assign-athlete-to-team-athlete-team-assign-put';
 import { apiAthleteDetail } from '../models/api-athlete-detail';
+import { apiAthleteSummaryCounts } from '../models/api-athlete-summary-counts';
 import { apiAutoTeamAssignmentOutput } from '../models/api-auto-team-assignment-output';
 import { getAthleteDetailAllAthleteDetailAllGet } from '../fn/athlete/get-athlete-detail-all-athlete-detail-all-get';
 import { GetAthleteDetailAllAthleteDetailAllGet$Params } from '../fn/athlete/get-athlete-detail-all-athlete-detail-all-get';
@@ -22,6 +23,8 @@ import { getAthleteDetailAthleteDetailGet } from '../fn/athlete/get-athlete-deta
 import { GetAthleteDetailAthleteDetailGet$Params } from '../fn/athlete/get-athlete-detail-athlete-detail-get';
 import { getAthleteListAthleteListGet } from '../fn/athlete/get-athlete-list-athlete-list-get';
 import { GetAthleteListAthleteListGet$Params } from '../fn/athlete/get-athlete-list-athlete-list-get';
+import { getCountsSummaryAthleteSummaryGet } from '../fn/athlete/get-counts-summary-athlete-summary-get';
+import { GetCountsSummaryAthleteSummaryGet$Params } from '../fn/athlete/get-counts-summary-athlete-summary-get';
 import { getMyAthleteDataAthleteMeGet } from '../fn/athlete/get-my-athlete-data-athlete-me-get';
 import { GetMyAthleteDataAthleteMeGet$Params } from '../fn/athlete/get-my-athlete-data-athlete-me-get';
 import { getTeamNamesAthleteTeamNamesGet } from '../fn/athlete/get-team-names-athlete-team-names-get';
@@ -299,6 +302,39 @@ export class apiAthleteService extends BaseService {
   renameTeamsAthleteRenameTeamsPut(params: RenameTeamsAthleteRenameTeamsPut$Params, context?: HttpContext): Observable<Array<apiTeamName>> {
     return this.renameTeamsAthleteRenameTeamsPut$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<apiTeamName>>): Array<apiTeamName> => r.body)
+    );
+  }
+
+  /** Path part for operation `getCountsSummaryAthleteSummaryGet()` */
+  static readonly GetCountsSummaryAthleteSummaryGetPath = '/athlete/summary';
+
+  /**
+   * Get Counts Summary.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getCountsSummaryAthleteSummaryGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getCountsSummaryAthleteSummaryGet$Response(params: GetCountsSummaryAthleteSummaryGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthleteSummaryCounts>>> {
+    return getCountsSummaryAthleteSummaryGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get Counts Summary.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getCountsSummaryAthleteSummaryGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getCountsSummaryAthleteSummaryGet(params: GetCountsSummaryAthleteSummaryGet$Params, context?: HttpContext): Observable<Array<apiAthleteSummaryCounts>> {
+    return this.getCountsSummaryAthleteSummaryGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiAthleteSummaryCounts>>): Array<apiAthleteSummaryCounts> => r.body)
     );
   }
 

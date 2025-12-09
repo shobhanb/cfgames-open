@@ -22,12 +22,21 @@
     </ion-card-content>
   </ion-card>
 
-  <div class="section-title">Select Event</div>
-  <ion-list [inset]="true">
-    @for (event of eventService.currentYearEvents(); track $index) {
-    <ion-item (click)="openAttendanceModal(event)">
-      <ion-label>{{ event.event }}</ion-label>
-    </ion-item>
-    }
-  </ion-list>
+  <div class="section-title">Select Event to Edit Attendance</div>
+  <ion-card>
+    <ion-list>
+      @for (event of eventService.currentYearEvents(); track $index) {
+      <ion-item (click)="openAttendanceModal(event)">
+        <ion-label>{{ event.event }}</ion-label>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card>
+
+  <ion-button
+    class="ion-margin"
+    expand="block"
+    (click)="onClickApplyAttendance()"
+    >Apply Attendance Scores</ion-button
+  >
 </ion-content>

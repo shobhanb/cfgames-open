@@ -9,20 +9,16 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface UpdateAttendanceAttendanceAffiliateIdYearPost$Params {
+export interface ApplyAttendanceAttendanceApplyPost$Params {
   affiliate_id: number;
   year: number;
-  crossfit_id: number;
-  ordinal: number;
 }
 
-export function updateAttendanceAttendanceAffiliateIdYearPost(http: HttpClient, rootUrl: string, params: UpdateAttendanceAttendanceAffiliateIdYearPost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
-  const rb = new RequestBuilder(rootUrl, updateAttendanceAttendanceAffiliateIdYearPost.PATH, 'post');
+export function applyAttendanceAttendanceApplyPost(http: HttpClient, rootUrl: string, params: ApplyAttendanceAttendanceApplyPost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+  const rb = new RequestBuilder(rootUrl, applyAttendanceAttendanceApplyPost.PATH, 'post');
   if (params) {
-    rb.path('affiliate_id', params.affiliate_id, {});
-    rb.path('year', params.year, {});
-    rb.query('crossfit_id', params.crossfit_id, {});
-    rb.query('ordinal', params.ordinal, {});
+    rb.query('affiliate_id', params.affiliate_id, {});
+    rb.query('year', params.year, {});
   }
 
   return http.request(
@@ -35,4 +31,4 @@ export function updateAttendanceAttendanceAffiliateIdYearPost(http: HttpClient, 
   );
 }
 
-updateAttendanceAttendanceAffiliateIdYearPost.PATH = '/attendance/{affiliate_id}/{year}/';
+applyAttendanceAttendanceApplyPost.PATH = '/attendance/apply';

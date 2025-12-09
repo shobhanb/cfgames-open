@@ -13,7 +13,9 @@ export type { apiAppreciationStatusModel } from './models/api-appreciation-statu
 export type { apiAthleteDetail } from './models/api-athlete-detail';
 export type { apiAthletePrefsModel } from './models/api-athlete-prefs-model';
 export type { apiAthletePrefsOutputModel } from './models/api-athlete-prefs-output-model';
+export type { apiAthleteSummaryCounts } from './models/api-athlete-summary-counts';
 export type { apiAttendanceModel } from './models/api-attendance-model';
+export type { apiAttendanceUpdateModel } from './models/api-attendance-update-model';
 export type { apiAutoTeamAssignmentInput } from './models/api-auto-team-assignment-input';
 export type { apiAutoTeamAssignmentOutput } from './models/api-auto-team-assignment-output';
 export type { apiCreateHomeBlogModel } from './models/api-create-home-blog-model';

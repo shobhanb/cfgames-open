@@ -19,6 +19,8 @@ import {
   IonCardContent,
   IonText,
   IonCard,
+  IonIcon,
+  IonButton,
 } from '@ionic/angular/standalone';
 import { apiAttendanceModel } from 'src/app/api/models';
 import { apiAttendanceService } from 'src/app/api/services';
@@ -28,6 +30,8 @@ import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { AttendanceModalComponent } from './attendance-modal/attendance-modal.component';
+import { addIcons } from 'ionicons';
+import { ellipsisHorizontalOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-attendance',
@@ -35,6 +39,8 @@ import { AttendanceModalComponent } from './attendance-modal/attendance-modal.co
   styleUrls: ['./attendance.page.scss'],
   standalone: true,
   imports: [
+    IonButton,
+    IonIcon,
     IonCard,
     IonText,
     IonCardContent,
@@ -59,11 +65,15 @@ import { AttendanceModalComponent } from './attendance-modal/attendance-modal.co
 export class AttendancePage implements OnInit {
   private config = inject(AppConfigService);
   private modalController = inject(ModalController);
+  private apiAttendance = inject(apiAttendanceService);
+  private toastService = inject(ToastService);
   eventService = inject(EventService);
 
   dataLoaded = signal<boolean>(false);
 
-  constructor() {}
+  constructor() {
+    addIcons({ ellipsisHorizontalOutline });
+  }
 
   ngOnInit() {
     this.getData();
@@ -88,5 +98,28 @@ export class AttendancePage implements OnInit {
     });
 
     await modal.present();
+  }
+
+  async onClickApplyAttendance() {
+    this.apiAttendance
+      .applyAttendanceAttendanceApplyPost({
+        affiliate_id: this.config.affiliateId,
+        year: this.config.year,
+      })
+      .subscribe({
+        next: () => {
+          this.toastService.showToast(
+            'Attendance has been successfully applied to all athletes.',
+            'success'
+          );
+        },
+        error: (error) => {
+          console.error('Error applying attendance:', error);
+          this.toastService.showToast(
+            'Error applying attendance. Please try again later.',
+            'danger'
+          );
+        },
+      });
   }
 }

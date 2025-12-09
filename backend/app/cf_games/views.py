@@ -7,7 +7,6 @@ from app.apikey_auth.dependencies import api_key_admin_dependency
 from app.database.dependencies import db_dependency
 from app.exceptions import unauthorised_exception
 
-from .constants import AFFILIATE_ID, YEAR
 from .schemas import CFDataCountModel
 from .service import process_cf_data
 
@@ -20,8 +19,8 @@ cf_games_router = APIRouter(prefix="/cfgames", tags=["cfgames"])
 async def refresh_cf_games_data(
     api_key_admin: api_key_admin_dependency,
     db_session: db_dependency,
-    affiliate_id: int = int(AFFILIATE_ID),
-    year: int = int(YEAR),
+    affiliate_id: int,
+    year: int,
 ) -> dict[str, Any]:
     if api_key_admin:
         try:

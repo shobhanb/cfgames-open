@@ -17,10 +17,13 @@ import {
   IonRouterLink,
   IonIcon,
   ModalController,
+  IonList,
+  IonItem,
+  IonLabel,
 } from '@ionic/angular/standalone';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
-import { apiHomeBlogService } from 'src/app/api/services';
-import { apiHomeBlogModel } from 'src/app/api/models';
+import { apiAthleteService, apiHomeBlogService } from 'src/app/api/services';
+import { apiAthleteSummaryCounts, apiHomeBlogModel } from 'src/app/api/models';
 import { RouterLink } from '@angular/router';
 import { AppInstallService } from 'src/app/services/app-install.service';
 import { addIcons } from 'ionicons';
@@ -35,6 +38,9 @@ import { LearnComponent } from './learn/learn.component';
   styleUrls: ['./home-tab.page.scss'],
   standalone: true,
   imports: [
+    IonLabel,
+    IonItem,
+    IonList,
     IonIcon,
     IonRefresherContent,
     IonRefresher,
@@ -59,10 +65,14 @@ export class HomeTabPage implements OnInit {
   private apiHomeBlog = inject(apiHomeBlogService);
   private config = inject(AppConfigService);
   private modalController = inject(ModalController);
+  private apiAthlete = inject(apiAthleteService);
+
   authService = inject(AuthService);
   appInstallService = inject(AppInstallService);
 
   blogData = signal<apiHomeBlogModel[]>([]);
+
+  athleteCountsData = signal<apiAthleteSummaryCounts[] | null>(null);
 
   welcomeMessage = `Welcome to ${this.config.affiliateName}'s Community Cup for the CF Open.`;
 
@@ -98,6 +108,20 @@ export class HomeTabPage implements OnInit {
             )
           );
           this.dataLoaded.set(true);
+        },
+      });
+
+    this.apiAthlete
+      .getCountsSummaryAthleteSummaryGet({
+        affiliate_id: this.config.affiliateId,
+      })
+      .subscribe({
+        next: (data: apiAthleteSummaryCounts[]) => {
+          this.athleteCountsData.set(data);
+        },
+        error: (error) => {
+          console.error('Error fetching athlete summary counts:', error);
+          this.athleteCountsData.set(null);
         },
       });
   }

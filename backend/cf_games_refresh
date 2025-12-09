@@ -5,7 +5,7 @@ export DEFAULT_AFFILIATE_ID="31316" #CFMF
 # export DEFAULT_AFFILIATE_ID="29255" #9one
 # export DEFAULT_AFFILIATE_ID="27414" #Kaali
 # export DEFAULT_AFFILIATE_ID="13774" #Blackfire
-export DEFAULT_YEAR="2025"
+export DEFAULT_YEAR="2026"
 curl -X "GET" \
   "${BACKEND_URL}/cfgames/refresh?affiliate_id=${DEFAULT_AFFILIATE_ID}&year=${DEFAULT_YEAR}" \
   -H "accept: application/json" \

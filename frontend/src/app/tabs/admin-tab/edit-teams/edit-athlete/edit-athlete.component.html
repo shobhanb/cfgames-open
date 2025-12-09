@@ -19,12 +19,19 @@
     <ion-list [inset]="true">
       <ion-radio-group formControlName="athleteType">
         <ion-item>
+          <ion-icon slot="start" name="ribbon-outline"></ion-icon>
           <ion-radio [value]="2">Team Leader</ion-radio>
         </ion-item>
         <ion-item>
+          <ion-icon slot="start" name="diamond-outline"></ion-icon>
           <ion-radio [value]="1">Coach</ion-radio>
         </ion-item>
         <ion-item>
+          <ion-icon
+            slot="start"
+            class="athlete-icon"
+            name="body-outline"
+          ></ion-icon>
           <ion-radio [value]="0">Athlete</ion-radio>
         </ion-item>
       </ion-radio-group>

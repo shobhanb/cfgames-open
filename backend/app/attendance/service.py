@@ -21,11 +21,15 @@ async def get_db_attendance(
     stmt = (
         select(Athlete.year, Athlete.affiliate_id, Athlete.name, Athlete.crossfit_id, Attendance.ordinal)
         .join_from(
-            Attendance,
             Athlete,
-            (Attendance.crossfit_id == Athlete.crossfit_id) & (Attendance.year == Athlete.year),
+            Attendance,
+            (Attendance.crossfit_id == Athlete.crossfit_id)
+            & (Attendance.year == Athlete.year)
+            & (Attendance.ordinal == ordinal),
+            isouter=True,
+            full=True,
         )
-        .where((Athlete.year == year) & (Athlete.affiliate_id == affiliate_id) & (Attendance.ordinal == ordinal))
+        .where((Athlete.year == year) & (Athlete.affiliate_id == affiliate_id))
     )
     ret = await db_session.execute(stmt)
     results = ret.mappings().all()
@@ -34,11 +38,11 @@ async def get_db_attendance(
 
 async def update_db_attendance(
     db_session: db_dependency,
-    affiliate_id: int,
     year: int,
     ordinal: int,
     crossfit_id: int,
-) -> None:
+    attendance: bool,  # noqa: FBT001
+) -> dict[str, Any]:
     select_stmt = (
         select(Attendance)
         .join_from(
@@ -47,22 +51,39 @@ async def update_db_attendance(
             (Attendance.crossfit_id == Athlete.crossfit_id) & (Attendance.year == Athlete.year),
         )
         .where(
-            (Athlete.year == year)
-            & (Athlete.affiliate_id == affiliate_id)
-            & (Athlete.crossfit_id == crossfit_id)
-            & (Attendance.ordinal == ordinal),
+            (Athlete.year == year) & (Athlete.crossfit_id == crossfit_id) & (Attendance.ordinal == ordinal),
         )
     )
     ret = await db_session.execute(select_stmt)
-    attendance = ret.scalar_one_or_none()
+    attendance_record = ret.scalar_one_or_none()
 
-    if not attendance:
+    if attendance and not attendance_record:
         athlete = await Athlete.find_or_raise(
             async_session=db_session,
             year=year,
-            affiliate_id=affiliate_id,
             crossfit_id=crossfit_id,
         )
         new_attendance = Attendance(crossfit_id=athlete.crossfit_id, year=year, ordinal=ordinal)
         db_session.add(new_attendance)
         await db_session.commit()
+
+    if not attendance and attendance_record:
+        await db_session.delete(attendance_record)
+        await db_session.commit()
+
+    stmt = (
+        select(Athlete.year, Athlete.affiliate_id, Athlete.name, Athlete.crossfit_id, Attendance.ordinal)
+        .join_from(
+            Athlete,
+            Attendance,
+            (Attendance.crossfit_id == Athlete.crossfit_id)
+            & (Attendance.year == Athlete.year)
+            & (Attendance.ordinal == ordinal),
+            isouter=True,
+            full=True,
+        )
+        .where((Athlete.year == year) & (Athlete.crossfit_id == crossfit_id))
+    )
+    ret = await db_session.execute(stmt)
+    results = ret.mappings().one()
+    return dict(results)

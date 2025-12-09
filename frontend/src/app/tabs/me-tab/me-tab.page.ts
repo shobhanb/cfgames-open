@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   IonContent,
@@ -19,6 +19,7 @@ import {
   heartOutline,
   peopleCircleOutline,
 } from 'ionicons/icons';
+import { AppConfigService } from 'src/app/services/app-config.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
@@ -41,6 +42,8 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
   ],
 })
 export class MeTabPage implements OnInit {
+  config = inject(AppConfigService);
+
   constructor() {
     addIcons({
       peopleCircleOutline,

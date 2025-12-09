@@ -1,4 +1,7 @@
 EVENTS = [
+    {"year": 2026, "ordinal": 1, "event": "26.1"},
+    {"year": 2026, "ordinal": 2, "event": "26.2"},
+    {"year": 2026, "ordinal": 3, "event": "26.3"},
     {"year": 2025, "ordinal": 1, "event": "25.1"},
     {"year": 2025, "ordinal": 2, "event": "25.2"},
     {"year": 2025, "ordinal": 3, "event": "25.3"},

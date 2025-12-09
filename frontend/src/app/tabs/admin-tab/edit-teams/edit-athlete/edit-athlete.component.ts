@@ -18,6 +18,7 @@ import {
   IonItem,
   IonRadio,
   IonInput,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { apiAthleteDetail } from 'src/app/api/models';
 import { apiAthleteService } from 'src/app/api/services';
@@ -28,6 +29,7 @@ import { ToastService } from 'src/app/services/toast.service';
   templateUrl: './edit-athlete.component.html',
   styleUrls: ['./edit-athlete.component.scss'],
   imports: [
+    IonIcon,
     IonInput,
     IonRadio,
     IonItem,

@@ -6,12 +6,20 @@ from app.athlete.models import Athlete
 from app.database.dependencies import db_dependency
 from app.firebase_auth.dependencies import admin_user_dependency, verified_user_dependency
 
-from .schemas import AffiliateAthlete, AthleteDetail, AutoTeamAssignmentInput, AutoTeamAssignmentOutput, TeamName
+from .schemas import (
+    AffiliateAthlete,
+    AthleteDetail,
+    AthleteSummaryCounts,
+    AutoTeamAssignmentInput,
+    AutoTeamAssignmentOutput,
+    TeamName,
+)
 from .service import (
     assign_db_athlete_to_team,
     get_affiliate_athletes_list_unassigned,
     get_db_athlete_detail,
     get_db_athlete_detail_all,
+    get_db_counts_summary,
     get_db_team_names,
     get_user_data,
     random_assign_db_athletes,
@@ -127,4 +135,15 @@ async def rename_teams(
         year=year,
         old_team_name=old_team_name,
         new_team_name=new_team_name,
+    )
+
+
+@athlete_router.get("/summary", status_code=status.HTTP_202_ACCEPTED, response_model=list[AthleteSummaryCounts])
+async def get_counts_summary(
+    db_session: db_dependency,
+    affiliate_id: int,
+) -> list[dict[str, Any]]:
+    return await get_db_counts_summary(
+        db_session=db_session,
+        affiliate_id=affiliate_id,
     )

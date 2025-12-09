@@ -9,14 +9,39 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-searchbar
-    debounce="500"
-    placeholder="Search name"
-    (ionInput)="onSearchBarInput($event)"
-  ></ion-searchbar>
-  <ion-list>
-    @for (item of filteredAttendanceData(); track $index) {
-    <ion-item> {{ item.name }} </ion-item>
-    }
-  </ion-list>
+  <ion-toolbar>
+    <ion-segment
+      [value]="filterAttendance()"
+      (ionChange)="onFilterAttendanceSelectionChanged($event)"
+    >
+      <ion-segment-button [value]="true">
+        <ion-label>Attendance Yes Only</ion-label>
+      </ion-segment-button>
+      <ion-segment-button [value]="false">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      debounce="500"
+      placeholder="Search name"
+      (ionInput)="onSearchBarInput($event)"
+    ></ion-searchbar>
+  </ion-toolbar>
+  <ion-card>
+    <ion-list>
+      @for (item of filteredAttendanceData(); track $index) {
+      <ion-item>
+        <ion-checkbox
+          labelPlacement="start"
+          [checked]="item.ordinal ? true : false"
+          (ionChange)="onClickCheckbox($event, item)"
+        >
+          {{ item.name }}
+        </ion-checkbox>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card>
 </ion-content>

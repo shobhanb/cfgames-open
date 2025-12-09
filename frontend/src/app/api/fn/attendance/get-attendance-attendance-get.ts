@@ -10,18 +10,18 @@ import { RequestBuilder } from '../../request-builder';
 
 import { apiAttendanceModel } from '../../models/api-attendance-model';
 
-export interface GetAttendanceAttendanceAffiliateIdYearOrdinalGet$Params {
+export interface GetAttendanceAttendanceGet$Params {
   affiliate_id: number;
   year: number;
   ordinal: number;
 }
 
-export function getAttendanceAttendanceAffiliateIdYearOrdinalGet(http: HttpClient, rootUrl: string, params: GetAttendanceAttendanceAffiliateIdYearOrdinalGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAttendanceModel>>> {
-  const rb = new RequestBuilder(rootUrl, getAttendanceAttendanceAffiliateIdYearOrdinalGet.PATH, 'get');
+export function getAttendanceAttendanceGet(http: HttpClient, rootUrl: string, params: GetAttendanceAttendanceGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAttendanceModel>>> {
+  const rb = new RequestBuilder(rootUrl, getAttendanceAttendanceGet.PATH, 'get');
   if (params) {
-    rb.path('affiliate_id', params.affiliate_id, {});
-    rb.path('year', params.year, {});
-    rb.path('ordinal', params.ordinal, {});
+    rb.query('affiliate_id', params.affiliate_id, {});
+    rb.query('year', params.year, {});
+    rb.query('ordinal', params.ordinal, {});
   }
 
   return http.request(
@@ -34,4 +34,4 @@ export function getAttendanceAttendanceAffiliateIdYearOrdinalGet(http: HttpClien
   );
 }
 
-getAttendanceAttendanceAffiliateIdYearOrdinalGet.PATH = '/attendance/{affiliate_id}/{year}/{ordinal}/';
+getAttendanceAttendanceGet.PATH = '/attendance/';

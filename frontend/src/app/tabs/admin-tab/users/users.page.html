@@ -18,10 +18,13 @@
       [value]="filterAdmin()"
       (ionChange)="onSelectionChanged($event)"
     >
-      <ion-segment-button [value]="true">
+      <ion-segment-button value="admin">
         <ion-label>Admin</ion-label>
       </ion-segment-button>
-      <ion-segment-button [value]="false">
+      <ion-segment-button value="notVerified">
+        <ion-label>Not Verified</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="all">
         <ion-label>All</ion-label>
       </ion-segment-button>
     </ion-segment>

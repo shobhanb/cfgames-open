@@ -83,14 +83,16 @@ export class UsersPage implements OnInit {
           user.email?.toLowerCase().includes(search) ||
           user.display_name?.toLowerCase().includes(search)
       );
-    } else if (adminOnly) {
+    } else if (adminOnly === 'admin') {
       return users.filter((user) => user.custom_claims?.admin === true);
+    } else if (adminOnly === 'notVerified') {
+      return users.filter((user) => user.email_verified === false);
     } else {
       return users;
     }
   });
 
-  filterAdmin = signal<boolean>(false);
+  filterAdmin = signal<'admin' | 'notVerified' | 'all'>('all');
   searchText = signal<string | null>(null);
 
   onSelectionChanged(event: CustomEvent) {
@@ -101,7 +103,7 @@ export class UsersPage implements OnInit {
     const target = event.target as HTMLIonSearchbarElement;
     this.searchText.set(target.value?.toLowerCase() || null);
     if (target.value) {
-      this.filterAdmin.set(false);
+      this.filterAdmin.set('all');
     }
   }
 
@@ -137,9 +139,9 @@ export class UsersPage implements OnInit {
     await actionSheet.present();
 
     const result = await actionSheet.onDidDismiss();
-    if (result.data.action === 'delete') {
+    if (result.data && result.data.action === 'delete') {
       await this.onClickDelete(user);
-    } else if (result.data.action === 'admin') {
+    } else if (result.data && result.data.action === 'admin') {
       await this.onClickAdmin(user);
     }
   }

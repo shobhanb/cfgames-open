@@ -8,14 +8,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { apiEventsModel } from '../../models/api-events-model';
+import { apiAthleteSummaryCounts } from '../../models/api-athlete-summary-counts';
 
-export interface GetCfeventsCfeventsGet$Params {
+export interface GetCountsSummaryAthleteSummaryGet$Params {
   affiliate_id: number;
 }
 
-export function getCfeventsCfeventsGet(http: HttpClient, rootUrl: string, params: GetCfeventsCfeventsGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiEventsModel>>> {
-  const rb = new RequestBuilder(rootUrl, getCfeventsCfeventsGet.PATH, 'get');
+export function getCountsSummaryAthleteSummaryGet(http: HttpClient, rootUrl: string, params: GetCountsSummaryAthleteSummaryGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthleteSummaryCounts>>> {
+  const rb = new RequestBuilder(rootUrl, getCountsSummaryAthleteSummaryGet.PATH, 'get');
   if (params) {
     rb.query('affiliate_id', params.affiliate_id, {});
   }
@@ -25,9 +25,9 @@ export function getCfeventsCfeventsGet(http: HttpClient, rootUrl: string, params
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<apiEventsModel>>;
+      return r as StrictHttpResponse<Array<apiAthleteSummaryCounts>>;
     })
   );
 }
 
-getCfeventsCfeventsGet.PATH = '/cfevents/';
+getCountsSummaryAthleteSummaryGet.PATH = '/athlete/summary';

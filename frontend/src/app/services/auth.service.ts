@@ -137,7 +137,6 @@ export class AuthService {
   }
 
   async getMyAthleteInfo(): Promise<boolean> {
-    console.log('Fetching athlete info...');
     return new Promise((resolve, reject) => {
       this.apiAthlete.getMyAthleteDataAthleteMeGet().subscribe({
         next: (data: apiAthleteDetail) => {
