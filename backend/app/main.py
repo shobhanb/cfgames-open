@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
+from app.affiliate_config.views import affiliate_config_router
 from app.appreciation.views import appreciation_router
 from app.appreciation_score.views import appreciation_score_router
 from app.appreciation_status.views import appreciation_open_router
@@ -28,7 +29,7 @@ from app.teams.views import teams_router
 
 log = logging.getLogger("uvicorn.error")
 
-RESET_DB = False
+RESET_DB = True
 
 cred = firebase_admin.credentials.Certificate("firebase_service_account_key.json")
 default_app = firebase_admin.initialize_app(credential=cred)
@@ -67,6 +68,7 @@ app.include_router(sidescore_router)
 app.include_router(teams_router)
 app.include_router(athlete_prefs_router)
 app.include_router(home_blog_router)
+app.include_router(affiliate_config_router)
 
 app.add_middleware(
     CORSMiddleware,

@@ -18,6 +18,7 @@ import { apiSidescoreService } from './services/api-sidescore.service';
 import { apiTeamsService } from './services/api-teams.service';
 import { apiAthletePrefsService } from './services/api-athlete-prefs.service';
 import { apiHomeBlogService } from './services/api-home-blog.service';
+import { apiAffiliateConfigService } from './services/api-affiliate-config.service';
 
 /**
  * Module that provides all services and configuration.
@@ -39,6 +40,7 @@ import { apiHomeBlogService } from './services/api-home-blog.service';
     apiTeamsService,
     apiAthletePrefsService,
     apiHomeBlogService,
+    apiAffiliateConfigService,
     ApiConfiguration
   ],
 })

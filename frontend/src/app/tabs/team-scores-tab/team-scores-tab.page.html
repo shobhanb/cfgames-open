@@ -9,7 +9,12 @@
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-card [button]="true" type="button" routerLink="/team-scores/team-info">
+  <ion-card
+    class="highlight-card"
+    [button]="true"
+    type="button"
+    routerLink="/team-scores/team-info"
+  >
     <ion-card-header>
       <ion-card-title>{{ config.year + ' Team Composition' }}</ion-card-title>
       <ion-card-subtitle>See who's on each team</ion-card-subtitle>

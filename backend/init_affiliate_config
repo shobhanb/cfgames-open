@@ -1,0 +1,7 @@
+export BACKEND_URL="http://localhost:8000"
+export AFFILIATE_ID="31316"
+export YEAR="2025"
+curl -X 'POST' \
+  "${BACKEND_URL}/affiliate_config/initialize?affiliate_id=${AFFILIATE_ID}&year=${YEAR}" \
+  -H "accept: application/json" \
+  -H "X-API-KEY: ${ADMIN_API_KEY}"

@@ -6,7 +6,8 @@ from sqlalchemy import Integer, String, UniqueConstraint
 from sqlalchemy.engine.default import DefaultExecutionContext
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.cf_games.constants import CF_DIVISION_MAP, DEFAULT_TEAM_NAME, MASTERS_AGE_CUTOFF, OPEN_AGE_CUTOFF
+from app.affiliate_config.constants import MASTERS_AGE_CUTOFF, OPEN_AGE_CUTOFF
+from app.cf_games.constants import CF_DIVISION_MAP, DEFAULT_TEAM_NAME
 from app.database.base import Base
 
 if TYPE_CHECKING:

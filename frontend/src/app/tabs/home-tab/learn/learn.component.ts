@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   ModalController,
   IonHeader,
@@ -16,7 +16,6 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonText,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -27,14 +26,15 @@ import {
   heartOutline,
   calendarOutline,
 } from 'ionicons/icons';
+import { apiAffiliateConfigService } from 'src/app/api/services';
 import { AppConfigService } from 'src/app/services/app-config.service';
+import { apiAffiliateConfigModel } from 'src/app/api/models';
 
 @Component({
   selector: 'app-learn',
   templateUrl: './learn.component.html',
   styleUrls: ['./learn.component.scss'],
   imports: [
-    IonText,
     IonCard,
     IonCardHeader,
     IonCardTitle,
@@ -54,7 +54,10 @@ import { AppConfigService } from 'src/app/services/app-config.service';
 })
 export class LearnComponent implements OnInit {
   private modalController = inject(ModalController);
+  private apiAffiliateConfig = inject(apiAffiliateConfigService);
   config = inject(AppConfigService);
+
+  affiliateConfig = signal<apiAffiliateConfigModel | null>(null);
 
   constructor() {
     addIcons({
@@ -67,7 +70,21 @@ export class LearnComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.apiAffiliateConfig
+      .getAffiliateConfigAffiliateConfigAffiliateIdYearGet({
+        affiliate_id: this.config.affiliateId,
+        year: this.config.year,
+      })
+      .subscribe({
+        next: (data) => {
+          this.affiliateConfig.set(data);
+        },
+        error: (error) => {
+          console.error('Error fetching affiliate config:', error);
+        },
+      });
+  }
 
   closeModal() {
     this.modalController.dismiss();

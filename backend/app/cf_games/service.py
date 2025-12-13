@@ -12,6 +12,7 @@ from pydantic import ValidationError
 from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.affiliate_config.service import get_config_or_defaults
 from app.appreciation_score.models import AppreciationScore
 from app.athlete.models import Athlete
 from app.athlete_prefs.service import init_assign_db_athlete_prefs
@@ -20,15 +21,11 @@ from app.score.models import Score
 from app.sidescore.models import SideScore
 
 from .constants import (
-    ATTENDANCE_SCORE,
     CF_DIVISION_MAP,
     CF_LEADERBOARD_URL,
     HTTPX_MAX_RATE_LIMIT_PER_SECOND,
     HTTPX_TIMEOUT,
     IGNORE_TEAMS,
-    JUDGE_SCORE,
-    PARTICIPATION_SCORE,
-    TOP3_SCORE,
 )
 from .schemas import CFEntrantInputModel, CFScoreInputModel
 
@@ -196,6 +193,8 @@ async def apply_participation_score(
     affiliate_id: int,
     year: int,
 ) -> None:
+    config = await get_config_or_defaults(db_session=db_session, affiliate_id=affiliate_id, year=year)
+
     select_stmt = (
         select(Score.id)
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
@@ -207,7 +206,9 @@ async def apply_participation_score(
         )
     )
     update_stmt = (
-        update(Score).where(Score.id.in_(select_stmt.scalar_subquery())).values(participation_score=PARTICIPATION_SCORE)
+        update(Score)
+        .where(Score.id.in_(select_stmt.scalar_subquery()))
+        .values(participation_score=config.participation_score)
     )
     await db_session.execute(update_stmt)
     await db_session.commit()
@@ -248,6 +249,8 @@ async def apply_top3_score(
     year: int,
     rank_cutoff: int = 3,
 ) -> None:
+    config = await get_config_or_defaults(db_session=db_session, affiliate_id=affiliate_id, year=year)
+
     select_stmt = (
         select(Score.id)
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
@@ -258,7 +261,7 @@ async def apply_top3_score(
             & (Score.affiliate_rank <= rank_cutoff),
         )
     )
-    update_stmt = update(Score).where(Score.id.in_(select_stmt.scalar_subquery())).values(top3_score=TOP3_SCORE)
+    update_stmt = update(Score).where(Score.id.in_(select_stmt.scalar_subquery())).values(top3_score=config.top3_score)
     await db_session.execute(update_stmt)
     await db_session.commit()
 
@@ -268,6 +271,8 @@ async def apply_attendance_scores(
     affiliate_id: int,
     year: int,
 ) -> None:
+    config = await get_config_or_defaults(db_session=db_session, affiliate_id=affiliate_id, year=year)
+
     select_stmt = (
         select(Score.id)
         .join_from(
@@ -278,7 +283,9 @@ async def apply_attendance_scores(
         .where((Athlete.year == year) & (Athlete.affiliate_id == affiliate_id))
     )
     update_stmt = (
-        update(Score).where(Score.id.in_(select_stmt.scalar_subquery())).values(attendance_score=ATTENDANCE_SCORE)
+        update(Score)
+        .where(Score.id.in_(select_stmt.scalar_subquery()))
+        .values(attendance_score=config.attendance_score)
     )
 
     await db_session.execute(update_stmt)
@@ -290,6 +297,8 @@ async def apply_judge_score(
     affiliate_id: int,
     year: int,
 ) -> None:
+    config = await get_config_or_defaults(db_session=db_session, affiliate_id=affiliate_id, year=year)
+
     select_judge_stmt = (
         select(Score.judge_name, Score.ordinal)
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
@@ -310,7 +319,9 @@ async def apply_judge_score(
             )
         )
         update_stmt = (
-            update(Score).where(Score.id.in_(select_score_stmt.scalar_subquery())).values(judge_score=JUDGE_SCORE)
+            update(Score)
+            .where(Score.id.in_(select_score_stmt.scalar_subquery()))
+            .values(judge_score=config.judge_score)
         )
         await db_session.execute(update_stmt)
 
