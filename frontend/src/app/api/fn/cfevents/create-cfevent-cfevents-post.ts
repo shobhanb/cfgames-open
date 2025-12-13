@@ -8,16 +8,17 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { apiEventsCreate } from '../../models/api-events-create';
 import { apiEventsModel } from '../../models/api-events-model';
 
-export interface GetCfeventsCfeventsGet$Params {
-  affiliate_id: number;
+export interface CreateCfeventCfeventsPost$Params {
+      body: apiEventsCreate
 }
 
-export function getCfeventsCfeventsGet(http: HttpClient, rootUrl: string, params: GetCfeventsCfeventsGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiEventsModel>>> {
-  const rb = new RequestBuilder(rootUrl, getCfeventsCfeventsGet.PATH, 'get');
+export function createCfeventCfeventsPost(http: HttpClient, rootUrl: string, params: CreateCfeventCfeventsPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiEventsModel>> {
+  const rb = new RequestBuilder(rootUrl, createCfeventCfeventsPost.PATH, 'post');
   if (params) {
-    rb.query('affiliate_id', params.affiliate_id, {});
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -25,9 +26,9 @@ export function getCfeventsCfeventsGet(http: HttpClient, rootUrl: string, params
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<apiEventsModel>>;
+      return r as StrictHttpResponse<apiEventsModel>;
     })
   );
 }
 
-getCfeventsCfeventsGet.PATH = '/cfevents/';
+createCfeventCfeventsPost.PATH = '/cfevents/';

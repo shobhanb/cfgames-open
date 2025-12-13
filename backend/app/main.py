@@ -29,7 +29,7 @@ from app.teams.views import teams_router
 
 log = logging.getLogger("uvicorn.error")
 
-RESET_DB = True
+RESET_DB = False
 
 cred = firebase_admin.credentials.Certificate("firebase_service_account_key.json")
 default_app = firebase_admin.initialize_app(credential=cred)

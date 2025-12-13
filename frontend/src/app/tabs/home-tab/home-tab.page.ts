@@ -17,12 +17,14 @@ import {
   IonRouterLink,
   IonIcon,
   ModalController,
-  IonList,
-  IonItem,
-  IonLabel,
+  IonText,
 } from '@ionic/angular/standalone';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
-import { apiAthleteService, apiHomeBlogService } from 'src/app/api/services';
+import {
+  apiAthleteService,
+  apiCfgamesService,
+  apiHomeBlogService,
+} from 'src/app/api/services';
 import { apiAthleteSummaryCounts, apiHomeBlogModel } from 'src/app/api/models';
 import { RouterLink } from '@angular/router';
 import { AppInstallService } from 'src/app/services/app-install.service';
@@ -38,9 +40,6 @@ import { LearnComponent } from './learn/learn.component';
   styleUrls: ['./home-tab.page.scss'],
   standalone: true,
   imports: [
-    IonLabel,
-    IonItem,
-    IonList,
     IonIcon,
     IonRefresherContent,
     IonRefresher,
@@ -59,6 +58,7 @@ import { LearnComponent } from './learn/learn.component';
     ToolbarButtonsComponent,
     RouterLink,
     IonRouterLink,
+    IonText,
   ],
 })
 export class HomeTabPage implements OnInit {
@@ -66,6 +66,7 @@ export class HomeTabPage implements OnInit {
   private config = inject(AppConfigService);
   private modalController = inject(ModalController);
   private apiAthlete = inject(apiAthleteService);
+  private cfGamesData = inject(apiCfgamesService);
 
   authService = inject(AuthService);
   appInstallService = inject(AppInstallService);
@@ -73,6 +74,8 @@ export class HomeTabPage implements OnInit {
   blogData = signal<apiHomeBlogModel[]>([]);
 
   athleteCountsData = signal<apiAthleteSummaryCounts[] | null>(null);
+
+  cfGamesDataTimestamp = signal<string | null>(null);
 
   welcomeMessage = `Welcome to ${this.config.affiliateName}'s Community Cup for the CF Open.`;
 
@@ -122,6 +125,25 @@ export class HomeTabPage implements OnInit {
         error: (error) => {
           console.error('Error fetching athlete summary counts:', error);
           this.athleteCountsData.set(null);
+        },
+      });
+
+    this.cfGamesData
+      .getCfGamesDataEndpointCfgamesDataAffiliateIdYearGet({
+        affiliate_id: this.config.affiliateId,
+        year: this.config.year,
+      })
+      .subscribe({
+        next: (data) => {
+          if (data && data.length > 0) {
+            // Convert UTC timestamp to local time
+            const utcDate = new Date(data[0].timestamp);
+            this.cfGamesDataTimestamp.set(utcDate.toISOString());
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching CF Games data timestamp:', error);
+          this.cfGamesDataTimestamp.set(null);
         },
       });
   }

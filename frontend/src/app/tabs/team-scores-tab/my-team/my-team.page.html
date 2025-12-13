@@ -59,7 +59,12 @@
   </ion-toolbar>
 
   @if ( dataLoaded()) {
-  <div class="section-title">{{ teamSectionTitle() }}</div>
+  <div class="section-title">
+    {{ teamSectionTitle() }}
+    <ion-chip>
+      <ion-label>{{ filteredAthletes().length }}</ion-label>
+    </ion-chip>
+  </div>
   <ion-card>
     <ion-list [inset]="true">
       @if (filteredAthletes().length === 0) {

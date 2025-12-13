@@ -13,9 +13,17 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { addUpdateCfeventsCfeventsInitializePost } from '../fn/cfevents/add-update-cfevents-cfevents-initialize-post';
 import { AddUpdateCfeventsCfeventsInitializePost$Params } from '../fn/cfevents/add-update-cfevents-cfevents-initialize-post';
+import { createCfeventCfeventsPost } from '../fn/cfevents/create-cfevent-cfevents-post';
+import { CreateCfeventCfeventsPost$Params } from '../fn/cfevents/create-cfevent-cfevents-post';
+import { deleteCfeventCfeventsYearOrdinalDelete } from '../fn/cfevents/delete-cfevent-cfevents-year-ordinal-delete';
+import { DeleteCfeventCfeventsYearOrdinalDelete$Params } from '../fn/cfevents/delete-cfevent-cfevents-year-ordinal-delete';
 import { apiEventsModel } from '../models/api-events-model';
-import { getCfeventsCfeventsGet } from '../fn/cfevents/get-cfevents-cfevents-get';
-import { GetCfeventsCfeventsGet$Params } from '../fn/cfevents/get-cfevents-cfevents-get';
+import { getAllCfeventsCfeventsAllGet } from '../fn/cfevents/get-all-cfevents-cfevents-all-get';
+import { GetAllCfeventsCfeventsAllGet$Params } from '../fn/cfevents/get-all-cfevents-cfevents-all-get';
+import { getEventsWithDataCfeventsGet } from '../fn/cfevents/get-events-with-data-cfevents-get';
+import { GetEventsWithDataCfeventsGet$Params } from '../fn/cfevents/get-events-with-data-cfevents-get';
+import { updateCfeventCfeventsYearOrdinalPatch } from '../fn/cfevents/update-cfevent-cfevents-year-ordinal-patch';
+import { UpdateCfeventCfeventsYearOrdinalPatch$Params } from '../fn/cfevents/update-cfevent-cfevents-year-ordinal-patch';
 
 @Injectable({ providedIn: 'root' })
 export class apiCfeventsService extends BaseService {
@@ -23,36 +31,69 @@ export class apiCfeventsService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getCfeventsCfeventsGet()` */
-  static readonly GetCfeventsCfeventsGetPath = '/cfevents/';
+  /** Path part for operation `getEventsWithDataCfeventsGet()` */
+  static readonly GetEventsWithDataCfeventsGetPath = '/cfevents/';
 
   /**
-   * Get Cfevents.
+   * Get Events With Data.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getCfeventsCfeventsGet()` instead.
+   * To access only the response body, use `getEventsWithDataCfeventsGet()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getCfeventsCfeventsGet$Response(params: GetCfeventsCfeventsGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiEventsModel>>> {
-    return getCfeventsCfeventsGet(this.http, this.rootUrl, params, context);
+  getEventsWithDataCfeventsGet$Response(params: GetEventsWithDataCfeventsGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiEventsModel>>> {
+    return getEventsWithDataCfeventsGet(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Get Cfevents.
+   * Get Events With Data.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getCfeventsCfeventsGet$Response()` instead.
+   * To access the full response (for headers, for example), `getEventsWithDataCfeventsGet$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getCfeventsCfeventsGet(params: GetCfeventsCfeventsGet$Params, context?: HttpContext): Observable<Array<apiEventsModel>> {
-    return this.getCfeventsCfeventsGet$Response(params, context).pipe(
+  getEventsWithDataCfeventsGet(params: GetEventsWithDataCfeventsGet$Params, context?: HttpContext): Observable<Array<apiEventsModel>> {
+    return this.getEventsWithDataCfeventsGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<apiEventsModel>>): Array<apiEventsModel> => r.body)
+    );
+  }
+
+  /** Path part for operation `createCfeventCfeventsPost()` */
+  static readonly CreateCfeventCfeventsPostPath = '/cfevents/';
+
+  /**
+   * Create Cfevent.
+   *
+   * Create a new event.
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `createCfeventCfeventsPost()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  createCfeventCfeventsPost$Response(params: CreateCfeventCfeventsPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiEventsModel>> {
+    return createCfeventCfeventsPost(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Create Cfevent.
+   *
+   * Create a new event.
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `createCfeventCfeventsPost$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  createCfeventCfeventsPost(params: CreateCfeventCfeventsPost$Params, context?: HttpContext): Observable<apiEventsModel> {
+    return this.createCfeventCfeventsPost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiEventsModel>): apiEventsModel => r.body)
     );
   }
 
@@ -86,6 +127,105 @@ export class apiCfeventsService extends BaseService {
   addUpdateCfeventsCfeventsInitializePost(params?: AddUpdateCfeventsCfeventsInitializePost$Params, context?: HttpContext): Observable<any> {
     return this.addUpdateCfeventsCfeventsInitializePost$Response(params, context).pipe(
       map((r: StrictHttpResponse<any>): any => r.body)
+    );
+  }
+
+  /** Path part for operation `getAllCfeventsCfeventsAllGet()` */
+  static readonly GetAllCfeventsCfeventsAllGetPath = '/cfevents/all';
+
+  /**
+   * Get All Cfevents.
+   *
+   * Get all events regardless of affiliate data.
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllCfeventsCfeventsAllGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllCfeventsCfeventsAllGet$Response(params?: GetAllCfeventsCfeventsAllGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiEventsModel>>> {
+    return getAllCfeventsCfeventsAllGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get All Cfevents.
+   *
+   * Get all events regardless of affiliate data.
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllCfeventsCfeventsAllGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllCfeventsCfeventsAllGet(params?: GetAllCfeventsCfeventsAllGet$Params, context?: HttpContext): Observable<Array<apiEventsModel>> {
+    return this.getAllCfeventsCfeventsAllGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiEventsModel>>): Array<apiEventsModel> => r.body)
+    );
+  }
+
+  /** Path part for operation `deleteCfeventCfeventsYearOrdinalDelete()` */
+  static readonly DeleteCfeventCfeventsYearOrdinalDeletePath = '/cfevents/{year}/{ordinal}/';
+
+  /**
+   * Delete Cfevent.
+   *
+   * Delete an event.
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deleteCfeventCfeventsYearOrdinalDelete()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteCfeventCfeventsYearOrdinalDelete$Response(params: DeleteCfeventCfeventsYearOrdinalDelete$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deleteCfeventCfeventsYearOrdinalDelete(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Delete Cfevent.
+   *
+   * Delete an event.
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deleteCfeventCfeventsYearOrdinalDelete$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteCfeventCfeventsYearOrdinalDelete(params: DeleteCfeventCfeventsYearOrdinalDelete$Params, context?: HttpContext): Observable<void> {
+    return this.deleteCfeventCfeventsYearOrdinalDelete$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `updateCfeventCfeventsYearOrdinalPatch()` */
+  static readonly UpdateCfeventCfeventsYearOrdinalPatchPath = '/cfevents/{year}/{ordinal}/';
+
+  /**
+   * Update Cfevent.
+   *
+   * Update an existing event.
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateCfeventCfeventsYearOrdinalPatch()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateCfeventCfeventsYearOrdinalPatch$Response(params: UpdateCfeventCfeventsYearOrdinalPatch$Params, context?: HttpContext): Observable<StrictHttpResponse<apiEventsModel>> {
+    return updateCfeventCfeventsYearOrdinalPatch(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Update Cfevent.
+   *
+   * Update an existing event.
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateCfeventCfeventsYearOrdinalPatch$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateCfeventCfeventsYearOrdinalPatch(params: UpdateCfeventCfeventsYearOrdinalPatch$Params, context?: HttpContext): Observable<apiEventsModel> {
+    return this.updateCfeventCfeventsYearOrdinalPatch$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiEventsModel>): apiEventsModel => r.body)
     );
   }
 

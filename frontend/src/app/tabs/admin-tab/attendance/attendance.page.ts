@@ -1,4 +1,4 @@
-import { Component, inject, linkedSignal, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   IonContent,
   IonHeader,
@@ -18,9 +18,8 @@ import {
   IonCard,
   IonButton,
 } from '@ionic/angular/standalone';
-import { apiAttendanceModel } from 'src/app/api/models';
+import { apiEventsModel } from 'src/app/api/models';
 import { apiAttendanceService } from 'src/app/api/services';
-import { EventModel } from 'src/app/config/events';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -76,7 +75,7 @@ export class AttendancePage implements OnInit {
     this.dataLoaded.set(false);
   }
 
-  async openAttendanceModal(event: EventModel) {
+  async openAttendanceModal(event: apiEventsModel) {
     // Open the attendance modal for the selected event
     const modal = await this.modalController.create({
       component: AttendanceModalComponent,

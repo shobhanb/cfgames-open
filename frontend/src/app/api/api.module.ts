@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { apiCfeventsService } from './services/api-cfevents.service';
+import { apiCfgamesService } from './services/api-cfgames.service';
 import { apiFireauthService } from './services/api-fireauth.service';
 import { apiAthleteService } from './services/api-athlete.service';
 import { apiScoreService } from './services/api-score.service';
@@ -29,6 +30,7 @@ import { apiAffiliateConfigService } from './services/api-affiliate-config.servi
   declarations: [],
   providers: [
     apiCfeventsService,
+    apiCfgamesService,
     apiFireauthService,
     apiAthleteService,
     apiScoreService,

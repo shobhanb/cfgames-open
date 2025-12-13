@@ -25,7 +25,6 @@ import {
   IonCardTitle,
   IonRefresher,
   IonRefresherContent,
-  IonSkeletonText,
   IonHeader,
   IonBackButton,
   IonButtons,
@@ -70,7 +69,6 @@ import { AppConfigService } from 'src/app/services/app-config.service';
     IonList,
     IonContent,
     TeamNamePipe,
-    IonSkeletonText,
     ToolbarButtonsComponent,
   ],
 })

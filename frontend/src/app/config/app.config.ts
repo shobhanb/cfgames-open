@@ -12,34 +12,10 @@ export const configs: { [key: string]: AppConfig } = {
     apiBaseUrl: 'https://cfmf.cfgames.site/api',
     year: 2025,
   },
-  itcf: {
-    affiliateId: 22847,
-    affiliateName: 'I Think Crossfit',
-    apiBaseUrl: 'https://itcf.cfgames.site/api',
-    year: 2025,
-  },
   enduro: {
     affiliateId: 2539,
     affiliateName: 'Crossfit Enduro',
     apiBaseUrl: 'https://enduro.cfgames.site/api',
-    year: 2025,
-  },
-  '9one': {
-    affiliateId: 29255,
-    affiliateName: 'Crossfit 9 One',
-    apiBaseUrl: 'https://9one.cfgames.site/api',
-    year: 2025,
-  },
-  kaali: {
-    affiliateId: 27414,
-    affiliateName: 'Crossfit Kaali',
-    apiBaseUrl: 'https://kaali.cfgames.site/api',
-    year: 2025,
-  },
-  blackfire: {
-    affiliateId: 13774,
-    affiliateName: 'Crossfit Blackfire',
-    apiBaseUrl: 'https://blackfire.cfgames.site/api',
     year: 2025,
   },
 };

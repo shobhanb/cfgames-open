@@ -1,13 +1,15 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { AppConfigService } from './app-config.service';
-import { EventModel, events } from '../config/events';
+import { apiEventsModel } from '../api/models';
+import { apiCfeventsService } from '../api/services';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventService {
-  private events = signal<EventModel[]>([]);
+  private events = signal<apiEventsModel[]>([]);
   private config = inject(AppConfigService);
+  private apiEvents = inject(apiCfeventsService);
 
   readonly currentYearEvents = computed(() =>
     this.events().filter((event) => event.year === this.config.year)
@@ -19,7 +21,7 @@ export class EventService {
 
   readonly groupedEvents = computed(() => {
     const events = this.events();
-    const groups: { [year: number]: EventModel[] } = {};
+    const groups: { [year: number]: apiEventsModel[] } = {};
     events.forEach((event) => {
       if (!groups[event.year]) {
         groups[event.year] = [];
@@ -29,7 +31,7 @@ export class EventService {
     return Object.entries(groups)
       .map(([year, events]) => ({
         year: +year,
-        events: events.sort((a, b) => b.ordinal - a.ordinal),
+        events: events.sort((a, b) => a.ordinal - b.ordinal),
       }))
       .sort((a, b) => b.year - a.year);
   });
@@ -47,7 +49,7 @@ export class EventService {
       year = this.config.year;
     }
     const event = this.events().find(
-      (e: EventModel) => e.year === year && e.ordinal === ordinal
+      (e: apiEventsModel) => e.year === year && e.ordinal === ordinal
     );
     return event ? event.event : null;
   }
@@ -55,7 +57,7 @@ export class EventService {
   getOrdinalFromEvent(event: string): number | null {
     const [year, ordinal] = event.split('.');
     const eventModel = this.events().find(
-      (e: EventModel) => e.year === +year && e.event === event
+      (e: apiEventsModel) => e.year === +year && e.event === event
     );
     return eventModel ? eventModel.ordinal : null;
   }
@@ -68,7 +70,16 @@ export class EventService {
   }
 
   getData() {
-    this.events.set(events);
+    this.apiEvents
+      .getEventsWithDataCfeventsGet({ affiliate_id: this.config.affiliateId })
+      .subscribe({
+        next: (events) => {
+          this.events.set(events);
+        },
+        error: (error) => {
+          console.error('Error fetching events:', error);
+        },
+      });
   }
 
   constructor() {

@@ -8,7 +8,6 @@ import {
   IonToolbar,
   IonCard,
   IonCardTitle,
-  IonText,
   IonCardHeader,
   IonCardSubtitle,
 } from '@ionic/angular/standalone';
@@ -24,7 +23,6 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
   imports: [
     IonCardSubtitle,
     IonCardHeader,
-    IonText,
     IonCardTitle,
     IonCard,
     IonToolbar,

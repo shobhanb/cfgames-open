@@ -1,10 +1,17 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Self
 
 from pydantic import Field, field_validator, model_validator
 
 from app.schemas import CustomBaseModel
+
+
+class CFGamesDataModel(CustomBaseModel):
+    affiliate_id: int
+    year: int
+    timestamp: datetime
 
 
 class CFDataCountModel(CustomBaseModel):

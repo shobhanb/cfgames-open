@@ -27,11 +27,9 @@ import {
   IonCardContent,
   IonText,
 } from '@ionic/angular/standalone';
-import { apiAthleteDetail, apiAttendanceModel } from 'src/app/api/models';
+import { apiAttendanceModel, apiEventsModel } from 'src/app/api/models';
 import { apiAttendanceService } from 'src/app/api/services';
-import { EventModel } from 'src/app/config/events';
 import { AppConfigService } from 'src/app/services/app-config.service';
-import { AthleteDataService } from 'src/app/services/athlete-data.service';
 import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
@@ -65,7 +63,7 @@ export class AttendanceModalComponent implements OnInit {
   private config = inject(AppConfigService);
   private toastService = inject(ToastService);
 
-  @Input({ required: true }) event!: EventModel;
+  @Input({ required: true }) event!: apiEventsModel;
   attendanceData = signal<apiAttendanceModel[]>([]);
 
   filterAttendance = signal<boolean>(false);

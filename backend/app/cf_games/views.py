@@ -1,4 +1,5 @@
 import logging
+from collections.abc import Sequence
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, status
@@ -7,7 +8,8 @@ from app.apikey_auth.dependencies import api_key_admin_dependency
 from app.database.dependencies import db_dependency
 from app.exceptions import unauthorised_exception
 
-from .schemas import CFDataCountModel
+from .models import CfGamesData
+from .schemas import CFDataCountModel, CFGamesDataModel
 from .service import process_cf_data
 
 log = logging.getLogger("uvicorn.error")
@@ -32,3 +34,29 @@ async def refresh_cf_games_data(
             ) from e
     else:
         raise unauthorised_exception()
+
+
+@cf_games_router.get(
+    "/data/all",
+    status_code=status.HTTP_200_OK,
+    response_model=list[CFGamesDataModel],
+)
+async def get_all_cf_games_data_endpoint(
+    db_session: db_dependency,
+) -> Sequence[CfGamesData]:
+    """Get all CF games data refresh timestamps."""
+    return await CfGamesData.find_all(async_session=db_session)
+
+
+@cf_games_router.get(
+    "/data/{affiliate_id}/{year}/",
+    status_code=status.HTTP_200_OK,
+    response_model=list[CFGamesDataModel],
+)
+async def get_cf_games_data_endpoint(
+    db_session: db_dependency,
+    affiliate_id: int,
+    year: int,
+) -> Sequence[CfGamesData]:
+    """Get CF games data refresh timestamp for a specific affiliate and year."""
+    return await CfGamesData.find_all(async_session=db_session, affiliate_id=affiliate_id, year=year)

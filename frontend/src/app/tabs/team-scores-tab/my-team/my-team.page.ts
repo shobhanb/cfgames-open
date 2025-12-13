@@ -19,6 +19,7 @@ import {
   IonSelect,
   IonSelectOption,
   IonCard,
+  IonChip,
 } from '@ionic/angular/standalone';
 import { apiAthleteDetail } from 'src/app/api/models';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
@@ -55,6 +56,7 @@ import { AuthService } from 'src/app/services/auth.service';
     TeamNamePipe,
     IonSelect,
     IonSelectOption,
+    IonChip,
   ],
 })
 export class MyTeamPage implements OnInit {

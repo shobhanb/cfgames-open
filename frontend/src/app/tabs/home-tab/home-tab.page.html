@@ -82,6 +82,15 @@
       <ion-button fill="clear" routerLink="/auth/signup"
         >Then sign up here</ion-button
       >
+      } @if (cfGamesDataTimestamp()) {
+      <div class="data-refresh-info">
+        <ion-text color="medium">
+          <small
+            >Data last refreshed: {{ cfGamesDataTimestamp() | date:
+            'short':'':'en-US' }}</small
+          >
+        </ion-text>
+      </div>
       }
     </div>
   </ion-card>

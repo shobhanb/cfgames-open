@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import time
+from datetime import UTC, datetime
 from typing import Any
 
 from httpx import AsyncClient, HTTPError
@@ -27,6 +28,7 @@ from .constants import (
     HTTPX_TIMEOUT,
     IGNORE_TEAMS,
 )
+from .models import CfGamesData
 from .schemas import CFEntrantInputModel, CFScoreInputModel
 
 log = logging.getLogger("uvicorn.error")
@@ -166,6 +168,16 @@ async def process_cf_data(  # noqa: C901, PLR0912
     await db_session.commit()
 
     await update_affiliate_scores(db_session=db_session, affiliate_id=affiliate_id, year=year)
+
+    # Update or create CFGamesData timestamp
+    cf_games_data = await CfGamesData.find(async_session=db_session, affiliate_id=affiliate_id, year=year)
+    if cf_games_data:
+        cf_games_data.timestamp = datetime.now(UTC)
+        db_session.add(cf_games_data)
+    else:
+        new_cf_games_data = CfGamesData(affiliate_id=affiliate_id, year=year, timestamp=datetime.now(UTC))
+        db_session.add(new_cf_games_data)
+    await db_session.commit()
 
     return {
         "affiliate_id": affiliate_id,
