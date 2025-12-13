@@ -12,3 +12,24 @@ ion-card img {
 .install-button-container .install-button {
   flex: 1;
 }
+
+.main-info-card {
+  // Mobile: default vertical layout (image on top)
+  display: flex;
+  flex-direction: column;
+
+  // Desktop: horizontal layout (image on left)
+  @media (min-width: 768px) {
+    flex-direction: row;
+
+    img {
+      width: 40%;
+    }
+
+    ion-card-header,
+    ion-card-content,
+    ion-button {
+      flex: 1;
+    }
+  }
+}

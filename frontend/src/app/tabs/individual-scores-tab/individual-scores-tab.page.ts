@@ -10,6 +10,7 @@ import {
   IonCard,
   IonCardHeader,
   IonCardTitle,
+  IonCardSubtitle,
 } from '@ionic/angular/standalone';
 import { EventListComponent } from '../../shared/event-list/event-list.component';
 import { EventService } from 'src/app/services/event.service';
@@ -21,6 +22,7 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
   styleUrls: ['./individual-scores-tab.page.scss'],
   standalone: true,
   imports: [
+    IonCardSubtitle,
     IonCardTitle,
     IonCardHeader,
     IonCard,

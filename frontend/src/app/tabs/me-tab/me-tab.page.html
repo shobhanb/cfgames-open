@@ -8,17 +8,13 @@
 <ion-content>
   <div class="section-title">{{ config.year }}</div>
   <ion-list [inset]="true">
-    <ion-item [button]="true" type="button" routerLink="/me/my-team">
-      <ion-icon slot="start" name="people-circle-outline"></ion-icon>
-      <ion-label>Team Composition</ion-label>
+    <ion-item [button]="true" type="button" routerLink="/me/schedule">
+      <ion-icon slot="start" name="calendar-outline"></ion-icon>
+      <ion-label>Scheduling Preferences</ion-label>
     </ion-item>
     <ion-item [button]="true" type="button" routerLink="/me/appreciation">
       <ion-icon slot="start" name="heart-outline"></ion-icon>
       <ion-label>Appreciation</ion-label>
-    </ion-item>
-    <ion-item [button]="true" type="button" routerLink="/me/schedule">
-      <ion-icon slot="start" name="calendar-outline"></ion-icon>
-      <ion-label>Schedule</ion-label>
     </ion-item>
   </ion-list>
 

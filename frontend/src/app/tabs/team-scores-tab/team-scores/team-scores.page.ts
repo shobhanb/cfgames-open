@@ -107,15 +107,15 @@ export class TeamScoresPage implements OnInit {
       }
     });
 
-    return Array.from(scoreMap.values()).sort(
-      (a: apiTeamScoreModel, b: apiTeamScoreModel) => {
+    return Array.from(scoreMap.values())
+      .filter((score: apiTeamScoreModel) => score.total_team_score > 0)
+      .sort((a: apiTeamScoreModel, b: apiTeamScoreModel) => {
         if (a.total_team_score === b.total_team_score) {
           return a.team_name > b.team_name ? 1 : -1;
         } else {
           return b.total_team_score - a.total_team_score;
         }
-      }
-    );
+      });
   });
 
   readonly rankedScores = computed(() => {

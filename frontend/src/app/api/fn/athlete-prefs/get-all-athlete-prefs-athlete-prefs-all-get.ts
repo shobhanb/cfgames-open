@@ -10,13 +10,13 @@ import { RequestBuilder } from '../../request-builder';
 
 import { apiAthletePrefsOutputModel } from '../../models/api-athlete-prefs-output-model';
 
-export interface GetAthletePrefsAthletePrefsAllGet$Params {
+export interface GetAllAthletePrefsAthletePrefsAllGet$Params {
   affiliate_id: number;
   year: number;
 }
 
-export function getAthletePrefsAthletePrefsAllGet(http: HttpClient, rootUrl: string, params: GetAthletePrefsAthletePrefsAllGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthletePrefsOutputModel>>> {
-  const rb = new RequestBuilder(rootUrl, getAthletePrefsAthletePrefsAllGet.PATH, 'get');
+export function getAllAthletePrefsAthletePrefsAllGet(http: HttpClient, rootUrl: string, params: GetAllAthletePrefsAthletePrefsAllGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthletePrefsOutputModel>>> {
+  const rb = new RequestBuilder(rootUrl, getAllAthletePrefsAthletePrefsAllGet.PATH, 'get');
   if (params) {
     rb.query('affiliate_id', params.affiliate_id, {});
     rb.query('year', params.year, {});
@@ -32,4 +32,4 @@ export function getAthletePrefsAthletePrefsAllGet(http: HttpClient, rootUrl: str
   );
 }
 
-getAthletePrefsAthletePrefsAllGet.PATH = '/athlete-prefs/all';
+getAllAthletePrefsAthletePrefsAllGet.PATH = '/athlete-prefs/all';

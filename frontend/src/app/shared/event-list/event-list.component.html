@@ -1,14 +1,25 @@
 @for (year of eventService.groupedEvents(); track $index) {
-<div class="section-title">
-  {{ year.year }}
-</div>
 <ion-list [inset]="true">
+  <ion-list-header>
+    <ion-label>{{ year.year }}</ion-label>
+  </ion-list-header>
   @if (showTotals()) {
-  <ion-item [routerLink]="[link(), year.year, 0]" class="">
-    <ion-label>{{ year.year + " Total" }}</ion-label>
+  <ion-item
+    [routerLink]="[link(), year.year, 0]"
+    [button]="true"
+    [detail]="true"
+    class="total-item"
+  >
+    <ion-label color="primary">
+      <strong>{{ year.year + " Total" }}</strong>
+    </ion-label>
   </ion-item>
   } @for (event of year.events; track $index) {
-  <ion-item [routerLink]="[link(), event.year, event.ordinal]" class="">
+  <ion-item
+    [routerLink]="[link(), event.year, event.ordinal]"
+    [button]="true"
+    [detail]="true"
+  >
     <ion-label>{{ event.event }}</ion-label>
   </ion-item>
   }

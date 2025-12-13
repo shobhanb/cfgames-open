@@ -35,6 +35,13 @@ export const tabsRoutes: Routes = [
           ),
       },
       {
+        path: 'team-scores/team-info',
+        loadComponent: () =>
+          import('./team-scores-tab/my-team/my-team.page').then(
+            (c) => c.MyTeamPage
+          ),
+      },
+      {
         path: 'team-scores/:year/:ordinal',
         loadComponent: () =>
           import('./team-scores-tab/team-scores/team-scores.page').then(
@@ -67,12 +74,6 @@ export const tabsRoutes: Routes = [
           import('./me-tab/my-scores/my-scores.page').then(
             (c) => c.MyScoresPage
           ),
-        canActivate: [userGuard],
-      },
-      {
-        path: 'me/my-team',
-        loadComponent: () =>
-          import('./me-tab/my-team/my-team.page').then((c) => c.MyTeamPage),
         canActivate: [userGuard],
       },
       {
@@ -132,6 +133,14 @@ export const tabsRoutes: Routes = [
         loadComponent: () =>
           import('./admin-tab/scheduling/scheduling.page').then(
             (c) => c.SchedulingPage
+          ),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'admin/schedule-override',
+        loadComponent: () =>
+          import('./admin-tab/schedule-pref/schedule-pref.page').then(
+            (c) => c.SchedulePrefPage
           ),
         canActivate: [adminGuard],
       },

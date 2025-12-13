@@ -5,6 +5,7 @@ import {
   IonLabel,
   IonItem,
   IonRouterLink,
+  IonListHeader,
 } from '@ionic/angular/standalone';
 import { EventService } from 'src/app/services/event.service';
 
@@ -12,7 +13,14 @@ import { EventService } from 'src/app/services/event.service';
   selector: 'app-event-list',
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.scss'],
-  imports: [IonList, IonLabel, IonItem, RouterLink, IonRouterLink],
+  imports: [
+    IonListHeader,
+    IonList,
+    IonLabel,
+    IonItem,
+    RouterLink,
+    IonRouterLink,
+  ],
 })
 export class EventListComponent implements OnInit {
   eventService = inject(EventService);

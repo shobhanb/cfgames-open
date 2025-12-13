@@ -65,6 +65,7 @@ export class SchedulePage implements OnInit {
   private toastService = inject(ToastService);
 
   prefs = signal<string[]>([]);
+  private initialPrefs: string[] = [];
 
   dataLoaded = signal<boolean>(false);
   editPrefs = signal<boolean>(false);
@@ -85,11 +86,10 @@ export class SchedulePage implements OnInit {
     this.dataLoaded.set(false);
     this.apiPrefs.getMyPrefsAthletePrefsMeGet().subscribe({
       next: (data) => {
-        this.prefs.set(
-          data
-            .sort((a, b) => a.preference_nbr - b.preference_nbr)
-            .map((pref: apiAthletePrefsModel) => pref.preference)
-        );
+        this.initialPrefs = data
+          .sort((a, b) => a.preference_nbr - b.preference_nbr)
+          .map((pref: apiAthletePrefsModel) => pref.preference);
+        this.prefs.set([...this.initialPrefs]);
         this.dataLoaded.set(true);
         return Promise.resolve();
       },
@@ -115,7 +115,7 @@ export class SchedulePage implements OnInit {
 
   onClickCancel() {
     this.editPrefs.set(false);
-    this.getData();
+    this.prefs.set([...this.initialPrefs]);
   }
 
   onClickDone() {
@@ -126,6 +126,7 @@ export class SchedulePage implements OnInit {
         preference_nbr: index,
       })
     );
+    this.initialPrefs = [...this.prefs()];
 
     this.apiPrefs
       .updateMyPrefsAthletePrefsMePost({ body: updatedPrefs })

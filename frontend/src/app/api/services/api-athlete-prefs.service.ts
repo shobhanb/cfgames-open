@@ -13,8 +13,10 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { apiAthletePrefsModel } from '../models/api-athlete-prefs-model';
 import { apiAthletePrefsOutputModel } from '../models/api-athlete-prefs-output-model';
-import { getAthletePrefsAthletePrefsAllGet } from '../fn/athlete-prefs/get-athlete-prefs-athlete-prefs-all-get';
-import { GetAthletePrefsAthletePrefsAllGet$Params } from '../fn/athlete-prefs/get-athlete-prefs-athlete-prefs-all-get';
+import { getAllAthletePrefsAthletePrefsAllGet } from '../fn/athlete-prefs/get-all-athlete-prefs-athlete-prefs-all-get';
+import { GetAllAthletePrefsAthletePrefsAllGet$Params } from '../fn/athlete-prefs/get-all-athlete-prefs-athlete-prefs-all-get';
+import { getAthletePrefsAthletePrefsCrossfitIdGet } from '../fn/athlete-prefs/get-athlete-prefs-athlete-prefs-crossfit-id-get';
+import { GetAthletePrefsAthletePrefsCrossfitIdGet$Params } from '../fn/athlete-prefs/get-athlete-prefs-athlete-prefs-crossfit-id-get';
 import { getMyPrefsAthletePrefsMeGet } from '../fn/athlete-prefs/get-my-prefs-athlete-prefs-me-get';
 import { GetMyPrefsAthletePrefsMeGet$Params } from '../fn/athlete-prefs/get-my-prefs-athlete-prefs-me-get';
 import { updateAthletePrefsAthletePrefsCrossfitIdPost } from '../fn/athlete-prefs/update-athlete-prefs-athlete-prefs-crossfit-id-post';
@@ -94,8 +96,41 @@ export class apiAthletePrefsService extends BaseService {
     );
   }
 
-  /** Path part for operation `getAthletePrefsAthletePrefsAllGet()` */
-  static readonly GetAthletePrefsAthletePrefsAllGetPath = '/athlete-prefs/all';
+  /** Path part for operation `getAllAthletePrefsAthletePrefsAllGet()` */
+  static readonly GetAllAthletePrefsAthletePrefsAllGetPath = '/athlete-prefs/all';
+
+  /**
+   * Get All Athlete Prefs.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllAthletePrefsAthletePrefsAllGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllAthletePrefsAthletePrefsAllGet$Response(params: GetAllAthletePrefsAthletePrefsAllGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthletePrefsOutputModel>>> {
+    return getAllAthletePrefsAthletePrefsAllGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get All Athlete Prefs.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllAthletePrefsAthletePrefsAllGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllAthletePrefsAthletePrefsAllGet(params: GetAllAthletePrefsAthletePrefsAllGet$Params, context?: HttpContext): Observable<Array<apiAthletePrefsOutputModel>> {
+    return this.getAllAthletePrefsAthletePrefsAllGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiAthletePrefsOutputModel>>): Array<apiAthletePrefsOutputModel> => r.body)
+    );
+  }
+
+  /** Path part for operation `getAthletePrefsAthletePrefsCrossfitIdGet()` */
+  static readonly GetAthletePrefsAthletePrefsCrossfitIdGetPath = '/athlete-prefs/{crossfit_id}';
 
   /**
    * Get Athlete Prefs.
@@ -103,12 +138,12 @@ export class apiAthletePrefsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAthletePrefsAthletePrefsAllGet()` instead.
+   * To access only the response body, use `getAthletePrefsAthletePrefsCrossfitIdGet()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAthletePrefsAthletePrefsAllGet$Response(params: GetAthletePrefsAthletePrefsAllGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthletePrefsOutputModel>>> {
-    return getAthletePrefsAthletePrefsAllGet(this.http, this.rootUrl, params, context);
+  getAthletePrefsAthletePrefsCrossfitIdGet$Response(params: GetAthletePrefsAthletePrefsCrossfitIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthletePrefsModel>>> {
+    return getAthletePrefsAthletePrefsCrossfitIdGet(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -117,13 +152,13 @@ export class apiAthletePrefsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAthletePrefsAthletePrefsAllGet$Response()` instead.
+   * To access the full response (for headers, for example), `getAthletePrefsAthletePrefsCrossfitIdGet$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAthletePrefsAthletePrefsAllGet(params: GetAthletePrefsAthletePrefsAllGet$Params, context?: HttpContext): Observable<Array<apiAthletePrefsOutputModel>> {
-    return this.getAthletePrefsAthletePrefsAllGet$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<apiAthletePrefsOutputModel>>): Array<apiAthletePrefsOutputModel> => r.body)
+  getAthletePrefsAthletePrefsCrossfitIdGet(params: GetAthletePrefsAthletePrefsCrossfitIdGet$Params, context?: HttpContext): Observable<Array<apiAthletePrefsModel>> {
+    return this.getAthletePrefsAthletePrefsCrossfitIdGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiAthletePrefsModel>>): Array<apiAthletePrefsModel> => r.body)
     );
   }
 

@@ -48,36 +48,41 @@
     }
   </ion-card>
   }
-  <ion-card>
+  <ion-card class="main-info-card">
     <img src="images/globe.jpeg" alt="Crossfit Games Logo" />
-    <ion-card-header>
-      <ion-card-title> Welcome! </ion-card-title>
-      <ion-card-subtitle>CF Games Community Cup</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      <p>{{ welcomeMessage }}</p>
-      @if (athleteCountsData()) {
-      <ul>
-        @for (item of athleteCountsData(); track $index) {
-        <li>{{ item.year + ': ' + item.athlete_count + ' athletes'}}</li>
+    <div>
+      <ion-card-header>
+        <ion-card-title> Welcome! </ion-card-title>
+        <ion-card-subtitle>CF Games Community Cup</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p>{{ welcomeMessage }}</p>
+        @if (athleteCountsData()) {
+        <ul>
+          @for (item of athleteCountsData(); track $index) {
+          <li>{{ item.year + ': ' + item.athlete_count + ' athletes'}}</li>
+          }
+        </ul>
         }
-      </ul>
+        <p>#StrongerTogether</p>
+      </ion-card-content>
+      <ion-button fill="clear" routerLink="/team-scores/team-info"
+        >Check out this year's Teams!</ion-button
+      >
+      <ion-button fill="clear" (click)="onClickLearnMore()"
+        >Learn more about this app</ion-button
+      >
+      @if (!authService.user()) {
+      <ion-button
+        fill="clear"
+        href="https://games.crossfit.com/register/open"
+        target="_blank"
+        >Register on Crossfit.com</ion-button
+      >
+      <ion-button fill="clear" routerLink="/auth/signup"
+        >Then sign up here</ion-button
+      >
       }
-      <p>#StrongerTogether</p>
-    </ion-card-content>
-    <ion-button fill="clear" (click)="onClickLearnMore()"
-      >Learn more about this app</ion-button
-    >
-    @if (!authService.user()) {
-    <ion-button
-      fill="clear"
-      href="https://games.crossfit.com/register/open"
-      target="_blank"
-      >Register on Crossfit.com</ion-button
-    >
-    <ion-button fill="clear" routerLink="/auth/signup"
-      >Then Sign up here</ion-button
-    >
-    }
+    </div>
   </ion-card>
 </ion-content>

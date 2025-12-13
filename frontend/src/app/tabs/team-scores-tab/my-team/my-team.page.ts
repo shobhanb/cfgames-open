@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -20,8 +20,6 @@ import {
   IonSelectOption,
   IonCard,
 } from '@ionic/angular/standalone';
-import { apiAthleteService } from 'src/app/api/services';
-import { ToastService } from 'src/app/services/toast.service';
 import { apiAthleteDetail } from 'src/app/api/models';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { TeamNamePipe } from 'src/app/pipes/team-name.pipe';
@@ -29,7 +27,6 @@ import { ScoreFilterService } from 'src/app/services/score-filter.service';
 import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-my-team',
@@ -61,11 +58,8 @@ import { AppConfigService } from 'src/app/services/app-config.service';
   ],
 })
 export class MyTeamPage implements OnInit {
-  private apiAthlete = inject(apiAthleteService);
-  private toastService = inject(ToastService);
   private helperFunctions = inject(HelperFunctionsService);
   private authService = inject(AuthService);
-  private config = inject(AppConfigService);
   scoreFilter = inject(ScoreFilterService);
   athleteDataService = inject(AthleteDataService);
 

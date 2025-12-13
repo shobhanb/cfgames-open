@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="individual-scores"></ion-back-button>
+      <ion-back-button defaultHref="team-scores"></ion-back-button>
     </ion-buttons>
     <ion-title>Team Composition</ion-title>
     <app-toolbar-buttons slot="end"></app-toolbar-buttons>
@@ -62,11 +62,15 @@
   <div class="section-title">{{ teamSectionTitle() }}</div>
   <ion-card>
     <ion-list [inset]="true">
-      @for (athlete of filteredAthletes(); track $index) {
+      @if (filteredAthletes().length === 0) {
+      <ion-item>
+        <ion-label>NA</ion-label>
+      </ion-item>
+      } @else { @for (athlete of filteredAthletes(); track $index) {
       <ion-item>
         <ion-label>{{ athlete.name }}</ion-label>
       </ion-item>
-      }
+      } }
     </ion-list>
   </ion-card>
   } @else {

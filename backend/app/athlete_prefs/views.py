@@ -31,13 +31,26 @@ async def update_my_prefs(
 
 
 @athlete_prefs_router.get("/all", status_code=status.HTTP_200_OK, response_model=list[AthletePrefsOutputModel])
-async def get_athlete_prefs(
+async def get_all_athlete_prefs(
     db_session: db_dependency,
     affiliate_id: int,
     year: int,
     _: admin_user_dependency,
 ) -> list[dict[str, Any]]:
     return await get_db_athlete_prefs(db_session=db_session, affiliate_id=affiliate_id, year=year)
+
+
+@athlete_prefs_router.get(
+    "/{crossfit_id}",
+    status_code=status.HTTP_202_ACCEPTED,
+    response_model=list[AthletePrefsModel],
+)
+async def get_athlete_prefs(
+    db_session: db_dependency,
+    _: admin_user_dependency,
+    crossfit_id: int,
+) -> Sequence[AthleteTimePref]:
+    return await AthleteTimePref.find_all(async_session=db_session, crossfit_id=crossfit_id)
 
 
 @athlete_prefs_router.post("/{crossfit_id}", status_code=status.HTTP_202_ACCEPTED)

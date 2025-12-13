@@ -9,10 +9,14 @@ import {
   IonCard,
   IonCardHeader,
   IonCardTitle,
+  IonCardSubtitle,
+  IonRouterLink,
 } from '@ionic/angular/standalone';
 import { EventListComponent } from '../../shared/event-list/event-list.component';
 import { EventService } from 'src/app/services/event.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
+import { AppConfigService } from 'src/app/services/app-config.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-team-scores-tab',
@@ -20,6 +24,7 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
   styleUrls: ['./team-scores-tab.page.scss'],
   standalone: true,
   imports: [
+    IonCardSubtitle,
     IonCardTitle,
     IonCardHeader,
     IonCard,
@@ -31,10 +36,13 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
     IonContent,
     EventListComponent,
     ToolbarButtonsComponent,
+    RouterLink,
+    IonRouterLink,
   ],
 })
 export class TeamScoresTabPage implements OnInit {
   private eventService = inject(EventService);
+  config = inject(AppConfigService);
 
   handleRefresh(event: CustomEvent) {
     this.eventService.getData();
