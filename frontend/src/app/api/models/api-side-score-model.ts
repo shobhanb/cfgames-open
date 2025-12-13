@@ -4,6 +4,7 @@
 
 export interface apiSideScoreModel {
   affiliate_id: number;
+  id: string;
   ordinal: number;
   score: number;
   score_type: string;

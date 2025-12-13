@@ -15,28 +15,53 @@
 
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Attendance</ion-card-title>
+      <ion-card-title>Attendance Management</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-text>Manage attendance for events.</ion-text>
+      <p>
+        Track athlete attendance for each event and apply attendance points to
+        team scores.
+      </p>
     </ion-card-content>
   </ion-card>
 
-  <div class="section-title">Select Event to Edit Attendance</div>
   <ion-card>
-    <ion-list>
-      @for (event of eventService.currentYearEvents(); track $index) {
-      <ion-item (click)="openAttendanceModal(event)">
-        <ion-label>{{ event.event }}</ion-label>
-      </ion-item>
-      }
-    </ion-list>
+    <ion-card-header>
+      <ion-card-title>Select Event</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        @for (event of eventService.currentYearEvents(); track event.ordinal) {
+        <ion-item
+          [button]="true"
+          [detail]="true"
+          (click)="openAttendanceModal(event)"
+        >
+          <ion-label>
+            <h2>{{ event.event }}</h2>
+            <p>Edit attendance for this event</p>
+          </ion-label>
+        </ion-item>
+        }
+      </ion-list>
+    </ion-card-content>
   </ion-card>
 
-  <ion-button
-    class="ion-margin"
-    expand="block"
-    (click)="onClickApplyAttendance()"
-    >Apply Attendance Scores</ion-button
-  >
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Apply Attendance Points</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        Apply attendance points to all teams based on saved attendance records.
+      </p>
+      <ion-button
+        expand="block"
+        color="primary"
+        (click)="onClickApplyAttendance()"
+      >
+        Apply Attendance Scores
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

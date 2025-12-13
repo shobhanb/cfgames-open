@@ -52,6 +52,7 @@
       <ion-select
         placeholder="Pick Team"
         label="Assign From Team"
+        interface="popover"
         (ionChange)="handleFromTeamChange($event)"
       >
         @for (team of fromTeamsList(); track $index) {
@@ -68,6 +69,7 @@
         placeholder="Pick Teams"
         label="Assign To Teams"
         [multiple]="true"
+        interface="popover"
         (ionChange)="selectedToTeams.set($event.detail.value)"
       >
         @for (team of toTeamsList(); track $index) {

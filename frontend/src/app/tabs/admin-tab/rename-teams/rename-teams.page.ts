@@ -13,7 +13,11 @@ import {
   IonList,
   IonItem,
   IonSkeletonText,
-  IonNote,
+  IonLabel,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
 } from '@ionic/angular/standalone';
 import { apiAthleteService } from 'src/app/api/services';
 import { ToastService } from 'src/app/services/toast.service';
@@ -28,7 +32,11 @@ import { AppConfigService } from 'src/app/services/app-config.service';
   styleUrls: ['./rename-teams.page.scss'],
   standalone: true,
   imports: [
-    IonNote,
+    IonCardContent,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
+    IonLabel,
     IonSkeletonText,
     IonItem,
     IonList,

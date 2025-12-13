@@ -1,4 +1,5 @@
 from typing import Literal
+from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -51,3 +52,11 @@ async def update_db_sidescores(  # noqa: PLR0913
     db_session.add(new_sidescore)
     await db_session.commit()
     return new_sidescore
+
+
+async def delete_db_sidescore(
+    db_session: AsyncSession,
+    sidescore_id: UUID,
+) -> None:
+    sidescore = await SideScore.find_or_raise(async_session=db_session, id=sidescore_id)
+    await sidescore.delete(async_session=db_session)

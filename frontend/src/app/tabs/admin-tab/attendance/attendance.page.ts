@@ -8,8 +8,6 @@ import {
   IonButtons,
   IonRefresher,
   IonRefresherContent,
-  IonSegment,
-  IonSegmentButton,
   IonLabel,
   ModalController,
   IonList,
@@ -17,9 +15,7 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonText,
   IonCard,
-  IonIcon,
   IonButton,
 } from '@ionic/angular/standalone';
 import { apiAttendanceModel } from 'src/app/api/models';
@@ -30,8 +26,6 @@ import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { AttendanceModalComponent } from './attendance-modal/attendance-modal.component';
-import { addIcons } from 'ionicons';
-import { ellipsisHorizontalOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-attendance',
@@ -40,17 +34,13 @@ import { ellipsisHorizontalOutline } from 'ionicons/icons';
   standalone: true,
   imports: [
     IonButton,
-    IonIcon,
     IonCard,
-    IonText,
     IonCardContent,
     IonCardTitle,
     IonCardHeader,
     IonItem,
     IonList,
     IonLabel,
-    IonSegmentButton,
-    IonSegment,
     IonRefresherContent,
     IonRefresher,
     IonButtons,
@@ -71,9 +61,7 @@ export class AttendancePage implements OnInit {
 
   dataLoaded = signal<boolean>(false);
 
-  constructor() {
-    addIcons({ ellipsisHorizontalOutline });
-  }
+  constructor() {}
 
   ngOnInit() {
     this.getData();

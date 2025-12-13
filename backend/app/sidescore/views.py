@@ -1,4 +1,5 @@
 from typing import Literal
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, status
 
@@ -8,7 +9,7 @@ from app.firebase_auth.dependencies import get_admin_user
 from app.sidescore.models import SideScore
 
 from .schemas import SideScoreModel
-from .service import get_db_sidescores, update_db_sidescores
+from .service import delete_db_sidescore, get_db_sidescores, update_db_sidescores
 
 sidescore_router = APIRouter(prefix="/sidescore", tags=["sidescore"], dependencies=[Depends(get_admin_user)])
 
@@ -55,3 +56,11 @@ async def apply_sidescores(
 ) -> None:
     await apply_side_scores(db_session=db_session, affiliate_id=affiliate_id, year=year)
     await apply_total_team_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
+
+
+@sidescore_router.delete("/{sidescore_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_sidescore(
+    db_session: db_dependency,
+    sidescore_id: UUID,
+) -> None:
+    await delete_db_sidescore(db_session=db_session, sidescore_id=sidescore_id)

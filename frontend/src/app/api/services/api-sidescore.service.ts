@@ -13,6 +13,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { applySidescoresSidescoreApplyAffiliateIdYearPost } from '../fn/sidescore/apply-sidescores-sidescore-apply-affiliate-id-year-post';
 import { ApplySidescoresSidescoreApplyAffiliateIdYearPost$Params } from '../fn/sidescore/apply-sidescores-sidescore-apply-affiliate-id-year-post';
+import { deleteSidescoreSidescoreSidescoreIdDelete } from '../fn/sidescore/delete-sidescore-sidescore-sidescore-id-delete';
+import { DeleteSidescoreSidescoreSidescoreIdDelete$Params } from '../fn/sidescore/delete-sidescore-sidescore-sidescore-id-delete';
 import { getSidescoresSidescoreAffiliateIdYearGet } from '../fn/sidescore/get-sidescores-sidescore-affiliate-id-year-get';
 import { GetSidescoresSidescoreAffiliateIdYearGet$Params } from '../fn/sidescore/get-sidescores-sidescore-affiliate-id-year-get';
 import { apiSideScoreModel } from '../models/api-side-score-model';
@@ -121,6 +123,39 @@ export class apiSidescoreService extends BaseService {
   applySidescoresSidescoreApplyAffiliateIdYearPost(params: ApplySidescoresSidescoreApplyAffiliateIdYearPost$Params, context?: HttpContext): Observable<any> {
     return this.applySidescoresSidescoreApplyAffiliateIdYearPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<any>): any => r.body)
+    );
+  }
+
+  /** Path part for operation `deleteSidescoreSidescoreSidescoreIdDelete()` */
+  static readonly DeleteSidescoreSidescoreSidescoreIdDeletePath = '/sidescore/{sidescore_id}';
+
+  /**
+   * Delete Sidescore.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deleteSidescoreSidescoreSidescoreIdDelete()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteSidescoreSidescoreSidescoreIdDelete$Response(params: DeleteSidescoreSidescoreSidescoreIdDelete$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deleteSidescoreSidescoreSidescoreIdDelete(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Delete Sidescore.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deleteSidescoreSidescoreSidescoreIdDelete$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteSidescoreSidescoreSidescoreIdDelete(params: DeleteSidescoreSidescoreSidescoreIdDelete$Params, context?: HttpContext): Observable<void> {
+    return this.deleteSidescoreSidescoreSidescoreIdDelete$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

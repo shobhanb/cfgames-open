@@ -9,5 +9,168 @@
 </ion-header>
 
 <ion-content>
-  <p>Coming soon!</p>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (dataLoaded()) {
+  <!-- Existing Sidescores -->
+  @if (sidescores().length > 0) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Existing Side Scores</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        @for (sidescore of sidescores(); track sidescore.ordinal +
+        sidescore.team_name + sidescore.score_type) {
+        <ion-item>
+          <ion-label>
+            <h2>{{ getEventName(sidescore.ordinal) }}</h2>
+            <p>{{ sidescore.team_name }} - {{ sidescore.score_type }}</p>
+            <p>Score: {{ sidescore.score }}</p>
+          </ion-label>
+          <ion-button
+            slot="end"
+            fill="outline"
+            size="small"
+            (click)="loadScore(sidescore)"
+          >
+            Edit
+          </ion-button>
+          <ion-button
+            slot="end"
+            fill="outline"
+            size="small"
+            color="danger"
+            (click)="confirmDelete(sidescore)"
+          >
+            Delete
+          </ion-button>
+        </ion-item>
+        }
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  }
+
+  <!-- Add/Update Form -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Add/Update Side Score</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <!-- Event Selection -->
+        <ion-item>
+          <ion-select
+            label="Event"
+            labelPlacement="stacked"
+            placeholder="Select event"
+            interface="popover"
+            [(ngModel)]="selectedOrdinal"
+          >
+            @for (event of currentYearEvents(); track event.ordinal) {
+            <ion-select-option [value]="event.ordinal">
+              {{ event.event }}
+            </ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+
+        <!-- Score Type -->
+        <ion-item>
+          <ion-select
+            label="Score Type"
+            interface="popover"
+            labelPlacement="stacked"
+            [(ngModel)]="selectedScoreType"
+          >
+            <ion-select-option value="side_challenge"
+              >Side Challenge</ion-select-option
+            >
+            <ion-select-option value="spirit">Spirit</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Team Name -->
+        <ion-item>
+          <ion-select
+            label="Team Name"
+            labelPlacement="stacked"
+            placeholder="Select team"
+            interface="popover"
+            [(ngModel)]="teamName"
+          >
+            @for (team of teamNames(); track team) {
+            <ion-select-option [value]="team"> {{ team }} </ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+
+        <!-- Score -->
+        <ion-item>
+          <ion-input
+            label="Score"
+            labelPlacement="stacked"
+            type="number"
+            placeholder="Enter score"
+            [(ngModel)]="score"
+          ></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <div class="button-container">
+        <ion-button expand="block" (click)="save()">Save</ion-button>
+        <ion-button expand="block" fill="outline" (click)="resetForm()"
+          >Clear</ion-button
+        >
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Apply Scores -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Apply Side Scores</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Apply all saved side scores to teams. This will update team totals.</p>
+      <ion-button expand="block" color="primary" (click)="apply()">
+        Apply Scores to Teams
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+  } @else {
+  <!-- Loading State -->
+  <ion-card>
+    <ion-card-header>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 50%"
+      ></ion-skeleton-text>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 80%"
+      ></ion-skeleton-text>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 60%"
+      ></ion-skeleton-text>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 90%"
+      ></ion-skeleton-text>
+    </ion-card-content>
+  </ion-card>
+  }
+
+  <ion-alert
+    [isOpen]="deleteAlertOpen()"
+    header="Confirm Delete"
+    message="Are you sure you want to delete this side score?"
+    [buttons]="deleteAlertButtons"
+  ></ion-alert>
 </ion-content>

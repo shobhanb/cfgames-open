@@ -14,7 +14,10 @@ import {
   IonLabel,
   IonIcon,
   IonSkeletonText,
-  IonButton,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
   ModalController,
 } from '@ionic/angular/standalone';
 import { apiAthleteService } from 'src/app/api/services';
@@ -38,7 +41,6 @@ import { EditAthleteComponent } from './edit-athlete/edit-athlete.component';
   styleUrls: ['./edit-teams.page.scss'],
   standalone: true,
   imports: [
-    IonButton,
     IonSkeletonText,
     IonIcon,
     IonLabel,
@@ -53,6 +55,10 @@ import { EditAthleteComponent } from './edit-athlete/edit-athlete.component';
     IonHeader,
     IonTitle,
     IonToolbar,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
     ToolbarButtonsComponent,
   ],
 })

@@ -13,51 +13,74 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-toolbar>
-    <ion-searchbar
-      [debounce]="500"
-      (ionInput)="onSearchBarInput($event)"
-    ></ion-searchbar>
-  </ion-toolbar>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Manage Team Assignments</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        Edit team assignments and roles for individual athletes. Click on an
+        athlete to modify their team or role.
+      </p>
+    </ion-card-content>
+  </ion-card>
 
-  @if (!loading) {
-  <ion-list>
-    @for (athlete of filteredAthleteData(); track athlete.crossfit_id) {
-    <ion-item>
-      @if (athlete.team_role === 1) {
-      <ion-icon slot="start" name="diamond-outline"></ion-icon>
-      } @else if (athlete.team_role === 2) {
-      <ion-icon slot="start" name="ribbon-outline"></ion-icon>
+  <ion-card>
+    <ion-card-header>
+      <ion-searchbar
+        [debounce]="500"
+        placeholder="Search by name or team"
+        (ionInput)="onSearchBarInput($event)"
+      ></ion-searchbar>
+    </ion-card-header>
+    <ion-card-content>
+      @if (!loading) {
+      <ion-list>
+        @for (athlete of filteredAthleteData(); track athlete.crossfit_id) {
+        <ion-item [button]="true" (click)="onClickAthlete(athlete)">
+          @if (athlete.team_role === 1) {
+          <ion-icon
+            slot="start"
+            name="diamond-outline"
+            color="warning"
+          ></ion-icon>
+          } @else if (athlete.team_role === 2) {
+          <ion-icon
+            slot="start"
+            name="ribbon-outline"
+            color="primary"
+          ></ion-icon>
+          } @else {
+          <ion-icon
+            slot="start"
+            class="athlete-icon"
+            name="body-outline"
+          ></ion-icon>
+          }
+          <ion-label>
+            <h2>{{ athlete.name }}</h2>
+            <p>{{ athlete.team_name }}</p>
+          </ion-label>
+        </ion-item>
+        }
+      </ion-list>
       } @else {
-      <ion-icon
-        slot="start"
-        class="athlete-icon"
-        name="body-outline"
-      ></ion-icon>
+      <ion-list>
+        @for (item of [0,1,2,3,4,5,6]; track $index) {
+        <ion-item>
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 150px; height: 20px"
+          ></ion-skeleton-text>
+          <ion-skeleton-text
+            slot="end"
+            [animated]="true"
+            style="width: 120px; height: 20px"
+          ></ion-skeleton-text>
+        </ion-item>
+        }
+      </ion-list>
       }
-      <ion-label> {{ athlete.name }} </ion-label>
-      <ion-label slot="end"> {{ athlete.team_name }} </ion-label>
-      <ion-button slot="end" fill="clear" (click)="onClickAthlete(athlete)">
-        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
-      </ion-button>
-    </ion-item>
-    }
-  </ion-list>
-  } @else {
-  <ion-list>
-    @for (item of [0,1,2,3,4,5,6]; track $index) {
-    <ion-item>
-      <ion-skeleton-text
-        [animated]="true"
-        style="width: 150px; height: 20px"
-      ></ion-skeleton-text>
-      <ion-skeleton-text
-        slot="end"
-        [animated]="true"
-        style="width: 120px; height: 20px"
-      ></ion-skeleton-text>
-    </ion-item>
-    }
-  </ion-list>
-  }
+    </ion-card-content>
+  </ion-card>
 </ion-content>

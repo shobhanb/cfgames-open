@@ -19,6 +19,11 @@ import {
   IonRadio,
   IonInput,
   IonIcon,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonLabel,
 } from '@ionic/angular/standalone';
 import { apiAthleteDetail } from 'src/app/api/models';
 import { apiAthleteService } from 'src/app/api/services';
@@ -29,6 +34,11 @@ import { ToastService } from 'src/app/services/toast.service';
   templateUrl: './edit-athlete.component.html',
   styleUrls: ['./edit-athlete.component.scss'],
   imports: [
+    IonLabel,
+    IonCardContent,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
     IonIcon,
     IonInput,
     IonRadio,

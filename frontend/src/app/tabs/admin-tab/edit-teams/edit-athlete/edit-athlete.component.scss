@@ -2,3 +2,10 @@
 .athlete-icon {
     opacity: 0.3;
 }
+
+.button-container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

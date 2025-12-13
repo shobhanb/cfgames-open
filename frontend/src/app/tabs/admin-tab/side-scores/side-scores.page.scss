@@ -1,0 +1,9 @@
+.button-container {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+
+  ion-button {
+    flex: 1;
+  }
+}

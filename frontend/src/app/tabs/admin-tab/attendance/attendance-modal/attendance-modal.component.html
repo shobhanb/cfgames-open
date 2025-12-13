@@ -1,47 +1,55 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ event.event + " Attendance" }}</ion-title>
+    <ion-title>{{ event.event }} Attendance</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="closeModal()">
         <ion-icon name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-</ion-header>
-<ion-content>
-  <ion-toolbar>
-    <ion-segment
-      [value]="filterAttendance()"
-      (ionChange)="onFilterAttendanceSelectionChanged($event)"
-    >
-      <ion-segment-button [value]="true">
-        <ion-label>Attendance Yes Only</ion-label>
-      </ion-segment-button>
-      <ion-segment-button [value]="false">
-        <ion-label>All</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
   <ion-toolbar>
     <ion-searchbar
       debounce="500"
-      placeholder="Search name"
+      placeholder="Search athlete name"
       (ionInput)="onSearchBarInput($event)"
     ></ion-searchbar>
   </ion-toolbar>
+</ion-header>
+<ion-content>
   <ion-card>
-    <ion-list>
-      @for (item of filteredAttendanceData(); track $index) {
-      <ion-item>
-        <ion-checkbox
-          labelPlacement="start"
-          [checked]="item.ordinal ? true : false"
-          (ionChange)="onClickCheckbox($event, item)"
-        >
-          {{ item.name }}
-        </ion-checkbox>
-      </ion-item>
+    <ion-card-header>
+      <ion-segment
+        [value]="filterAttendance()"
+        (ionChange)="onFilterAttendanceSelectionChanged($event)"
+      >
+        <ion-segment-button [value]="false">
+          <ion-label>All Athletes</ion-label>
+        </ion-segment-button>
+        <ion-segment-button [value]="true">
+          <ion-label>Present Only</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-card-header>
+    <ion-card-content>
+      @if (filteredAttendanceData().length > 0) {
+      <ion-list>
+        @for (item of filteredAttendanceData(); track item.crossfit_id) {
+        <ion-item>
+          <ion-checkbox
+            labelPlacement="end"
+            [checked]="item.ordinal ? true : false"
+            (ionChange)="onClickCheckbox($event, item)"
+          >
+            {{ item.name }}
+          </ion-checkbox>
+        </ion-item>
+        }
+      </ion-list>
+      } @else {
+      <ion-text color="medium">
+        <p class="ion-text-center">No athletes found</p>
+      </ion-text>
       }
-    </ion-list>
+    </ion-card-content>
   </ion-card>
 </ion-content>

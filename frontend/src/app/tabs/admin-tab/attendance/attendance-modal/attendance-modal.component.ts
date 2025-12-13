@@ -24,7 +24,8 @@ import {
   IonSegmentButton,
   IonCard,
   IonCardHeader,
-  IonCardTitle,
+  IonCardContent,
+  IonText,
 } from '@ionic/angular/standalone';
 import { apiAthleteDetail, apiAttendanceModel } from 'src/app/api/models';
 import { apiAttendanceService } from 'src/app/api/services';
@@ -38,7 +39,8 @@ import { ToastService } from 'src/app/services/toast.service';
   templateUrl: './attendance-modal.component.html',
   styleUrls: ['./attendance-modal.component.scss'],
   imports: [
-    IonCardTitle,
+    IonText,
+    IonCardContent,
     IonCardHeader,
     IonCard,
     IonSegmentButton,
@@ -142,9 +144,6 @@ export class AttendanceModalComponent implements OnInit {
             }
             return [...records];
           });
-          if (this.filterAttendance()) {
-            this.filterAttendance.set(false);
-          }
         },
         error: (error) => {
           console.error('Error updating attendance:', error);
