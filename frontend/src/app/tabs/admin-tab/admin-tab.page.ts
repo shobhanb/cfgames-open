@@ -23,6 +23,7 @@ import {
   heartOutline,
   heartCircleOutline,
   homeOutline,
+  globeOutline,
 } from 'ionicons/icons';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
@@ -56,6 +57,7 @@ export class AdminTabPage implements OnInit {
       clipboardOutline,
       golfOutline,
       calendarNumberOutline,
+      globeOutline,
       bodyOutline,
       homeOutline,
     });

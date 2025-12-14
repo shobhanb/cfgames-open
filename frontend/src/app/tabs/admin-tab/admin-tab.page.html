@@ -76,6 +76,10 @@
 
   <div class="section-title">App Management</div>
   <ion-list [inset]="true">
+    <ion-item [button]="true" type="button" routerLink="/admin/cf-events">
+      <ion-icon slot="start" name="globe-outline"></ion-icon>
+      <ion-label>CF Events</ion-label>
+    </ion-item>
     <ion-item [button]="true" type="button" routerLink="/admin/users">
       <ion-icon slot="start" name="body-outline"></ion-icon>
       <ion-label>Users</ion-label>

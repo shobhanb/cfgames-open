@@ -193,6 +193,14 @@ export const tabsRoutes: Routes = [
         canActivate: [adminGuard],
       },
       {
+        path: 'admin/cf-events',
+        loadComponent: () =>
+          import('./admin-tab/cf-events/cf-events.page').then(
+            (c) => c.CfEventsPage
+          ),
+        canActivate: [adminGuard],
+      },
+      {
         path: 'admin/users',
         loadComponent: () =>
           import('./admin-tab/users/users.page').then((c) => c.UsersPage),

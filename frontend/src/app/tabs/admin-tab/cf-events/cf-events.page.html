@@ -1,0 +1,90 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>CF Events Management</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      placeholder="Search events..."
+      (ionInput)="onSearchChange($event)"
+    ></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>CrossFit Open Events</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Manage CrossFit Open events. Add, edit, or delete events as needed.</p>
+      <ion-button expand="block" (click)="addEvent()">
+        Add New Event
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  @if (loading()) {
+  <ion-card>
+    <ion-list>
+      @for (item of [1,2,3,4,5]; track $index) {
+      <ion-item>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text
+              [animated]="true"
+              style="width: 60%"
+            ></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text
+              [animated]="true"
+              style="width: 40%"
+            ></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card>
+  } @else if (groupedEvents().length === 0) {
+  <ion-card>
+    <ion-card-content>
+      <p class="ion-text-center">No events found.</p>
+    </ion-card-content>
+  </ion-card>
+  } @else { @for (group of groupedEvents(); track group.year) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ group.year }}</ion-card-title>
+    </ion-card-header>
+    <ion-list [inset]="true">
+      @for (event of group.events; track event.ordinal) {
+      <ion-item>
+        <ion-label>
+          <h3>{{ event.event }}</h3>
+          <p>Ordinal: {{ event.ordinal }}</p>
+        </ion-label>
+        <ion-button fill="clear" (click)="editEvent(event)" slot="end">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          fill="clear"
+          color="danger"
+          (click)="deleteEvent(event)"
+          slot="end"
+        >
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card>
+  } }
+</ion-content>
