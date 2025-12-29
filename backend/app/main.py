@@ -21,7 +21,13 @@ from app.database.base import Base
 from app.database.core import session_manager
 from app.events.views import cf_events_router
 from app.firebase_auth.views import firebase_auth_router
+from app.heat_assignments.views import heat_assignments_router
+from app.heats.views import heats_router
+from app.heats_setup.views import heats_setup_router
 from app.home_blog.views import home_blog_router
+from app.judge_availability.views import judge_availability_router
+from app.judges.views import judges_router
+from app.preferred_athletes.views import preferred_athletes_router
 from app.score.views import score_router
 from app.settings import env_settings, url_settings
 from app.sidescore.views import sidescore_router
@@ -67,6 +73,12 @@ app.include_router(appreciation_open_router)
 app.include_router(sidescore_router)
 app.include_router(teams_router)
 app.include_router(athlete_prefs_router)
+app.include_router(judges_router)
+app.include_router(judge_availability_router)
+app.include_router(preferred_athletes_router)
+app.include_router(heats_router)
+app.include_router(heats_setup_router)
+app.include_router(heat_assignments_router)
 app.include_router(home_blog_router)
 app.include_router(affiliate_config_router)
 

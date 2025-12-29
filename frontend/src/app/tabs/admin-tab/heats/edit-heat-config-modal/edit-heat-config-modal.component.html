@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Edit Heat Configuration</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if (config) {
+  <form [formGroup]="configForm">
+    <ion-list [inset]="true">
+      <ion-item>
+        <ion-label position="stacked">Session Name</ion-label>
+        <ion-input [value]="config.short_name" readonly></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Start Time</ion-label>
+        <ion-input type="time" formControlName="startTime" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">End Time</ion-label>
+        <ion-input type="time" formControlName="endTime" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Interval (minutes)</ion-label>
+        <ion-input
+          type="number"
+          formControlName="interval"
+          min="5"
+          max="120"
+          required
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Max Athletes</ion-label>
+        <ion-input
+          type="number"
+          formControlName="maxAthletes"
+          min="1"
+          max="50"
+          required
+        ></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <div style="padding: 16px">
+      <ion-button
+        expand="block"
+        (click)="save()"
+        [disabled]="!configForm.valid"
+      >
+        Save Changes
+      </ion-button>
+    </div>
+  </form>
+  }
+</ion-content>

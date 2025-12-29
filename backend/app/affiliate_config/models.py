@@ -1,8 +1,16 @@
 from __future__ import annotations
 
-from sqlalchemy import Integer, UniqueConstraint
+from sqlalchemy import Boolean, Integer, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
+from app.affiliate_config.constants import (
+    ATTENDANCE_SCORE,
+    DEFAULT_APPRECIATION_SCORE,
+    DEFAULT_SIDE_SCORE,
+    JUDGE_SCORE,
+    PARTICIPATION_SCORE,
+    TOP3_SCORE,
+)
 from app.database.base import Base
 
 
@@ -13,11 +21,13 @@ class AffiliateConfig(Base):
     year: Mapped[int] = mapped_column(Integer)
 
     # Scoring configuration
-    masters_age_cutoff: Mapped[int] = mapped_column(Integer, default=55)
-    open_age_cutoff: Mapped[int] = mapped_column(Integer, default=35)
-    participation_score: Mapped[int] = mapped_column(Integer, default=1)
-    top3_score: Mapped[int] = mapped_column(Integer, default=3)
-    judge_score: Mapped[int] = mapped_column(Integer, default=2)
-    attendance_score: Mapped[int] = mapped_column(Integer, default=2)
-    default_appreciation_score: Mapped[int] = mapped_column(Integer, default=10)
-    default_side_score: Mapped[int] = mapped_column(Integer, default=25)
+    participation_score: Mapped[int] = mapped_column(Integer, default=PARTICIPATION_SCORE)
+    top3_score: Mapped[int] = mapped_column(Integer, default=TOP3_SCORE)
+    judge_score: Mapped[int] = mapped_column(Integer, default=JUDGE_SCORE)
+    attendance_score: Mapped[int] = mapped_column(Integer, default=ATTENDANCE_SCORE)
+    default_appreciation_score: Mapped[int] = mapped_column(Integer, default=DEFAULT_APPRECIATION_SCORE)
+    default_side_score: Mapped[int] = mapped_column(Integer, default=DEFAULT_SIDE_SCORE)
+
+    # App Configuration
+    use_scheduling: Mapped[bool] = mapped_column(Boolean, default=True)
+    use_appreciation: Mapped[bool] = mapped_column(Boolean, default=True)

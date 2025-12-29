@@ -2,7 +2,6 @@ from typing import Any, Literal
 
 from fastapi import APIRouter, status
 
-from app.athlete.models import Athlete
 from app.database.dependencies import db_dependency
 from app.firebase_auth.dependencies import admin_user_dependency, verified_user_dependency
 
@@ -33,7 +32,7 @@ athlete_router = APIRouter(prefix="/athlete", tags=["athlete"])
 async def get_my_athlete_data(
     db_session: db_dependency,
     user: verified_user_dependency,
-) -> Athlete:
+) -> dict[str, Any]:
     return await get_user_data(db_session=db_session, crossfit_id=user.crossfit_id)
 
 

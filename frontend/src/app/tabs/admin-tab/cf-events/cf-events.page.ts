@@ -24,7 +24,11 @@ import {
   IonSkeletonText,
 } from '@ionic/angular/standalone';
 import { apiCfeventsService } from 'src/app/api/services';
-import { apiEventsModel } from 'src/app/api/models';
+import {
+  apiEventsModel,
+  apiEventsCreate,
+  apiEventsUpdate,
+} from 'src/app/api/models';
 import { ToastService } from 'src/app/services/toast.service';
 import { addIcons } from 'ionicons';
 import { createOutline, trashOutline } from 'ionicons/icons';
@@ -150,6 +154,11 @@ export class CfEventsPage implements OnInit {
           type: 'text',
           placeholder: 'Event name (e.g., 25.1)',
         },
+        {
+          name: 'start_date',
+          type: 'date',
+          placeholder: 'Start date (optional)',
+        },
       ],
       buttons: [
         {
@@ -160,13 +169,17 @@ export class CfEventsPage implements OnInit {
           text: 'Add',
           handler: (data) => {
             if (!data.year || !data.ordinal || !data.event) {
-              this.toastService.showToast('All fields are required', 'warning');
+              this.toastService.showToast(
+                'Year, ordinal, and event name are required',
+                'warning'
+              );
               return false;
             }
             this.createEvent({
               year: parseInt(data.year),
               ordinal: parseInt(data.ordinal),
               event: data.event,
+              start_date: data.start_date || null,
             });
             return true;
           },
@@ -177,7 +190,7 @@ export class CfEventsPage implements OnInit {
     await alert.present();
   }
 
-  createEvent(eventData: apiEventsModel) {
+  createEvent(eventData: apiEventsCreate) {
     this.apiEvents.createCfeventCfeventsPost({ body: eventData }).subscribe({
       next: () => {
         this.toastService.showToast('Event added successfully', 'success');
@@ -201,6 +214,12 @@ export class CfEventsPage implements OnInit {
           value: event.event,
           placeholder: 'Event name',
         },
+        {
+          name: 'start_date',
+          type: 'date',
+          value: event.start_date || '',
+          placeholder: 'Start date (optional)',
+        },
       ],
       buttons: [
         {
@@ -210,11 +229,10 @@ export class CfEventsPage implements OnInit {
         {
           text: 'Update',
           handler: (data) => {
-            if (!data.event) {
-              this.toastService.showToast('Event name is required', 'warning');
-              return false;
-            }
-            this.updateEvent(event.year, event.ordinal, data.event);
+            this.updateEvent(event.year, event.ordinal, {
+              event: data.event || null,
+              start_date: data.start_date || null,
+            });
             return true;
           },
         },
@@ -224,12 +242,12 @@ export class CfEventsPage implements OnInit {
     await alert.present();
   }
 
-  updateEvent(year: number, ordinal: number, eventName: string) {
+  updateEvent(year: number, ordinal: number, updateData: apiEventsUpdate) {
     this.apiEvents
       .updateCfeventCfeventsYearOrdinalPatch({
         year,
         ordinal,
-        body: { event: eventName },
+        body: updateData,
       })
       .subscribe({
         next: () => {

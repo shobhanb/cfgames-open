@@ -75,7 +75,7 @@ export class HomeTabPage implements OnInit {
 
   athleteCountsData = signal<apiAthleteSummaryCounts[] | null>(null);
 
-  cfGamesDataTimestamp = signal<string | null>(null);
+  cfGamesDataTimestamp = signal<Date | null>(null);
 
   welcomeMessage = `Welcome to ${this.config.affiliateName}'s Community Cup for the CF Open.`;
 
@@ -136,9 +136,9 @@ export class HomeTabPage implements OnInit {
       .subscribe({
         next: (data) => {
           if (data && data.length > 0) {
-            // Convert UTC timestamp to local time
-            const utcDate = new Date(data[0].timestamp);
-            this.cfGamesDataTimestamp.set(utcDate.toISOString());
+            console.log(data[0].timestamp);
+            const utcDate = new Date(data[0].timestamp + '+0000');
+            this.cfGamesDataTimestamp.set(utcDate);
           }
         },
         error: (error) => {

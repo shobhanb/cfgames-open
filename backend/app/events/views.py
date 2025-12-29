@@ -41,24 +41,24 @@ async def get_events_with_data(
 )
 async def add_update_cfevents(
     db_session: db_dependency,
-    api_key_admin: api_key_admin_dependency,
+    _: api_key_admin_dependency,
 ) -> None:
-    if api_key_admin:
-        for item in EVENTS:
-            event_data = EventsModel.model_validate(item)
-            existing_event = await Events.find(
-                async_session=db_session,
-                year=event_data.year,
-                ordinal=event_data.ordinal,
-            )
-            if existing_event:
-                existing_event.event = event_data.event
-                db_session.add(existing_event)
-                await db_session.commit()
-            else:
-                new_event = Events(**event_data.model_dump())
-                db_session.add(new_event)
-                await db_session.commit()
+    for item in EVENTS:
+        event_data = EventsModel.model_validate(item)
+        existing_event = await Events.find(
+            async_session=db_session,
+            year=event_data.year,
+            ordinal=event_data.ordinal,
+        )
+        if existing_event:
+            existing_event.event = event_data.event
+            existing_event.start_date = event_data.start_date
+            db_session.add(existing_event)
+            await db_session.commit()
+        else:
+            new_event = Events(**event_data.model_dump())
+            db_session.add(new_event)
+            await db_session.commit()
 
 
 @cf_events_router.get(

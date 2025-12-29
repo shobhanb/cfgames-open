@@ -9,7 +9,7 @@ from sqlalchemy import func, select, text, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.firebase_auth.models import FirebaseUser
-from app.score.models import Score
+from app.judges.models import Judges
 
 from .models import Athlete
 from .schemas import AutoTeamAssignmentOutput
@@ -20,10 +20,28 @@ log = logging.getLogger("uvicorn.error")
 async def get_user_data(
     db_session: AsyncSession,
     crossfit_id: int,
-) -> Athlete:
-    stmt = select(Athlete).where(Athlete.crossfit_id == crossfit_id).order_by(Athlete.year.desc()).limit(1)
+) -> dict[str, Any]:
+    stmt = (
+        select(
+            Athlete.affiliate_name,
+            Athlete.affiliate_id,
+            Athlete.name,
+            Athlete.crossfit_id,
+            Athlete.year,
+            Athlete.team_name,
+            Athlete.team_role,
+            Athlete.age_category,
+            Athlete.gender,
+            (Judges.crossfit_id.isnot(None)).label("judge"),
+        )
+        .join_from(Athlete, Judges, (Athlete.crossfit_id == Judges.crossfit_id), isouter=True)
+        .where(Athlete.crossfit_id == crossfit_id)
+        .order_by(Athlete.year.desc())
+        .limit(1)
+    )
     ret = await db_session.execute(stmt)
-    return ret.scalar_one()
+    result = ret.mappings().one()
+    return dict(result)
 
 
 async def get_affiliate_athletes_list_unassigned(
@@ -59,17 +77,22 @@ async def get_db_athlete_detail_all(  # noqa: PLR0913
     age_category: str | None = None,
     gender: str | None = None,
 ) -> list[dict[str, Any]]:
-    stmt = select(
-        Athlete.affiliate_name,
-        Athlete.affiliate_id,
-        Athlete.year,
-        Athlete.name,
-        Athlete.crossfit_id,
-        Athlete.team_name,
-        Athlete.team_role,
-        Athlete.age_category,
-        Athlete.gender,
-    ).where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year))
+    stmt = (
+        select(
+            Athlete.affiliate_name,
+            Athlete.affiliate_id,
+            Athlete.year,
+            Athlete.name,
+            Athlete.crossfit_id,
+            Athlete.team_name,
+            Athlete.team_role,
+            Athlete.age_category,
+            Athlete.gender,
+            (Judges.crossfit_id.isnot(None)).label("judge"),
+        )
+        .join_from(Athlete, Judges, (Athlete.crossfit_id == Judges.crossfit_id), isouter=True)
+        .where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year))
+    )
     if team_name:
         stmt = stmt.where(Athlete.team_name == team_name)
     if age_category:
@@ -86,17 +109,22 @@ async def get_db_athlete_detail(
     crossfit_id: int,
     year: int,
 ) -> dict[str, Any]:
-    stmt = select(
-        Athlete.affiliate_name,
-        Athlete.affiliate_id,
-        Athlete.year,
-        Athlete.name,
-        Athlete.crossfit_id,
-        Athlete.team_name,
-        Athlete.team_role,
-        Athlete.age_category,
-        Athlete.gender,
-    ).where((Athlete.crossfit_id == crossfit_id) & (Athlete.year == year))
+    stmt = (
+        select(
+            Athlete.affiliate_name,
+            Athlete.affiliate_id,
+            Athlete.year,
+            Athlete.name,
+            Athlete.crossfit_id,
+            Athlete.team_name,
+            Athlete.team_role,
+            Athlete.age_category,
+            Athlete.gender,
+            (Judges.crossfit_id.isnot(None)).label("judge"),
+        )
+        .join_from(Athlete, Judges, (Athlete.crossfit_id == Judges.crossfit_id), isouter=True)
+        .where((Athlete.crossfit_id == crossfit_id) & (Athlete.year == year))
+    )
     ret = await db_session.execute(stmt)
     results = ret.mappings().one()
     return dict(results)
@@ -139,9 +167,8 @@ async def random_assign_db_athletes(
                 & (Athlete.gender == gender)
                 & (Athlete.age_category == age_cat),
             )
-            # Check judges. This needs previous years data to be included
-            judge_stmt = select(Score.judge_user_id).distinct()
-
+            # Check judges from judges table
+            judge_stmt = select(Judges.crossfit_id).distinct()
             athlete_judge_stmt = athlete_stmt.where(Athlete.crossfit_id.in_(judge_stmt.scalar_subquery()))
 
             judge_result = await db_session.execute(athlete_judge_stmt)

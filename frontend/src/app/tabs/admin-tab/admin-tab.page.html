@@ -26,6 +26,39 @@
     </ion-item>
   </ion-list>
 
+  @if (affiliateConfig.useScheduling()) {
+  <div class="section-title">Scheduling</div>
+  <ion-list [inset]="true">
+    <ion-item
+      [button]="true"
+      type="button"
+      routerLink="/admin/schedule-override"
+    >
+      <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
+      <ion-label>Athlete Schedule Pref Override</ion-label>
+    </ion-item>
+    <ion-item [button]="true" type="button" routerLink="/admin/judges">
+      <ion-icon slot="start" name="clipboard-outline"></ion-icon>
+      <ion-label>Judges</ion-label>
+    </ion-item>
+    <ion-item
+      [button]="true"
+      type="button"
+      routerLink="/admin/judge-availability-override"
+    >
+      <ion-icon slot="start" name="clipboard-outline"></ion-icon>
+      <ion-label>Judge Availability Override</ion-label>
+    </ion-item>
+    <ion-item [button]="true" type="button" routerLink="/admin/heats">
+      <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
+      <ion-label>Setup Heats</ion-label>
+    </ion-item>
+    <ion-item [button]="true" type="button" routerLink="/admin/manage-heats">
+      <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
+      <ion-label>Manage Heats</ion-label>
+    </ion-item>
+  </ion-list>
+  } @if (affiliateConfig.useAppreciation()) {
   <div class="section-title">Appreciation Form</div>
   <ion-list [inset]="true">
     <ion-item
@@ -44,7 +77,16 @@
       <ion-icon slot="start" name="heart-outline"></ion-icon>
       <ion-label>Appreciation Results</ion-label>
     </ion-item>
+    <ion-item
+      [button]="true"
+      type="button"
+      routerLink="/admin/appreciation-score"
+    >
+      <ion-icon slot="start" name="golf-outline"></ion-icon>
+      <ion-label>Appreciation Scores</ion-label>
+    </ion-item>
   </ion-list>
+  }
 
   <div class="section-title">Community Cup Scores</div>
   <ion-list [inset]="true">
@@ -55,22 +97,6 @@
     <ion-item [button]="true" type="button" routerLink="/admin/side-scores">
       <ion-icon slot="start" name="golf-outline"></ion-icon>
       <ion-label>Side Scores</ion-label>
-    </ion-item>
-  </ion-list>
-
-  <div class="section-title">Heat Management</div>
-  <ion-list [inset]="true">
-    <ion-item [button]="true" type="button" routerLink="/admin/scheduling">
-      <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
-      <ion-label>Scheduling</ion-label>
-    </ion-item>
-    <ion-item
-      [button]="true"
-      type="button"
-      routerLink="/admin/schedule-override"
-    >
-      <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
-      <ion-label>Athlete Schedule Pref Override</ion-label>
     </ion-item>
   </ion-list>
 

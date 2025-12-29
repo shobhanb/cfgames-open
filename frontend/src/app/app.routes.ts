@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { adminGuard } from './guards/admin.guard';
-import { userGuard } from './guards/user.guard';
 
 export const routes: Routes = [
   {

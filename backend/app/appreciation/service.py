@@ -25,6 +25,26 @@ async def get_db_appreciation(
     return list(results)
 
 
+async def get_db_appreciation_text(
+    db_session: AsyncSession,
+    crossfit_id: int,
+    year: int,
+) -> list[dict[str, Any]]:
+    stmt_team = select(Appreciation.year, Appreciation.ordinal, Appreciation.team_vote_text.label("text")).where(
+        (Appreciation.team_vote_crossfit_id == crossfit_id) & (Appreciation.year == year),
+    )
+    stmt_non_team = select(
+        Appreciation.year,
+        Appreciation.ordinal,
+        Appreciation.non_team_vote_text.label("text"),
+    ).where(
+        (Appreciation.non_team_vote_crossfit_id == crossfit_id) & (Appreciation.year == year),
+    )
+    ret = await db_session.execute(stmt_team.union_all(stmt_non_team))
+    results = ret.mappings().all()
+    return [dict(x) for x in results]
+
+
 async def update_db_appreciation(
     db_session: AsyncSession,
     input_data: AppreciationModel,

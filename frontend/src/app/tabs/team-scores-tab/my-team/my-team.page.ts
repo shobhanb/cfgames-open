@@ -20,6 +20,7 @@ import {
   IonSelectOption,
   IonCard,
   IonChip,
+  IonNote,
 } from '@ionic/angular/standalone';
 import { apiAthleteDetail } from 'src/app/api/models';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
@@ -35,6 +36,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./my-team.page.scss'],
   standalone: true,
   imports: [
+    IonNote,
     IonCard,
     IonSkeletonText,
     IonSegmentButton,

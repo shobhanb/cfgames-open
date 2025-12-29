@@ -14,6 +14,7 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { apiAppreciationCountsModel } from '../models/api-appreciation-counts-model';
 import { apiAppreciationModel } from '../models/api-appreciation-model';
 import { apiAppreciationResultDetail } from '../models/api-appreciation-result-detail';
+import { apiAppreciationResultNotes } from '../models/api-appreciation-result-notes';
 import { apiAppreciationResults } from '../models/api-appreciation-results';
 import { deleteMyAppreciationAppreciationDelete } from '../fn/appreciation/delete-my-appreciation-appreciation-delete';
 import { DeleteMyAppreciationAppreciationDelete$Params } from '../fn/appreciation/delete-my-appreciation-appreciation-delete';
@@ -27,6 +28,8 @@ import { getAppreciationResultsDetailAppreciationDetailGet } from '../fn/appreci
 import { GetAppreciationResultsDetailAppreciationDetailGet$Params } from '../fn/appreciation/get-appreciation-results-detail-appreciation-detail-get';
 import { getMyAppreciationAppreciationGet } from '../fn/appreciation/get-my-appreciation-appreciation-get';
 import { GetMyAppreciationAppreciationGet$Params } from '../fn/appreciation/get-my-appreciation-appreciation-get';
+import { getMyAppreciationTextAppreciationMyAppreciationTextGet } from '../fn/appreciation/get-my-appreciation-text-appreciation-my-appreciation-text-get';
+import { GetMyAppreciationTextAppreciationMyAppreciationTextGet$Params } from '../fn/appreciation/get-my-appreciation-text-appreciation-my-appreciation-text-get';
 import { updateMyAppreciationAppreciationPost } from '../fn/appreciation/update-my-appreciation-appreciation-post';
 import { UpdateMyAppreciationAppreciationPost$Params } from '../fn/appreciation/update-my-appreciation-appreciation-post';
 
@@ -132,6 +135,39 @@ export class apiAppreciationService extends BaseService {
   deleteMyAppreciationAppreciationDelete(params: DeleteMyAppreciationAppreciationDelete$Params, context?: HttpContext): Observable<any> {
     return this.deleteMyAppreciationAppreciationDelete$Response(params, context).pipe(
       map((r: StrictHttpResponse<any>): any => r.body)
+    );
+  }
+
+  /** Path part for operation `getMyAppreciationTextAppreciationMyAppreciationTextGet()` */
+  static readonly GetMyAppreciationTextAppreciationMyAppreciationTextGetPath = '/appreciation/my-appreciation-text';
+
+  /**
+   * Get My Appreciation Text.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getMyAppreciationTextAppreciationMyAppreciationTextGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getMyAppreciationTextAppreciationMyAppreciationTextGet$Response(params: GetMyAppreciationTextAppreciationMyAppreciationTextGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAppreciationResultNotes>>> {
+    return getMyAppreciationTextAppreciationMyAppreciationTextGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get My Appreciation Text.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getMyAppreciationTextAppreciationMyAppreciationTextGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getMyAppreciationTextAppreciationMyAppreciationTextGet(params: GetMyAppreciationTextAppreciationMyAppreciationTextGet$Params, context?: HttpContext): Observable<Array<apiAppreciationResultNotes>> {
+    return this.getMyAppreciationTextAppreciationMyAppreciationTextGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiAppreciationResultNotes>>): Array<apiAppreciationResultNotes> => r.body)
     );
   }
 

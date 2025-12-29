@@ -26,9 +26,8 @@ import {
   heartOutline,
   calendarOutline,
 } from 'ionicons/icons';
-import { apiAffiliateConfigService } from 'src/app/api/services';
 import { AppConfigService } from 'src/app/services/app-config.service';
-import { apiAffiliateConfigModel } from 'src/app/api/models';
+import { AffiliateConfigService } from 'src/app/services/affiliate-config.service';
 
 @Component({
   selector: 'app-learn',
@@ -54,10 +53,8 @@ import { apiAffiliateConfigModel } from 'src/app/api/models';
 })
 export class LearnComponent implements OnInit {
   private modalController = inject(ModalController);
-  private apiAffiliateConfig = inject(apiAffiliateConfigService);
   config = inject(AppConfigService);
-
-  affiliateConfig = signal<apiAffiliateConfigModel | null>(null);
+  affiliateConfig = inject(AffiliateConfigService);
 
   constructor() {
     addIcons({
@@ -70,21 +67,7 @@ export class LearnComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.apiAffiliateConfig
-      .getAffiliateConfigAffiliateConfigAffiliateIdYearGet({
-        affiliate_id: this.config.affiliateId,
-        year: this.config.year,
-      })
-      .subscribe({
-        next: (data) => {
-          this.affiliateConfig.set(data);
-        },
-        error: (error) => {
-          console.error('Error fetching affiliate config:', error);
-        },
-      });
-  }
+  ngOnInit() {}
 
   closeModal() {
     this.modalController.dismiss();

@@ -12,7 +12,8 @@ TEAM_ROLE_REVERSE_MAP = {v: k for k, v in TEAM_ROLE_MAP.items()}
 DEFAULT_TEAM_NAME = "zz"
 IGNORE_TEAMS = [
     "Short-put Bai-kar",
-    "Leadership",
+    "Admin",
+    "Other",
 ]
 
 CF_DIVISION_MAP = {

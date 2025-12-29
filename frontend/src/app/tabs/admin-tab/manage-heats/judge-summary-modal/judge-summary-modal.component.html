@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Judge Assignments - {{ shortName }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    @for (judge of judgeSummary; track judge.judgeName) {
+    <ion-item>
+      <ion-label>
+        {{ judge.judgeName }}
+      </ion-label>
+      <ion-label slot="end">
+        {{ judge.count }}
+        {{ judge.count === 1 ? "assignment" : "assignments" }}
+      </ion-label>
+    </ion-item>
+    } @empty {
+    <ion-item>
+      <ion-label class="ion-text-center">
+        <p>No judge assignments found</p>
+      </ion-label>
+    </ion-item>
+    }
+  </ion-list>
+</ion-content>

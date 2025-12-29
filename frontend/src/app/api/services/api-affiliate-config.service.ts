@@ -62,30 +62,30 @@ export class apiAffiliateConfigService extends BaseService {
   /**
    * Initialize Affiliate Config.
    *
-   * Initialize affiliate config with default values from constants.
+   * Initialize affiliate configs with default values from constants.
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `initializeAffiliateConfigAffiliateConfigInitializePost()` instead.
    *
    * This method doesn't expect any request body.
    */
-  initializeAffiliateConfigAffiliateConfigInitializePost$Response(params: InitializeAffiliateConfigAffiliateConfigInitializePost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAffiliateConfigModel>> {
+  initializeAffiliateConfigAffiliateConfigInitializePost$Response(params?: InitializeAffiliateConfigAffiliateConfigInitializePost$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAffiliateConfigModel>>> {
     return initializeAffiliateConfigAffiliateConfigInitializePost(this.http, this.rootUrl, params, context);
   }
 
   /**
    * Initialize Affiliate Config.
    *
-   * Initialize affiliate config with default values from constants.
+   * Initialize affiliate configs with default values from constants.
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `initializeAffiliateConfigAffiliateConfigInitializePost$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  initializeAffiliateConfigAffiliateConfigInitializePost(params: InitializeAffiliateConfigAffiliateConfigInitializePost$Params, context?: HttpContext): Observable<apiAffiliateConfigModel> {
+  initializeAffiliateConfigAffiliateConfigInitializePost(params?: InitializeAffiliateConfigAffiliateConfigInitializePost$Params, context?: HttpContext): Observable<Array<apiAffiliateConfigModel>> {
     return this.initializeAffiliateConfigAffiliateConfigInitializePost$Response(params, context).pipe(
-      map((r: StrictHttpResponse<apiAffiliateConfigModel>): apiAffiliateConfigModel => r.body)
+      map((r: StrictHttpResponse<Array<apiAffiliateConfigModel>>): Array<apiAffiliateConfigModel> => r.body)
     );
   }
 

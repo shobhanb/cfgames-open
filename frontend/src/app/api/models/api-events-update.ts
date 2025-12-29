@@ -4,4 +4,5 @@
 
 export interface apiEventsUpdate {
   event?: (string | null);
+  start_date?: (string | null);
 }

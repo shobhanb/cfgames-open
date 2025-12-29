@@ -3,14 +3,27 @@ from typing import Any
 
 from fastapi import APIRouter, status
 
+from app.apikey_auth.dependencies import api_key_admin_dependency
 from app.database.dependencies import db_dependency
 from app.firebase_auth.dependencies import admin_user_dependency, verified_user_dependency
 
 from .models import AthleteTimePref
 from .schemas import AthletePrefsModel, AthletePrefsOutputModel
-from .service import get_db_athlete_prefs, update_db_user_prefs
+from .service import get_db_athlete_prefs, initialize_2025_prefs, update_db_user_prefs
 
 athlete_prefs_router = APIRouter(prefix="/athlete-prefs", tags=["athlete-prefs"])
+
+
+@athlete_prefs_router.post(
+    "/initialize",
+    status_code=status.HTTP_200_OK,
+)
+async def initialize_prefs(
+    db_session: db_dependency,
+    _: api_key_admin_dependency,
+) -> dict[str, Any]:
+    """Initialize athlete preferences for 2025 from the athlete_prefs_2025 file."""
+    return await initialize_2025_prefs(db_session=db_session)
 
 
 @athlete_prefs_router.get("/me", status_code=status.HTTP_200_OK, response_model=list[AthletePrefsModel])

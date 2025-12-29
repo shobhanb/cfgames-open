@@ -14,5 +14,11 @@ export { apiAppreciationStatusService } from './services/api-appreciation-status
 export { apiSidescoreService } from './services/api-sidescore.service';
 export { apiTeamsService } from './services/api-teams.service';
 export { apiAthletePrefsService } from './services/api-athlete-prefs.service';
+export { apiJudgesService } from './services/api-judges.service';
+export { apiJudgeAvailabilityService } from './services/api-judge-availability.service';
+export { apiPreferredAthletesService } from './services/api-preferred-athletes.service';
+export { apiHeatsService } from './services/api-heats.service';
+export { apiHeatsSetupService } from './services/api-heats-setup.service';
+export { apiHeatAssignmentsService } from './services/api-heat-assignments.service';
 export { apiHomeBlogService } from './services/api-home-blog.service';
 export { apiAffiliateConfigService } from './services/api-affiliate-config.service';

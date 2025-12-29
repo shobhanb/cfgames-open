@@ -43,7 +43,11 @@
             {{`Team: ${ authService.athlete()!.team_name  | teamName}`}}
           </ion-label>
         </ion-item>
-        @if (authService.userCustomClaims()?.admin) {
+        @if ( authService.athlete()?.judge) {
+        <ion-item>
+          <ion-label>Judge</ion-label>
+        </ion-item>
+        } @if (authService.userCustomClaims()?.admin) {
         <ion-item>
           <ion-label color="danger">Admin</ion-label>
           @if (authService.userCustomClaims()?.super_admin) {

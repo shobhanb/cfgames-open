@@ -19,6 +19,8 @@ import { getAthletePrefsAthletePrefsCrossfitIdGet } from '../fn/athlete-prefs/ge
 import { GetAthletePrefsAthletePrefsCrossfitIdGet$Params } from '../fn/athlete-prefs/get-athlete-prefs-athlete-prefs-crossfit-id-get';
 import { getMyPrefsAthletePrefsMeGet } from '../fn/athlete-prefs/get-my-prefs-athlete-prefs-me-get';
 import { GetMyPrefsAthletePrefsMeGet$Params } from '../fn/athlete-prefs/get-my-prefs-athlete-prefs-me-get';
+import { initializePrefsAthletePrefsInitializePost } from '../fn/athlete-prefs/initialize-prefs-athlete-prefs-initialize-post';
+import { InitializePrefsAthletePrefsInitializePost$Params } from '../fn/athlete-prefs/initialize-prefs-athlete-prefs-initialize-post';
 import { updateAthletePrefsAthletePrefsCrossfitIdPost } from '../fn/athlete-prefs/update-athlete-prefs-athlete-prefs-crossfit-id-post';
 import { UpdateAthletePrefsAthletePrefsCrossfitIdPost$Params } from '../fn/athlete-prefs/update-athlete-prefs-athlete-prefs-crossfit-id-post';
 import { updateMyPrefsAthletePrefsMePost } from '../fn/athlete-prefs/update-my-prefs-athlete-prefs-me-post';
@@ -28,6 +30,43 @@ import { UpdateMyPrefsAthletePrefsMePost$Params } from '../fn/athlete-prefs/upda
 export class apiAthletePrefsService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `initializePrefsAthletePrefsInitializePost()` */
+  static readonly InitializePrefsAthletePrefsInitializePostPath = '/athlete-prefs/initialize';
+
+  /**
+   * Initialize Prefs.
+   *
+   * Initialize athlete preferences for 2025 from the athlete_prefs_2025 file.
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `initializePrefsAthletePrefsInitializePost()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  initializePrefsAthletePrefsInitializePost$Response(params?: InitializePrefsAthletePrefsInitializePost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return initializePrefsAthletePrefsInitializePost(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Initialize Prefs.
+   *
+   * Initialize athlete preferences for 2025 from the athlete_prefs_2025 file.
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `initializePrefsAthletePrefsInitializePost$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  initializePrefsAthletePrefsInitializePost(params?: InitializePrefsAthletePrefsInitializePost$Params, context?: HttpContext): Observable<{
+}> {
+    return this.initializePrefsAthletePrefsInitializePost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
   }
 
   /** Path part for operation `getMyPrefsAthletePrefsMeGet()` */

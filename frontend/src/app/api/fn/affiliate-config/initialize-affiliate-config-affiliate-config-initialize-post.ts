@@ -11,15 +11,11 @@ import { RequestBuilder } from '../../request-builder';
 import { apiAffiliateConfigModel } from '../../models/api-affiliate-config-model';
 
 export interface InitializeAffiliateConfigAffiliateConfigInitializePost$Params {
-  affiliate_id: number;
-  year: number;
 }
 
-export function initializeAffiliateConfigAffiliateConfigInitializePost(http: HttpClient, rootUrl: string, params: InitializeAffiliateConfigAffiliateConfigInitializePost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAffiliateConfigModel>> {
+export function initializeAffiliateConfigAffiliateConfigInitializePost(http: HttpClient, rootUrl: string, params?: InitializeAffiliateConfigAffiliateConfigInitializePost$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAffiliateConfigModel>>> {
   const rb = new RequestBuilder(rootUrl, initializeAffiliateConfigAffiliateConfigInitializePost.PATH, 'post');
   if (params) {
-    rb.query('affiliate_id', params.affiliate_id, {});
-    rb.query('year', params.year, {});
   }
 
   return http.request(
@@ -27,7 +23,7 @@ export function initializeAffiliateConfigAffiliateConfigInitializePost(http: Htt
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<apiAffiliateConfigModel>;
+      return r as StrictHttpResponse<Array<apiAffiliateConfigModel>>;
     })
   );
 }

@@ -1,0 +1,121 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Judge Management</ion-title>
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      placeholder="Search judges..."
+      (ionInput)="onSearchChange($event)"
+    ></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        Judges
+        <ion-badge color="primary">{{ judgeCount() }}</ion-badge>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        Manage judges for competitions. Create, update, or delete judge records.
+      </p>
+      <ion-button expand="block" (click)="createJudge()">
+        <ion-icon slot="start" name="add-circle"></ion-icon>
+        Add New Judge
+      </ion-button>
+      <ion-button expand="block" (click)="createNonGymJudge()" fill="outline">
+        <ion-icon slot="start" name="add-circle"></ion-icon>
+        Add Non-Gym Judge
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  @if (loading()) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Loading...</ion-card-title>
+    </ion-card-header>
+    <ion-list>
+      @for (item of [1,2,3,4,5,6,7,8]; track $index) {
+      <ion-item>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text
+              [animated]="true"
+              style="width: 60%"
+            ></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text
+              [animated]="true"
+              style="width: 40%"
+            ></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card>
+  } @else { @if (filteredJudges().length > 0) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title
+        >Judge List ({{ filteredJudges().length }})</ion-card-title
+      >
+    </ion-card-header>
+    <ion-list [inset]="true">
+      @for (judge of filteredJudges(); track judge.id) {
+      <ion-item>
+        <ion-label>
+          <h3>{{ judge.name }}</h3>
+          <p>CrossFit ID: {{ judge.crossfit_id }}</p>
+        </ion-label>
+        <ion-button
+          fill="clear"
+          color="primary"
+          (click)="updateJudge(judge)"
+          slot="end"
+        >
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          fill="clear"
+          color="danger"
+          (click)="deleteJudge(judge)"
+          slot="end"
+        >
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card>
+  } @if (filteredJudges().length === 0 && searchTerm()) {
+  <ion-card>
+    <ion-card-content>
+      <p class="ion-text-center">
+        No judges found matching "{{ searchTerm() }}".
+      </p>
+    </ion-card-content>
+  </ion-card>
+  } @if (judges().length === 0 && !loading()) {
+  <ion-card>
+    <ion-card-content>
+      <p class="ion-text-center">
+        No judges found. Create your first judge above.
+      </p>
+    </ion-card-content>
+  </ion-card>
+  } }
+</ion-content>

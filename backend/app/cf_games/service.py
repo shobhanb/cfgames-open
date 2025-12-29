@@ -358,7 +358,7 @@ async def apply_appreciation_score(
     await db_session.execute(remove_appreciation_stmt)
 
     appreciation_scores_stmt = (
-        select(Score.id, AppreciationScore.score)
+        select(Score.id, AppreciationScore.score.label("appreciation_score"))
         .join_from(
             Score,
             AppreciationScore,
@@ -375,7 +375,8 @@ async def apply_appreciation_score(
     ret = await db_session.execute(appreciation_scores_stmt)
     update_values = ret.mappings().all()
 
-    await db_session.execute(update(Score).values([dict(x) for x in update_values]))
+    await db_session.execute(update(Score), [dict(x) for x in update_values])
+    await db_session.commit()
 
 
 async def apply_side_scores(

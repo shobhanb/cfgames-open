@@ -11,9 +11,11 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { applyAppreciationAppreciationScoreApplyAffiliateIdYearPost } from '../fn/appreciation-score/apply-appreciation-appreciation-score-apply-affiliate-id-year-post';
-import { ApplyAppreciationAppreciationScoreApplyAffiliateIdYearPost$Params } from '../fn/appreciation-score/apply-appreciation-appreciation-score-apply-affiliate-id-year-post';
+import { applyAppreciationAppreciationScoreApplyPost } from '../fn/appreciation-score/apply-appreciation-appreciation-score-apply-post';
+import { ApplyAppreciationAppreciationScoreApplyPost$Params } from '../fn/appreciation-score/apply-appreciation-appreciation-score-apply-post';
 import { apiAppreciationScoreModel } from '../models/api-appreciation-score-model';
+import { deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete } from '../fn/appreciation-score/delete-appreciation-scores-appreciation-score-crossfit-id-ordinal-delete';
+import { DeleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Params } from '../fn/appreciation-score/delete-appreciation-scores-appreciation-score-crossfit-id-ordinal-delete';
 import { getAppreciationScoresAppreciationScoreAffiliateIdYearGet } from '../fn/appreciation-score/get-appreciation-scores-appreciation-score-affiliate-id-year-get';
 import { GetAppreciationScoresAppreciationScoreAffiliateIdYearGet$Params } from '../fn/appreciation-score/get-appreciation-scores-appreciation-score-affiliate-id-year-get';
 import { updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost } from '../fn/appreciation-score/update-appreciation-scores-appreciation-score-crossfit-id-ordinal-score-post';
@@ -91,8 +93,41 @@ export class apiAppreciationScoreService extends BaseService {
     );
   }
 
-  /** Path part for operation `applyAppreciationAppreciationScoreApplyAffiliateIdYearPost()` */
-  static readonly ApplyAppreciationAppreciationScoreApplyAffiliateIdYearPostPath = '/appreciation_score/apply/{affiliate_id}/{year}';
+  /** Path part for operation `deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete()` */
+  static readonly DeleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDeletePath = '/appreciation_score/{crossfit_id}/{ordinal}';
+
+  /**
+   * Delete Appreciation Scores.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Response(params: DeleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Delete Appreciation Scores.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete(params: DeleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Params, context?: HttpContext): Observable<void> {
+    return this.deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `applyAppreciationAppreciationScoreApplyPost()` */
+  static readonly ApplyAppreciationAppreciationScoreApplyPostPath = '/appreciation_score/apply';
 
   /**
    * Apply Appreciation.
@@ -100,12 +135,12 @@ export class apiAppreciationScoreService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `applyAppreciationAppreciationScoreApplyAffiliateIdYearPost()` instead.
+   * To access only the response body, use `applyAppreciationAppreciationScoreApplyPost()` instead.
    *
    * This method doesn't expect any request body.
    */
-  applyAppreciationAppreciationScoreApplyAffiliateIdYearPost$Response(params: ApplyAppreciationAppreciationScoreApplyAffiliateIdYearPost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
-    return applyAppreciationAppreciationScoreApplyAffiliateIdYearPost(this.http, this.rootUrl, params, context);
+  applyAppreciationAppreciationScoreApplyPost$Response(params: ApplyAppreciationAppreciationScoreApplyPost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+    return applyAppreciationAppreciationScoreApplyPost(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -114,12 +149,12 @@ export class apiAppreciationScoreService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `applyAppreciationAppreciationScoreApplyAffiliateIdYearPost$Response()` instead.
+   * To access the full response (for headers, for example), `applyAppreciationAppreciationScoreApplyPost$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  applyAppreciationAppreciationScoreApplyAffiliateIdYearPost(params: ApplyAppreciationAppreciationScoreApplyAffiliateIdYearPost$Params, context?: HttpContext): Observable<any> {
-    return this.applyAppreciationAppreciationScoreApplyAffiliateIdYearPost$Response(params, context).pipe(
+  applyAppreciationAppreciationScoreApplyPost(params: ApplyAppreciationAppreciationScoreApplyPost$Params, context?: HttpContext): Observable<any> {
+    return this.applyAppreciationAppreciationScoreApplyPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<any>): any => r.body)
     );
   }

@@ -96,6 +96,30 @@ class Base(DeclarativeBase):
         result = await async_session.execute(stmt)
         return result.scalars().all()
 
+    @classmethod
+    async def find_with_nested_relationships(
+        cls,
+        async_session: AsyncSession,
+        nested_relationships: list[Any] | None = None,
+        **kwargs,  # noqa: ANN003
+    ) -> Self | None:
+        stmt = select(cls).filter_by(**kwargs)
+        if nested_relationships:
+            stmt = stmt.options(*nested_relationships)
+        return await async_session.scalar(stmt)
+
+    @classmethod
+    async def find_or_raise_with_nested_relationships(
+        cls,
+        async_session: AsyncSession,
+        nested_relationships: list[Any] | None = None,
+        **kwargs,  # noqa: ANN003
+    ) -> Self:
+        resp = await cls.find_with_nested_relationships(async_session, nested_relationships, **kwargs)
+        if not resp:
+            raise not_found_error(msg=f"{cls.__name__} not found")
+        return resp
+
 
 def resolve_table_name(name: str) -> str:
     """Resolves table names to their mapped names."""

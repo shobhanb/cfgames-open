@@ -1,0 +1,142 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/me"></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Heats</ion-title>
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Select Event</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-select
+          label="Event"
+          labelPlacement="stacked"
+          placeholder="Select event"
+          interface="popover"
+          [(ngModel)]="selectedOrdinal"
+          (ionChange)="onEventSelect()"
+        >
+          @for (event of eventService.currentYearEvents(); track event.ordinal)
+          {
+          <ion-select-option [value]="event.ordinal">
+            {{ event.event }}
+          </ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  @if (selectedEventName() && dataLoaded()) {
+  <!-- Athlete Heat Assignment -->
+  @if (athleteAssignment()) {
+  <ion-card class="heat-card">
+    <ion-card-header>
+      <ion-card-subtitle>My Heat</ion-card-subtitle>
+      <ion-card-title>
+        {{ getHeatDetails(athleteAssignment()!.heat_id)?.short_name }} - {{
+        getHeatDetails(athleteAssignment()!.heat_id)?.start_time | date: 'EEE d
+        MMM, h:mm a' }}
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <table class="assignments-table">
+        <thead>
+          <tr>
+            <th>Athlete</th>
+            <th>Judge</th>
+            <th>Preference</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ athleteAssignment()!.athlete_name }}</td>
+            <td>{{ athleteAssignment()!.judge_name || 'Not assigned' }}</td>
+            <td>
+              @if (athleteAssignment()!.preference_nbr !== null) { {{
+              athleteAssignment()!.preference_nbr! + 1 }} } @else { - }
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ion-card-content>
+  </ion-card>
+  } @else {
+  <ion-card>
+    <ion-card-content>
+      <p class="ion-text-center">No athlete assignment for this event.</p>
+    </ion-card-content>
+  </ion-card>
+  }
+
+  <!-- Judge Assignments (only for judges) -->
+  @if (isJudge && judgeAssignments().length > 0) {
+  <ion-card class="heat-card">
+    <ion-card-header>
+      <ion-card-title>My Judging Assignments</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <table class="assignments-table">
+        <thead>
+          <tr>
+            <th>Heat</th>
+            <th>Time</th>
+            <th>Judging</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (assignment of judgeAssignments(); track $index) {
+          <tr>
+            <td>{{ getHeatDetails(assignment.heat_id)?.short_name }}</td>
+            <td>
+              {{ getHeatDetails(assignment.heat_id)?.start_time | date: 'EEE d
+              MMM, h:mm a' }}
+            </td>
+            <td>{{ assignment.athlete_name || '-' }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </ion-card-content>
+  </ion-card>
+  } } @else if (selectedEventName() && !dataLoaded()) {
+  <!-- Loading skeletons -->
+  <ion-card>
+    <ion-card-header>
+      <ion-skeleton-text
+        animated
+        style="width: 60%; height: 24px"
+      ></ion-skeleton-text>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        @for (i of [1, 2, 3]; track $index) {
+        <ion-item>
+          <ion-label>
+            <ion-skeleton-text
+              animated
+              style="width: 80%; height: 16px"
+            ></ion-skeleton-text>
+            <ion-skeleton-text
+              animated
+              style="width: 60%; height: 14px"
+            ></ion-skeleton-text>
+          </ion-label>
+        </ion-item>
+        }
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  }
+</ion-content>

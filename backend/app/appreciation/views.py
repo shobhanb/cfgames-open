@@ -9,12 +9,19 @@ from app.exceptions import unauthorised_exception
 from app.firebase_auth.dependencies import admin_user_dependency, verified_user_dependency
 
 from .models import Appreciation
-from .schemas import AppreciationCountsModel, AppreciationModel, AppreciationResultDetail, AppreciationResults
+from .schemas import (
+    AppreciationCountsModel,
+    AppreciationModel,
+    AppreciationResultDetail,
+    AppreciationResultNotes,
+    AppreciationResults,
+)
 from .service import (
     get_db_appreciation,
     get_db_appreciation_counts,
     get_db_appreciation_results,
     get_db_appreciation_results_detail,
+    get_db_appreciation_text,
     update_db_appreciation,
 )
 
@@ -33,6 +40,23 @@ async def get_my_appreciation(
     ordinal: int | None = None,
 ) -> list[Appreciation]:
     return await get_db_appreciation(db_session=db_session, crossfit_id=user.crossfit_id, year=year, ordinal=ordinal)
+
+
+@appreciation_router.get(
+    "/my-appreciation-text",
+    status_code=status.HTTP_200_OK,
+    response_model=list[AppreciationResultNotes],
+)
+async def get_my_appreciation_text(
+    db_session: db_dependency,
+    user: verified_user_dependency,
+    year: int,
+) -> list[dict[str, Any]]:
+    return await get_db_appreciation_text(
+        db_session=db_session,
+        crossfit_id=user.crossfit_id,
+        year=year,
+    )
 
 
 @appreciation_router.post(

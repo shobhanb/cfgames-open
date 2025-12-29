@@ -5,5 +5,6 @@
 export interface apiEventsModel {
   event: string;
   ordinal: number;
+  start_date?: (string | null);
   year: number;
 }

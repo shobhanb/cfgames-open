@@ -3,16 +3,7 @@ from fastapi import APIRouter, status
 from app.apikey_auth.dependencies import api_key_admin_dependency
 from app.database.dependencies import db_dependency
 
-from .constants import (
-    ATTENDANCE_SCORE,
-    DEFAULT_APPRECIATION_SCORE,
-    DEFAULT_SIDE_SCORE,
-    JUDGE_SCORE,
-    MASTERS_AGE_CUTOFF,
-    OPEN_AGE_CUTOFF,
-    PARTICIPATION_SCORE,
-    TOP3_SCORE,
-)
+from .constants import AFFILIATE_CONFIG_DEFAULTS
 from .models import AffiliateConfig
 from .schemas import AffiliateConfigCreate, AffiliateConfigModel
 from .service import (
@@ -43,25 +34,16 @@ async def get_affiliate_config(
 @affiliate_config_router.post(
     "/initialize",
     status_code=status.HTTP_201_CREATED,
-    response_model=AffiliateConfigModel,
+    response_model=list[AffiliateConfigModel],
 )
 async def initialize_affiliate_config(
     db_session: db_dependency,
     _: api_key_admin_dependency,
-    affiliate_id: int,
-    year: int,
-) -> AffiliateConfig:
-    """Initialize affiliate config with default values from constants."""
-    config_data = AffiliateConfigCreate(
-        affiliate_id=affiliate_id,
-        year=year,
-        masters_age_cutoff=MASTERS_AGE_CUTOFF,
-        open_age_cutoff=OPEN_AGE_CUTOFF,
-        participation_score=PARTICIPATION_SCORE,
-        top3_score=TOP3_SCORE,
-        judge_score=JUDGE_SCORE,
-        attendance_score=ATTENDANCE_SCORE,
-        default_appreciation_score=DEFAULT_APPRECIATION_SCORE,
-        default_side_score=DEFAULT_SIDE_SCORE,
-    )
-    return await create_db_affiliate_config(db_session=db_session, config_data=config_data)
+) -> list[AffiliateConfig]:
+    """Initialize affiliate configs with default values from constants."""
+    configs = []
+    for config_dict in AFFILIATE_CONFIG_DEFAULTS:
+        config_data = AffiliateConfigCreate(**config_dict)
+        config = await create_db_affiliate_config(db_session=db_session, config_data=config_data)
+        configs.append(config)
+    return configs

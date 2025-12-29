@@ -18,6 +18,12 @@ import { apiAppreciationStatusService } from './services/api-appreciation-status
 import { apiSidescoreService } from './services/api-sidescore.service';
 import { apiTeamsService } from './services/api-teams.service';
 import { apiAthletePrefsService } from './services/api-athlete-prefs.service';
+import { apiJudgesService } from './services/api-judges.service';
+import { apiJudgeAvailabilityService } from './services/api-judge-availability.service';
+import { apiPreferredAthletesService } from './services/api-preferred-athletes.service';
+import { apiHeatsService } from './services/api-heats.service';
+import { apiHeatsSetupService } from './services/api-heats-setup.service';
+import { apiHeatAssignmentsService } from './services/api-heat-assignments.service';
 import { apiHomeBlogService } from './services/api-home-blog.service';
 import { apiAffiliateConfigService } from './services/api-affiliate-config.service';
 
@@ -41,6 +47,12 @@ import { apiAffiliateConfigService } from './services/api-affiliate-config.servi
     apiSidescoreService,
     apiTeamsService,
     apiAthletePrefsService,
+    apiJudgesService,
+    apiJudgeAvailabilityService,
+    apiPreferredAthletesService,
+    apiHeatsService,
+    apiHeatsSetupService,
+    apiHeatAssignmentsService,
     apiHomeBlogService,
     apiAffiliateConfigService,
     ApiConfiguration

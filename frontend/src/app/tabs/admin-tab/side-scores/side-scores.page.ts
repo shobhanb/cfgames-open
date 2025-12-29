@@ -160,7 +160,7 @@ export class SideScoresPage implements OnInit {
     const sidescoreId = sidescore.id;
 
     this.apiSideScores
-      .deleteSidescoreSidescoreSidescoreIdDelete$Response({
+      .deleteSidescoreSidescoreSidescoreIdDelete({
         sidescore_id: sidescoreId,
       })
       .subscribe({
@@ -191,7 +191,7 @@ export class SideScoresPage implements OnInit {
     const year = this.appConfig.year;
 
     this.apiSideScores
-      .updateSidescoresSidescoreAffiliateIdYearPost$Response({
+      .updateSidescoresSidescoreAffiliateIdYearPost({
         affiliate_id: affiliateId,
         year,
         ordinal: this.selectedOrdinal()!,
@@ -220,7 +220,7 @@ export class SideScoresPage implements OnInit {
     const year = this.appConfig.year;
 
     this.apiSideScores
-      .applySidescoresSidescoreApplyAffiliateIdYearPost$Response({
+      .applySidescoresSidescoreApplyAffiliateIdYearPost({
         affiliate_id: affiliateId,
         year,
       })

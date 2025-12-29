@@ -74,6 +74,7 @@
       } @else { @for (athlete of filteredAthletes(); track $index) {
       <ion-item>
         <ion-label>{{ athlete.name }}</ion-label>
+        <ion-note>{{ athlete.judge ? "Judge" : "" }}</ion-note>
       </ion-item>
       } }
     </ion-list>

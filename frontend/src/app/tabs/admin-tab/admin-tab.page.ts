@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   IonContent,
@@ -25,6 +25,7 @@ import {
   homeOutline,
   globeOutline,
 } from 'ionicons/icons';
+import { AffiliateConfigService } from 'src/app/services/affiliate-config.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
@@ -47,6 +48,8 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
   ],
 })
 export class AdminTabPage implements OnInit {
+  affiliateConfig = inject(AffiliateConfigService);
+
   constructor() {
     addIcons({
       codeOutline,

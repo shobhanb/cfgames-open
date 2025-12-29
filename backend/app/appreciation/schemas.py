@@ -37,3 +37,9 @@ class AppreciationSource(CustomBaseModel):
 class AppreciationResultDetail(CustomBaseModel):
     team_votes: list[AppreciationSource]
     non_team_votes: list[AppreciationSource]
+
+
+class AppreciationResultNotes(CustomBaseModel):
+    year: int
+    ordinal: int
+    text: str

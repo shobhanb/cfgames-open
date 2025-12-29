@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Judge Availability Override</ion-title>
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Select Judge</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button expand="block" (click)="onSelectJudge()">
+        @if (selectedJudgeName()) { {{ selectedJudgeName() }} } @else { Select a
+        Judge }
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  @if (selectedJudgeName() && dataLoaded()) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ selectedJudgeName() }}'s Availability</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-label
+        >Select / unselect the time slots that {{ selectedJudgeName() }} is
+        available to judge</ion-label
+      >
+    </ion-card-content>
+  </ion-card>
+
+  @if (availabilities().length === 0) {
+  <div class="ion-padding ion-text-center">
+    <p>No availability slots found for this judge.</p>
+  </div>
+  } @else {
+  <div class="ion-padding-horizontal">
+    <ion-button expand="block" fill="outline" (click)="onSelectAll()">
+      Select All
+    </ion-button>
+    <ion-button
+      expand="block"
+      fill="outline"
+      color="medium"
+      (click)="onDeselectAll()"
+    >
+      Deselect All
+    </ion-button>
+  </div>
+  <ion-list [inset]="true">
+    @for (availability of availabilities(); track $index) {
+    <ion-item>
+      <ion-checkbox
+        [checked]="availability.available"
+        (ionChange)="onAvailabilityChange($event, availability)"
+      >
+        <ion-label>{{ availability.time_slot }}</ion-label>
+      </ion-checkbox>
+    </ion-item>
+    }
+  </ion-list>
+  } } @else if (selectedJudgeName() && !dataLoaded()) {
+  <!-- Loading skeleton -->
+  <ion-card>
+    <ion-card-header>
+      <ion-skeleton-text
+        animated
+        style="width: 40%; height: 24px"
+      ></ion-skeleton-text>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-skeleton-text
+        animated
+        style="width: 60%; height: 16px"
+      ></ion-skeleton-text>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    @for (item of [1, 2, 3, 4, 5]; track $index) {
+    <ion-item>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 80%; height: 20px"
+      ></ion-skeleton-text>
+    </ion-item>
+    }
+  </ion-list>
+  }
+</ion-content>

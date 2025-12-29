@@ -11,3 +11,11 @@ class AthletePrefsOutputModel(CustomBaseModel):
 class AthletePrefsModel(CustomBaseModel):
     preference_nbr: int
     preference: str
+
+
+class Initialize2025PrefsResponse(CustomBaseModel):
+    processed: int
+    inserted: int
+    skipped: int
+    errors: int
+    athletes: int

@@ -70,6 +70,9 @@
         <ion-label>
           <h3>{{ event.event }}</h3>
           <p>Ordinal: {{ event.ordinal }}</p>
+          @if (event.start_date) {
+          <p>Start Date: {{ event.start_date | date: 'mediumDate' }}</p>
+          }
         </ion-label>
         <ion-button fill="clear" (click)="editEvent(event)" slot="end">
           <ion-icon name="create-outline"></ion-icon>

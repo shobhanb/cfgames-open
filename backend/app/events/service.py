@@ -44,6 +44,7 @@ async def create_event(
         year=event_data.year,
         ordinal=event_data.ordinal,
         event=event_data.event,
+        start_date=event_data.start_date,
     )
     db_session.add(new_event)
     await db_session.commit()
@@ -61,6 +62,8 @@ async def update_event(
 
     if event_data.event is not None:
         event.event = event_data.event
+    if event_data.start_date is not None:
+        event.start_date = event_data.start_date
 
     db_session.add(event)
     await db_session.commit()

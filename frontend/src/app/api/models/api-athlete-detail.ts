@@ -8,6 +8,7 @@ export interface apiAthleteDetail {
   age_category: 'Open' | 'Masters' | 'Masters 55+';
   crossfit_id: number;
   gender: 'F' | 'M';
+  judge: boolean;
   name: string;
   team_name: string;
   team_role: number;

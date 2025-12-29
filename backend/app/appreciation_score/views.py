@@ -6,7 +6,7 @@ from app.firebase_auth.dependencies import get_admin_user
 
 from .models import AppreciationScore
 from .schemas import AppreciationScoreModel
-from .service import get_db_appreciation, update_db_appreciation
+from .service import delete_db_appreciation, get_db_appreciation, update_db_appreciation
 
 appreciation_score_router = APIRouter(
     prefix="/appreciation_score",
@@ -43,7 +43,20 @@ async def update_appreciation_scores(
     )
 
 
-@appreciation_score_router.post("/apply/{affiliate_id}/{year}", status_code=status.HTTP_202_ACCEPTED)
+@appreciation_score_router.delete("/{crossfit_id}/{ordinal}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_appreciation_scores(
+    db_session: db_dependency,
+    crossfit_id: int,
+    ordinal: int,
+) -> None:
+    return await delete_db_appreciation(
+        db_session=db_session,
+        crossfit_id=crossfit_id,
+        ordinal=ordinal,
+    )
+
+
+@appreciation_score_router.post("/apply", status_code=status.HTTP_202_ACCEPTED)
 async def apply_appreciation(
     db_session: db_dependency,
     affiliate_id: int,

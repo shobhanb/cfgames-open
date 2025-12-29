@@ -15,7 +15,7 @@ firebase_bearer_scheme = HTTPBearer()
 async def get_firebase_user_from_token(
     token: Annotated[HTTPAuthorizationCredentials, Depends(firebase_bearer_scheme)],
 ) -> dict:
-    return verify_id_token(token.credentials)
+    return verify_id_token(token.credentials, clock_skew_seconds=10)
 
 
 async def get_verified_user(

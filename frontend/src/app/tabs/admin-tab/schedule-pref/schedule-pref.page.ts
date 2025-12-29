@@ -161,7 +161,7 @@ export class SchedulePrefPage implements OnInit {
     this.initialPrefs = [...this.prefs()];
 
     this.apiPrefs
-      .updateAthletePrefsAthletePrefsCrossfitIdPost$Response({
+      .updateAthletePrefsAthletePrefsCrossfitIdPost({
         crossfit_id: this.selectedCrossfitId()!,
         body: updatedPrefs,
       })

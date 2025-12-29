@@ -1,0 +1,191 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Heat Management</ion-title>
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Select Event</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-select
+        label="Event"
+        labelPlacement="stacked"
+        [(ngModel)]="selectedEvent"
+        (ionChange)="onEventChange()"
+        placeholder="Choose an event"
+        interface="popover"
+      >
+        @for (event of eventService.currentYearEvents(); track event.ordinal) {
+        <ion-select-option [value]="event">{{ event.event }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-card-content>
+  </ion-card>
+
+  @if (selectedEvent()) { @if (heatsSetup().length > 0) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Heat Configuration</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>The following heat parameters will be used:</p>
+      <ion-list [inset]="true">
+        @for (config of heatsSetup(); track config.id) {
+        <ion-item>
+          <ion-label>
+            <h3>{{ config.short_name }}</h3>
+            <p>
+              {{ config.start_time.substring(0, 5) }} - {{
+              config.end_time.substring(0, 5) }}
+            </p>
+            <p>
+              Interval: {{ config.interval }} minutes | Max Athletes: {{
+              config.max_athletes || 10 }}
+            </p>
+          </ion-label>
+          <ion-button fill="clear" (click)="editHeatConfig(config)" slot="end">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+        }
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  }
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        Heats for {{ selectedEvent()!.event }}
+        <ion-badge color="primary">{{ heats().length }}</ion-badge>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        Create and manage heats for {{ selectedEvent()!.event }}. @if
+        (heatsSetup().length > 0) { Heats will be generated based on your
+        affiliate's heat configuration. } @else { No heat setup found. Configure
+        heat setup first. }
+      </p>
+      @if (selectedEvent()!.start_date) {
+      <p>Event starts: {{ selectedEvent()!.start_date | date: 'fullDate' }}</p>
+      }
+      <div style="display: flex; gap: 8px; margin-top: 16px">
+        <ion-button
+          expand="block"
+          (click)="generateHeats()"
+          [disabled]="heatsSetup().length === 0"
+        >
+          <ion-icon slot="start" name="add-outline"></ion-icon>
+          Generate Heats
+        </ion-button>
+        @if (heats().length > 0) {
+        <ion-button
+          expand="block"
+          color="danger"
+          fill="outline"
+          (click)="deleteAllHeats()"
+        >
+          <ion-icon slot="start" name="trash-outline"></ion-icon>
+          Delete All
+        </ion-button>
+        }
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  @if (loading()) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Loading...</ion-card-title>
+    </ion-card-header>
+    <ion-list>
+      @for (item of [1,2,3,4,5]; track $index) {
+      <ion-item>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text
+              [animated]="true"
+              style="width: 60%"
+            ></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text
+              [animated]="true"
+              style="width: 40%"
+            ></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card>
+  } @else if (heats().length > 0) { @for (group of groupedHeats(); track
+  group.shortName) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ group.shortName }}</ion-card-title>
+    </ion-card-header>
+    <ion-list [inset]="true" lines="none">
+      @for (heat of group.heats; track heat.start_time) {
+      <ion-item
+        style="
+          --padding-start: 8px;
+          --inner-padding-end: 8px;
+          --min-height: 44px;
+        "
+      >
+        <ion-label>
+          <p style="margin: 4px 0">
+            {{ heat.start_time | date: 'short' }} • Max: {{ heat.max_athletes ||
+            10 }}
+          </p>
+        </ion-label>
+        <ion-button
+          fill="clear"
+          size="small"
+          (click)="editHeat(heat)"
+          slot="end"
+        >
+          <ion-icon name="create-outline" size="small"></ion-icon>
+        </ion-button>
+        <ion-button
+          fill="clear"
+          size="small"
+          color="danger"
+          (click)="deleteHeat(heat)"
+          slot="end"
+        >
+          <ion-icon name="trash-outline" size="small"></ion-icon>
+        </ion-button>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card>
+  } } @else {
+  <ion-card>
+    <ion-card-content>
+      <p class="ion-text-center">
+        No heats found. Click "Generate Heats" to create heats for this event.
+      </p>
+    </ion-card-content>
+  </ion-card>
+  } } @else {
+  <ion-card>
+    <ion-card-content>
+      <p class="ion-text-center">Please select an event to manage heats.</p>
+    </ion-card-content>
+  </ion-card>
+  }
+</ion-content>

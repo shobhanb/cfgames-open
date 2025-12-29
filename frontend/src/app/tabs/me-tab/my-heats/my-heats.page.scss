@@ -1,0 +1,47 @@
+.heat-card {
+  ion-card-header {
+    .heat-subtitle {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--ion-color-medium);
+      font-weight: normal;
+    }
+  }
+}
+
+.assignments-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--ion-color-light-shade);
+
+  thead {
+    background-color: var(--ion-color-light);
+
+    th {
+      padding: 0.5rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.875rem;
+      border: 1px solid var(--ion-color-light-shade);
+      color: var(--ion-color-dark);
+    }
+  }
+
+  tbody {
+    tr {
+      &:nth-child(even) {
+        background-color: var(--ion-color-light-tint);
+      }
+
+      &:hover {
+        background-color: var(--ion-color-light);
+      }
+    }
+
+    td {
+      padding: 0.5rem;
+      border: 1px solid var(--ion-color-light-shade);
+      font-size: 0.875rem;
+    }
+  }
+}

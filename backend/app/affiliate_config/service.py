@@ -5,8 +5,6 @@ from .constants import (
     DEFAULT_APPRECIATION_SCORE,
     DEFAULT_SIDE_SCORE,
     JUDGE_SCORE,
-    MASTERS_AGE_CUTOFF,
-    OPEN_AGE_CUTOFF,
     PARTICIPATION_SCORE,
     TOP3_SCORE,
 )
@@ -45,14 +43,14 @@ async def create_db_affiliate_config(
     new_config = AffiliateConfig(
         affiliate_id=config_data.affiliate_id,
         year=config_data.year,
-        masters_age_cutoff=config_data.masters_age_cutoff,
-        open_age_cutoff=config_data.open_age_cutoff,
         participation_score=config_data.participation_score,
         top3_score=config_data.top3_score,
         judge_score=config_data.judge_score,
         attendance_score=config_data.attendance_score,
         default_appreciation_score=config_data.default_appreciation_score,
         default_side_score=config_data.default_side_score,
+        use_scheduling=config_data.use_scheduling,
+        use_appreciation=config_data.use_appreciation,
     )
     db_session.add(new_config)
     await db_session.commit()
@@ -110,8 +108,6 @@ async def get_config_or_defaults(
     return AffiliateConfig(
         affiliate_id=affiliate_id,
         year=year,
-        masters_age_cutoff=MASTERS_AGE_CUTOFF,
-        open_age_cutoff=OPEN_AGE_CUTOFF,
         participation_score=PARTICIPATION_SCORE,
         top3_score=TOP3_SCORE,
         judge_score=JUDGE_SCORE,

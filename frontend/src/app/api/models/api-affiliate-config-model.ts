@@ -8,9 +8,9 @@ export interface apiAffiliateConfigModel {
   default_appreciation_score?: number;
   default_side_score?: number;
   judge_score?: number;
-  masters_age_cutoff?: number;
-  open_age_cutoff?: number;
   participation_score?: number;
   top3_score?: number;
+  use_appreciation?: boolean;
+  use_scheduling?: boolean;
   year: number;
 }

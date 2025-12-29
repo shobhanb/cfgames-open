@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
 import { userGuard } from '../guards/user.guard';
 import { adminGuard } from '../guards/admin.guard';
+import { judgeUserGuard } from '../guards/judge-user.guard';
 
 export const tabsRoutes: Routes = [
   {
@@ -93,10 +94,32 @@ export const tabsRoutes: Routes = [
         canActivate: [userGuard],
       },
       {
+        path: 'me/appreciation-text',
+        loadComponent: () =>
+          import(
+            './me-tab/my-appreciation-text/my-appreciation-text.page'
+          ).then((c) => c.MyAppreciationTextPage),
+        canActivate: [userGuard],
+      },
+      {
         path: 'me/schedule',
         loadComponent: () =>
           import('./me-tab/schedule/schedule.page').then((c) => c.SchedulePage),
         canActivate: [userGuard],
+      },
+      {
+        path: 'me/my-heats',
+        loadComponent: () =>
+          import('./me-tab/my-heats/my-heats.page').then((c) => c.MyHeatsPage),
+        canActivate: [userGuard],
+      },
+      {
+        path: 'me/judge-availability',
+        loadComponent: () =>
+          import('./me-tab/judge-availability/judge-availability.page').then(
+            (c) => c.JudgeAvailabilityPage
+          ),
+        canActivate: [judgeUserGuard],
       },
       {
         path: 'admin',
@@ -129,10 +152,30 @@ export const tabsRoutes: Routes = [
         canActivate: [adminGuard],
       },
       {
-        path: 'admin/scheduling',
+        path: 'admin/judges',
         loadComponent: () =>
-          import('./admin-tab/scheduling/scheduling.page').then(
-            (c) => c.SchedulingPage
+          import('./admin-tab/judges/judges.page').then((c) => c.JudgesPage),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'admin/judge-availability-override',
+        loadComponent: () =>
+          import(
+            './admin-tab/judge-availability-override/judge-availability-override.page'
+          ).then((c) => c.JudgeAvailabilityOverridePage),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'admin/heats',
+        loadComponent: () =>
+          import('./admin-tab/heats/heats.page').then((c) => c.HeatsPage),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'admin/manage-heats',
+        loadComponent: () =>
+          import('./admin-tab/manage-heats/manage-heats.page').then(
+            (c) => c.ManageHeatsPage
           ),
         canActivate: [adminGuard],
       },
@@ -174,6 +217,14 @@ export const tabsRoutes: Routes = [
           import(
             './admin-tab/appreciation-results/appreciation-result/appreciation-detail/appreciation-detail.page'
           ).then((c) => c.AppreciationDetailPage),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'admin/appreciation-score',
+        loadComponent: () =>
+          import('./admin-tab/appreciation-score/appreciation-score.page').then(
+            (c) => c.AppreciationScorePage
+          ),
         canActivate: [adminGuard],
       },
       {
