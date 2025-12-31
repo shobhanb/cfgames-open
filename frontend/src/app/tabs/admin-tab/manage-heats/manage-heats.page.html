@@ -59,7 +59,29 @@
     </ion-card-content>
   </ion-card>
 
-  @if (loading()) {
+  @if (selectedOrdinal() && dataLoaded() && heats().length > 0) {
+  <!-- Search Bar -->
+  <ion-card>
+    <ion-card-content style="padding: 12px">
+      <ion-searchbar
+        [(ngModel)]="searchTerm"
+        (ionInput)="onSearchChange($event)"
+        placeholder="Search by athlete or judge name"
+        debounce="300"
+        animated="true"
+      ></ion-searchbar>
+      <ion-button
+        expand="block"
+        fill="outline"
+        (click)="showUnassignedAthletes()"
+        style="margin-top: 8px"
+      >
+        <ion-icon slot="start" name="person"></ion-icon>
+        Show Unassigned Athletes ({{ unassignedAthletes().length }})
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+  } @if (loading()) {
   <!-- Loading State -->
   <div class="loading-container">
     <ion-spinner></ion-spinner>
@@ -185,11 +207,14 @@
                         (contextmenu)="setHoveredJudge(assignment.athlete_name); $event.preventDefault()"
                         class="clickable"
                         [id]="'athlete-' + assignment.id"
+                        [class.missing-athlete]="!assignment.athlete_name"
                         [class.conflict-cell]="
-                          assignment.athlete_crossfit_id &&
+                          (assignment.athlete_crossfit_id &&
                           getConflictingCrossfitIds(heat).has(
                             assignment.athlete_crossfit_id
-                          )
+                          )) ||
+                          (assignment.athlete_crossfit_id &&
+                          duplicateAthleteIds().has(assignment.athlete_crossfit_id))
                         "
                         [class.highlighted-judge]="
                           hoveredJudgeName() &&
@@ -198,9 +223,10 @@
                         "
                         [class.disabled]="!isHeatEditable(heat)"
                       >
-                        {{ assignment.preference_nbr ? assignment.athlete_name +
-                        ' (' + assignment.preference_nbr + ')' :
-                        assignment.athlete_name }}
+                        {{ assignment.athlete_name ? (assignment.preference_nbr
+                        ? assignment.athlete_name + ' (' +
+                        assignment.preference_nbr + ')' :
+                        assignment.athlete_name) : 'Assign Athlete' }}
                         <ion-popover
                           [trigger]="'athlete-' + assignment.id"
                           triggerAction="context-menu"

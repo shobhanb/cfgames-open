@@ -27,6 +27,7 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonPopover,
+  IonSearchbar,
   PopoverController,
   AlertController,
   ModalController,
@@ -49,6 +50,7 @@ import {
   apiAthletePrefsOutputModel,
 } from 'src/app/api/models';
 import { JudgeSummaryModalComponent } from './judge-summary-modal/judge-summary-modal.component';
+import { UnassignedAthletesModalComponent } from './unassigned-athletes-modal/unassigned-athletes-modal.component';
 import { addIcons } from 'ionicons';
 import {
   add,
@@ -94,6 +96,7 @@ import {
     IonTitle,
     IonToolbar,
     IonPopover,
+    IonSearchbar,
     CommonModule,
     FormsModule,
     ToolbarButtonsComponent,
@@ -119,7 +122,7 @@ export class ManageHeatsPage implements OnInit {
   loading = signal(false);
   dataLoaded = signal(false);
   hoveredJudgeName = signal<string | null>(null);
-  private dismissTimeout?: number;
+  searchTerm = signal<string>('');
 
   // Computed
   currentYearEvents = computed(() => this.eventService.currentYearEvents());
@@ -133,12 +136,69 @@ export class ManageHeatsPage implements OnInit {
       .map((a) => a.name)
   );
 
+  // Filter heat assignments based on search term
+  filteredHeatAssignments = computed(() => {
+    const search = this.searchTerm().toLowerCase().trim();
+    if (!search) return this.heatAssignments();
+
+    return this.heatAssignments().filter((assignment) => {
+      const athleteMatch = assignment.athlete_name
+        ?.toLowerCase()
+        .includes(search);
+      const judgeMatch = assignment.judge_name?.toLowerCase().includes(search);
+      return athleteMatch || judgeMatch;
+    });
+  });
+
+  // Get heat IDs that have filtered assignments
+  filteredHeatIds = computed(() => {
+    const search = this.searchTerm().toLowerCase().trim();
+    if (!search) return new Set<string>();
+
+    return new Set(
+      this.filteredHeatAssignments().map((assignment) => assignment.heat_id)
+    );
+  });
+
+  // Get athlete IDs that are assigned to multiple heats
+  duplicateAthleteIds = computed(() => {
+    const athleteCounts = new Map<number, number>();
+    const currentHeatIds = new Set(this.heats().map((h) => h.id));
+
+    // Count assignments per athlete, only for current event's heats
+    this.heatAssignments().forEach((assignment) => {
+      if (
+        assignment.athlete_crossfit_id &&
+        currentHeatIds.has(assignment.heat_id)
+      ) {
+        const count = athleteCounts.get(assignment.athlete_crossfit_id) || 0;
+        athleteCounts.set(assignment.athlete_crossfit_id, count + 1);
+      }
+    });
+
+    // Return set of IDs that appear more than once
+    const duplicates = new Set<number>();
+    athleteCounts.forEach((count, athleteId) => {
+      if (count > 1) {
+        duplicates.add(athleteId);
+      }
+    });
+
+    return duplicates;
+  });
+
   // Group heats by short_name for display
   groupedHeats = computed(() => {
     const heatsData = this.heats();
+    const search = this.searchTerm().toLowerCase().trim();
     const groups = new Map<string, apiHeatsModel[]>();
 
-    heatsData.forEach((heat) => {
+    // If searching, only include heats with matching assignments
+    const filteredHeats = search
+      ? heatsData.filter((heat) => this.filteredHeatIds().has(heat.id))
+      : heatsData;
+
+    filteredHeats.forEach((heat) => {
       const existing = groups.get(heat.short_name) || [];
       existing.push(heat);
       groups.set(heat.short_name, existing);
@@ -151,6 +211,23 @@ export class ManageHeatsPage implements OnInit {
           new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
       ),
     }));
+  });
+
+  // Get unassigned athletes for the current event
+  unassignedAthletes = computed(() => {
+    const assignedAthleteIds = new Set(
+      this.heatAssignments()
+        .filter((a) => a.athlete_crossfit_id !== null)
+        .map((a) => a.athlete_crossfit_id)
+    );
+
+    return this.athleteDataService
+      .athleteData()
+      .filter((athlete) => !assignedAthleteIds.has(athlete.crossfit_id))
+      .map((athlete) => ({
+        name: athlete.name,
+        preferences: this.getAthletePreferences(athlete.crossfit_id),
+      }));
   });
 
   constructor() {
@@ -350,7 +427,25 @@ Total Assignments: ${result.assigned_count}`;
 
   getAssignmentsForHeat(heat: apiHeatsModel): apiHeatAssignmentModel[] {
     const heatId = heat.id;
-    return this.heatAssignments().filter((a) => a.heat_id === heatId);
+    const search = this.searchTerm().toLowerCase().trim();
+    const assignments = this.heatAssignments().filter(
+      (a) => a.heat_id === heatId
+    );
+
+    // If searching, only return matching assignments
+    if (search) {
+      return assignments.filter((assignment) => {
+        const athleteMatch = assignment.athlete_name
+          ?.toLowerCase()
+          .includes(search);
+        const judgeMatch = assignment.judge_name
+          ?.toLowerCase()
+          .includes(search);
+        return athleteMatch || judgeMatch;
+      });
+    }
+
+    return assignments;
   }
 
   getAssignmentsForHeatShortName(shortName: string): apiHeatAssignmentModel[] {
@@ -495,23 +590,43 @@ Total Assignments: ${result.assigned_count}`;
     }
 
     const assignedAthleteIds = new Set(
-      this.getAssignmentsForHeat(heat)
+      this.heatAssignments()
         .filter((a) => a.id !== assignment.id)
         .map((a) => a.athlete_crossfit_id)
         .filter((id): id is number => id !== null)
     );
 
-    const availableAthletes = computed(() =>
-      this.athleteDataService
+    const availableAthletes = computed(() => [
+      'None',
+      ...this.athleteDataService
         .athleteData()
         .filter((a) => !assignedAthleteIds.has(a.crossfit_id))
-        .map((a) => a.name)
-    );
+        .map((a) => a.name),
+    ]);
 
     const selectedName = await this.athleteNameModal.openAthleteSelectModal(
       availableAthletes
     );
     if (!selectedName) return;
+
+    // Handle "None" selection - remove athlete
+    if (selectedName === 'None') {
+      this.apiHeatAssignments
+        .clearAthleteHeatAssignmentsAssignmentIdClearAthletePatch$Response({
+          assignment_id: assignment.id,
+        })
+        .subscribe({
+          next: () => {
+            this.toastService.showToast('Athlete removed', 'success');
+            this.loadHeatAssignments();
+          },
+          error: (error: unknown) => {
+            console.error('Error removing athlete:', error);
+            this.toastService.showToast('Failed to remove athlete', 'danger');
+          },
+        });
+      return;
+    }
 
     const crossfitId = this.athleteDataService.getCrossfitId(selectedName);
     if (!crossfitId) {
@@ -555,17 +670,37 @@ Total Assignments: ${result.assigned_count}`;
         .filter((id): id is number => id !== null)
     );
 
-    const availableJudges = computed(() =>
-      this.athleteDataService
+    const availableJudges = computed(() => [
+      'None',
+      ...this.athleteDataService
         .athleteData()
         .filter((a) => a.judge && !assignedJudgeIds.has(a.crossfit_id))
-        .map((a) => a.name)
-    );
+        .map((a) => a.name),
+    ]);
 
     const selectedName = await this.athleteNameModal.openAthleteSelectModal(
       availableJudges
     );
     if (!selectedName) return;
+
+    // Handle "None" selection - remove judge
+    if (selectedName === 'None') {
+      this.apiHeatAssignments
+        .clearJudgeHeatAssignmentsAssignmentIdClearJudgePatch$Response({
+          assignment_id: assignment.id,
+        })
+        .subscribe({
+          next: () => {
+            this.toastService.showToast('Judge removed', 'success');
+            this.loadHeatAssignments();
+          },
+          error: (error: unknown) => {
+            console.error('Error removing judge:', error);
+            this.toastService.showToast('Failed to remove judge', 'danger');
+          },
+        });
+      return;
+    }
 
     const crossfitId = this.athleteDataService.getCrossfitId(selectedName);
     if (!crossfitId) {
@@ -617,6 +752,17 @@ Total Assignments: ${result.assigned_count}`;
       componentProps: {
         shortName: shortName,
         judgeSummary: judgeSummary,
+      },
+    });
+
+    await modal.present();
+  }
+
+  async showUnassignedAthletes() {
+    const modal = await this.modalController.create({
+      component: UnassignedAthletesModalComponent,
+      componentProps: {
+        unassignedAthletes: this.unassignedAthletes,
       },
     });
 
@@ -775,5 +921,9 @@ Total Assignments: ${result.assigned_count}`;
         );
       },
     });
+  }
+
+  onSearchChange(event: any) {
+    this.searchTerm.set(event.target.value || '');
   }
 }

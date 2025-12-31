@@ -43,12 +43,11 @@
   @if (athleteAssignment()) {
   <ion-card class="heat-card">
     <ion-card-header>
-      <ion-card-subtitle>My Heat</ion-card-subtitle>
       <ion-card-title>
-        {{ getHeatDetails(athleteAssignment()!.heat_id)?.short_name }} - {{
-        getHeatDetails(athleteAssignment()!.heat_id)?.start_time | date: 'EEE d
-        MMM, h:mm a' }}
+        {{ getHeatDetails(athleteAssignment()!.heat_id)?.start_time | date: 'EEE
+        d MMM, h:mm a' }}
       </ion-card-title>
+      <ion-card-subtitle>My Heat</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
       <table class="assignments-table">
@@ -56,17 +55,12 @@
           <tr>
             <th>Athlete</th>
             <th>Judge</th>
-            <th>Preference</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>{{ athleteAssignment()!.athlete_name }}</td>
             <td>{{ athleteAssignment()!.judge_name || 'Not assigned' }}</td>
-            <td>
-              @if (athleteAssignment()!.preference_nbr !== null) { {{
-              athleteAssignment()!.preference_nbr! + 1 }} } @else { - }
-            </td>
           </tr>
         </tbody>
       </table>

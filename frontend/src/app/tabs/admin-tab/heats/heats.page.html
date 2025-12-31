@@ -133,46 +133,50 @@
   </ion-card>
   } @else if (heats().length > 0) { @for (group of groupedHeats(); track
   group.shortName) {
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>{{ group.shortName }}</ion-card-title>
-    </ion-card-header>
-    <ion-list [inset]="true" lines="none">
-      @for (heat of group.heats; track heat.start_time) {
-      <ion-item
-        style="
-          --padding-start: 8px;
-          --inner-padding-end: 8px;
-          --min-height: 44px;
-        "
-      >
-        <ion-label>
-          <p style="margin: 4px 0">
-            {{ heat.start_time | date: 'short' }} • Max: {{ heat.max_athletes ||
-            10 }}
-          </p>
-        </ion-label>
-        <ion-button
-          fill="clear"
-          size="small"
-          (click)="editHeat(heat)"
-          slot="end"
-        >
-          <ion-icon name="create-outline" size="small"></ion-icon>
-        </ion-button>
-        <ion-button
-          fill="clear"
-          size="small"
-          color="danger"
-          (click)="deleteHeat(heat)"
-          slot="end"
-        >
-          <ion-icon name="trash-outline" size="small"></ion-icon>
-        </ion-button>
-      </ion-item>
-      }
-    </ion-list>
-  </ion-card>
+  <div class="heat-group">
+    <div class="group-header">
+      <h2 class="group-title">{{ group.shortName }}</h2>
+    </div>
+    <ion-grid class="heats-grid">
+      <ion-row>
+        @for (heat of group.heats; track heat.start_time) {
+        <ion-col size="12" sizeMd="6" sizeLg="4" sizeXl="3">
+          <ion-card class="heat-card">
+            <ion-card-header>
+              <ion-card-title>
+                {{ heat.start_time | date: 'short' }}
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <p>Max Athletes: {{ heat.max_athletes || 10 }}</p>
+              <div style="display: flex; gap: 8px; margin-top: 12px">
+                <ion-button
+                  fill="outline"
+                  size="small"
+                  expand="block"
+                  (click)="editHeat(heat)"
+                >
+                  <ion-icon slot="start" name="create-outline"></ion-icon>
+                  Edit
+                </ion-button>
+                <ion-button
+                  fill="outline"
+                  size="small"
+                  color="danger"
+                  expand="block"
+                  (click)="deleteHeat(heat)"
+                >
+                  <ion-icon slot="start" name="trash-outline"></ion-icon>
+                  Delete
+                </ion-button>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        }
+      </ion-row>
+    </ion-grid>
+  </div>
   } } @else {
   <ion-card>
     <ion-card-content>

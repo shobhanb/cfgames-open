@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <ion-icon
+        name="person"
+        style="vertical-align: middle; margin-right: 8px"
+      ></ion-icon>
+      Unassigned Athletes
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="unassigned-athletes-content">
+  @if (unassignedAthletes().length === 0) {
+  <div class="empty-state">
+    <ion-icon name="person" class="empty-icon"></ion-icon>
+    <h2>All Set!</h2>
+    <p>All athletes have been assigned to heats.</p>
+  </div>
+  } @else {
+  <div class="summary-card">
+    <div class="summary-item">
+      <ion-icon name="person"></ion-icon>
+      <div>
+        <div class="summary-value">{{ unassignedAthletes().length }}</div>
+        <div class="summary-label">Unassigned Athletes</div>
+      </div>
+    </div>
+    <div class="summary-item">
+      <ion-icon name="time"></ion-icon>
+      <div>
+        <div class="summary-value">{{ groupedAthletes().length }}</div>
+        <div class="summary-label">Preference Groups</div>
+      </div>
+    </div>
+  </div>
+
+  @for (group of groupedAthletes(); track group.preference) {
+  <div class="preference-group">
+    <div class="group-header">
+      <div class="group-title">
+        <ion-icon name="time"></ion-icon>
+        <h3>{{ group.preference }}</h3>
+      </div>
+      <ion-badge color="primary">{{ group.athletes.length }}</ion-badge>
+    </div>
+    <ion-list class="athletes-list">
+      @for (athlete of group.athletes; track athlete.name) {
+      <ion-item lines="none" class="athlete-item">
+        <ion-icon name="person" slot="start" class="athlete-icon"></ion-icon>
+        <ion-label class="ion-text-wrap">
+          <h3>{{ athlete.name }}</h3>
+          <p class="preferences-text">
+            <ion-icon name="time" class="pref-icon"></ion-icon>
+            {{ athlete.preferences || "No preferences" }}
+          </p>
+        </ion-label>
+      </ion-item>
+      }
+    </ion-list>
+  </div>
+  } }
+</ion-content>

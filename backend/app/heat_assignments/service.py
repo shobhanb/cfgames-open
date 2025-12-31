@@ -253,6 +253,41 @@ async def delete_heat_assignment(
     await assignment.delete(async_session=db_session)
 
 
+async def clear_athlete_from_assignment(
+    db_session: AsyncSession,
+    assignment_id: UUID,
+) -> dict[str, Any]:
+    """Clear athlete fields from a heat assignment."""
+    assignment = await HeatAssignments.find_or_raise(async_session=db_session, id=assignment_id)
+
+    assignment.athlete_crossfit_id = None
+    assignment.athlete_name = None
+    assignment.preference_nbr = None
+
+    db_session.add(assignment)
+    await db_session.commit()
+    await db_session.refresh(assignment)
+
+    return await get_heat_assignment(db_session=db_session, assignment_id=assignment.id)
+
+
+async def clear_judge_from_assignment(
+    db_session: AsyncSession,
+    assignment_id: UUID,
+) -> dict[str, Any]:
+    """Clear judge fields from a heat assignment."""
+    assignment = await HeatAssignments.find_or_raise(async_session=db_session, id=assignment_id)
+
+    assignment.judge_crossfit_id = None
+    assignment.judge_name = None
+
+    db_session.add(assignment)
+    await db_session.commit()
+    await db_session.refresh(assignment)
+
+    return await get_heat_assignment(db_session=db_session, assignment_id=assignment.id)
+
+
 async def delete_heat_assignments_by_criteria(
     db_session: AsyncSession,
     affiliate_id: int,
@@ -587,9 +622,13 @@ async def assign_athletes_and_judges_randomly(
     heat_judges: dict[UUID, set[int]] = {heat.id: set() for heat in heats}
     new_assignments: list[HeatAssignments] = []
 
+    # Track already assigned athletes to avoid reassigning them
+    already_assigned_athletes: set[int] = set()
+
     for assignment in existing_assignments:
         if assignment.athlete_crossfit_id:
             heat_athlete_counts[assignment.heat_id] += 1
+            already_assigned_athletes.add(assignment.athlete_crossfit_id)
             # Track if this athlete is a judge
             if assignment.athlete_crossfit_id in judge_crossfit_ids:
                 judge_athlete_assignments[assignment.athlete_crossfit_id].append(assignment.heat_id)
@@ -600,8 +639,10 @@ async def assign_athletes_and_judges_randomly(
     athletes_assigned = 0
     judges_assigned = 0
 
-    # Assign preferred athletes first
-    preferred_list = sorted(preferred_athletes.items())
+    # Assign preferred athletes first (skip already assigned)
+    preferred_list = sorted(
+        (cid, data) for cid, data in preferred_athletes.items() if cid not in already_assigned_athletes
+    )
 
     for crossfit_id, athlete_data in preferred_list:
         assignment, count = _assign_athlete_to_heat(
@@ -618,7 +659,7 @@ async def assign_athletes_and_judges_randomly(
             athletes_assigned += count
 
     # Removed unused call to _separate_judges_and_athletes
-    judge_list = sorted(judges_after_pref.items())
+    judge_list = sorted((cid, data) for cid, data in judges_after_pref.items() if cid not in already_assigned_athletes)
 
     for crossfit_id, athlete_data in judge_list:
         assignment, count = _assign_athlete_to_heat(
@@ -634,8 +675,10 @@ async def assign_athletes_and_judges_randomly(
             assigned_count += count
             athletes_assigned += count
 
-    # Then, assign regular athletes
-    athlete_list = sorted(regular_after_pref.items())
+    # Then, assign regular athletes (skip already assigned)
+    athlete_list = sorted(
+        (cid, data) for cid, data in regular_after_pref.items() if cid not in already_assigned_athletes
+    )
 
     for crossfit_id, athlete_data in athlete_list:
         assignment, count = _assign_athlete_to_heat(

@@ -13,6 +13,10 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { assignAthletesAndJudgesHeatAssignmentsAssignRandomPost } from '../fn/heat-assignments/assign-athletes-and-judges-heat-assignments-assign-random-post';
 import { AssignAthletesAndJudgesHeatAssignmentsAssignRandomPost$Params } from '../fn/heat-assignments/assign-athletes-and-judges-heat-assignments-assign-random-post';
+import { clearAthleteHeatAssignmentsAssignmentIdClearAthletePatch } from '../fn/heat-assignments/clear-athlete-heat-assignments-assignment-id-clear-athlete-patch';
+import { ClearAthleteHeatAssignmentsAssignmentIdClearAthletePatch$Params } from '../fn/heat-assignments/clear-athlete-heat-assignments-assignment-id-clear-athlete-patch';
+import { clearJudgeHeatAssignmentsAssignmentIdClearJudgePatch } from '../fn/heat-assignments/clear-judge-heat-assignments-assignment-id-clear-judge-patch';
+import { ClearJudgeHeatAssignmentsAssignmentIdClearJudgePatch$Params } from '../fn/heat-assignments/clear-judge-heat-assignments-assignment-id-clear-judge-patch';
 import { createNewHeatAssignmentHeatAssignmentsPost } from '../fn/heat-assignments/create-new-heat-assignment-heat-assignments-post';
 import { CreateNewHeatAssignmentHeatAssignmentsPost$Params } from '../fn/heat-assignments/create-new-heat-assignment-heat-assignments-post';
 import { deleteAssignmentsByCriteriaHeatAssignmentsDeleteByCriteriaPost } from '../fn/heat-assignments/delete-assignments-by-criteria-heat-assignments-delete-by-criteria-post';
@@ -266,6 +270,72 @@ export class apiHeatAssignmentsService extends BaseService {
    */
   updateExistingHeatAssignmentHeatAssignmentsAssignmentIdPatch(params: UpdateExistingHeatAssignmentHeatAssignmentsAssignmentIdPatch$Params, context?: HttpContext): Observable<apiHeatAssignmentModel> {
     return this.updateExistingHeatAssignmentHeatAssignmentsAssignmentIdPatch$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiHeatAssignmentModel>): apiHeatAssignmentModel => r.body)
+    );
+  }
+
+  /** Path part for operation `clearAthleteHeatAssignmentsAssignmentIdClearAthletePatch()` */
+  static readonly ClearAthleteHeatAssignmentsAssignmentIdClearAthletePatchPath = '/heat_assignments/{assignment_id}/clear-athlete';
+
+  /**
+   * Clear Athlete.
+   *
+   * Clear the athlete assignment from a heat assignment.
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `clearAthleteHeatAssignmentsAssignmentIdClearAthletePatch()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  clearAthleteHeatAssignmentsAssignmentIdClearAthletePatch$Response(params: ClearAthleteHeatAssignmentsAssignmentIdClearAthletePatch$Params, context?: HttpContext): Observable<StrictHttpResponse<apiHeatAssignmentModel>> {
+    return clearAthleteHeatAssignmentsAssignmentIdClearAthletePatch(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Clear Athlete.
+   *
+   * Clear the athlete assignment from a heat assignment.
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `clearAthleteHeatAssignmentsAssignmentIdClearAthletePatch$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  clearAthleteHeatAssignmentsAssignmentIdClearAthletePatch(params: ClearAthleteHeatAssignmentsAssignmentIdClearAthletePatch$Params, context?: HttpContext): Observable<apiHeatAssignmentModel> {
+    return this.clearAthleteHeatAssignmentsAssignmentIdClearAthletePatch$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiHeatAssignmentModel>): apiHeatAssignmentModel => r.body)
+    );
+  }
+
+  /** Path part for operation `clearJudgeHeatAssignmentsAssignmentIdClearJudgePatch()` */
+  static readonly ClearJudgeHeatAssignmentsAssignmentIdClearJudgePatchPath = '/heat_assignments/{assignment_id}/clear-judge';
+
+  /**
+   * Clear Judge.
+   *
+   * Clear the judge assignment from a heat assignment.
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `clearJudgeHeatAssignmentsAssignmentIdClearJudgePatch()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  clearJudgeHeatAssignmentsAssignmentIdClearJudgePatch$Response(params: ClearJudgeHeatAssignmentsAssignmentIdClearJudgePatch$Params, context?: HttpContext): Observable<StrictHttpResponse<apiHeatAssignmentModel>> {
+    return clearJudgeHeatAssignmentsAssignmentIdClearJudgePatch(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Clear Judge.
+   *
+   * Clear the judge assignment from a heat assignment.
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `clearJudgeHeatAssignmentsAssignmentIdClearJudgePatch$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  clearJudgeHeatAssignmentsAssignmentIdClearJudgePatch(params: ClearJudgeHeatAssignmentsAssignmentIdClearJudgePatch$Params, context?: HttpContext): Observable<apiHeatAssignmentModel> {
+    return this.clearJudgeHeatAssignmentsAssignmentIdClearJudgePatch$Response(params, context).pipe(
       map((r: StrictHttpResponse<apiHeatAssignmentModel>): apiHeatAssignmentModel => r.body)
     );
   }

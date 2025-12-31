@@ -17,6 +17,8 @@ from .schemas import (
 )
 from .service import (
     assign_athletes_and_judges_randomly,
+    clear_athlete_from_assignment,
+    clear_judge_from_assignment,
     create_heat_assignment,
     delete_heat_assignment,
     delete_heat_assignments_by_criteria,
@@ -122,6 +124,40 @@ async def update_existing_heat_assignment(
         db_session=db_session,
         assignment_id=assignment_id,
         assignment_data=assignment_data,
+    )
+
+
+@heat_assignments_router.patch(
+    "/{assignment_id}/clear-athlete",
+    status_code=status.HTTP_200_OK,
+    response_model=HeatAssignmentModel,
+)
+async def clear_athlete(
+    db_session: db_dependency,
+    _: admin_user_dependency,
+    assignment_id: UUID,
+) -> dict[str, Any]:
+    """Clear the athlete assignment from a heat assignment."""
+    return await clear_athlete_from_assignment(
+        db_session=db_session,
+        assignment_id=assignment_id,
+    )
+
+
+@heat_assignments_router.patch(
+    "/{assignment_id}/clear-judge",
+    status_code=status.HTTP_200_OK,
+    response_model=HeatAssignmentModel,
+)
+async def clear_judge(
+    db_session: db_dependency,
+    _: admin_user_dependency,
+    assignment_id: UUID,
+) -> dict[str, Any]:
+    """Clear the judge assignment from a heat assignment."""
+    return await clear_judge_from_assignment(
+        db_session=db_session,
+        assignment_id=assignment_id,
     )
 
 

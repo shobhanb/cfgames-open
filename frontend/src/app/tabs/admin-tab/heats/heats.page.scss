@@ -1,0 +1,25 @@
+
+.heat-group {
+  margin-bottom: 2rem;
+
+  .group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    margin: 1rem 0;
+    gap: 1rem;
+
+    .group-title {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: bold;
+      flex: 1;
+    }
+  }
+
+.heats-grid {
+  --ion-grid-padding: 8px;
+}
+
+}
