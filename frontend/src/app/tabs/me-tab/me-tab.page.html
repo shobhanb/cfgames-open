@@ -11,12 +11,12 @@
   <ion-list [inset]="true">
     <ion-item [button]="true" type="button" routerLink="/me/schedule">
       <ion-icon slot="start" name="calendar-outline"></ion-icon>
-      <ion-label>Athlete Scheduling Preferences</ion-label>
+      <ion-label>My Scheduling Preferences</ion-label>
     </ion-item>
     @if (isJudge) {
     <ion-item [button]="true" type="button" routerLink="/me/judge-availability">
       <ion-icon slot="start" name="clipboard-outline"></ion-icon>
-      <ion-label>Judging Availability</ion-label>
+      <ion-label>My Judging Availability</ion-label>
     </ion-item>
     }
     <ion-item [button]="true" type="button" routerLink="/me/my-heats">
@@ -37,7 +37,7 @@
     </ion-item>
     <ion-item [button]="true" type="button" routerLink="/me/appreciation-text">
       <ion-icon slot="start" name="heart-circle-outline"></ion-icon>
-      <ion-label>My Appreciation Text</ion-label>
+      <ion-label>My Appreciation Comments</ion-label>
     </ion-item>
   </ion-list>
   }

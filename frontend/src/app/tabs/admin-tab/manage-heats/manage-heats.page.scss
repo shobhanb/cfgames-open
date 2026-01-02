@@ -202,3 +202,28 @@
     font-size: 0.875rem;
   }
 }
+
+.stat-box {
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--ion-color-light);
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--ion-color-primary);
+    margin-bottom: 4px;
+
+    &.warning {
+      color: var(--ion-color-warning);
+    }
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--ion-color-medium);
+    font-weight: 600;
+  }
+}

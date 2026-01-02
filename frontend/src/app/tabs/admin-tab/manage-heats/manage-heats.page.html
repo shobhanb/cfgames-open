@@ -53,26 +53,7 @@
         animated="true"
         style="padding: 0 0 12px 0"
       ></ion-searchbar>
-      <ion-button
-        expand="block"
-        fill="outline"
-        (click)="showUnassignedAthletes()"
-        style="margin-bottom: 8px"
-      >
-        <ion-icon slot="start" name="person"></ion-icon>
-        Show Unassigned Athletes ({{ unassignedAthletes().length }})
-      </ion-button>
-      <ion-button
-        expand="block"
-        fill="outline"
-        color="tertiary"
-        [disabled]="loading() || !hasAnyAssignments()"
-        (click)="showOverallJudgeSummary()"
-        style="margin-bottom: 8px"
-      >
-        <ion-icon slot="start" name="stats-chart-outline"></ion-icon>
-        Overall Judge Summary
-      </ion-button>
+
       <ion-button
         expand="block"
         color="primary"
@@ -105,7 +86,7 @@
         </ion-button>
         <ion-button
           size="small"
-          color="success"
+          color="medium"
           fill="outline"
           [disabled]="loading() || !hasAnyAssignments()"
           (click)="toggleAllPublished()"
@@ -114,6 +95,60 @@
           {{ allHeatsPublished() ? 'Unpublish All' : 'Publish All' }}
         </ion-button>
       </div>
+    </ion-card-content>
+  </ion-card>
+  <!-- Assignment Summary -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Assignment Summary</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <div class="stat-box" (click)="showUnassignedAthletes()">
+              <div class="stat-value">{{ unassignedAthletes().length }}</div>
+              <div class="stat-label">Unassigned Athletes (click)</div>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="stat-box" (click)="showOverallJudgeSummary()">
+              <div class="stat-value">{{ totalJudgesAssigned() }}</div>
+              <div class="stat-label">Judges Assigned (click)</div>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <div class="stat-box">
+              <div
+                class="stat-value"
+                [class.warning]="assignmentsWithoutAthletes() > 0"
+              >
+                {{ assignmentsWithoutAthletes() }}
+              </div>
+              <div class="stat-label">Missing Athlete Assignments</div>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="stat-box">
+              <div
+                class="stat-value"
+                [class.warning]="assignmentsWithoutJudges() > 0"
+              >
+                {{ assignmentsWithoutJudges() }}
+              </div>
+              <div class="stat-label">Missing Judge Assignments</div>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="stat-box">
+              <div class="stat-value">{{ totalAthletesAssigned() }}</div>
+              <div class="stat-label">Athletes Assigned</div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-card-content>
   </ion-card>
   } @if (loading()) {
@@ -183,6 +218,15 @@
                 {{ heat.start_time | date: 'EEE d MMM, h:mm a' }}
               </ion-card-title>
               <div class="heat-checkboxes">
+                <ion-button
+                  size="small"
+                  fill="clear"
+                  (click)="editHeat(heat)"
+                  [disabled]="getAssignmentsForHeat(heat)[0]?.is_locked"
+                  title="Edit heat time"
+                >
+                  <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                </ion-button>
                 <ion-button
                   size="small"
                   [fill]="getAssignmentsForHeat(heat)[0]?.is_locked ? 'solid' : 'clear'"
@@ -294,7 +338,6 @@
                         </ion-popover>
                       </td>
                       <td
-                        (click)="updateJudge(assignment, heat)"
                         (contextmenu)="setHoveredJudge(assignment.judge_name); $event.preventDefault()"
                         (click)="updateJudge(assignment, heat)"
                         (contextmenu)="setHoveredJudge(assignment.judge_name); $event.preventDefault()"

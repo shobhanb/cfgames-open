@@ -23,9 +23,6 @@ import {
   IonIcon,
   IonSkeletonText,
   IonBadge,
-  IonGrid,
-  IonRow,
-  IonCol,
   AlertController,
   ModalController,
 } from '@ionic/angular/standalone';
@@ -44,7 +41,12 @@ import {
 } from 'src/app/api/models';
 import { ToastService } from 'src/app/services/toast.service';
 import { addIcons } from 'ionicons';
-import { createOutline, trashOutline, addOutline } from 'ionicons/icons';
+import {
+  createOutline,
+  trashOutline,
+  addOutline,
+  addCircleOutline,
+} from 'ionicons/icons';
 import { EditHeatConfigModalComponent } from './edit-heat-config-modal/edit-heat-config-modal.component';
 
 @Component({
@@ -74,9 +76,6 @@ import { EditHeatConfigModalComponent } from './edit-heat-config-modal/edit-heat
     IonHeader,
     IonTitle,
     IonToolbar,
-    IonGrid,
-    IonRow,
-    IonCol,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -99,57 +98,24 @@ export class HeatsPage implements OnInit {
 
   groupedHeats = computed(() => {
     const heatsData = this.heats();
-    const setup = this.heatsSetup();
-    const event = this.selectedEvent();
+    const groupsMap = new Map<string, apiHeatsModel[]>();
 
-    if (!event?.start_date || setup.length === 0) {
-      return [];
-    }
-
-    const baseDate = new Date(event.start_date);
-    const groups: Array<{
-      shortName: string;
-      heats: apiHeatsModel[];
-      config: apiHeatsSetupModel;
-    }> = [];
-
-    setup.forEach((config) => {
-      const targetDate = this.getTargetDate(baseDate, config.short_name);
-      const [startHour, startMin] = config.start_time
-        .substring(0, 5)
-        .split(':')
-        .map(Number);
-      const [endHour, endMin] = config.end_time
-        .substring(0, 5)
-        .split(':')
-        .map(Number);
-
-      const sessionStart = new Date(targetDate);
-      sessionStart.setHours(startHour, startMin, 0, 0);
-      const sessionEnd = new Date(targetDate);
-      sessionEnd.setHours(endHour, endMin, 59, 999);
-
-      const heatsForConfig = heatsData.filter((heat) => {
-        const heatDate = new Date(heat.start_time);
-        return heatDate >= sessionStart && heatDate <= sessionEnd;
-      });
-
-      if (heatsForConfig.length > 0) {
-        groups.push({
-          shortName: config.short_name,
-          heats: heatsForConfig.sort((a, b) =>
-            a.start_time.localeCompare(b.start_time)
-          ),
-          config: config,
-        });
+    heatsData.forEach((heat) => {
+      const shortName = heat.short_name;
+      if (!groupsMap.has(shortName)) {
+        groupsMap.set(shortName, []);
       }
+      groupsMap.get(shortName)!.push(heat);
     });
 
-    return groups;
+    return Array.from(groupsMap.entries()).map(([shortName, heats]) => ({
+      shortName,
+      heats: heats.sort((a, b) => a.start_time.localeCompare(b.start_time)),
+    }));
   });
 
   constructor() {
-    addIcons({ createOutline, trashOutline, addOutline });
+    addIcons({ createOutline, trashOutline, addOutline, addCircleOutline });
   }
 
   ngOnInit() {
@@ -203,7 +169,6 @@ export class HeatsPage implements OnInit {
         next: (data) => {
           const sorted = [...data].sort((a, b) => this.sortHeatsSetup(a, b));
           this.heatsSetup.set(sorted);
-          console.log(data);
         },
         error: (error) => {
           console.error('Error loading heats setup:', error);
@@ -230,6 +195,7 @@ export class HeatsPage implements OnInit {
       })
       .subscribe({
         next: (data) => {
+          console.log(data);
           const filtered = data.filter(
             (heat) =>
               heat.year === this.config.year &&
@@ -328,14 +294,99 @@ export class HeatsPage implements OnInit {
     return targetDate;
   }
 
+  async addHeat() {
+    if (!this.selectedEvent()) {
+      this.toastService.showToast('Please select an event first', 'warning');
+      return;
+    }
+
+    const alert = await this.alertController.create({
+      header: 'Add Heat',
+      inputs: [
+        {
+          name: 'shortName',
+          type: 'text',
+          placeholder: 'Heat Short Name (e.g., Fri AM)',
+          label: 'Short Name',
+        },
+        {
+          name: 'startTime',
+          type: 'datetime-local',
+          label: 'Start Time',
+        },
+        {
+          name: 'maxAthletes',
+          type: 'number',
+          value: 10,
+          label: 'Max Athletes',
+          min: 1,
+          max: 50,
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Add',
+          handler: (data) => {
+            if (!data.shortName || !data.startTime) {
+              this.toastService.showToast('Please fill all fields', 'warning');
+              return false;
+            }
+
+            this.apiHeats
+              .createNewHeatHeatsPost({
+                body: {
+                  year: this.config.year,
+                  affiliate_id: this.config.affiliateId,
+                  ordinal: this.selectedEvent()!.ordinal,
+                  start_time: data.startTime,
+                  short_name: data.shortName,
+                  max_athletes: parseInt(data.maxAthletes) || 10,
+                },
+              })
+              .subscribe({
+                next: () => {
+                  this.toastService.showToast(
+                    'Heat added successfully',
+                    'success'
+                  );
+                  this.loadHeats();
+                },
+                error: (error) => {
+                  console.error('Error adding heat:', error);
+                  this.toastService.showToast('Error adding heat', 'danger');
+                },
+              });
+
+            return true;
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
   async editHeat(heat: apiHeatsModel) {
+    // Convert UTC time to local time for datetime-local input
+    const localDate = new Date(heat.start_time);
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
+    const hours = String(localDate.getHours()).padStart(2, '0');
+    const minutes = String(localDate.getMinutes()).padStart(2, '0');
+    const localDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
     const alert = await this.alertController.create({
       header: 'Edit Heat',
       inputs: [
         {
           name: 'startTime',
           type: 'datetime-local',
-          value: new Date(heat.start_time).toISOString().slice(0, 16),
+          value: localDateTime,
           label: 'Start Time',
         },
         {
@@ -365,7 +416,8 @@ export class HeatsPage implements OnInit {
   }
 
   updateHeat(heat: apiHeatsModel, data: any) {
-    const newStartTime = new Date(data.startTime).toISOString();
+    // const newStartTime = new Date(data.startTime).toISOString();
+    const newStartTime = data.startTime;
 
     this.apiHeats
       .updateExistingHeatHeatsYearAffiliateIdOrdinalStartTimePatch({

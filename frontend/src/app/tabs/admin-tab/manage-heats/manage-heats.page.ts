@@ -57,6 +57,7 @@ import {
   close,
   cloudDoneOutline,
   cloudOfflineOutline,
+  createOutline,
   lockClosedOutline,
   lockOpenOutline,
   person,
@@ -230,12 +231,48 @@ export class ManageHeatsPage implements OnInit {
       }));
   });
 
+  // Assignment statistics
+  totalAthletesAssigned = computed(() => {
+    const currentHeatIds = new Set(this.heats().map((h) => h.id));
+    const uniqueAthleteIds = new Set(
+      this.heatAssignments()
+        .filter((a) => currentHeatIds.has(a.heat_id) && a.athlete_crossfit_id)
+        .map((a) => a.athlete_crossfit_id)
+    );
+    return uniqueAthleteIds.size;
+  });
+
+  totalJudgesAssigned = computed(() => {
+    const currentHeatIds = new Set(this.heats().map((h) => h.id));
+    const uniqueJudgeIds = new Set(
+      this.heatAssignments()
+        .filter((a) => currentHeatIds.has(a.heat_id) && a.judge_crossfit_id)
+        .map((a) => a.judge_crossfit_id)
+    );
+    return uniqueJudgeIds.size;
+  });
+
+  assignmentsWithoutAthletes = computed(() => {
+    const currentHeatIds = new Set(this.heats().map((h) => h.id));
+    return this.heatAssignments().filter(
+      (a) => currentHeatIds.has(a.heat_id) && !a.athlete_crossfit_id
+    ).length;
+  });
+
+  assignmentsWithoutJudges = computed(() => {
+    const currentHeatIds = new Set(this.heats().map((h) => h.id));
+    return this.heatAssignments().filter(
+      (a) => currentHeatIds.has(a.heat_id) && !a.judge_crossfit_id
+    ).length;
+  });
+
   constructor() {
     addIcons({
       add,
       close,
       cloudDoneOutline,
       cloudOfflineOutline,
+      createOutline,
       lockClosedOutline,
       lockOpenOutline,
       person,
@@ -1112,5 +1149,70 @@ Total Assignments: ${result.assigned_count}`;
 
   onSearchChange(event: any) {
     this.searchTerm.set(event.target.value || '');
+  }
+
+  async editHeat(heat: apiHeatsModel) {
+    const firstAssignment = this.getAssignmentsForHeat(heat)[0];
+    if (firstAssignment?.is_locked) {
+      this.toastService.showToast('Cannot edit locked heat', 'warning');
+      return;
+    }
+
+    // Convert UTC time to local time for datetime-local input
+    const localDate = new Date(heat.start_time);
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
+    const hours = String(localDate.getHours()).padStart(2, '0');
+    const minutes = String(localDate.getMinutes()).padStart(2, '0');
+    const localDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    const alert = await this.alertController.create({
+      header: 'Edit Heat Time',
+      inputs: [
+        {
+          name: 'startTime',
+          type: 'datetime-local',
+          value: localDateTime,
+          label: 'Start Time',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Update',
+          handler: (data) => {
+            const newStartTime = data.startTime;
+
+            this.apiHeats
+              .updateExistingHeatHeatsYearAffiliateIdOrdinalStartTimePatch({
+                year: heat.year,
+                affiliate_id: heat.affiliate_id,
+                ordinal: heat.ordinal,
+                start_time: heat.start_time,
+                body: {
+                  start_time: newStartTime,
+                  max_athletes: heat.max_athletes,
+                },
+              })
+              .subscribe({
+                next: () => {
+                  this.toastService.showToast('Heat time updated', 'success');
+                  this.loadHeats();
+                },
+                error: (error: unknown) => {
+                  console.error('Error updating heat:', error);
+                  this.toastService.showToast('Error updating heat', 'danger');
+                },
+              });
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

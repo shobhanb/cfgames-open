@@ -1,25 +1,51 @@
 
 .heat-group {
-  margin-bottom: 2rem;
+  margin-bottom: 24px;
+}
 
-  .group-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1rem;
-    margin: 1rem 0;
-    gap: 1rem;
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px 12px;
+  border-bottom: 2px solid var(--ion-color-primary);
+  margin-bottom: 16px;
 
-    .group-title {
-      margin: 0;
-      font-size: 1.5rem;
-      font-weight: bold;
-      flex: 1;
+  .group-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ion-color-primary);
+    margin: 0;
+  }
+}
+
+.heats-grid {
+  padding: 0;
+}
+
+.heat-card {
+  height: 100%;
+  margin: 8px;
+
+  ion-card-header {
+    padding-bottom: 8px;
+  }
+
+  ion-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  ion-card-content {
+    p {
+      margin: 0 0 12px 0;
+      color: var(--ion-color-medium);
     }
   }
 
-.heats-grid {
-  --ion-grid-padding: 8px;
-}
-
+  .heat-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 12px;
+  }
 }
