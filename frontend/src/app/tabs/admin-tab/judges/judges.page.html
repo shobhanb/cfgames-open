@@ -6,12 +6,6 @@
     <ion-title>Judge Management</ion-title>
     <app-toolbar-buttons slot="end"></app-toolbar-buttons>
   </ion-toolbar>
-  <ion-toolbar>
-    <ion-searchbar
-      placeholder="Search judges..."
-      (ionInput)="onSearchChange($event)"
-    ></ion-searchbar>
-  </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -30,6 +24,11 @@
       <p>
         Manage judges for competitions. Create, update, or delete judge records.
       </p>
+      <ion-searchbar
+        style="padding: 12px 0 12px 0"
+        placeholder="Search judges..."
+        (ionInput)="onSearchChange($event)"
+      ></ion-searchbar>
       <ion-button expand="block" (click)="createJudge()">
         <ion-icon slot="start" name="add-circle"></ion-icon>
         Add New Judge
@@ -78,9 +77,23 @@
       @for (judge of filteredJudges(); track judge.id) {
       <ion-item>
         <ion-label>
-          <h3>{{ judge.name }}</h3>
-          <p>CrossFit ID: {{ judge.crossfit_id }}</p>
+          <h3>
+            {{ judge.name }} @if (judge.preferred) {
+            <ion-badge color="success">Preferred</ion-badge>
+            }
+          </h3>
         </ion-label>
+        <ion-button
+          fill="clear"
+          color="warning"
+          (click)="togglePreferred(judge)"
+          slot="end"
+          title="Toggle preferred"
+        >
+          <ion-icon
+            [name]="judge.preferred ? 'star' : 'star-outline'"
+          ></ion-icon>
+        </ion-button>
         <ion-button
           fill="clear"
           color="primary"

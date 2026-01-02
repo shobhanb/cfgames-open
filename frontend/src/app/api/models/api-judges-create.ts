@@ -5,4 +5,5 @@
 export interface apiJudgesCreate {
   crossfit_id: number;
   name: string;
+  preferred?: boolean;
 }

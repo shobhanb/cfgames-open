@@ -37,7 +37,13 @@ import { AppConfigService } from 'src/app/services/app-config.service';
 import { apiJudgesModel } from 'src/app/api/models';
 import { ToastService } from 'src/app/services/toast.service';
 import { addIcons } from 'ionicons';
-import { addCircle, createOutline, trashOutline } from 'ionicons/icons';
+import {
+  addCircle,
+  createOutline,
+  trashOutline,
+  star,
+  starOutline,
+} from 'ionicons/icons';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
 
 @Component({
@@ -105,7 +111,7 @@ export class JudgesPage implements OnInit {
   judgeCount = computed(() => this.judges().length);
 
   constructor() {
-    addIcons({ addCircle, createOutline, trashOutline });
+    addIcons({ addCircle, createOutline, trashOutline, star, starOutline });
   }
 
   ngOnInit() {
@@ -364,5 +370,34 @@ export class JudgesPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  togglePreferred(judge: apiJudgesModel) {
+    const preferred = !judge.preferred;
+
+    this.apiJudge
+      .updateExistingJudgeJudgesJudgeIdPatch({
+        judge_id: judge.id,
+        body: {
+          preferred,
+          crossfit_id: judge.crossfit_id,
+        },
+      })
+      .subscribe({
+        next: () => {
+          this.toastService.showToast(
+            preferred ? 'Marked as preferred' : 'Removed preferred',
+            'success'
+          );
+          this.loadJudges();
+        },
+        error: (error) => {
+          console.error('Error updating preferred status:', error);
+          this.toastService.showToast(
+            'Error updating preferred status',
+            'danger'
+          );
+        },
+      });
   }
 }

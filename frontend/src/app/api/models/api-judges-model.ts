@@ -6,4 +6,5 @@ export interface apiJudgesModel {
   crossfit_id: number;
   id: string;
   name: string;
+  preferred: boolean;
 }

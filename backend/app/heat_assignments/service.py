@@ -15,6 +15,7 @@ from app.judge_availability.models import JudgeAvailability
 from app.judges.models import Judges
 from app.preferred_athletes.models import PreferredAthletes
 
+from .constants import PREFERRED_JUDGE_MULTIPLIER
 from .models import HeatAssignments
 from .schemas import HeatAssignmentCreate, HeatAssignmentUpdate
 
@@ -757,8 +758,10 @@ async def assign_athletes_and_judges_randomly(
         if not candidate_judges:
             continue
 
-        random.shuffle(candidate_judges)
-        chosen_judge = candidate_judges[0]
+        # Use weighted random selection to favor preferred judges
+        # Preferred judges get PREFERRED_JUDGE_MULTIPLIER weight, non-preferred get 1.0
+        weights = [PREFERRED_JUDGE_MULTIPLIER if judge.preferred else 1.0 for judge in candidate_judges]
+        chosen_judge = random.choices(candidate_judges, weights=weights, k=1)[0]  # noqa: S311
         assignment.judge_crossfit_id = chosen_judge.crossfit_id
         assignment.judge_name = chosen_judge.name
         heat_judges[assignment.heat_id].add(chosen_judge.crossfit_id)

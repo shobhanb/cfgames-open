@@ -22,6 +22,7 @@ async def get_all_judges(
         Judges.id,
         Judges.crossfit_id,
         Judges.name,
+        Judges.preferred,
     ).distinct()
     result = await db_session.execute(stmt)
     rows = result.mappings().all()
@@ -38,6 +39,7 @@ async def get_judge(
             Judges.id,
             Judges.crossfit_id,
             Judges.name,
+            Judges.preferred,
         )
         .where(Judges.id == judge_id)
         .distinct()
@@ -59,6 +61,7 @@ async def get_judge_by_crossfit_id(
             Judges.id,
             Judges.crossfit_id,
             Judges.name,
+            Judges.preferred,
         )
         .where(Judges.crossfit_id == crossfit_id)
         .distinct()
@@ -104,6 +107,7 @@ async def create_judge(
     new_judge = Judges(
         crossfit_id=judge_data.crossfit_id,
         name=judge_data.name,
+        preferred=judge_data.preferred,
     )
     db_session.add(new_judge)
     await db_session.commit()
@@ -131,6 +135,8 @@ async def update_judge(
         judge.crossfit_id = judge_data.crossfit_id
     if judge_data.name is not None:
         judge.name = judge_data.name
+    if judge_data.preferred is not None:
+        judge.preferred = judge_data.preferred
 
     db_session.add(judge)
     await db_session.commit()

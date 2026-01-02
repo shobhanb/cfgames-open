@@ -29,6 +29,11 @@ import {
   IonSelectOption,
   IonNote,
   IonCardSubtitle,
+  IonIcon,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import {
   apiHeatAssignmentsService,
@@ -45,6 +50,8 @@ import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { forkJoin } from 'rxjs';
+import { addIcons } from 'ionicons';
+import { person } from 'ionicons/icons';
 
 @Component({
   selector: 'app-my-heats',
@@ -52,11 +59,13 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./my-heats.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    IonSkeletonText,
+    IonSpinner,
+    IonCol,
+    IonRow,
+    IonGrid,
+    IonIcon,
     IonSelect,
     IonSelectOption,
-    IonList,
-    IonLabel,
     IonItem,
     IonCard,
     IonCardHeader,
@@ -74,7 +83,6 @@ import { forkJoin } from 'rxjs';
     DatePipe,
     FormsModule,
     ToolbarButtonsComponent,
-    IonCardSubtitle,
   ],
 })
 export class MyHeatsPage implements OnInit {
@@ -84,6 +92,12 @@ export class MyHeatsPage implements OnInit {
   eventService = inject(EventService);
   private toastService = inject(ToastService);
   private config = inject(AppConfigService);
+
+  constructor() {
+    addIcons({
+      person,
+    });
+  }
 
   readonly isJudge = this.authService.athlete()?.judge ?? false;
   readonly selectedOrdinal = signal<number | null>(null);
@@ -98,13 +112,7 @@ export class MyHeatsPage implements OnInit {
     return this.eventService.getEventName(ordinal, this.config.year);
   });
 
-  ionViewWillEnter() {
-    const events = this.eventService.currentYearEvents();
-    if (events.length > 0) {
-      this.selectedOrdinal.set(events[0].ordinal);
-      this.loadAssignments(events[0].ordinal);
-    }
-  }
+  ionViewWillEnter() {}
 
   ngOnInit() {}
 
@@ -124,6 +132,9 @@ export class MyHeatsPage implements OnInit {
 
   private loadAssignments(ordinal: number) {
     this.dataLoaded.set(false);
+    this.heatsMap.set(new Map());
+    this.athleteAssignment.set(null);
+    this.judgeAssignments.set([]);
 
     const year = this.config.year;
 

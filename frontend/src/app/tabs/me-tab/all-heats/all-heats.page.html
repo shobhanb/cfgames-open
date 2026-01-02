@@ -1,0 +1,154 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/me"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Heat Assignments</ion-title>
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Event Selection -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Select Event</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-select
+          label="Event"
+          labelPlacement="stacked"
+          placeholder="Select event"
+          interface="popover"
+          [ngModel]="selectedOrdinal()"
+          (ngModelChange)="selectedOrdinal.set($event); onEventSelect()"
+        >
+          @for (event of currentYearEvents(); track event.ordinal) {
+          <ion-select-option [value]="event.ordinal">
+            {{ event.event }}
+          </ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  @if (selectedOrdinal() && dataLoaded() && heats().length > 0) {
+  <!-- Filters -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Filters</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-searchbar
+        [ngModel]="searchTerm()"
+        (ionInput)="onSearchChange($event)"
+        placeholder="Search by athlete, judge, or team name"
+        debounce="300"
+        animated="true"
+        style="padding: 0 0 12px 0"
+      ></ion-searchbar>
+      <ion-item>
+        <ion-select
+          label="Heat Type"
+          labelPlacement="stacked"
+          placeholder="All Heats"
+          interface="popover"
+          [ngModel]="shortNameFilter()"
+          (ngModelChange)="shortNameFilter.set($event)"
+        >
+          <ion-select-option value="all">All Heats</ion-select-option>
+          @for (shortName of uniqueShortNames(); track shortName) {
+          <ion-select-option [value]="shortName">
+            {{ shortName }}
+          </ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+  } @if (loading()) {
+  <!-- Loading State -->
+  <div class="loading-container">
+    <ion-spinner></ion-spinner>
+    <p>Loading heats...</p>
+  </div>
+  } @else if (dataLoaded() && heats().length === 0 && selectedOrdinal()) {
+  <!-- No Heats -->
+  <ion-card>
+    <ion-card-content>
+      <p class="ion-text-center">No published heats found for this event.</p>
+    </ion-card-content>
+  </ion-card>
+  } @else if (dataLoaded() && heats().length > 0) { @if (groupedHeats().length
+  === 0) {
+  <!-- No Results After Filtering -->
+  <ion-card>
+    <ion-card-content>
+      <p class="ion-text-center">No heats match the selected filters.</p>
+    </ion-card-content>
+  </ion-card>
+  } @else {
+  <!-- Heats Grid -->
+  @for (group of groupedHeats(); track group.shortName) {
+  <div class="heat-group">
+    <div class="group-header">
+      <h2 class="group-title">{{ group.shortName }}</h2>
+    </div>
+    <ion-grid class="heats-grid">
+      <ion-row>
+        @for (heat of group.heats; track heat.id) {
+        <ion-col size="12" sizeMd="6" sizeLg="4" sizeXl="3">
+          <ion-card class="heat-card">
+            <ion-card-header>
+              <ion-card-title>
+                {{ heat.start_time | date: 'EEE d MMM, h:mm a' }}
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <!-- Athletes Section -->
+              <div class="section">
+                <div class="section-header">
+                  <h3>
+                    <ion-icon name="person"></ion-icon>
+                    Athletes ({{ getAssignmentsForHeat(heat).length }}/{{
+                    heat.max_athletes }})
+                  </h3>
+                </div>
+
+                <table class="assignments-table">
+                  <thead>
+                    <tr>
+                      <th>Athlete</th>
+                      <th>Judge</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (assignment of getAssignmentsForHeat(heat); track
+                    assignment.id) {
+                    <tr>
+                      <td>{{ assignment.athlete_name || '—' }}</td>
+                      <td>{{ assignment.judge_name || '—' }}</td>
+                    </tr>
+                    } @empty {
+                    <tr>
+                      <td colspan="2" class="empty-message">No assignments</td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        }
+      </ion-row>
+    </ion-grid>
+  </div>
+  } } }
+</ion-content>

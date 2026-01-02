@@ -23,6 +23,7 @@ import {
   IonBackButton,
   IonList,
   IonItem,
+  IonText,
 } from '@ionic/angular/standalone';
 import { apiAppreciationService } from 'src/app/api/services';
 import { apiAppreciationResultNotes } from 'src/app/api/models';
@@ -36,6 +37,7 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
   styleUrls: ['./my-appreciation-text.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    IonText,
     IonItem,
     IonList,
     IonContent,

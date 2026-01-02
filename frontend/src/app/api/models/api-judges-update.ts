@@ -5,4 +5,5 @@
 export interface apiJudgesUpdate {
   crossfit_id?: (number | null);
   name?: (string | null);
+  preferred?: (boolean | null);
 }

@@ -35,7 +35,44 @@
           }
         </ion-select>
       </ion-item>
-      @if (selectedOrdinal()) {
+    </ion-card-content>
+  </ion-card>
+
+  @if (selectedOrdinal() && dataLoaded() && heats().length > 0) {
+  <!-- Search Bar & Actions -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Filters & Actions</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-searchbar
+        [ngModel]="searchTerm()"
+        (ionInput)="onSearchChange($event)"
+        placeholder="Search by athlete or judge name"
+        debounce="300"
+        animated="true"
+        style="padding: 0 0 12px 0"
+      ></ion-searchbar>
+      <ion-button
+        expand="block"
+        fill="outline"
+        (click)="showUnassignedAthletes()"
+        style="margin-bottom: 8px"
+      >
+        <ion-icon slot="start" name="person"></ion-icon>
+        Show Unassigned Athletes ({{ unassignedAthletes().length }})
+      </ion-button>
+      <ion-button
+        expand="block"
+        fill="outline"
+        color="tertiary"
+        [disabled]="loading() || !hasAnyAssignments()"
+        (click)="showOverallJudgeSummary()"
+        style="margin-bottom: 8px"
+      >
+        <ion-icon slot="start" name="stats-chart-outline"></ion-icon>
+        Overall Judge Summary
+      </ion-button>
       <ion-button
         expand="block"
         color="primary"
@@ -55,30 +92,28 @@
         <ion-icon slot="start" name="trash"></ion-icon>
         Delete All Assignments
       </ion-button>
-      }
-    </ion-card-content>
-  </ion-card>
-
-  @if (selectedOrdinal() && dataLoaded() && heats().length > 0) {
-  <!-- Search Bar -->
-  <ion-card>
-    <ion-card-content style="padding: 12px">
-      <ion-searchbar
-        [(ngModel)]="searchTerm"
-        (ionInput)="onSearchChange($event)"
-        placeholder="Search by athlete or judge name"
-        debounce="300"
-        animated="true"
-      ></ion-searchbar>
-      <ion-button
-        expand="block"
-        fill="outline"
-        (click)="showUnassignedAthletes()"
-        style="margin-top: 8px"
-      >
-        <ion-icon slot="start" name="person"></ion-icon>
-        Show Unassigned Athletes ({{ unassignedAthletes().length }})
-      </ion-button>
+      <div class="compact-actions">
+        <ion-button
+          size="small"
+          color="medium"
+          fill="outline"
+          [disabled]="loading() || !hasAnyAssignments()"
+          (click)="toggleAllLocked()"
+        >
+          <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+          {{ allHeatsLocked() ? 'Unlock All' : 'Lock All' }}
+        </ion-button>
+        <ion-button
+          size="small"
+          color="success"
+          fill="outline"
+          [disabled]="loading() || !hasAnyAssignments()"
+          (click)="toggleAllPublished()"
+        >
+          <ion-icon slot="start" name="cloud-done-outline"></ion-icon>
+          {{ allHeatsPublished() ? 'Unpublish All' : 'Publish All' }}
+        </ion-button>
+      </div>
     </ion-card-content>
   </ion-card>
   } @if (loading()) {
@@ -107,6 +142,7 @@
           [color]="getAssignmentsForHeat(group.heats[0])[0]?.is_locked ? 'danger' : ''"
           (click)="toggleLockedForGroup(group.shortName)"
           [disabled]="getAssignmentsForHeat(group.heats[0]).length === 0"
+          title="Lock all heats in group"
         >
           <ion-icon
             slot="icon-only"
@@ -119,6 +155,7 @@
           [color]="getAssignmentsForHeat(group.heats[0])[0]?.is_published ? 'danger' : ''"
           (click)="togglePublishedForGroup(group.shortName)"
           [disabled]="getAssignmentsForHeat(group.heats[0]).length === 0"
+          title="Publish all heats in group"
         >
           <ion-icon
             slot="icon-only"
@@ -129,15 +166,16 @@
           size="small"
           fill="outline"
           (click)="showJudgeSummary(group.shortName)"
+          title="Show judge assignments for group"
         >
           <ion-icon slot="start" name="stats-chart-outline"></ion-icon>
-          Judge Summary
+          Judges
         </ion-button>
       </div>
     </div>
     <ion-grid class="heats-grid">
       <ion-row>
-        @for (heat of group.heats; track $index) {
+        @for (heat of group.heats; track heat.id) {
         <ion-col size="12" sizeMd="6" sizeLg="4" sizeXl="3">
           <ion-card class="heat-card">
             <ion-card-header>
@@ -151,6 +189,7 @@
                   [color]="getAssignmentsForHeat(heat)[0]?.is_locked ? 'danger' : ''"
                   (click)="toggleLocked(heat)"
                   [disabled]="getAssignmentsForHeat(heat).length === 0"
+                  title="Lock this heat"
                 >
                   <ion-icon
                     slot="icon-only"
@@ -163,6 +202,7 @@
                   [color]="getAssignmentsForHeat(heat)[0]?.is_published ? 'danger' : ''"
                   (click)="togglePublished(heat)"
                   [disabled]="getAssignmentsForHeat(heat).length === 0"
+                  title="Publish this heat"
                 >
                   <ion-icon
                     slot="icon-only"
@@ -177,14 +217,15 @@
                 <div class="section-header">
                   <h3>
                     <ion-icon name="person"></ion-icon>
-                    {{ 'Athletes (' + getAssignmentsForHeat(heat).length + '/' +
-                    heat.max_athletes + ')'}}
+                    Athletes ({{ getAssignmentsForHeat(heat).length }}/{{
+                    heat.max_athletes }})
                   </h3>
                   <ion-button
                     size="small"
                     fill="clear"
                     (click)="addAthlete(heat)"
                     [disabled]="!isHeatEditable(heat)"
+                    title="Add athlete"
                   >
                     <ion-icon slot="icon-only" name="add"></ion-icon>
                   </ion-button>
@@ -222,6 +263,7 @@
                           assignment.athlete_name === hoveredJudgeName()
                         "
                         [class.disabled]="!isHeatEditable(heat)"
+                        title="Click to change athlete"
                       >
                         {{ assignment.athlete_name ? (assignment.preference_nbr
                         ? assignment.athlete_name + ' (' +
@@ -254,6 +296,8 @@
                       <td
                         (click)="updateJudge(assignment, heat)"
                         (contextmenu)="setHoveredJudge(assignment.judge_name); $event.preventDefault()"
+                        (click)="updateJudge(assignment, heat)"
+                        (contextmenu)="setHoveredJudge(assignment.judge_name); $event.preventDefault()"
                         class="clickable"
                         [class.missing-judge]="!assignment.judge_name"
                         [class.highlighted-judge]="
@@ -268,6 +312,7 @@
                           )
                         "
                         [class.disabled]="!isHeatEditable(heat)"
+                        title="Click to change judge"
                       >
                         {{ assignment.judge_name || 'Assign Judge' }}
                       </td>
@@ -278,6 +323,7 @@
                           color="danger"
                           (click)="removeAssignment(assignment)"
                           [disabled]="!isHeatEditable(heat)"
+                          title="Remove assignment"
                         >
                           <ion-icon slot="icon-only" name="close"></ion-icon>
                         </ion-button>

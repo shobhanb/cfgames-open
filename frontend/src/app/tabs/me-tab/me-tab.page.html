@@ -23,6 +23,10 @@
       <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
       <ion-label>My Heats!</ion-label>
     </ion-item>
+    <ion-item [button]="true" type="button" routerLink="/me/all-heats">
+      <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
+      <ion-label>All Heats</ion-label>
+    </ion-item>
   </ion-list>
   } @if (affiliateConfig.useAppreciation()) {
   <div class="section-title">Appreciation</div>

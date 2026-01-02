@@ -28,11 +28,22 @@
       <br />
       <ion-label
         >If you will not be participating this weekend, select NA as your first
-        preference</ion-label
+        preference or click on the "Not available button"</ion-label
       >
     </ion-card-content>
   </ion-card>
 
+  <ion-button
+    size="medium"
+    fill="outline"
+    expand="block"
+    class="ion-margin-horizontal"
+    [color]="isNotAvailable() ? 'primary' : 'danger'"
+    (click)="onToggleAvailability()"
+  >
+    {{ isNotAvailable() ? 'I am available this weekend' : 'I am not available
+    this weekend' }}
+  </ion-button>
   <ion-card>
     <ion-card-header>
       <div class="button-container">

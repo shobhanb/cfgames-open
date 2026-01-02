@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/me"></ion-back-button>
     </ion-buttons>
-    <ion-title>Appreciation Forms</ion-title>
+    <ion-title>My Appreciation</ion-title>
     <app-toolbar-buttons slot="end"></app-toolbar-buttons>
   </ion-toolbar>
 </ion-header>
@@ -13,13 +13,25 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Appreciation text</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text
+        >Here you will find comments for votes that you received from your
+        fellow athletes for appreciating you</ion-text
+      >
+    </ion-card-content>
+  </ion-card>
+
   @if (dataLoaded()) { @if (appreciationResults().length === 0) {
   <ion-card>
     <ion-card-header>
-      <ion-card-title>No Appreciation Text</ion-card-title>
+      <ion-card-title>No Appreciation comments</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      You haven't received any appreciation text for {{ currentYear }} yet.
+      You haven't received any appreciation comments for {{ currentYear }} yet.
     </ion-card-content>
   </ion-card>
   } @else { @for (result of appreciationResults(); track result.ordinal) {

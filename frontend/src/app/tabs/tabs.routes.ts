@@ -114,6 +114,14 @@ export const tabsRoutes: Routes = [
         canActivate: [userGuard],
       },
       {
+        path: 'me/all-heats',
+        loadComponent: () =>
+          import('./me-tab/all-heats/all-heats.page').then(
+            (c) => c.AllHeatsPage
+          ),
+        canActivate: [userGuard],
+      },
+      {
         path: 'me/judge-availability',
         loadComponent: () =>
           import('./me-tab/judge-availability/judge-availability.page').then(

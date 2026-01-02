@@ -246,6 +246,32 @@ export class ManageHeatsPage implements OnInit {
     });
   }
 
+  private heatsWithAssignments(): apiHeatsModel[] {
+    return this.heats().filter((heat) =>
+      this.heatAssignments().some((a) => a.heat_id === heat.id)
+    );
+  }
+
+  hasAnyAssignments(): boolean {
+    return this.heatsWithAssignments().length > 0;
+  }
+
+  allHeatsLocked(): boolean {
+    const heatsWithAssignments = this.heatsWithAssignments();
+    if (heatsWithAssignments.length === 0) return false;
+    return heatsWithAssignments.every(
+      (heat) => this.getAssignmentsForHeat(heat)[0]?.is_locked === true
+    );
+  }
+
+  allHeatsPublished(): boolean {
+    const heatsWithAssignments = this.heatsWithAssignments();
+    if (heatsWithAssignments.length === 0) return false;
+    return heatsWithAssignments.every(
+      (heat) => this.getAssignmentsForHeat(heat)[0]?.is_published === true
+    );
+  }
+
   ngOnInit() {}
 
   onEventSelect() {
@@ -598,6 +624,7 @@ Total Assignments: ${result.assigned_count}`;
 
     const availableAthletes = computed(() => [
       'None',
+      'Add Non-Gym Athlete',
       ...this.athleteDataService
         .athleteData()
         .filter((a) => !assignedAthleteIds.has(a.crossfit_id))
@@ -625,6 +652,75 @@ Total Assignments: ${result.assigned_count}`;
             this.toastService.showToast('Failed to remove athlete', 'danger');
           },
         });
+      return;
+    }
+
+    // Handle "Add Non-Gym Athlete" selection
+    if (selectedName === 'Add Non-Gym Athlete') {
+      const alert = await this.alertController.create({
+        header: 'Add Non-Gym Athlete',
+        inputs: [
+          {
+            name: 'name',
+            type: 'text',
+            placeholder: 'Athlete Name',
+          },
+          {
+            name: 'crossfit_id',
+            type: 'number',
+            placeholder: 'CrossFit ID',
+          },
+        ],
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+          },
+          {
+            text: 'Add',
+            handler: (data) => {
+              if (!data.name || !data.crossfit_id) {
+                this.toastService.showToast(
+                  'Please fill all fields',
+                  'warning'
+                );
+                return false;
+              }
+
+              this.apiHeatAssignments
+                .updateExistingHeatAssignmentHeatAssignmentsAssignmentIdPatch$Response(
+                  {
+                    assignment_id: assignment.id,
+                    body: {
+                      athlete_crossfit_id: parseInt(data.crossfit_id),
+                      athlete_name: data.name,
+                    },
+                  }
+                )
+                .subscribe({
+                  next: () => {
+                    this.toastService.showToast(
+                      `${data.name} assigned to heat`,
+                      'success'
+                    );
+                    this.loadHeatAssignments();
+                  },
+                  error: (error: unknown) => {
+                    console.error('Error updating assignment:', error);
+                    this.toastService.showToast(
+                      'Error assigning athlete',
+                      'danger'
+                    );
+                  },
+                });
+
+              return true;
+            },
+          },
+        ],
+      });
+
+      await alert.present();
       return;
     }
 
@@ -758,6 +854,33 @@ Total Assignments: ${result.assigned_count}`;
     await modal.present();
   }
 
+  async showOverallJudgeSummary() {
+    const allAssignments = this.heatAssignments().filter((a) => {
+      const heatIds = new Set(this.heats().map((h) => h.id));
+      return heatIds.has(a.heat_id);
+    });
+
+    const judgeCounts = new Map<string, number>();
+    allAssignments.forEach((assignment) => {
+      const judgeName = assignment.judge_name || 'Unassigned';
+      judgeCounts.set(judgeName, (judgeCounts.get(judgeName) || 0) + 1);
+    });
+
+    const judgeSummary = Array.from(judgeCounts.entries())
+      .map(([judgeName, count]) => ({ judgeName, count }))
+      .sort((a, b) => b.count - a.count);
+
+    const modal = await this.modalController.create({
+      component: JudgeSummaryModalComponent,
+      componentProps: {
+        shortName: 'All Heats',
+        judgeSummary: judgeSummary,
+      },
+    });
+
+    await modal.present();
+  }
+
   async showUnassignedAthletes() {
     const modal = await this.modalController.create({
       component: UnassignedAthletesModalComponent,
@@ -798,6 +921,38 @@ Total Assignments: ${result.assigned_count}`;
       });
   }
 
+  toggleAllLocked() {
+    const heatsWithAssignments = this.heatsWithAssignments();
+    if (heatsWithAssignments.length === 0) {
+      this.toastService.showToast('No heats to lock', 'warning');
+      return;
+    }
+
+    const newValue = !this.allHeatsLocked();
+    const toggleCalls = heatsWithAssignments.map((heat) =>
+      this.apiHeats.toggleLockedHeatsToggleLockedPost({
+        body: {
+          heat_id: heat.id,
+          locked: newValue,
+        },
+      })
+    );
+
+    forkJoin(toggleCalls).subscribe({
+      next: () => {
+        this.toastService.showToast(
+          newValue ? 'All heats locked' : 'All heats unlocked',
+          'success'
+        );
+        this.loadHeats();
+      },
+      error: (error: unknown) => {
+        console.error('Error locking all heats:', error);
+        this.toastService.showToast('Failed to lock heats', 'danger');
+      },
+    });
+  }
+
   togglePublished(heat: apiHeatsModel) {
     const firstAssignment = this.getAssignmentsForHeat(heat)[0];
     if (!firstAssignment) return;
@@ -828,6 +983,38 @@ Total Assignments: ${result.assigned_count}`;
           );
         },
       });
+  }
+
+  toggleAllPublished() {
+    const heatsWithAssignments = this.heatsWithAssignments();
+    if (heatsWithAssignments.length === 0) {
+      this.toastService.showToast('No heats to publish', 'warning');
+      return;
+    }
+
+    const newValue = !this.allHeatsPublished();
+    const toggleCalls = heatsWithAssignments.map((heat) =>
+      this.apiHeats.togglePublishedHeatsTogglePublishedPost({
+        body: {
+          heat_id: heat.id,
+          published: newValue,
+        },
+      })
+    );
+
+    forkJoin(toggleCalls).subscribe({
+      next: () => {
+        this.toastService.showToast(
+          newValue ? 'All heats published' : 'All heats unpublished',
+          'success'
+        );
+        this.loadHeats();
+      },
+      error: (error: unknown) => {
+        console.error('Error publishing all heats:', error);
+        this.toastService.showToast('Failed to publish heats', 'danger');
+      },
+    });
   }
 
   toggleLockedForGroup(shortName: string) {
