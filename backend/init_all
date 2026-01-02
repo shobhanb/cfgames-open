@@ -4,5 +4,4 @@
 ./init_firebase_db
 ./cf_games_refresh
 ./init_judges
-./init_preferred_athletes
 ./init_athlete_prefs

@@ -165,7 +165,20 @@ export class MyHeatsPage implements OnInit {
             }).subscribe({
               next: ({ athlete, judge }) => {
                 this.athleteAssignment.set(athlete);
-                this.judgeAssignments.set(judge);
+                this.judgeAssignments.set(
+                  judge.sort(
+                    (a: apiHeatAssignmentModel, b: apiHeatAssignmentModel) => {
+                      const heatA = this.getHeatDetails(a.heat_id);
+                      const heatB = this.getHeatDetails(b.heat_id);
+                      if (heatA && heatB) {
+                        return (heatA.start_time ?? '').localeCompare(
+                          heatB.start_time ?? ''
+                        );
+                      }
+                      return 0;
+                    }
+                  )
+                );
                 this.dataLoaded.set(true);
               },
               error: () => {

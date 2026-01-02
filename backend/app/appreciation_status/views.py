@@ -44,8 +44,8 @@ async def add_open_appreciation_status(
     if appreciation_open:
         raise conflict_exception()
 
-    appreciation_open = AppreciationStatus(**data.model_dump())
-    db_session.add(appreciation_open)
+    appreciation_status = AppreciationStatus(**data.model_dump())
+    db_session.add(appreciation_status)
     await db_session.commit()
 
 

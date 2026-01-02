@@ -1,4 +1,5 @@
 import datetime as dt
+import logging
 import random
 from collections.abc import Sequence
 from typing import Any
@@ -15,14 +16,11 @@ from app.judge_availability.models import JudgeAvailability
 from app.judges.models import Judges
 from app.preferred_athletes.models import PreferredAthletes
 
-from .constants import PREFERRED_JUDGE_MULTIPLIER
+from .constants import JUDGE_BUFFER_MINUTES, MIN_JUDGE_GAP_MINUTES
 from .models import HeatAssignments
 from .schemas import HeatAssignmentCreate, HeatAssignmentUpdate
 
-# Buffer time in minutes for judge assignments
-JUDGE_BUFFER_MINUTES = 45
-# Minimum gap between judge assignments in minutes
-MIN_JUDGE_GAP_MINUTES = 60
+log = logging.getLogger("uvicorn.error")
 
 
 async def get_all_heat_assignments(
@@ -522,6 +520,13 @@ def _assign_athlete_to_heat(
                 judge_name=None,
                 preference_nbr=pref["preference_nbr"] + 1,
             )
+            log.info(
+                "Assigning athlete %s to heat %s at %s with preference %s",
+                athlete_data["name"],
+                heat.short_name,
+                heat.start_time,
+                pref["preference_nbr"],
+            )
             db_session.add(new_assignment)
             heat_athlete_counts[heat.id] += 1
             if judge_athlete_assignments is not None and crossfit_id in judge_athlete_assignments:
@@ -709,10 +714,14 @@ async def assign_athletes_and_judges_randomly(
     # Track judge assignments for back-to-back checking
     judge_judging_assignments: dict[int, list[UUID]] = {judge.crossfit_id: [] for judge in all_judges}
 
+    # Track total assignment counts per judge for load balancing
+    judge_assignment_counts: dict[int, int] = {judge.crossfit_id: 0 for judge in all_judges}
+
     # Track existing judge assignments
     for assignment in existing_assignments:
         if assignment.judge_crossfit_id:
             judge_judging_assignments[assignment.judge_crossfit_id].append(assignment.heat_id)
+            judge_assignment_counts[assignment.judge_crossfit_id] += 1
 
     # Finally, assign judges to every athlete assignment (ensuring buffer and availability)
     all_assignments = existing_assignments + new_assignments
@@ -758,16 +767,45 @@ async def assign_athletes_and_judges_randomly(
         if not candidate_judges:
             continue
 
-        # Use weighted random selection to favor preferred judges
-        # Preferred judges get PREFERRED_JUDGE_MULTIPLIER weight, non-preferred get 1.0
-        weights = [PREFERRED_JUDGE_MULTIPLIER if judge.preferred else 1.0 for judge in candidate_judges]
-        chosen_judge = random.choices(candidate_judges, weights=weights, k=1)[0]  # noqa: S311
+        # Separate preferred and non-preferred judges
+        preferred_judges = [j for j in candidate_judges if j.preferred]
+        non_preferred_judges = [j for j in candidate_judges if not j.preferred]
+
+        # For preferred judges, select the one with the fewest current assignments
+        # This ensures even distribution among preferred judges
+        if preferred_judges:
+            # Find the minimum assignment count among preferred judges
+            min_assignments = min(judge_assignment_counts[j.crossfit_id] for j in preferred_judges)
+            # Get all preferred judges with this minimum count
+            least_assigned_preferred = [
+                j for j in preferred_judges if judge_assignment_counts[j.crossfit_id] == min_assignments
+            ]
+            # Randomly select from judges with equal minimum assignments
+            chosen_judge = random.choice(least_assigned_preferred)  # noqa: S311
+        elif non_preferred_judges:
+            # If no preferred judges available, fall back to non-preferred with fewest assignments
+            min_assignments = min(judge_assignment_counts[j.crossfit_id] for j in non_preferred_judges)
+            least_assigned_non_preferred = [
+                j for j in non_preferred_judges if judge_assignment_counts[j.crossfit_id] == min_assignments
+            ]
+            chosen_judge = random.choice(least_assigned_non_preferred)  # noqa: S311
+        else:
+            continue
+
         assignment.judge_crossfit_id = chosen_judge.crossfit_id
         assignment.judge_name = chosen_judge.name
         heat_judges[assignment.heat_id].add(chosen_judge.crossfit_id)
         judge_judging_assignments[chosen_judge.crossfit_id].append(assignment.heat_id)
+        judge_assignment_counts[chosen_judge.crossfit_id] += 1
         assigned_count += 1
         judges_assigned += 1
+        log.info(
+            "Assigned judge %s to heat %s for athlete %s (total assignments: %d)",
+            chosen_judge.name,
+            assignment.heat_id,
+            assignment.athlete_name,
+            judge_assignment_counts[chosen_judge.crossfit_id],
+        )
 
     await db_session.commit()
 

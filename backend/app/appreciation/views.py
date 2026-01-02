@@ -71,13 +71,13 @@ async def update_my_appreciation(
 ) -> Appreciation:
     if user.crossfit_id != input_data.crossfit_id:
         raise unauthorised_exception()
-    appreciation_open = await AppreciationStatus.find(
+    appreciation_status = await AppreciationStatus.find(
         async_session=db_session,
         affiliate_id=input_data.affiliate_id,
         year=input_data.year,
         ordinal=input_data.ordinal,
     )
-    if not appreciation_open:
+    if not appreciation_status:
         msg = "Event not open for appreciation submission"
         raise unauthorised_exception(detail=msg)
     return await update_db_appreciation(
@@ -96,13 +96,13 @@ async def delete_my_appreciation(
     year: int,
     ordinal: int,
 ) -> None:
-    appreciation_open = await AppreciationStatus.find(
+    appreciation_status = await AppreciationStatus.find(
         async_session=db_session,
         affiliate_id=user.affiliate_id,
         year=year,
         ordinal=ordinal,
     )
-    if not appreciation_open:
+    if not appreciation_status:
         msg = "Event not open for appreciation submission"
         raise unauthorised_exception(detail=msg)
 
