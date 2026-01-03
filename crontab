@@ -1,0 +1,15 @@
+# CRONTAB -e
+# m h  dom mon dow   command
+0 0 * * * /root/cfgames-open/scripts/backup-db.sh
+
+# CF Games Refresh. Daily for now
+0 0 * * * /root/cfgames-open/backend/cf-games-refresh
+
+# Change CF Games to every 15 minutes later
+# */15 0 * * 5-7 /root/cfgames-open/backend/cf-games-refresh
+# */15 0 * * 0-3 /root/cfgames-open/backend/cf-games-refresh
+
+
+# Weekly renew ssl certs
+# Monday 5:30am IST
+0 0 * * 1 /root/cfgames-open/scripts/renew-ssl.sh
