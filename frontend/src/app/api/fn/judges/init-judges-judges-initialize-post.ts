@@ -9,18 +9,14 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface InitJudgesJudgesInitializeAffiliateIdYearPost$Params {
-  affiliate_id: number;
-  year: number;
+export interface InitJudgesJudgesInitializePost$Params {
 }
 
-export function initJudgesJudgesInitializeAffiliateIdYearPost(http: HttpClient, rootUrl: string, params: InitJudgesJudgesInitializeAffiliateIdYearPost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+export function initJudgesJudgesInitializePost(http: HttpClient, rootUrl: string, params?: InitJudgesJudgesInitializePost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: string;
 }>> {
-  const rb = new RequestBuilder(rootUrl, initJudgesJudgesInitializeAffiliateIdYearPost.PATH, 'post');
+  const rb = new RequestBuilder(rootUrl, initJudgesJudgesInitializePost.PATH, 'post');
   if (params) {
-    rb.path('affiliate_id', params.affiliate_id, {});
-    rb.path('year', params.year, {});
   }
 
   return http.request(
@@ -35,4 +31,4 @@ export function initJudgesJudgesInitializeAffiliateIdYearPost(http: HttpClient, 
   );
 }
 
-initJudgesJudgesInitializeAffiliateIdYearPost.PATH = '/judges/initialize/{affiliate_id}/{year}';
+initJudgesJudgesInitializePost.PATH = '/judges/initialize';

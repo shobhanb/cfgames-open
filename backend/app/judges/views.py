@@ -109,19 +109,15 @@ async def delete_existing_judge(
 
 
 @judges_router.post(
-    "/initialize/{affiliate_id}/{year}",
+    "/initialize",
     status_code=status.HTTP_200_OK,
 )
 async def init_judges(
     db_session: db_dependency,
     _: api_key_admin_dependency,
-    affiliate_id: int,
-    year: int,
 ) -> dict[str, str]:
     """Initialize judge information for all athletes based on scoring history."""
     await initialize_judges(
         db_session=db_session,
-        affiliate_id=affiliate_id,
-        year=year,
     )
     return {"message": "Judge information initialized successfully"}

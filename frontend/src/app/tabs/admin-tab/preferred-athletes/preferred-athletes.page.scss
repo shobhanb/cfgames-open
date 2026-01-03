@@ -1,0 +1,22 @@
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  justify-content: flex-end;
+}
+
+.edit-container {
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
+ion-card {
+  margin: 1rem;
+}

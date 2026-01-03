@@ -18,8 +18,6 @@ import { deleteOpenAppreciationStatusAppreciationStatusDelete } from '../fn/appr
 import { DeleteOpenAppreciationStatusAppreciationStatusDelete$Params } from '../fn/appreciation-status/delete-open-appreciation-status-appreciation-status-delete';
 import { getOpenAppreciationStatusAppreciationStatusGet } from '../fn/appreciation-status/get-open-appreciation-status-appreciation-status-get';
 import { GetOpenAppreciationStatusAppreciationStatusGet$Params } from '../fn/appreciation-status/get-open-appreciation-status-appreciation-status-get';
-import { updateAppreciationStatusAppreciationStatusPatch } from '../fn/appreciation-status/update-appreciation-status-appreciation-status-patch';
-import { UpdateAppreciationStatusAppreciationStatusPatch$Params } from '../fn/appreciation-status/update-appreciation-status-appreciation-status-patch';
 
 @Injectable({ providedIn: 'root' })
 export class apiAppreciationStatusService extends BaseService {
@@ -123,39 +121,6 @@ export class apiAppreciationStatusService extends BaseService {
   deleteOpenAppreciationStatusAppreciationStatusDelete(params: DeleteOpenAppreciationStatusAppreciationStatusDelete$Params, context?: HttpContext): Observable<any> {
     return this.deleteOpenAppreciationStatusAppreciationStatusDelete$Response(params, context).pipe(
       map((r: StrictHttpResponse<any>): any => r.body)
-    );
-  }
-
-  /** Path part for operation `updateAppreciationStatusAppreciationStatusPatch()` */
-  static readonly UpdateAppreciationStatusAppreciationStatusPatchPath = '/appreciation_status/';
-
-  /**
-   * Update Appreciation Status.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateAppreciationStatusAppreciationStatusPatch()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  updateAppreciationStatusAppreciationStatusPatch$Response(params: UpdateAppreciationStatusAppreciationStatusPatch$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAppreciationStatusModel>> {
-    return updateAppreciationStatusAppreciationStatusPatch(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Update Appreciation Status.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updateAppreciationStatusAppreciationStatusPatch$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  updateAppreciationStatusAppreciationStatusPatch(params: UpdateAppreciationStatusAppreciationStatusPatch$Params, context?: HttpContext): Observable<apiAppreciationStatusModel> {
-    return this.updateAppreciationStatusAppreciationStatusPatch$Response(params, context).pipe(
-      map((r: StrictHttpResponse<apiAppreciationStatusModel>): apiAppreciationStatusModel => r.body)
     );
   }
 

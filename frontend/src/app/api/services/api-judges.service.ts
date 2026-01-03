@@ -21,8 +21,8 @@ import { getJudgeByIdJudgesJudgeIdGet } from '../fn/judges/get-judge-by-id-judge
 import { GetJudgeByIdJudgesJudgeIdGet$Params } from '../fn/judges/get-judge-by-id-judges-judge-id-get';
 import { getJudgesListJudgesGet } from '../fn/judges/get-judges-list-judges-get';
 import { GetJudgesListJudgesGet$Params } from '../fn/judges/get-judges-list-judges-get';
-import { initJudgesJudgesInitializeAffiliateIdYearPost } from '../fn/judges/init-judges-judges-initialize-affiliate-id-year-post';
-import { InitJudgesJudgesInitializeAffiliateIdYearPost$Params } from '../fn/judges/init-judges-judges-initialize-affiliate-id-year-post';
+import { initJudgesJudgesInitializePost } from '../fn/judges/init-judges-judges-initialize-post';
+import { InitJudgesJudgesInitializePost$Params } from '../fn/judges/init-judges-judges-initialize-post';
 import { apiJudgesModel } from '../models/api-judges-model';
 import { updateExistingJudgeJudgesJudgeIdPatch } from '../fn/judges/update-existing-judge-judges-judge-id-patch';
 import { UpdateExistingJudgeJudgesJudgeIdPatch$Params } from '../fn/judges/update-existing-judge-judges-judge-id-patch';
@@ -231,8 +231,8 @@ export class apiJudgesService extends BaseService {
     );
   }
 
-  /** Path part for operation `initJudgesJudgesInitializeAffiliateIdYearPost()` */
-  static readonly InitJudgesJudgesInitializeAffiliateIdYearPostPath = '/judges/initialize/{affiliate_id}/{year}';
+  /** Path part for operation `initJudgesJudgesInitializePost()` */
+  static readonly InitJudgesJudgesInitializePostPath = '/judges/initialize';
 
   /**
    * Init Judges.
@@ -240,14 +240,14 @@ export class apiJudgesService extends BaseService {
    * Initialize judge information for all athletes based on scoring history.
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `initJudgesJudgesInitializeAffiliateIdYearPost()` instead.
+   * To access only the response body, use `initJudgesJudgesInitializePost()` instead.
    *
    * This method doesn't expect any request body.
    */
-  initJudgesJudgesInitializeAffiliateIdYearPost$Response(params: InitJudgesJudgesInitializeAffiliateIdYearPost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+  initJudgesJudgesInitializePost$Response(params?: InitJudgesJudgesInitializePost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: string;
 }>> {
-    return initJudgesJudgesInitializeAffiliateIdYearPost(this.http, this.rootUrl, params, context);
+    return initJudgesJudgesInitializePost(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -256,14 +256,14 @@ export class apiJudgesService extends BaseService {
    * Initialize judge information for all athletes based on scoring history.
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `initJudgesJudgesInitializeAffiliateIdYearPost$Response()` instead.
+   * To access the full response (for headers, for example), `initJudgesJudgesInitializePost$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  initJudgesJudgesInitializeAffiliateIdYearPost(params: InitJudgesJudgesInitializeAffiliateIdYearPost$Params, context?: HttpContext): Observable<{
+  initJudgesJudgesInitializePost(params?: InitJudgesJudgesInitializePost$Params, context?: HttpContext): Observable<{
 [key: string]: string;
 }> {
-    return this.initJudgesJudgesInitializeAffiliateIdYearPost$Response(params, context).pipe(
+    return this.initJudgesJudgesInitializePost$Response(params, context).pipe(
       map((r: StrictHttpResponse<{
 [key: string]: string;
 }>): {

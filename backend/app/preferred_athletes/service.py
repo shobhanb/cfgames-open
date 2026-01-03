@@ -15,6 +15,7 @@ def _to_dict(record: PreferredAthletes) -> dict[str, Any]:
         "id": record.id,
         "crossfit_id": record.crossfit_id,
         "name": record.name,
+        "start_time": record.start_time,
     }
 
 
@@ -39,10 +40,11 @@ async def create_preferred_athlete(
 ) -> dict[str, Any]:
     record = await PreferredAthletes.find(async_session=db_session, crossfit_id=data.crossfit_id)
     if record:
-        # Replace the name if already present to keep id stable
+        # Replace the name and start_time if already present to keep id stable
         record.name = data.name
+        record.start_time = data.start_time
     else:
-        record = PreferredAthletes(crossfit_id=data.crossfit_id, name=data.name)
+        record = PreferredAthletes(crossfit_id=data.crossfit_id, name=data.name, start_time=data.start_time)
         db_session.add(record)
 
     await db_session.commit()
@@ -61,6 +63,8 @@ async def update_preferred_athlete(
         record.crossfit_id = data.crossfit_id
     if data.name is not None:
         record.name = data.name
+    if data.start_time is not None:
+        record.start_time = data.start_time
 
     db_session.add(record)
     await db_session.commit()
@@ -92,7 +96,7 @@ async def initialize_preferred_athletes_from_judges(db_session: AsyncSession) ->
                 db_session.add(existing)
                 updated += 1
         else:
-            new_pref = PreferredAthletes(crossfit_id=judge.crossfit_id, name=judge.name)
+            new_pref = PreferredAthletes(crossfit_id=judge.crossfit_id, name=judge.name, start_time="")
             db_session.add(new_pref)
             inserted += 1
 

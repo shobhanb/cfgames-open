@@ -5,4 +5,5 @@
 export interface apiPreferredAthleteCreate {
   crossfit_id: number;
   name: string;
+  start_time: string;
 }

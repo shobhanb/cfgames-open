@@ -7,16 +7,19 @@ class PreferredAthleteModel(CustomBaseModel):
     id: UUID
     crossfit_id: int
     name: str
+    start_time: str
 
 
 class PreferredAthleteCreate(CustomBaseModel):
     crossfit_id: int
     name: str
+    start_time: str
 
 
 class PreferredAthleteUpdate(CustomBaseModel):
     crossfit_id: int | None = None
     name: str | None = None
+    start_time: str | None = None
 
 
 class PreferredAthletesInitResponse(CustomBaseModel):

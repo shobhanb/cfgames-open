@@ -1,0 +1,158 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Manage Heats</ion-title>
+    <app-toolbar-buttons slot="end"></app-toolbar-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (loading()) {
+  <div class="loading-container">
+    <ion-spinner></ion-spinner>
+  </div>
+  } @if (showAddForm()) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Add Preferred Athlete</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-input
+          label="Athlete"
+          label-placement="stacked"
+          [value]="newAthleteName()"
+          readonly
+          (click)="openAthleteModal()"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-select
+          label="Day"
+          label-placement="stacked"
+          [value]="newDay()"
+          interface="popover"
+          (ionChange)="newDay.set($event.detail.value)"
+        >
+          @for (day of dayOptions; track day) {
+          <ion-select-option [value]="day">{{ day }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-select
+          label="Time"
+          label-placement="stacked"
+          [value]="newTime()"
+          interface="popover"
+          (ionChange)="newTime.set($event.detail.value)"
+        >
+          @for (time of timeOptions; track time) {
+          <ion-select-option [value]="time">{{ time }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+
+      <div class="button-group">
+        <ion-button (click)="toggleAddForm()" fill="outline" color="medium">
+          Cancel
+        </ion-button>
+        <ion-button (click)="addAthlete()" [disabled]="!newAthleteName()">
+          <ion-icon name="save" slot="start"></ion-icon>
+          Add Athlete
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+  }
+
+  <ion-list [inset]="true">
+    @for (athlete of preferredAthletes(); track athlete.id) {
+    <ion-item>
+      @if (editingId() === athlete.id) {
+      <div class="edit-container">
+        <ion-input
+          label="Athlete"
+          label-placement="stacked"
+          [value]="editName()"
+          readonly
+          (click)="openEditAthleteModal()"
+        ></ion-input>
+
+        <ion-select
+          label="Day"
+          label-placement="stacked"
+          [value]="editDay()"
+          (ionChange)="editDay.set($event.detail.value)"
+        >
+          @for (day of dayOptions; track day) {
+          <ion-select-option [value]="day">{{ day }}</ion-select-option>
+          }
+        </ion-select>
+
+        <ion-select
+          label="Time"
+          label-placement="stacked"
+          [value]="editTime()"
+          (ionChange)="editTime.set($event.detail.value)"
+        >
+          @for (time of timeOptions; track time) {
+          <ion-select-option [value]="time">{{ time }}</ion-select-option>
+          }
+        </ion-select>
+
+        <div class="button-group">
+          <ion-button
+            (click)="cancelEdit()"
+            fill="outline"
+            size="small"
+            color="medium"
+          >
+            <ion-icon name="close" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button (click)="saveEdit(athlete)" size="small">
+            <ion-icon name="save" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+      } @else {
+      <ion-label>
+        <h2>{{ athlete.name }}</h2>
+        <p>{{ athlete.start_time }}</p>
+      </ion-label>
+      <ion-button (click)="startEdit(athlete)" slot="end" fill="clear">
+        <ion-icon name="pencil" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button
+        (click)="deleteAthlete(athlete)"
+        slot="end"
+        fill="clear"
+        color="danger"
+      >
+        <ion-icon name="trash" slot="icon-only"></ion-icon>
+      </ion-button>
+      }
+    </ion-item>
+    } @empty { @if (!loading()) {
+    <ion-item>
+      <ion-label class="ion-text-center">
+        <p>No preferred athletes yet. Add one to get started!</p>
+      </ion-label>
+    </ion-item>
+    } }
+  </ion-list>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="toggleAddForm()">
+      <ion-icon [name]="showAddForm() ? 'close' : 'add'"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

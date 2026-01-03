@@ -4,7 +4,6 @@ from uuid import UUID
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.athlete.models import Athlete
 from app.exceptions import not_found_exception
 from app.judge_availability.constants import JUDGE_TIMESLOTS
 from app.judge_availability.models import JudgeAvailability
@@ -158,45 +157,36 @@ async def delete_judge(
 
 async def initialize_judges(
     db_session: AsyncSession,
-    affiliate_id: int,
-    year: int,
 ) -> None:
     """Initialize judge information for all athletes based on scoring history."""
     # Get all unique judge_user_ids from scores
-    select_judge_ids_stmt = select(Score.judge_user_id).where(Score.judge_user_id.is_not(None)).distinct()
+    select_judge_ids_stmt = (
+        select(Score.judge_user_id, Score.judge_name).where(Score.judge_user_id.is_not(None)).distinct()
+    )
     result = await db_session.execute(select_judge_ids_stmt)
-    judge_user_ids = [row[0] for row in result.all()]
+    judge_data = [(row[0], row[1]) for row in result.all()]
 
-    if not judge_user_ids:
+    if not judge_data:
         return
 
-    # For each judge_user_id, get the athlete and create a Judges record if it doesn't exist
-    for judge_user_id in judge_user_ids:
+    # For each judge_user_id, create a Judges record if it doesn't exist
+    for judge_user_id, judge_name in judge_data:
         # Check if judge already exists in Judges table
         existing_judge = await Judges.find(async_session=db_session, crossfit_id=judge_user_id)
         if existing_judge:
             continue
 
-        # Get the athlete with this crossfit_id for the given affiliate_id and year
-        athlete = await Athlete.find(
-            async_session=db_session,
+        # Create a new Judges record
+        new_judge = Judges(
             crossfit_id=judge_user_id,
-            affiliate_id=affiliate_id,
-            year=year,
+            name=judge_name,
         )
-
-        if athlete:
-            # Create a new Judges record
-            new_judge = Judges(
-                crossfit_id=judge_user_id,
-                name=athlete.name,
-            )
-            db_session.add(new_judge)
+        db_session.add(new_judge)
 
     await db_session.commit()
 
     # Initialize availability for all newly created judges
-    for judge_user_id in judge_user_ids:
+    for judge_user_id, _ in judge_data:
         await init_judge_availability(
             db_session=db_session,
             judge_crossfit_id=judge_user_id,

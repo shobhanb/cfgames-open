@@ -188,6 +188,14 @@ export const tabsRoutes: Routes = [
         canActivate: [adminGuard],
       },
       {
+        path: 'admin/preferred-athletes',
+        loadComponent: () =>
+          import('./admin-tab/preferred-athletes/preferred-athletes.page').then(
+            (c) => c.PreferredAthletesPage
+          ),
+        canActivate: [adminGuard],
+      },
+      {
         path: 'admin/schedule-override',
         loadComponent: () =>
           import('./admin-tab/schedule-pref/schedule-pref.page').then(

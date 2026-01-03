@@ -16,7 +16,7 @@ from app.judge_availability.models import JudgeAvailability
 from app.judges.models import Judges
 from app.preferred_athletes.models import PreferredAthletes
 
-from .constants import JUDGE_BUFFER_MINUTES, MIN_JUDGE_GAP_MINUTES
+from .constants import JUDGE_BUFFER_MINUTES, MIN_JUDGE_GAP_MINUTES, PREFERRED_ATHLETE_BUFFER_MINUTES
 from .models import HeatAssignments
 from .schemas import HeatAssignmentCreate, HeatAssignmentUpdate
 
@@ -414,14 +414,79 @@ def _get_time_slot_for_heat(heat_time: dt.datetime) -> str:
     # Determine AM/PM and format hour
     if hour == 0:
         time_str = "12AM"
-    elif hour < 12:
+    elif hour < 12:  # noqa: PLR2004
         time_str = f"{hour}AM"
-    elif hour == 12:
+    elif hour == 12:  # noqa: PLR2004
         time_str = "12PM"
     else:
         time_str = f"{hour - 12}PM"
 
     return f"{day_name} {time_str}"
+
+
+def _is_within_time_buffer(
+    heat_time: dt.datetime,
+    preferred_time_slot: str,
+    buffer_minutes: int = PREFERRED_ATHLETE_BUFFER_MINUTES,
+) -> bool:
+    """Check if heat_time is within buffer_minutes of the preferred time slot.
+
+    Args:
+        heat_time: The actual datetime of the heat
+        preferred_time_slot: Time slot string like "Sat 6AM", "Fri 7PM"
+        buffer_minutes: The buffer in minutes (default 30)
+
+    Returns:
+        True if heat_time is within the buffer of the preferred time slot
+    """
+    # Parse the preferred time slot
+    parts = preferred_time_slot.split()
+    if len(parts) != 2:  # noqa: PLR2004
+        return False
+
+    day_str, time_str = parts
+
+    # Map day names to weekday numbers
+    day_map = {
+        "Fri": 4,
+        "Sat": 5,
+        "Sun": 6,
+        "Mon": 0,
+    }
+
+    preferred_weekday = day_map.get(day_str)
+    if preferred_weekday is None:
+        return False
+
+    # Parse the time (e.g., "6AM", "7PM", "12PM")
+    if time_str.endswith("AM"):
+        hour_str = time_str[:-2]
+        hour = int(hour_str)
+        if hour == 12:  # noqa: PLR2004
+            hour = 0
+    elif time_str.endswith("PM"):
+        hour_str = time_str[:-2]
+        hour = int(hour_str)
+        if hour != 12:  # noqa: PLR2004
+            hour += 12
+    else:
+        return False
+
+    # Check if same day
+    if heat_time.weekday() != preferred_weekday:
+        return False
+
+    # Calculate time difference in minutes
+    heat_hour = heat_time.hour
+    heat_minute = heat_time.minute
+
+    # Convert both to minutes since midnight
+    heat_minutes = heat_hour * 60 + heat_minute
+    preferred_minutes = hour * 60
+
+    # Check if within buffer
+    time_diff = abs(heat_minutes - preferred_minutes)
+    return time_diff <= buffer_minutes
 
 
 def _can_judge_be_assigned(
@@ -487,6 +552,57 @@ def _has_back_to_back_assignment(
             return True
 
     return False
+
+
+def _assign_preferred_athlete_to_heat(
+    crossfit_id: int,
+    athlete_data: dict[str, Any],
+    preferred_start_time: str,
+    heat_athlete_counts: dict[UUID, int],
+    heats: list[Heats],
+    db_session: AsyncSession,
+    judge_athlete_assignments: dict[int, list[UUID]] | None = None,
+) -> tuple[HeatAssignments | None, int]:
+    """Assign a preferred athlete to a heat matching their start_time preference."""
+    # Find heats matching the preferred start_time (within 30 minute buffer)
+    matching_heats = []
+    for heat in heats:
+        if _is_within_time_buffer(heat.start_time, preferred_start_time, buffer_minutes=30):
+            matching_heats.append(heat)
+
+    # Try to assign to a matching heat
+    for heat in matching_heats:
+        if heat.max_athletes is not None and heat_athlete_counts[heat.id] >= heat.max_athletes:
+            continue
+
+        new_assignment = HeatAssignments(
+            heat_id=heat.id,
+            athlete_crossfit_id=crossfit_id,
+            athlete_name=athlete_data["name"],
+            judge_crossfit_id=None,
+            judge_name=None,
+            preference_nbr=0,  # Preferred athlete, highest priority
+        )
+        log.info(
+            "Assigning preferred athlete %s to heat %s at %s (matched start_time: %s)",
+            athlete_data["name"],
+            heat.short_name,
+            heat.start_time,
+            preferred_start_time,
+        )
+        db_session.add(new_assignment)
+        heat_athlete_counts[heat.id] += 1
+        if judge_athlete_assignments is not None and crossfit_id in judge_athlete_assignments:
+            judge_athlete_assignments[crossfit_id].append(heat.id)
+        return new_assignment, 1
+
+    # If no matching heat found, log and return None
+    log.warning(
+        "No matching heat found for preferred athlete %s with start_time %s",
+        athlete_data["name"],
+        preferred_start_time,
+    )
+    return None, 0
 
 
 def _assign_athlete_to_heat(
@@ -587,24 +703,33 @@ async def assign_athletes_and_judges_randomly(
     # Filter out athletes with "NA" at preference_nbr 0
     available_athletes, skipped_athletes = _filter_available_athletes(athlete_prefs)
 
-    # Pull preferred athletes set
-    preferred_stmt = select(PreferredAthletes.crossfit_id)
+    # Pull preferred athletes with their start_time preferences
+    preferred_stmt = select(PreferredAthletes)
     preferred_result = await db_session.execute(preferred_stmt)
-    preferred_ids = {row[0] for row in preferred_result.all()}
+    preferred_athletes_records = list(preferred_result.scalars().all())
+    preferred_ids = {pref.crossfit_id for pref in preferred_athletes_records}
+    # Map crossfit_id to start_time for preferred athletes
+    preferred_start_times = {pref.crossfit_id: pref.start_time for pref in preferred_athletes_records}
 
     # Get all judges
     judges_stmt = select(Judges)
     judges_result = await db_session.execute(judges_stmt)
     all_judges = list(judges_result.scalars().all())
     judge_crossfit_ids = {judge.crossfit_id for judge in all_judges}
+    preferred_judge_ids = {judge.crossfit_id for judge in all_judges if judge.preferred}
 
     # Split preferred vs remaining
     preferred_athletes = {cid: data for cid, data in available_athletes.items() if cid in preferred_ids}
     remaining_after_preferred = {cid: data for cid, data in available_athletes.items() if cid not in preferred_ids}
 
-    # Among remaining, keep judge/non-judge split
-    judges_after_pref = {cid: data for cid, data in remaining_after_preferred.items() if cid in judge_crossfit_ids}
-    regular_after_pref = {cid: data for cid, data in remaining_after_preferred.items() if cid not in judge_crossfit_ids}
+    # Among remaining, separate preferred judges from everyone else
+    # Preferred judges get priority, non-preferred judges are treated as regular athletes
+    preferred_judges_after_pref = {
+        cid: data for cid, data in remaining_after_preferred.items() if cid in preferred_judge_ids
+    }
+    regular_after_pref = {
+        cid: data for cid, data in remaining_after_preferred.items() if cid not in preferred_judge_ids
+    }
 
     # Create a heat time index for quick lookup
     heat_times = {heat.id: heat.start_time for heat in heats}
@@ -645,46 +770,64 @@ async def assign_athletes_and_judges_randomly(
     athletes_assigned = 0
     judges_assigned = 0
 
-    # Assign preferred athletes first (skip already assigned)
+    # Assign preferred athletes first using their start_time preferences (skip already assigned)
     preferred_list = sorted(
         (cid, data) for cid, data in preferred_athletes.items() if cid not in already_assigned_athletes
     )
 
     for crossfit_id, athlete_data in preferred_list:
-        assignment, count = _assign_athlete_to_heat(
-            crossfit_id,
-            athlete_data,
-            heat_athlete_counts,
-            db_session,
-            judge_athlete_assignments,
-            heats_by_pref,
-        )
+        # Get the preferred start_time for this athlete
+        preferred_start_time = preferred_start_times.get(crossfit_id, "")
+
+        if preferred_start_time:
+            # Use start_time matching for preferred athletes
+            assignment, count = _assign_preferred_athlete_to_heat(
+                crossfit_id,
+                athlete_data,
+                preferred_start_time,
+                heat_athlete_counts,
+                heats,
+                db_session,
+                judge_athlete_assignments,
+            )
+        else:
+            # Fall back to regular preference-based assignment if no start_time
+            assignment, count = _assign_athlete_to_heat(
+                crossfit_id,
+                athlete_data,
+                heat_athlete_counts,
+                db_session,
+                judge_athlete_assignments,
+                heats_by_pref,
+            )
+
         if assignment:
             new_assignments.append(assignment)
             assigned_count += count
             athletes_assigned += count
 
-    # Removed unused call to _separate_judges_and_athletes
-    judge_list = sorted((cid, data) for cid, data in judges_after_pref.items() if cid not in already_assigned_athletes)
-
-    for crossfit_id, athlete_data in judge_list:
-        assignment, count = _assign_athlete_to_heat(
-            crossfit_id,
-            athlete_data,
-            heat_athlete_counts,
-            db_session,
-            judge_athlete_assignments,
-            heats_by_pref,
-        )
-        if assignment:
-            new_assignments.append(assignment)
-            assigned_count += count
-            athletes_assigned += count
-
-    # Then, assign regular athletes (skip already assigned)
-    athlete_list = sorted(
-        (cid, data) for cid, data in regular_after_pref.items() if cid not in already_assigned_athletes
+    # Assign preferred judges who are also athletes next (skip already assigned)
+    preferred_judge_list = sorted(
+        (cid, data) for cid, data in preferred_judges_after_pref.items() if cid not in already_assigned_athletes
     )
+
+    for crossfit_id, athlete_data in preferred_judge_list:
+        assignment, count = _assign_athlete_to_heat(
+            crossfit_id,
+            athlete_data,
+            heat_athlete_counts,
+            db_session,
+            judge_athlete_assignments,
+            heats_by_pref,
+        )
+        if assignment:
+            new_assignments.append(assignment)
+            assigned_count += count
+            athletes_assigned += count
+
+    # Then, assign regular athletes (including non-preferred judges) (skip already assigned)
+    athlete_list = [(cid, data) for cid, data in regular_after_pref.items() if cid not in already_assigned_athletes]
+    random.shuffle(athlete_list)
 
     for crossfit_id, athlete_data in athlete_list:
         assignment, count = _assign_athlete_to_heat(
@@ -692,7 +835,8 @@ async def assign_athletes_and_judges_randomly(
             athlete_data,
             heat_athlete_counts,
             db_session,
-            heats_by_pref=heats_by_pref,
+            judge_athlete_assignments if crossfit_id in judge_crossfit_ids else None,
+            heats_by_pref,
         )
         if assignment:
             new_assignments.append(assignment)

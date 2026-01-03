@@ -1,5 +1,5 @@
 export BACKEND_URL="http://localhost:8000"
 curl -X 'POST' \
-  "${BACKEND_URL}/judges/initialize/31316/2025" \
+  "${BACKEND_URL}/judges/initialize" \
   -H "accept: application/json" \
   -H "X-API-KEY: ${ADMIN_API_KEY}"

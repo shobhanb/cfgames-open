@@ -6,6 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.events.models import Events
+from app.exceptions import conflict_exception
 from app.heat_assignments.models import HeatAssignments
 from app.heats_setup.models import HeatsSetup
 
@@ -116,6 +117,16 @@ async def update_heat(
         ordinal=ordinal,
     )
 
+    # Check if any heat assignments are locked
+    stmt = select(HeatAssignments).where(
+        (HeatAssignments.heat_id == heat.id) & (HeatAssignments.is_locked.is_(True)),
+    )
+    result = await db_session.execute(stmt)
+    locked_assignments = result.scalars().first()
+
+    if locked_assignments:
+        raise conflict_exception(detail="Cannot update heat: heat has locked assignments")
+
     if heat_data.short_name is not None:
         heat.short_name = heat_data.short_name
     if heat_data.start_time is not None:
@@ -144,6 +155,17 @@ async def delete_heat(
         year=year,
         ordinal=ordinal,
     )
+
+    # Check if any heat assignments are locked
+    stmt = select(HeatAssignments).where(
+        (HeatAssignments.heat_id == heat.id) & (HeatAssignments.is_locked.is_(True)),
+    )
+    result = await db_session.execute(stmt)
+    locked_assignments = result.scalars().first()
+
+    if locked_assignments:
+        raise conflict_exception(detail="Cannot delete heat: heat has locked assignments")
+
     await heat.delete(async_session=db_session)
 
 
@@ -159,6 +181,18 @@ async def delete_heats_by_criteria(
     )
     result = await db_session.execute(stmt)
     heats = result.scalars().all()
+
+    # Check if any heat assignments are locked for these heats
+    heat_ids = [heat.id for heat in heats]
+    if heat_ids:
+        locked_stmt = select(HeatAssignments).where(
+            (HeatAssignments.heat_id.in_(heat_ids)) & (HeatAssignments.is_locked.is_(True)),
+        )
+        locked_result = await db_session.execute(locked_stmt)
+        locked_assignments = locked_result.scalars().first()
+
+        if locked_assignments:
+            raise conflict_exception(detail="Cannot delete heats: some heats have locked assignments")
 
     count = len(heats)
     for heat in heats:
@@ -185,8 +219,9 @@ async def create_heats_based_on_setup(
     )
 
     if existing_heats:
-        msg = f"Heats already exist for affiliate_id={affiliate_id}, year={year}, ordinal={ordinal}. Cannot generate heats."
-        raise ValueError(msg)
+        raise conflict_exception(
+            detail=f"Heats already exist for affiliate_id={affiliate_id}, year={year}, ordinal={ordinal}. Cannot generate heats.",
+        )
 
     # 1. Pull data from HeatsSetup for this affiliate_id
     heats_setup_list = await HeatsSetup.find_all(async_session=db_session, affiliate_id=affiliate_id)
@@ -198,8 +233,7 @@ async def create_heats_based_on_setup(
     event = await Events.find_or_raise(async_session=db_session, year=year, ordinal=ordinal)
 
     if not event.start_date:
-        msg = f"Event {year}.{ordinal} has no start_date defined"
-        raise ValueError(msg)
+        raise conflict_exception(detail=f"Event {year}.{ordinal} has no start_date defined")
 
     # 3. For each setup entry, create Heats entries in the database
     created_heats = []
@@ -220,8 +254,9 @@ async def create_heats_based_on_setup(
         day_name = setup.short_name.split()[0]
 
         if day_name not in day_map:
-            msg = f"Invalid day name '{day_name}' in HeatsSetup.short_name '{setup.short_name}'"
-            raise ValueError(msg)
+            raise conflict_exception(
+                detail=f"Invalid day name '{day_name}' in HeatsSetup.short_name '{setup.short_name}'"
+            )
 
         target_weekday = day_map[day_name]
 

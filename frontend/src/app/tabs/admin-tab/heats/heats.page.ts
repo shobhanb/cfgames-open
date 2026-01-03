@@ -437,7 +437,10 @@ export class HeatsPage implements OnInit {
         },
         error: (error) => {
           console.error('Error updating heat:', error);
-          this.toastService.showToast('Error updating heat', 'danger');
+          this.toastService.showToast(
+            'Error updating heat: ' + error.error.detail,
+            'danger'
+          );
         },
       });
   }

@@ -9,3 +9,4 @@ from app.database.base import Base
 class PreferredAthletes(Base):
     crossfit_id: Mapped[int] = mapped_column(Integer, unique=True)
     name: Mapped[str] = mapped_column(String)
+    start_time: Mapped[str] = mapped_column(String)  # e.g. "Sat 7AM", "Fri 6PM"

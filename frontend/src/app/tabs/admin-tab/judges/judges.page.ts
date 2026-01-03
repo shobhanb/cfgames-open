@@ -45,6 +45,7 @@ import {
   starOutline,
 } from 'ionicons/icons';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
+import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
 
 @Component({
   selector: 'app-judges',
@@ -81,6 +82,7 @@ import { AthleteDataService } from 'src/app/services/athlete-data.service';
 export class JudgesPage implements OnInit {
   private apiJudge = inject(apiJudgesService);
   private athleteDataService = inject(AthleteDataService);
+  private athleteNameModalService = inject(AthleteNameModalService);
   config = inject(AppConfigService);
   private toastService = inject(ToastService);
   private alertController = inject(AlertController);
@@ -96,6 +98,10 @@ export class JudgesPage implements OnInit {
       .filter((athlete) => !judgeIds.has(athlete.crossfit_id))
       .sort((a, b) => a.name.localeCompare(b.name));
   });
+
+  availableAthleteNames = computed(() =>
+    this.availableAthletes().map((a) => a.name)
+  );
 
   filteredJudges = computed(() => {
     const search = this.searchTerm().toLowerCase();
@@ -158,61 +164,42 @@ export class JudgesPage implements OnInit {
       return;
     }
 
-    const alert = await this.alertController.create({
-      header: 'Select Athlete to Add',
-      inputs: available.map((athlete) => ({
-        name: 'athlete',
-        type: 'radio',
-        label: `${athlete.name} • ${athlete.team_name}`,
-        value: athlete.crossfit_id,
-      })),
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
+    const selectedName =
+      await this.athleteNameModalService.openAthleteSelectModal(
+        this.availableAthleteNames
+      );
+
+    if (!selectedName) {
+      return;
+    }
+
+    const athlete = available.find((a) => a.name === selectedName);
+
+    if (!athlete) {
+      this.toastService.showToast('Athlete not found', 'danger');
+      return;
+    }
+
+    this.apiJudge
+      .createNewJudgeJudgesPost({
+        body: {
+          crossfit_id: athlete.crossfit_id,
+          name: athlete.name,
         },
-        {
-          text: 'Add',
-          handler: (selected) => {
-            const crossfitId = Number(selected);
-            const athlete = available.find((a) => a.crossfit_id === crossfitId);
-
-            if (!athlete) {
-              this.toastService.showToast(
-                'Please select an athlete',
-                'warning'
-              );
-              return false;
-            }
-
-            this.apiJudge
-              .createNewJudgeJudgesPost({
-                body: {
-                  crossfit_id: athlete.crossfit_id,
-                  name: athlete.name,
-                },
-              })
-              .subscribe({
-                next: () => {
-                  this.toastService.showToast(
-                    `${athlete.name} added as judge`,
-                    'success'
-                  );
-                  this.loadJudges();
-                },
-                error: (error) => {
-                  console.error('Error creating judge:', error);
-                  this.toastService.showToast('Error creating judge', 'danger');
-                },
-              });
-
-            return true;
-          },
+      })
+      .subscribe({
+        next: () => {
+          this.toastService.showToast(
+            `${athlete.name} added as judge`,
+            'success'
+          );
+          this.loadJudges();
         },
-      ],
-    });
-
-    await alert.present();
+        error: (error) => {
+          console.error('Error creating judge:', error);
+          this.toastService.showToast('Error creating judge', 'danger');
+        },
+      });
   }
 
   async createNonGymJudge() {
