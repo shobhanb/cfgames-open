@@ -338,9 +338,13 @@ export class ManageHeatsPage implements OnInit {
           this.heats.set(heatsData);
           this.loadHeatAssignments();
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error loading heats:', error);
-          this.toastService.showToast('Failed to load heats', 'danger');
+          this.toastService.showToast(
+            'Failed to load heats: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger'
+          );
           this.loading.set(false);
           this.dataLoaded.set(true);
         },
@@ -355,10 +359,11 @@ export class ManageHeatsPage implements OnInit {
           this.heatAssignments.set(assignments);
           this.loadAthletePrefs();
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error loading heat assignments:', error);
           this.toastService.showToast(
-            'Failed to load heat assignments',
+            'Failed to load heat assignments: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
             'danger'
           );
           this.loading.set(false);
@@ -389,9 +394,13 @@ export class ManageHeatsPage implements OnInit {
           await this.showAssignmentResults(result);
           this.loadHeats();
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error assigning randomly:', error);
-          this.toastService.showToast('Failed to assign randomly', 'danger');
+          this.toastService.showToast(
+            'Failed to assign randomly: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger'
+          );
           this.loading.set(false);
           this.dataLoaded.set(true);
         },
@@ -456,9 +465,13 @@ Total Assignments: ${result.assigned_count}`;
           );
           this.loadHeats();
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error deleting assignments:', error);
-          this.toastService.showToast('Failed to delete assignments', 'danger');
+          this.toastService.showToast(
+            'Failed to delete assignments: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger'
+          );
           this.loading.set(false);
           this.dataLoaded.set(true);
         },
@@ -480,8 +493,13 @@ Total Assignments: ${result.assigned_count}`;
           this.loading.set(false);
           this.dataLoaded.set(true);
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error loading athlete preferences:', error);
+          this.toastService.showToast(
+            'Failed to load athlete preferences: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger'
+          );
           this.loading.set(false);
           this.dataLoaded.set(true);
         },
@@ -588,9 +606,13 @@ Total Assignments: ${result.assigned_count}`;
           this.toastService.showToast('Athlete added successfully', 'success');
           this.loadHeatAssignments();
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error adding athlete:', error);
-          this.toastService.showToast('Failed to add athlete', 'danger');
+          this.toastService.showToast(
+            'Failed to add athlete: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger'
+          );
         },
       });
   }
@@ -610,9 +632,13 @@ Total Assignments: ${result.assigned_count}`;
           this.toastService.showToast('Assignment removed', 'success');
           this.loadHeatAssignments();
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error removing assignment:', error);
-          this.toastService.showToast('Failed to remove assignment', 'danger');
+          this.toastService.showToast(
+            'Failed to remove assignment: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger'
+          );
         },
       });
   }
@@ -684,9 +710,13 @@ Total Assignments: ${result.assigned_count}`;
             this.toastService.showToast('Athlete removed', 'success');
             this.loadHeatAssignments();
           },
-          error: (error: unknown) => {
+          error: (error) => {
             console.error('Error removing athlete:', error);
-            this.toastService.showToast('Failed to remove athlete', 'danger');
+            this.toastService.showToast(
+              'Failed to remove athlete: ' +
+                (error?.error?.detail ? error.error.detail : 'Unknown error'),
+              'danger'
+            );
           },
         });
       return;
@@ -742,10 +772,13 @@ Total Assignments: ${result.assigned_count}`;
                     );
                     this.loadHeatAssignments();
                   },
-                  error: (error: unknown) => {
+                  error: (error) => {
                     console.error('Error updating assignment:', error);
                     this.toastService.showToast(
-                      'Error assigning athlete',
+                      'Error assigning athlete: ' +
+                        (error?.error?.detail
+                          ? error.error.detail
+                          : 'Unknown error'),
                       'danger'
                     );
                   },
@@ -783,9 +816,13 @@ Total Assignments: ${result.assigned_count}`;
           );
           this.loadHeatAssignments();
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error updating athlete:', error);
-          this.toastService.showToast('Failed to update athlete', 'danger');
+          this.toastService.showToast(
+            'Failed to update athlete: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger'
+          );
         },
       });
   }
@@ -827,9 +864,13 @@ Total Assignments: ${result.assigned_count}`;
             this.toastService.showToast('Judge removed', 'success');
             this.loadHeatAssignments();
           },
-          error: (error: unknown) => {
+          error: (error) => {
             console.error('Error removing judge:', error);
-            this.toastService.showToast('Failed to remove judge', 'danger');
+            this.toastService.showToast(
+              'Failed to remove judge: ' +
+                (error?.error?.detail ? error.error.detail : 'Unknown error'),
+              'danger'
+            );
           },
         });
       return;
@@ -854,9 +895,13 @@ Total Assignments: ${result.assigned_count}`;
           this.toastService.showToast('Judge updated successfully', 'success');
           this.loadHeatAssignments();
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error updating judge:', error);
-          this.toastService.showToast('Failed to update judge', 'danger');
+          this.toastService.showToast(
+            'Failed to update judge: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger'
+          );
         },
       });
   }
@@ -878,8 +923,6 @@ Total Assignments: ${result.assigned_count}`;
       .map(([judgeName, count]) => ({ judgeName, count }))
       .sort((a, b) => b.count - a.count);
 
-    console.log('Heat name', shortName);
-    console.log('Judge Summary', judgeSummary);
     const modal = await this.modalController.create({
       component: JudgeSummaryModalComponent,
       componentProps: {
@@ -951,9 +994,13 @@ Total Assignments: ${result.assigned_count}`;
           );
           this.loadHeatAssignments();
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error updating is_locked:', error);
-          this.toastService.showToast('Failed to update lock status', 'danger');
+          this.toastService.showToast(
+            'Failed to update lock status: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger'
+          );
         },
       });
   }
@@ -983,9 +1030,13 @@ Total Assignments: ${result.assigned_count}`;
         );
         this.loadHeats();
       },
-      error: (error: unknown) => {
+      error: (error) => {
         console.error('Error locking all heats:', error);
-        this.toastService.showToast('Failed to lock heats', 'danger');
+        this.toastService.showToast(
+          'Failed to lock heats: ' +
+            (error?.error?.detail ? error.error.detail : 'Unknown error'),
+          'danger'
+        );
       },
     });
   }
@@ -1012,10 +1063,11 @@ Total Assignments: ${result.assigned_count}`;
           );
           this.loadHeatAssignments();
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error updating is_published:', error);
           this.toastService.showToast(
-            'Failed to update publish status',
+            'Failed to update publish status: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
             'danger'
           );
         },
@@ -1047,9 +1099,13 @@ Total Assignments: ${result.assigned_count}`;
         );
         this.loadHeats();
       },
-      error: (error: unknown) => {
+      error: (error) => {
         console.error('Error publishing all heats:', error);
-        this.toastService.showToast('Failed to publish heats', 'danger');
+        this.toastService.showToast(
+          'Failed to publish heats: ' +
+            (error?.error?.detail ? error.error.detail : 'Unknown error'),
+          'danger'
+        );
       },
     });
   }
@@ -1092,9 +1148,13 @@ Total Assignments: ${result.assigned_count}`;
         );
         this.loadHeatAssignments();
       },
-      error: (error: unknown) => {
+      error: (error) => {
         console.error('Error updating lock status for group:', error);
-        this.toastService.showToast('Failed to update lock status', 'danger');
+        this.toastService.showToast(
+          'Failed to update lock status: ' +
+            (error?.error?.detail ? error.error.detail : 'Unknown error'),
+          'danger'
+        );
       },
     });
   }
@@ -1137,10 +1197,11 @@ Total Assignments: ${result.assigned_count}`;
         );
         this.loadHeatAssignments();
       },
-      error: (error: unknown) => {
+      error: (error) => {
         console.error('Error updating publish status for group:', error);
         this.toastService.showToast(
-          'Failed to update publish status',
+          'Failed to update publish status: ' +
+            (error?.error?.detail ? error.error.detail : 'Unknown error'),
           'danger'
         );
       },
@@ -1203,9 +1264,15 @@ Total Assignments: ${result.assigned_count}`;
                   this.toastService.showToast('Heat time updated', 'success');
                   this.loadHeats();
                 },
-                error: (error: unknown) => {
+                error: (error) => {
                   console.error('Error updating heat:', error);
-                  this.toastService.showToast('Error updating heat', 'danger');
+                  this.toastService.showToast(
+                    'Error updating heat: ' +
+                      (error?.error?.detail
+                        ? error.error.detail
+                        : 'Unknown error'),
+                    'danger'
+                  );
                 },
               });
           },

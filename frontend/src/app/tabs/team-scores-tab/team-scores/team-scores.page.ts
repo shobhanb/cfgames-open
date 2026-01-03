@@ -154,7 +154,12 @@ export class TeamScoresPage implements OnInit {
       },
       error: (err: any) => {
         console.error(err);
-        this.toastService.showToast(err.message, 'danger', null, 3000);
+        this.toastService.showToast(
+          'Error loading team scores: ' + (err?.error?.detail ?? ''),
+          'danger',
+          null,
+          3000
+        );
       },
     });
   }

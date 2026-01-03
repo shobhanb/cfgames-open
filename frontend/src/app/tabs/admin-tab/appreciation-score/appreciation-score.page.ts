@@ -123,10 +123,10 @@ export class AppreciationScorePage implements OnInit {
           this.appreciationScores.set(data);
           this.dataLoaded.set(true);
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error fetching appreciation scores:', error);
           this.toastService.showToast(
-            'Failed to load appreciation scores',
+            'Failed to load appreciation scores: ' + error.error?.detail,
             'danger'
           );
           this.dataLoaded.set(true);
@@ -171,10 +171,10 @@ export class AppreciationScorePage implements OnInit {
           this.deleteAlertOpen.set(false);
           this.scoreToDelete.set(null);
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error deleting appreciation score:', error);
           this.toastService.showToast(
-            'Failed to delete appreciation score',
+            'Failed to delete appreciation score: ' + error.error?.detail,
             'danger'
           );
           this.deleteAlertOpen.set(false);
@@ -207,10 +207,10 @@ export class AppreciationScorePage implements OnInit {
           this.getData();
           this.resetForm();
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error saving appreciation score:', error);
           this.toastService.showToast(
-            'Failed to save appreciation score',
+            'Failed to save appreciation score: ' + error.error?.detail,
             'danger'
           );
         },
@@ -234,10 +234,10 @@ export class AppreciationScorePage implements OnInit {
           );
           this.getData();
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error applying appreciation scores:', error);
           this.toastService.showToast(
-            'Failed to apply appreciation scores',
+            'Failed to apply appreciation scores: ' + error.error?.detail,
             'danger'
           );
         },

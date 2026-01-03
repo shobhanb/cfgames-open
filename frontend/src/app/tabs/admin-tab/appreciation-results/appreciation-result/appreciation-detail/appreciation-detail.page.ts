@@ -100,7 +100,9 @@ export class AppreciationDetailPage implements OnInit {
         error: (error) => {
           console.error('Error fetching appreciation detail:', error);
           this.toastService.showToast(
-            'Error fetching appreciation detail. Please try again later.',
+            `Error fetching appreciation detail. ${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger',
             null,
             2000

@@ -223,8 +223,8 @@ export class AllHeatsPage {
           this.heats.set(heatsData);
           this.loadHeatAssignments();
         },
-        error: (error: unknown) => {
-          console.error('Error loading heats:', error);
+        error: (error) => {
+          console.error('Error loading heats:', error.error?.detail);
           this.loading.set(false);
           this.dataLoaded.set(true);
         },
@@ -244,8 +244,8 @@ export class AllHeatsPage {
           this.loading.set(false);
           this.dataLoaded.set(true);
         },
-        error: (error: unknown) => {
-          console.error('Error loading heat assignments:', error);
+        error: (error) => {
+          console.error('Error loading heat assignments:', error.error?.detail);
           this.loading.set(false);
           this.dataLoaded.set(true);
         },

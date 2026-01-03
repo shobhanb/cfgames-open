@@ -96,9 +96,10 @@ export class JudgeAvailabilityOverridePage implements OnInit {
       next: (data) => {
         this.judges.set(data.sort((a, b) => a.name.localeCompare(b.name)));
       },
-      error: () => {
+      error: (error) => {
         this.toastService.showToast(
-          'Error loading judges list',
+          'Error loading judges list: ' +
+            (error?.error?.detail ? error.error.detail : 'Unknown error'),
           'danger',
           null,
           3000
@@ -149,9 +150,10 @@ export class JudgeAvailabilityOverridePage implements OnInit {
           this.availabilities.set(judgeAvailabilities);
           this.dataLoaded.set(true);
         },
-        error: () => {
+        error: (error) => {
           this.toastService.showToast(
-            'Error loading availabilities',
+            'Error loading availabilities: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
             'danger',
             null,
             3000
@@ -194,13 +196,14 @@ export class JudgeAvailabilityOverridePage implements OnInit {
             2000
           );
         },
-        error: () => {
+        error: (error) => {
           const judge = this.selectedJudge();
           if (judge) {
             this.loadJudgeAvailabilities(judge.id);
           }
           this.toastService.showToast(
-            'Error updating availability',
+            'Error updating availability: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
             'danger',
             null,
             3000
@@ -229,9 +232,10 @@ export class JudgeAvailabilityOverridePage implements OnInit {
                 avails.map((a) => (a.id === updated.id ? updated : a))
               );
             },
-            error: () => {
+            error: (error) => {
               this.toastService.showToast(
-                'Error updating availability',
+                'Error updating availability: ' +
+                  (error?.error?.detail ? error.error.detail : 'Unknown error'),
                 'danger',
                 null,
                 3000
@@ -267,9 +271,10 @@ export class JudgeAvailabilityOverridePage implements OnInit {
                 avails.map((a) => (a.id === updated.id ? updated : a))
               );
             },
-            error: () => {
+            error: (error) => {
               this.toastService.showToast(
-                'Error updating availability',
+                'Error updating availability: ' +
+                  (error?.error?.detail ? error.error.detail : 'Unknown error'),
                 'danger',
                 null,
                 3000
@@ -300,9 +305,10 @@ export class JudgeAvailabilityOverridePage implements OnInit {
                 avails.map((a) => (a.id === updated.id ? updated : a))
               );
             },
-            error: () => {
+            error: (error) => {
               this.toastService.showToast(
-                'Error updating availability',
+                'Error updating availability: ' +
+                  (error?.error?.detail ? error.error.detail : 'Unknown error'),
                 'danger',
                 null,
                 3000

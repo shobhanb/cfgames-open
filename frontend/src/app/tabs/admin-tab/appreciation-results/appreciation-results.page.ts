@@ -96,7 +96,9 @@ export class AppreciationResultsPage implements OnInit {
         },
         error: (error) => {
           this.toastService.showToast(
-            'Error fetching appreciation results. Please try again later.',
+            `Error fetching appreciation results. Please try again later${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger'
           );
           console.error('Error fetching appreciation results:', error);

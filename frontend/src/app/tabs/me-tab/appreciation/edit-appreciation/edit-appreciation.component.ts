@@ -184,7 +184,9 @@ export class EditAppreciationComponent implements OnInit {
         error: (error) => {
           console.error('Error submitting appreciation form:', error);
           this.toastService.showToast(
-            'Failed to submit appreciation form',
+            `Failed to submit appreciation form${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger',
             null,
             3000
@@ -235,7 +237,9 @@ export class EditAppreciationComponent implements OnInit {
         error: (error) => {
           console.error('Error fetching appreciation data:', error);
           this.toastService.showToast(
-            'Failed to load appreciation data',
+            `Failed to load appreciation data${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger',
             null,
             3000

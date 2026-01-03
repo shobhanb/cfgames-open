@@ -172,6 +172,10 @@ export class HeatsPage implements OnInit {
         },
         error: (error) => {
           console.error('Error loading heats setup:', error);
+          this.toastService.showToast(
+            'Error loading heats setup: ' + error.error?.detail,
+            'danger'
+          );
         },
       });
   }
@@ -195,7 +199,6 @@ export class HeatsPage implements OnInit {
       })
       .subscribe({
         next: (data) => {
-          console.log(data);
           const filtered = data.filter(
             (heat) =>
               heat.year === this.config.year &&
@@ -206,7 +209,10 @@ export class HeatsPage implements OnInit {
         },
         error: (error) => {
           console.error('Error loading heats:', error);
-          this.toastService.showToast('Error loading heats', 'danger');
+          this.toastService.showToast(
+            'Error loading heats: ' + error.error?.detail,
+            'danger'
+          );
           this.loading.set(false);
         },
       });
@@ -256,7 +262,10 @@ export class HeatsPage implements OnInit {
         },
         error: (error) => {
           console.error('Error generating heats:', error);
-          this.toastService.showToast('Error generating heats', 'danger');
+          this.toastService.showToast(
+            'Error generating heats: ' + error.error?.detail,
+            'danger'
+          );
         },
       });
   }
@@ -357,7 +366,10 @@ export class HeatsPage implements OnInit {
                 },
                 error: (error) => {
                   console.error('Error adding heat:', error);
-                  this.toastService.showToast('Error adding heat', 'danger');
+                  this.toastService.showToast(
+                    'Error adding heat: ' + error.error?.detail,
+                    'danger'
+                  );
                 },
               });
 
@@ -482,7 +494,10 @@ export class HeatsPage implements OnInit {
         },
         error: (error) => {
           console.error('Error deleting heat:', error);
-          this.toastService.showToast('Error deleting heat', 'danger');
+          this.toastService.showToast(
+            'Error deleting heat: ' + error.error?.detail,
+            'danger'
+          );
         },
       });
   }
@@ -521,7 +536,10 @@ export class HeatsPage implements OnInit {
                 },
                 error: (error) => {
                   console.error('Error deleting heats:', error);
-                  this.toastService.showToast('Error deleting heats', 'danger');
+                  this.toastService.showToast(
+                    'Error deleting heats: ' + error.error?.detail,
+                    'danger'
+                  );
                 },
               });
           },
@@ -571,7 +589,8 @@ export class HeatsPage implements OnInit {
         error: (error: any) => {
           console.error('Error updating heat configuration:', error);
           this.toastService.showToast(
-            'Error updating heat configuration',
+            'Error updating heat configuration: ' +
+              (error.error?.detail ? error.error.detail : 'Unknown error'),
             'danger'
           );
         },

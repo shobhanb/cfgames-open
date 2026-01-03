@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { from, switchMap } from 'rxjs';
 
-export const httpInterceptor: HttpInterceptorFn = (req, next) => {
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(Auth);
   // getIdToken() returns a Promise<string|null>
   return from(

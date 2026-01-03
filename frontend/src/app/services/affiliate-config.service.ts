@@ -2,12 +2,14 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { apiAffiliateConfigService } from '../api/services';
 import { apiAffiliateConfigModel } from '../api/models';
 import { AppConfigService } from './app-config.service';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AffiliateConfigService {
   private apiAffiliateConfig = inject(apiAffiliateConfigService);
+  private toastService = inject(ToastService);
   private appConfig = inject(AppConfigService);
 
   private affiliateConfig = signal<apiAffiliateConfigModel | null>(null);
@@ -52,7 +54,6 @@ export class AffiliateConfigService {
           this.loading.set(false);
         },
         error: (error) => {
-          console.error('Error loading affiliate config:', error);
           this.loading.set(false);
         },
       });

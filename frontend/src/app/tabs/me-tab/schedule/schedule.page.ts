@@ -97,7 +97,9 @@ export class SchedulePage implements OnInit {
       },
       error: (error) => {
         this.toastService.showToast(
-          'Error fetching schedule data',
+          `Error fetching schedule data${
+            error?.error?.detail ? ': ' + error.error.detail : ''
+          }`,
           'danger',
           null,
           3000
@@ -142,7 +144,9 @@ export class SchedulePage implements OnInit {
         error: (error) => {
           console.error('Error updating preferences:', error);
           this.toastService.showToast(
-            'Failed to update preferences',
+            `Failed to update preferences${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger',
             null,
             3000
@@ -192,7 +196,9 @@ export class SchedulePage implements OnInit {
         error: (error) => {
           console.error('Error updating preferences:', error);
           this.toastService.showToast(
-            'Failed to update availability',
+            `Failed to update availability${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger',
             null,
             3000

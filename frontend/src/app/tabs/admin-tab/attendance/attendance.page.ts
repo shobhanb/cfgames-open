@@ -103,7 +103,9 @@ export class AttendancePage implements OnInit {
         error: (error) => {
           console.error('Error applying attendance:', error);
           this.toastService.showToast(
-            'Error applying attendance. Please try again later.',
+            `Error applying attendance. Please try again later${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger'
           );
         },

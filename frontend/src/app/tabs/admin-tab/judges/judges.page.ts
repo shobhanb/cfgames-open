@@ -138,7 +138,12 @@ export class JudgesPage implements OnInit {
       },
       error: (error) => {
         console.error('Error loading judges:', error);
-        this.toastService.showToast('Error loading judges', 'danger');
+        this.toastService.showToast(
+          `Error loading judges${
+            error?.error?.detail ? ': ' + error.error.detail : ''
+          }`,
+          'danger'
+        );
         this.loading.set(false);
       },
     });
@@ -197,7 +202,12 @@ export class JudgesPage implements OnInit {
         },
         error: (error) => {
           console.error('Error creating judge:', error);
-          this.toastService.showToast('Error creating judge', 'danger');
+          this.toastService.showToast(
+            `Error creating judge${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
+            'danger'
+          );
         },
       });
   }
@@ -247,7 +257,12 @@ export class JudgesPage implements OnInit {
                 },
                 error: (error) => {
                   console.error('Error creating judge:', error);
-                  this.toastService.showToast('Error creating judge', 'danger');
+                  this.toastService.showToast(
+                    `Error creating judge${
+                      error?.error?.detail ? ': ' + error.error.detail : ''
+                    }`,
+                    'danger'
+                  );
                 },
               });
 
@@ -304,7 +319,9 @@ export class JudgesPage implements OnInit {
                   error: (error) => {
                     console.error('Error updating judge:', error);
                     this.toastService.showToast(
-                      'Error updating judge',
+                      `Error updating judge${
+                        error?.error?.detail ? ': ' + error.error.detail : ''
+                      }`,
                       'danger'
                     );
                   },
@@ -348,7 +365,12 @@ export class JudgesPage implements OnInit {
                 },
                 error: (error) => {
                   console.error('Error deleting judge:', error);
-                  this.toastService.showToast('Error deleting judge', 'danger');
+                  this.toastService.showToast(
+                    `Error deleting judge${
+                      error?.error?.detail ? ': ' + error.error.detail : ''
+                    }`,
+                    'danger'
+                  );
                 },
               });
           },
@@ -381,7 +403,9 @@ export class JudgesPage implements OnInit {
         error: (error) => {
           console.error('Error updating preferred status:', error);
           this.toastService.showToast(
-            'Error updating preferred status',
+            `Error updating preferred status${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger'
           );
         },

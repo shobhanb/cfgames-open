@@ -46,6 +46,7 @@ import {
 } from 'src/app/api/models';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { AthleteNameModalComponent } from 'src/app/shared/athlete-name-modal/athlete-name-modal.component';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-preferred-athletes',
@@ -86,6 +87,7 @@ export class PreferredAthletesPage implements OnInit {
   private apiPreferredAthletes = inject(apiPreferredAthletesService);
   private alertController = inject(AlertController);
   private modalController = inject(ModalController);
+  private toastService = inject(ToastService);
   athleteDataService = inject(AthleteDataService);
 
   readonly preferredAthletes = signal<apiPreferredAthleteModel[]>([]);
@@ -129,6 +131,18 @@ export class PreferredAthletesPage implements OnInit {
     this.loadPreferredAthletes();
   }
 
+  private getErrorMessage(error: any, baseMessage: string): string {
+    if (error?.error) {
+      const detail =
+        error.error.detail ||
+        (typeof error.error === 'object'
+          ? JSON.stringify(error.error)
+          : error.error);
+      return `${baseMessage}: ${detail}`;
+    }
+    return baseMessage;
+  }
+
   loadPreferredAthletes(): void {
     this.loading.set(true);
     this.apiPreferredAthletes
@@ -142,6 +156,12 @@ export class PreferredAthletesPage implements OnInit {
         },
         error: (error) => {
           console.error('Error loading preferred athletes:', error);
+          this.toastService.showToast(
+            `Error loading preferred athletes${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
+            'danger'
+          );
           this.loading.set(false);
         },
       });
@@ -214,6 +234,12 @@ export class PreferredAthletesPage implements OnInit {
         },
         error: (error) => {
           console.error('Error adding athlete:', error);
+          this.toastService.showToast(
+            `Error adding athlete${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
+            'danger'
+          );
           this.loading.set(false);
         },
       });
@@ -262,6 +288,12 @@ export class PreferredAthletesPage implements OnInit {
         },
         error: (error) => {
           console.error('Error updating athlete:', error);
+          this.toastService.showToast(
+            `Error updating athlete${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
+            'danger'
+          );
           this.loading.set(false);
         },
       });
@@ -291,6 +323,12 @@ export class PreferredAthletesPage implements OnInit {
                 },
                 error: (error) => {
                   console.error('Error deleting athlete:', error);
+                  this.toastService.showToast(
+                    `Error deleting athlete${
+                      error?.error?.detail ? ': ' + error.error.detail : ''
+                    }`,
+                    'danger'
+                  );
                   this.loading.set(false);
                 },
               });

@@ -126,7 +126,12 @@ export class SideScoresPage implements OnInit {
         },
         error: (error) => {
           console.error('Error fetching sidescores:', error);
-          this.toastService.showToast('Failed to load sidescores', 'danger');
+          this.toastService.showToast(
+            `Failed to load sidescores${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
+            'danger'
+          );
           this.dataLoaded.set(true);
         },
       });
@@ -175,7 +180,12 @@ export class SideScoresPage implements OnInit {
         },
         error: (error) => {
           console.error('Error deleting sidescore:', error);
-          this.toastService.showToast('Failed to delete side score', 'danger');
+          this.toastService.showToast(
+            `Failed to delete side score${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
+            'danger'
+          );
           this.deleteAlertOpen.set(false);
         },
       });
@@ -210,7 +220,12 @@ export class SideScoresPage implements OnInit {
         },
         error: (error) => {
           console.error('Error saving sidescore:', error);
-          this.toastService.showToast('Failed to save side score', 'danger');
+          this.toastService.showToast(
+            `Failed to save side score${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
+            'danger'
+          );
         },
       });
   }
@@ -234,7 +249,12 @@ export class SideScoresPage implements OnInit {
         },
         error: (error) => {
           console.error('Error applying sidescores:', error);
-          this.toastService.showToast('Failed to apply side scores', 'danger');
+          this.toastService.showToast(
+            `Failed to apply side scores${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
+            'danger'
+          );
         },
       });
   }

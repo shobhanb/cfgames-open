@@ -86,7 +86,12 @@ export class RenameTeamsPage implements OnInit {
           this.dataLoaded.set(true);
         },
         error: (err: any) => {
-          this.toastService.showToast(err.message, 'danger', null, 3000);
+          this.toastService.showToast(
+            'Error getting team names: ' + err.error?.detail,
+            'danger',
+            null,
+            3000
+          );
         },
       });
   }
@@ -117,7 +122,12 @@ export class RenameTeamsPage implements OnInit {
             this.getData();
           },
           error: (err: any) => {
-            this.toastService.showToast(err.message, 'danger', null, 3000);
+            this.toastService.showToast(
+              'Error renaming team: ' + err.error?.detail,
+              'danger',
+              null,
+              3000
+            );
           },
         });
     }

@@ -124,9 +124,10 @@ export class SchedulePrefPage implements OnInit {
           this.prefs.set([...this.initialPrefs]);
           this.dataLoaded.set(true);
         },
-        error: () => {
+        error: (error) => {
           this.toastService.showToast(
-            'Error fetching schedule data',
+            'Error fetching schedule data' +
+              (error?.error?.detail ? ': ' + error.error.detail : ''),
             'danger',
             null,
             3000
@@ -175,7 +176,9 @@ export class SchedulePrefPage implements OnInit {
         error: (error) => {
           console.error('Error updating preferences:', error);
           this.toastService.showToast(
-            'Failed to update preferences',
+            `Failed to update preferences${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger',
             null,
             3000

@@ -125,7 +125,12 @@ export class CfEventsPage implements OnInit {
       },
       error: (error) => {
         console.error('Error loading events:', error);
-        this.toastService.showToast('Error loading events', 'danger');
+        this.toastService.showToast(
+          `Error loading events${
+            error?.error?.detail ? ': ' + error.error.detail : ''
+          }`,
+          'danger'
+        );
         this.loading.set(false);
       },
     });
@@ -198,7 +203,12 @@ export class CfEventsPage implements OnInit {
       },
       error: (error) => {
         console.error('Error creating event:', error);
-        this.toastService.showToast('Error adding event', 'danger');
+        this.toastService.showToast(
+          `Error adding event${
+            error?.error?.detail ? ': ' + error.error.detail : ''
+          }`,
+          'danger'
+        );
       },
     });
   }
@@ -256,7 +266,12 @@ export class CfEventsPage implements OnInit {
         },
         error: (error) => {
           console.error('Error updating event:', error);
-          this.toastService.showToast('Error updating event', 'danger');
+          this.toastService.showToast(
+            `Error updating event${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
+            'danger'
+          );
         },
       });
   }
@@ -293,7 +308,12 @@ export class CfEventsPage implements OnInit {
         },
         error: (error) => {
           console.error('Error deleting event:', error);
-          this.toastService.showToast('Error deleting event', 'danger');
+          this.toastService.showToast(
+            `Error deleting event${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
+            'danger'
+          );
         },
       });
   }

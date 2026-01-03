@@ -119,8 +119,12 @@ export class BlogPage implements OnInit {
           );
           this.dataLoaded.set(true);
         },
-        error: (error: any) => {
-          this.toastService.showToast('Failed to load blog posts', 'danger');
+        error: (error) => {
+          this.toastService.showToast(
+            'Failed to load blog posts: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger'
+          );
         },
       });
   }
@@ -154,8 +158,12 @@ export class BlogPage implements OnInit {
             );
             this.getData();
           },
-          error: (error: any) => {
-            this.toastService.showToast('Failed to update blog post', 'danger');
+          error: (error) => {
+            this.toastService.showToast(
+              'Failed to update blog post: ' +
+                (error?.error?.detail ? error.error.detail : 'Unknown error'),
+              'danger'
+            );
           },
         });
     }
@@ -179,8 +187,12 @@ export class BlogPage implements OnInit {
             );
             this.getData();
           },
-          error: (error: any) => {
-            this.toastService.showToast('Failed to create blog post', 'danger');
+          error: (error) => {
+            this.toastService.showToast(
+              'Failed to create blog post: ' +
+                (error?.error?.detail ? error.error.detail : 'Unknown error'),
+              'danger'
+            );
           },
         });
     }
@@ -197,8 +209,12 @@ export class BlogPage implements OnInit {
           );
           this.getData();
         },
-        error: (error: any) => {
-          this.toastService.showToast('Failed to delete blog post', 'danger');
+        error: (error) => {
+          this.toastService.showToast(
+            'Failed to delete blog post: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger'
+          );
         },
       });
   }

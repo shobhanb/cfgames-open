@@ -3,11 +3,13 @@ import { apiAthleteService } from '../api/services';
 import { apiAthleteDetail } from '../api/models';
 import { AppConfigService } from './app-config.service';
 import { HelperFunctionsService } from './helper-functions.service';
+import { ToastService } from './toast.service';
 
 @Injectable({ providedIn: 'root' })
 export class AthleteDataService {
   private apiAthlete = inject(apiAthleteService);
   private helperFunctions = inject(HelperFunctionsService);
+  private toastService = inject(ToastService);
   private config = inject(AppConfigService);
 
   readonly athleteData = signal<apiAthleteDetail[]>([]);

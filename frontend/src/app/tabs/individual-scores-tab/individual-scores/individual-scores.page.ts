@@ -202,7 +202,12 @@ export class IndividualScoresPage implements OnInit {
       },
       error: (err: any) => {
         console.error(err);
-        this.toastService.showToast(err.message, 'danger', null, 3000);
+        this.toastService.showToast(
+          'Error fetching individual scores: ' + err.error?.detail,
+          'danger',
+          null,
+          3000
+        );
       },
     });
   }

@@ -77,13 +77,12 @@ export class JudgeAvailabilityPage implements OnInit {
       .getMyJudgeAvailabilityJudgeAvailabilityMeGet()
       .subscribe({
         next: (data) => {
-          console.log(data);
           this.availabilities.set(data);
           this.dataLoaded.set(true);
         },
         error: (err) => {
           this.toastService.showToast(
-            'Error loading availabilities',
+            'Error loading availabilities : ' + (err?.error?.detail ?? ''),
             'danger',
             null,
             3000
@@ -128,7 +127,7 @@ export class JudgeAvailabilityPage implements OnInit {
           // Revert the checkbox state on error
           this.loadAvailabilities();
           this.toastService.showToast(
-            'Error updating availability',
+            'Error updating availability: ' + (err?.error?.detail ?? ''),
             'danger',
             null,
             3000

@@ -181,7 +181,14 @@ export class MyHeatsPage implements OnInit {
                 );
                 this.dataLoaded.set(true);
               },
-              error: () => {
+              error: (error) => {
+                this.toastService.showToast(
+                  'Error loading heat assignments: ' +
+                    (error?.error?.detail ?? ''),
+                  'danger',
+                  null,
+                  3000
+                );
                 this.dataLoaded.set(true);
               },
             });
@@ -195,15 +202,22 @@ export class MyHeatsPage implements OnInit {
                   this.athleteAssignment.set(assignment);
                   this.dataLoaded.set(true);
                 },
-                error: () => {
+                error: (error) => {
+                  this.toastService.showToast(
+                    'Error loading heat assignment: ' +
+                      (error?.error?.detail ?? ''),
+                    'danger',
+                    null,
+                    3000
+                  );
                   this.dataLoaded.set(true);
                 },
               });
           }
         },
-        error: () => {
+        error: (error) => {
           this.toastService.showToast(
-            'Error loading heat details',
+            'Error loading heat details: ' + (error?.error?.detail ?? ''),
             'danger',
             null,
             3000

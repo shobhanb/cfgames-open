@@ -85,7 +85,10 @@ export class MyAppreciationTextPage implements OnInit {
           this.dataLoaded.set(true);
         },
         error: (error) => {
-          console.error('Error loading appreciation text:', error);
+          console.error(
+            'Error loading appreciation text:',
+            error.error?.detail
+          );
           this.dataLoaded.set(true);
         },
       });

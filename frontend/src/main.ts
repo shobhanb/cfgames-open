@@ -17,11 +17,12 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getMessaging, provideMessaging } from '@angular/fire/messaging';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { httpInterceptor } from './app/providers/http.interceptor';
 import { ApiModule } from './app/api/api.module';
 import { AppConfigService } from './app/services/app-config.service';
 import { isDevMode } from '@angular/core';
 import { provideServiceWorker } from '@angular/service-worker';
+import { authInterceptor } from './app/providers/auth.interceptor';
+import { errorInterceptor } from './app/providers/error.interceptor';
 
 // Create config service instance to get dynamic configuration
 const configService = new AppConfigService();
@@ -38,7 +39,7 @@ bootstrapApplication(AppComponent, {
     // Use dynamic API base URL
     ...(ApiModule.forRoot({ rootUrl: configService.apiBaseUrl }).providers ??
       []),
-    provideHttpClient(withInterceptors([httpInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideFirebaseApp(() =>
       initializeApp({
         projectId: 'cfgames-21159',

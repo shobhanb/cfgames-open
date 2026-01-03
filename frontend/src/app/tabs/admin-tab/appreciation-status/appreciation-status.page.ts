@@ -130,7 +130,9 @@ export class AppreciationStatusPage implements OnInit {
         error: (error) => {
           console.error('Error fetching appreciation status:', error);
           this.toastService.showToast(
-            'Failed to load appreciation status',
+            `Failed to load appreciation status${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger',
             null,
             3000
@@ -166,7 +168,9 @@ export class AppreciationStatusPage implements OnInit {
         error: (error) => {
           console.error('Error adding appreciation event:', error);
           this.toastService.showToast(
-            `Failed to enable form ${event.event}`,
+            `Failed to enable form ${event.event}${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger',
             null,
             3000
@@ -197,7 +201,9 @@ export class AppreciationStatusPage implements OnInit {
         error: (error) => {
           console.error('Error deleting appreciation event:', error);
           this.toastService.showToast(
-            `Failed to disable form ${event.event}`,
+            `Failed to disable form ${event.event}${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger',
             null,
             3000

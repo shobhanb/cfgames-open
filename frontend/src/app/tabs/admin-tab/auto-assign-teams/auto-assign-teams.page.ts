@@ -139,10 +139,11 @@ export class AutoAssignTeamsPage implements OnInit {
           this.teamAssignmentResults.set(data);
           this.getData();
         },
-        error: (error: any) => {
+        error: (error) => {
           console.error('Error during auto assignment:', error);
           this.toastService.showToast(
-            'Failed to auto-assign athletes. Please try again.',
+            'Failed to auto-assign athletes: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
             'danger'
           );
         },

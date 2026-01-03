@@ -107,7 +107,8 @@ export class EditAthleteComponent implements OnInit {
         },
         error: (err) => {
           this.toastService.showToast(
-            'Failed to assign athlete to team',
+            'Failed to assign athlete to team: ' +
+              (err.error?.detail ? err.error.detail : 'Unknown error'),
             'danger',
             null,
             3000

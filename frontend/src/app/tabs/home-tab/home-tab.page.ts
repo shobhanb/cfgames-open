@@ -123,7 +123,10 @@ export class HomeTabPage implements OnInit {
           this.athleteCountsData.set(data);
         },
         error: (error) => {
-          console.error('Error fetching athlete summary counts:', error);
+          console.error(
+            'Error fetching athlete summary counts:',
+            error.error?.detail
+          );
           this.athleteCountsData.set(null);
         },
       });
@@ -136,13 +139,15 @@ export class HomeTabPage implements OnInit {
       .subscribe({
         next: (data) => {
           if (data && data.length > 0) {
-            console.log(data[0].timestamp);
             const utcDate = new Date(data[0].timestamp + '+0000');
             this.cfGamesDataTimestamp.set(utcDate);
           }
         },
         error: (error) => {
-          console.error('Error fetching CF Games data timestamp:', error);
+          console.error(
+            'Error fetching CF Games data timestamp:',
+            error.error?.detail
+          );
           this.cfGamesDataTimestamp.set(null);
         },
       });

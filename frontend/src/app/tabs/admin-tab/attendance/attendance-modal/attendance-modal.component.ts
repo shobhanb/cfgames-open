@@ -100,7 +100,15 @@ export class AttendanceModalComponent implements OnInit {
             })
           );
         },
-        error: (error) => {},
+        error: (error) => {
+          this.toastService.showToast(
+            `Error fetching attendance data. ${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
+            'danger'
+          );
+          console.error('Error fetching attendance data:', error);
+        },
       });
   }
 
@@ -146,7 +154,9 @@ export class AttendanceModalComponent implements OnInit {
         error: (error) => {
           console.error('Error updating attendance:', error);
           this.toastService.showToast(
-            'Failed to update attendance',
+            `Failed to update attendance${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger',
             null,
             3000

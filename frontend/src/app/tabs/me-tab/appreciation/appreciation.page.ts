@@ -169,7 +169,7 @@ export class AppreciationPage implements OnInit {
         error: (error) => {
           console.error('Error fetching appreciations:', error);
           this.toastService.showToast(
-            'Failed to load appreciation data',
+            'Failed to load appreciation data: ' + (error?.error?.detail ?? ''),
             'danger',
             null,
             3000
@@ -194,7 +194,9 @@ export class AppreciationPage implements OnInit {
         error: (error) => {
           console.error('Error fetching appreciation status:', error);
           this.toastService.showToast(
-            'Failed to load appreciation status',
+            `Failed to load appreciation data${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger',
             null,
             3000
@@ -241,7 +243,9 @@ export class AppreciationPage implements OnInit {
         error: (error) => {
           console.error('Error deleting appreciation:', error);
           this.toastService.showToast(
-            'Failed to delete appreciation',
+            `Failed to delete appreciation${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger',
             null,
             3000
