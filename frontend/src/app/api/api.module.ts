@@ -16,7 +16,6 @@ import { apiAppreciationScoreService } from './services/api-appreciation-score.s
 import { apiAppreciationService } from './services/api-appreciation.service';
 import { apiAppreciationStatusService } from './services/api-appreciation-status.service';
 import { apiSidescoreService } from './services/api-sidescore.service';
-import { apiTeamsService } from './services/api-teams.service';
 import { apiAthletePrefsService } from './services/api-athlete-prefs.service';
 import { apiJudgesService } from './services/api-judges.service';
 import { apiJudgeAvailabilityService } from './services/api-judge-availability.service';
@@ -45,7 +44,6 @@ import { apiAffiliateConfigService } from './services/api-affiliate-config.servi
     apiAppreciationService,
     apiAppreciationStatusService,
     apiSidescoreService,
-    apiTeamsService,
     apiAthletePrefsService,
     apiJudgesService,
     apiJudgeAvailabilityService,

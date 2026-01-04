@@ -26,7 +26,8 @@
         placeholder="Choose an event"
         interface="popover"
       >
-        @for (event of eventService.currentYearEvents(); track event.ordinal) {
+        @for (event of eventService.currentYearWeekendEvents(); track
+        event.ordinal) {
         <ion-select-option [value]="event">{{ event.event }}</ion-select-option>
         }
       </ion-select>

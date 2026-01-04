@@ -32,7 +32,8 @@
       [routerLink]="'/admin/appreciation-results/' + item.year + '/' + item.ordinal"
     >
       <ion-label
-        >{{ eventService.getEventName(item.ordinal, item.year) }}</ion-label
+        >{{ eventService.getWeekendEventName(item.ordinal, item.year)
+        }}</ion-label
       >
       <ion-note>{{ item.count }}</ion-note>
     </ion-item>

@@ -126,7 +126,8 @@ export class ManageHeatsPage implements OnInit {
   searchTerm = signal<string>('');
 
   // Computed
-  currentYearEvents = computed(() => this.eventService.currentYearEvents());
+  currentYearEvents = this.eventService.currentYearWeekendEvents;
+
   athleteNames = computed(() =>
     this.athleteDataService.athleteData().map((a) => a.name)
   );
@@ -652,7 +653,7 @@ Total Assignments: ${result.assigned_count}`;
 
   getEventName(ordinal: number): string {
     return (
-      this.eventService.getEventName(ordinal, this.appConfig.year) ??
+      this.eventService.getWeekendEventName(ordinal, this.appConfig.year) ??
       'Unknown Event'
     );
   }

@@ -86,7 +86,7 @@ export class AllHeatsPage {
   shortNameFilter = signal<string>('all');
 
   // Computed
-  currentYearEvents = computed(() => this.eventService.currentYearEvents());
+  currentYearEvents = this.eventService.currentYearWeekendEvents;
 
   // Get unique short names from heats
   uniqueShortNames = computed(() => {
@@ -277,7 +277,7 @@ export class AllHeatsPage {
 
   getEventName(ordinal: number): string {
     return (
-      this.eventService.getEventName(ordinal, this.appConfig.year) ??
+      this.eventService.getWeekendEventName(ordinal, this.appConfig.year) ??
       'Unknown Event'
     );
   }

@@ -12,7 +12,6 @@ export { apiAppreciationScoreService } from './services/api-appreciation-score.s
 export { apiAppreciationService } from './services/api-appreciation.service';
 export { apiAppreciationStatusService } from './services/api-appreciation-status.service';
 export { apiSidescoreService } from './services/api-sidescore.service';
-export { apiTeamsService } from './services/api-teams.service';
 export { apiAthletePrefsService } from './services/api-athlete-prefs.service';
 export { apiJudgesService } from './services/api-judges.service';
 export { apiJudgeAvailabilityService } from './services/api-judge-availability.service';

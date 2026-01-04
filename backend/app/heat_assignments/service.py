@@ -79,6 +79,7 @@ async def get_heat_assignment(
 async def get_my_db_heat_assignments_judge(
     db_session: AsyncSession,
     crossfit_id: int,
+    year: int,
     ordinal: int,
 ) -> list[dict[str, Any]]:
     """Get heat assignments for a judge by their crossfit_id and ordinal."""
@@ -88,6 +89,7 @@ async def get_my_db_heat_assignments_judge(
         .where(
             HeatAssignments.judge_crossfit_id == crossfit_id,
             Heats.ordinal == ordinal,
+            Heats.year == year,
             HeatAssignments.is_published.is_(True),
         )
     )
@@ -118,6 +120,7 @@ async def get_my_db_heat_assignments_judge(
 async def get_my_db_heat_assignment_athlete(
     db_session: AsyncSession,
     crossfit_id: int,
+    year: int,
     ordinal: int,
 ) -> dict[str, Any]:
     """Get heat assignment for an athlete by their crossfit_id and ordinal."""
@@ -127,6 +130,7 @@ async def get_my_db_heat_assignment_athlete(
         .where(
             HeatAssignments.athlete_crossfit_id == crossfit_id,
             Heats.ordinal == ordinal,
+            Heats.year == year,
             HeatAssignments.is_published.is_(True),
         )
     )

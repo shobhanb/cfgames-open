@@ -11,12 +11,14 @@ import { RequestBuilder } from '../../request-builder';
 import { apiHeatAssignmentModel } from '../../models/api-heat-assignment-model';
 
 export interface GetMyHeatAssignmentsJudgeHeatAssignmentsMeJudgeGet$Params {
+  year: number;
   ordinal: number;
 }
 
 export function getMyHeatAssignmentsJudgeHeatAssignmentsMeJudgeGet(http: HttpClient, rootUrl: string, params: GetMyHeatAssignmentsJudgeHeatAssignmentsMeJudgeGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiHeatAssignmentModel>>> {
   const rb = new RequestBuilder(rootUrl, getMyHeatAssignmentsJudgeHeatAssignmentsMeJudgeGet.PATH, 'get');
   if (params) {
+    rb.query('year', params.year, {});
     rb.query('ordinal', params.ordinal, {});
   }
 

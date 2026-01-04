@@ -125,6 +125,7 @@ export class EditAppreciationComponent implements OnInit {
           this.selectedTeamVoteName.set(selectedAthlete);
         }
       });
+    console.log('Non athlete names: ', this.teamAthleteNames());
   }
 
   onClickNonTeamVoteName() {
@@ -135,6 +136,7 @@ export class EditAppreciationComponent implements OnInit {
           this.selectedNonTeamVoteName.set(selectedAthlete);
         }
       });
+    console.log('Non athlete names: ', this.nonTeamAthleteNames());
   }
 
   isFormValid() {

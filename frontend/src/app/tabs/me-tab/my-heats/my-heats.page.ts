@@ -49,7 +49,6 @@ import {
 import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { AppConfigService } from 'src/app/services/app-config.service';
-import { forkJoin } from 'rxjs';
 import { addIcons } from 'ionicons';
 import { person } from 'ionicons/icons';
 
@@ -109,10 +108,8 @@ export class MyHeatsPage implements OnInit {
   readonly selectedEventName = computed(() => {
     const ordinal = this.selectedOrdinal();
     if (!ordinal) return null;
-    return this.eventService.getEventName(ordinal, this.config.year);
+    return this.eventService.getWeekendEventName(ordinal, this.config.year);
   });
-
-  ionViewWillEnter() {}
 
   ngOnInit() {}
 
@@ -153,49 +150,68 @@ export class MyHeatsPage implements OnInit {
 
           // Now load assignments
           if (this.isJudge) {
-            forkJoin({
-              athlete:
-                this.apiHeatAssignments.getMyHeatAssignmentsAthleteHeatAssignmentsMeAthleteGet(
-                  { ordinal }
-                ),
-              judge:
-                this.apiHeatAssignments.getMyHeatAssignmentsJudgeHeatAssignmentsMeJudgeGet(
-                  { ordinal }
-                ),
-            }).subscribe({
-              next: ({ athlete, judge }) => {
-                this.athleteAssignment.set(athlete);
-                this.judgeAssignments.set(
-                  judge.sort(
-                    (a: apiHeatAssignmentModel, b: apiHeatAssignmentModel) => {
-                      const heatA = this.getHeatDetails(a.heat_id);
-                      const heatB = this.getHeatDetails(b.heat_id);
-                      if (heatA && heatB) {
-                        return (heatA.start_time ?? '').localeCompare(
-                          heatB.start_time ?? ''
-                        );
+            let athleteLoaded = false;
+            let judgeLoaded = false;
+            const markLoaded = () => {
+              if (athleteLoaded && judgeLoaded) {
+                this.dataLoaded.set(true);
+              }
+            };
+
+            this.apiHeatAssignments
+              .getMyHeatAssignmentsAthleteHeatAssignmentsMeAthleteGet({
+                year: year,
+                ordinal: ordinal,
+              })
+              .subscribe({
+                next: (athlete) => {
+                  this.athleteAssignment.set(athlete);
+                  athleteLoaded = true;
+                  markLoaded();
+                },
+                error: () => {
+                  athleteLoaded = true;
+                  markLoaded();
+                },
+              });
+
+            this.apiHeatAssignments
+              .getMyHeatAssignmentsJudgeHeatAssignmentsMeJudgeGet({
+                year: year,
+                ordinal: ordinal,
+              })
+              .subscribe({
+                next: (judge) => {
+                  this.judgeAssignments.set(
+                    judge.sort(
+                      (
+                        a: apiHeatAssignmentModel,
+                        b: apiHeatAssignmentModel
+                      ) => {
+                        const heatA = this.getHeatDetails(a.heat_id);
+                        const heatB = this.getHeatDetails(b.heat_id);
+                        if (heatA && heatB) {
+                          return (heatA.start_time ?? '').localeCompare(
+                            heatB.start_time ?? ''
+                          );
+                        }
+                        return 0;
                       }
-                      return 0;
-                    }
-                  )
-                );
-                this.dataLoaded.set(true);
-              },
-              error: (error) => {
-                this.toastService.showToast(
-                  'Error loading heat assignments: ' +
-                    (error?.error?.detail ?? ''),
-                  'danger',
-                  null,
-                  3000
-                );
-                this.dataLoaded.set(true);
-              },
-            });
+                    )
+                  );
+                  judgeLoaded = true;
+                  markLoaded();
+                },
+                error: () => {
+                  judgeLoaded = true;
+                  markLoaded();
+                },
+              });
           } else {
             this.apiHeatAssignments
               .getMyHeatAssignmentsAthleteHeatAssignmentsMeAthleteGet({
-                ordinal,
+                year: year,
+                ordinal: ordinal,
               })
               .subscribe({
                 next: (assignment) => {
@@ -203,13 +219,6 @@ export class MyHeatsPage implements OnInit {
                   this.dataLoaded.set(true);
                 },
                 error: (error) => {
-                  this.toastService.showToast(
-                    'Error loading heat assignment: ' +
-                      (error?.error?.detail ?? ''),
-                    'danger',
-                    null,
-                    3000
-                  );
                   this.dataLoaded.set(true);
                 },
               });

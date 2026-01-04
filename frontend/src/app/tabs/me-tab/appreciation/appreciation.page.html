@@ -27,7 +27,8 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title>
-        {{ eventService.getEventName(appreciation.ordinal, appreciation.year)}}
+        {{ eventService.getWeekendEventName(appreciation.ordinal,
+        appreciation.year)}}
       </ion-card-title>
       @if (checkIfAppreciationStatusOpen(appreciation.ordinal,
       appreciation.year)) {
@@ -180,7 +181,8 @@
       <ion-fab-button
         color="primary"
         [routerLink]="'/me/appreciation/' + item.year + '/' + item.ordinal"
-        >{{ eventService.getEventName(item.ordinal, item.year)}}</ion-fab-button
+        >{{ eventService.getWeekendEventName(item.ordinal,
+        item.year)}}</ion-fab-button
       >
       }
     </ion-fab-list>

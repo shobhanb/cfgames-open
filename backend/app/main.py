@@ -31,7 +31,6 @@ from app.preferred_athletes.views import preferred_athletes_router
 from app.score.views import score_router
 from app.settings import env_settings, url_settings
 from app.sidescore.views import sidescore_router
-from app.teams.views import teams_router
 
 log = logging.getLogger("uvicorn.error")
 
@@ -71,7 +70,6 @@ app.include_router(appreciation_score_router)
 app.include_router(appreciation_router)
 app.include_router(appreciation_open_router)
 app.include_router(sidescore_router)
-app.include_router(teams_router)
 app.include_router(athlete_prefs_router)
 app.include_router(judges_router)
 app.include_router(judge_availability_router)

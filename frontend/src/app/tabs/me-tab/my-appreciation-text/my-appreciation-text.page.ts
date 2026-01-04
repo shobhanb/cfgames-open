@@ -30,6 +30,7 @@ import { apiAppreciationResultNotes } from 'src/app/api/models';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
 import { EventService } from 'src/app/services/event.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-my-appreciation-text',
@@ -62,10 +63,11 @@ export class MyAppreciationTextPage implements OnInit {
   private apiAppreciation = inject(apiAppreciationService);
   athleteDataService = inject(AthleteDataService);
   eventService = inject(EventService);
+  private config = inject(AppConfigService);
 
+  currentYear = this.config.year;
   appreciationResults = signal<apiAppreciationResultNotes[]>([]);
   dataLoaded = signal(false);
-  currentYear = 2025;
 
   ngOnInit() {
     this.loadAppreciationText();
@@ -75,7 +77,7 @@ export class MyAppreciationTextPage implements OnInit {
     this.dataLoaded.set(false);
     this.apiAppreciation
       .getMyAppreciationTextAppreciationMyAppreciationTextGet({
-        year: this.currentYear,
+        year: this.config.year,
       })
       .subscribe({
         next: (data) => {

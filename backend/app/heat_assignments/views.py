@@ -40,12 +40,14 @@ heat_assignments_router = APIRouter(prefix="/heat_assignments", tags=["heat_assi
 async def get_my_heat_assignments_athlete(
     db_session: db_dependency,
     user: verified_user_dependency,
+    year: int,
     ordinal: int,
 ) -> dict[str, Any]:
     """Get heat assignments for the authenticated athlete."""
     return await get_my_db_heat_assignment_athlete(
         db_session=db_session,
         crossfit_id=user.crossfit_id,
+        year=year,
         ordinal=ordinal,
     )
 
@@ -58,12 +60,14 @@ async def get_my_heat_assignments_athlete(
 async def get_my_heat_assignments_judge(
     db_session: db_dependency,
     user: verified_user_dependency,
+    year: int,
     ordinal: int,
 ) -> list[dict[str, Any]]:
     """Get heat assignments for the authenticated judge."""
     return await get_my_db_heat_assignments_judge(
         db_session=db_session,
         crossfit_id=user.crossfit_id,
+        year=year,
         ordinal=ordinal,
     )
 

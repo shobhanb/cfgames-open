@@ -15,6 +15,18 @@ export class EventService {
     this.events().filter((event) => event.year === this.config.year)
   );
 
+  readonly currentYearWeekendEvents = computed<apiEventsModel[]>(() => {
+    const seen = new Set<string>();
+    return this.currentYearEvents()
+      .filter((event) => {
+        const weekend = event.event.slice(0, 4);
+        if (seen.has(weekend)) return false;
+        seen.add(weekend);
+        return true;
+      })
+      .map((event) => ({ ...event, event: event.event.slice(0, 4) }));
+  });
+
   readonly baseURL = 'https://games.crossfit.com/workouts/open';
 
   readonly eventsLoaded = computed<boolean>(() => this.events().length > 0);
@@ -52,6 +64,16 @@ export class EventService {
       (e: apiEventsModel) => e.year === year && e.ordinal === ordinal
     );
     return event ? event.event : null;
+  }
+
+  getWeekendEventName(ordinal: number, year?: number | null): string | null {
+    if (year === null) {
+      year = this.config.year;
+    }
+    const event = this.events().find(
+      (e: apiEventsModel) => e.year === year && e.ordinal === ordinal
+    );
+    return event ? event.event.slice(0, 4) : null;
   }
 
   getOrdinalFromEvent(event: string): number | null {

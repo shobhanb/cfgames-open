@@ -58,7 +58,6 @@ export type { apiRandomAssignmentResponse } from './models/api-random-assignment
 export type { apiSideScoreModel } from './models/api-side-score-model';
 export type { apiTeamName } from './models/api-team-name';
 export type { apiTeamScoreModel } from './models/api-team-score-model';
-export type { apiTeamsModel } from './models/api-teams-model';
 export type { apiToggleLockedRequest } from './models/api-toggle-locked-request';
 export type { apiTogglePublishedRequest } from './models/api-toggle-published-request';
 export type { apiToggleResponse } from './models/api-toggle-response';
