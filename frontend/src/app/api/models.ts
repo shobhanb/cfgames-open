@@ -20,6 +20,7 @@ export type { apiAttendanceModel } from './models/api-attendance-model';
 export type { apiAttendanceUpdateModel } from './models/api-attendance-update-model';
 export type { apiAutoTeamAssignmentInput } from './models/api-auto-team-assignment-input';
 export type { apiAutoTeamAssignmentOutput } from './models/api-auto-team-assignment-output';
+export type { apiCfDataCountModel } from './models/api-cf-data-count-model';
 export type { apiCfGamesDataModel } from './models/api-cf-games-data-model';
 export type { apiCreateHomeBlogModel } from './models/api-create-home-blog-model';
 export type { apiCreateUser } from './models/api-create-user';

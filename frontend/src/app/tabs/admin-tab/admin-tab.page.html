@@ -110,6 +110,10 @@
 
   <div class="section-title">App Management</div>
   <ion-list [inset]="true">
+    <ion-item [button]="true" type="button" routerLink="/admin/cfdata-refresh">
+      <ion-icon slot="start" name="globe-outline"></ion-icon>
+      <ion-label>CF Data Refresh</ion-label>
+    </ion-item>
     <ion-item [button]="true" type="button" routerLink="/admin/cf-events">
       <ion-icon slot="start" name="globe-outline"></ion-icon>
       <ion-label>CF Events</ion-label>

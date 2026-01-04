@@ -268,6 +268,14 @@ export const tabsRoutes: Routes = [
         canActivate: [adminGuard],
       },
       {
+        path: 'admin/cfdata-refresh',
+        loadComponent: () =>
+          import('./admin-tab/cfdata-refresh/cfdata-refresh.page').then(
+            (c) => c.CfdataRefreshPage
+          ),
+        canActivate: [adminGuard],
+      },
+      {
         path: 'admin/users',
         loadComponent: () =>
           import('./admin-tab/users/users.page').then((c) => c.UsersPage),

@@ -11,6 +11,9 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { adminRefreshCfGamesDataCfgamesAdminRefreshGet } from '../fn/cfgames/admin-refresh-cf-games-data-cfgames-admin-refresh-get';
+import { AdminRefreshCfGamesDataCfgamesAdminRefreshGet$Params } from '../fn/cfgames/admin-refresh-cf-games-data-cfgames-admin-refresh-get';
+import { apiCfDataCountModel } from '../models/api-cf-data-count-model';
 import { apiCfGamesDataModel } from '../models/api-cf-games-data-model';
 import { getAllCfGamesDataEndpointCfgamesDataAllGet } from '../fn/cfgames/get-all-cf-games-data-endpoint-cfgames-data-all-get';
 import { GetAllCfGamesDataEndpointCfgamesDataAllGet$Params } from '../fn/cfgames/get-all-cf-games-data-endpoint-cfgames-data-all-get';
@@ -21,6 +24,39 @@ import { GetCfGamesDataEndpointCfgamesDataAffiliateIdYearGet$Params } from '../f
 export class apiCfgamesService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `adminRefreshCfGamesDataCfgamesAdminRefreshGet()` */
+  static readonly AdminRefreshCfGamesDataCfgamesAdminRefreshGetPath = '/cfgames/admin-refresh';
+
+  /**
+   * Admin Refresh Cf Games Data.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `adminRefreshCfGamesDataCfgamesAdminRefreshGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  adminRefreshCfGamesDataCfgamesAdminRefreshGet$Response(params: AdminRefreshCfGamesDataCfgamesAdminRefreshGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiCfDataCountModel>> {
+    return adminRefreshCfGamesDataCfgamesAdminRefreshGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Admin Refresh Cf Games Data.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `adminRefreshCfGamesDataCfgamesAdminRefreshGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  adminRefreshCfGamesDataCfgamesAdminRefreshGet(params: AdminRefreshCfGamesDataCfgamesAdminRefreshGet$Params, context?: HttpContext): Observable<apiCfDataCountModel> {
+    return this.adminRefreshCfGamesDataCfgamesAdminRefreshGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiCfDataCountModel>): apiCfDataCountModel => r.body)
+    );
   }
 
   /** Path part for operation `getAllCfGamesDataEndpointCfgamesDataAllGet()` */

@@ -5,9 +5,10 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, status
 
 from app.apikey_auth.dependencies import api_key_admin_dependency
+from app.cf_games.models import CfGamesData
 from app.database.dependencies import db_dependency
+from app.firebase_auth.dependencies import admin_user_dependency
 
-from .models import CfGamesData
 from .schemas import CFDataCountModel, CFGamesDataModel
 from .service import process_cf_data
 
@@ -16,8 +17,29 @@ log = logging.getLogger("uvicorn.error")
 cf_games_router = APIRouter(prefix="/cfgames", tags=["cfgames"])
 
 
-@cf_games_router.get("/refresh", status_code=status.HTTP_200_OK, response_model=CFDataCountModel, tags=["apikey"])
-async def refresh_cf_games_data(
+@cf_games_router.get("/admin-refresh", status_code=status.HTTP_200_OK, response_model=CFDataCountModel)
+async def admin_refresh_cf_games_data(
+    _: admin_user_dependency,
+    db_session: db_dependency,
+    affiliate_id: int,
+    year: int,
+) -> dict[str, Any]:
+    try:
+        return await process_cf_data(db_session=db_session, affiliate_id=affiliate_id, year=year)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error processing CF data",
+        ) from e
+
+
+@cf_games_router.get(
+    "/refresh",
+    status_code=status.HTTP_200_OK,
+    response_model=CFDataCountModel,
+    tags=["apikey"],
+)
+async def apikey_refresh_cf_games_data(
     _: api_key_admin_dependency,
     db_session: db_dependency,
     affiliate_id: int,
