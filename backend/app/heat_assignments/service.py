@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.athlete.models import Athlete
 from app.athlete_prefs.models import AthleteTimePref
 from app.exceptions import not_found_exception
+from app.firebase_auth.models import FirebaseUser
 from app.heats.models import Heats
 from app.judge_availability.models import JudgeAvailability
 from app.judges.models import Judges
@@ -964,3 +965,33 @@ async def assign_athletes_and_judges_randomly(
         "judges_assigned": judges_assigned,
         "skipped_athletes": skipped_athletes,
     }
+
+
+async def get_db_heat_attendance(
+    db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
+    ordinal: int,
+) -> list[dict[str, Any]]:
+    """Get heat attendance summary for heats matching affiliate_id, year, and ordinal."""
+    stmt = (
+        select(HeatAssignments.athlete_name, HeatAssignments.athlete_crossfit_id, Heats.start_time, FirebaseUser.email)
+        .join_from(
+            HeatAssignments,
+            Heats,
+            HeatAssignments.heat_id == Heats.id,
+        )
+        .join_from(
+            HeatAssignments,
+            FirebaseUser,
+            HeatAssignments.athlete_crossfit_id == FirebaseUser.crossfit_id,
+            isouter=True,
+        )
+        .where(
+            (Heats.affiliate_id == affiliate_id) & (Heats.year == year) & (Heats.ordinal == ordinal),
+        )
+    )
+    result = await db_session.execute(stmt)
+    attendance = result.mappings().all()
+
+    return [dict(row) for row in attendance]

@@ -12,6 +12,7 @@ from .schemas import (
     HeatAssignmentCreate,
     HeatAssignmentModel,
     HeatAssignmentUpdate,
+    HeatAttendanceModel,
     RandomAssignmentRequest,
     RandomAssignmentResponse,
 )
@@ -23,6 +24,7 @@ from .service import (
     delete_heat_assignment,
     delete_heat_assignments_by_criteria,
     get_all_heat_assignments,
+    get_db_heat_attendance,
     get_heat_assignment,
     get_my_db_heat_assignment_athlete,
     get_my_db_heat_assignments_judge,
@@ -83,6 +85,27 @@ async def get_heat_assignments_list(
 ) -> list[dict[str, Any]]:
     """Get all heat assignments, optionally filtered by heat_id."""
     return await get_all_heat_assignments(db_session=db_session, heat_id=heat_id)
+
+
+@heat_assignments_router.get(
+    "/heat-attendance",
+    status_code=status.HTTP_200_OK,
+    response_model=list[HeatAttendanceModel],
+)
+async def get_heat_attendance(
+    db_session: db_dependency,
+    _: admin_user_dependency,
+    affiliate_id: int,
+    year: int,
+    ordinal: int,
+) -> list[dict[str, Any]]:
+    """Get heat attendance for a specific affiliate and year."""
+    return await get_db_heat_attendance(
+        db_session=db_session,
+        affiliate_id=affiliate_id,
+        year=year,
+        ordinal=ordinal,
+    )
 
 
 @heat_assignments_router.get(

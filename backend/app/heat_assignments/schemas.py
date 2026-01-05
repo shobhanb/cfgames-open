@@ -1,3 +1,4 @@
+import datetime as dt
 from uuid import UUID
 
 from app.schemas import CustomBaseModel
@@ -61,3 +62,10 @@ class DeleteAssignmentsByCriteriaResponse(CustomBaseModel):
     deleted_count: int
     heats_found: int
     message: str
+
+
+class HeatAttendanceModel(CustomBaseModel):
+    athlete_name: str
+    athlete_crossfit_id: int
+    start_time: dt.datetime
+    email: str | None
