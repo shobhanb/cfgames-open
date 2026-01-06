@@ -29,6 +29,7 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
 import { ToastService } from 'src/app/services/toast.service';
 import { apiAppreciationScoreService } from 'src/app/api/services';
 import { AppConfigService } from 'src/app/services/app-config.service';
+import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
 import { EventService } from 'src/app/services/event.service';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
 import { apiAppreciationScoreModel } from 'src/app/api/models';
@@ -71,6 +72,7 @@ export class AppreciationScorePage implements OnInit {
   private appConfig = inject(AppConfigService);
   private eventService = inject(EventService);
   private athleteDataService = inject(AthleteDataService);
+  private athleteNameModalService = inject(AthleteNameModalService);
 
   // State
   appreciationScores = signal<apiAppreciationScoreModel[]>([]);
@@ -81,11 +83,16 @@ export class AppreciationScorePage implements OnInit {
   // Form state
   selectedOrdinal = signal<number | null>(null);
   selectedCrossfitId = signal<number | null>(null);
+  selectedAthleteName = signal<string | null>(null);
   score = signal<number | null>(null);
 
   // Computed
   currentYearEvents = computed(() => this.eventService.currentYearEvents());
   athletes = computed(() => this.athleteDataService.athleteData());
+  athleteNames = computed(() => {
+    const names = this.athletes().map((a) => a.name);
+    return [...new Set(names)];
+  });
   deleteAlertButtons = [
     {
       text: 'Cancel',
@@ -120,7 +127,9 @@ export class AppreciationScorePage implements OnInit {
       })
       .subscribe({
         next: (data) => {
-          this.appreciationScores.set(data);
+          this.appreciationScores.set(
+            data.sort((a, b) => a.ordinal - b.ordinal)
+          );
           this.dataLoaded.set(true);
         },
         error: (error) => {
@@ -141,9 +150,42 @@ export class AppreciationScorePage implements OnInit {
     }, 500);
   }
 
+  async openAthleteSelectModal() {
+    const selectedName =
+      await this.athleteNameModalService.openAthleteSelectModal(
+        this.athleteNames
+      );
+
+    if (selectedName) {
+      this.selectedAthleteName.set(selectedName);
+
+      // Find athlete(s) with this name and set the crossfit_id
+      const athletesWithName = this.athletes().filter(
+        (a) => a.name === selectedName
+      );
+
+      // If only one athlete with this name, auto-select their crossfit_id
+      if (athletesWithName.length === 1) {
+        this.selectedCrossfitId.set(athletesWithName[0].crossfit_id);
+      } else if (athletesWithName.length > 0) {
+        // If multiple, just set the first one for now
+        this.selectedCrossfitId.set(athletesWithName[0].crossfit_id);
+      }
+    }
+  }
+
   loadScore(appreciationScore: apiAppreciationScoreModel) {
     this.selectedOrdinal.set(appreciationScore.ordinal);
     this.selectedCrossfitId.set(appreciationScore.crossfit_id);
+
+    // Find and set the athlete name
+    const athlete = this.athletes().find(
+      (a) => a.crossfit_id === appreciationScore.crossfit_id
+    );
+    if (athlete) {
+      this.selectedAthleteName.set(athlete.name);
+    }
+
     this.score.set(appreciationScore.score);
   }
 
@@ -247,6 +289,7 @@ export class AppreciationScorePage implements OnInit {
   resetForm() {
     this.selectedOrdinal.set(null);
     this.selectedCrossfitId.set(null);
+    this.selectedAthleteName.set(null);
     this.score.set(null);
   }
 

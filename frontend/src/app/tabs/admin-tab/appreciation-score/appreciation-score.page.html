@@ -79,20 +79,11 @@
         </ion-item>
 
         <!-- Athlete Selection -->
-        <ion-item>
-          <ion-select
-            label="Athlete"
-            labelPlacement="stacked"
-            placeholder="Select athlete"
-            interface="popover"
-            [(ngModel)]="selectedCrossfitId"
-          >
-            @for (athlete of athletes(); track athlete.crossfit_id) {
-            <ion-select-option [value]="athlete.crossfit_id">
-              {{ athlete.name }} ({{ athlete.team_name }})
-            </ion-select-option>
-            }
-          </ion-select>
+        <ion-item (click)="openAthleteSelectModal()">
+          <ion-label>Athlete</ion-label>
+          <ion-label slot="end">
+            {{ selectedAthleteName() || 'Click to select' }}
+          </ion-label>
         </ion-item>
 
         <!-- Score -->
