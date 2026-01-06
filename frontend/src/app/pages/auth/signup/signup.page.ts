@@ -12,6 +12,7 @@ import {
   IonInput,
   IonInputPasswordToggle,
   IonButton,
+  IonButtons,
   IonSelect,
   IonSelectOption,
   IonLabel,
@@ -27,6 +28,7 @@ import {
   IonCardSubtitle,
   IonCardContent,
   IonText,
+  IonModal,
 } from '@ionic/angular/standalone';
 import { apiAthleteService, apiFireauthService } from 'src/app/api/services';
 import { apiAffiliateAthlete } from 'src/app/api/models';
@@ -65,6 +67,7 @@ import { AppConfigService } from 'src/app/services/app-config.service';
     IonNote,
     IonLabel,
     IonButton,
+    IonButtons,
     IonList,
     IonItem,
     IonContent,
@@ -76,6 +79,7 @@ import { AppConfigService } from 'src/app/services/app-config.service';
     ToolbarButtonsComponent,
     RouterLink,
     IonRouterLink,
+    IonModal,
   ],
 })
 export class SignupPage implements OnInit {
@@ -90,6 +94,7 @@ export class SignupPage implements OnInit {
 
   // Controls the UI - show assign athlete form, or show signup email/password form
   readonly showAssignAthleteForm = signal<boolean>(true);
+  readonly isNameNotFoundModalOpen = signal<boolean>(false);
 
   // Assign Athlete Name & CF ID
   assignAthleteForm = new FormGroup({
@@ -288,5 +293,13 @@ export class SignupPage implements OnInit {
           );
         },
       });
+  }
+
+  openNameNotFoundModal() {
+    this.isNameNotFoundModalOpen.set(true);
+  }
+
+  closeNameNotFoundModal() {
+    this.isNameNotFoundModalOpen.set(false);
   }
 }

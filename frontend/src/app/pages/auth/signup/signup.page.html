@@ -15,7 +15,14 @@
     </ion-card-header>
     <ion-card-content>
       <ion-text
-        >Sign up on the CFGames website first before signing up here.</ion-text
+        >Sign up on the official Crossfit Open website first before signing up
+        here.</ion-text
+      >
+      <br />
+      <ion-note
+        >This account is separate from the official Crossfit account. You'll
+        need to create one here too, in order to access all the features of our
+        Community Cup</ion-note
       >
     </ion-card-content>
   </ion-card>
@@ -61,6 +68,14 @@
       </ion-item>
       }
     </ion-list>
+
+    <ion-button
+      type="button"
+      fill="clear"
+      class="ion-margin-horizontal"
+      (click)="openNameNotFoundModal()"
+      >Don't see your name?</ion-button
+    >
 
     <ion-button
       expand="block"
@@ -141,4 +156,56 @@
     >
   </form>
   }
+
+  <ion-modal
+    [isOpen]="isNameNotFoundModalOpen()"
+    (didDismiss)="closeNameNotFoundModal()"
+  >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Don't See Your Name?</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeNameNotFoundModal()">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title
+              >First Time Participating in CrossFit Games?</ion-card-title
+            >
+          </ion-card-header>
+          <ion-card-content>
+            <ul>
+              <li>Register for the Open on the CrossFit website first</li>
+              <li>
+                Wait a little while before checking back here - let the data
+                sync up (30 minutes should do it)
+              </li>
+            </ul>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title
+              >Not Your First CF Open with CF Monkey Flag?</ion-card-title
+            >
+          </ion-card-header>
+          <ion-card-content>
+            <ul>
+              <li>
+                Maybe you already have created an account here? (Try the forgot
+                password link on the login page)
+              </li>
+              <li>Maybe someone else accidentally used your name</li>
+              <li>Either case, reach out to the admin team for assistance</li>
+            </ul>
+          </ion-card-content>
+        </ion-card>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
