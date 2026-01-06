@@ -34,6 +34,7 @@ export type { apiFirebaseUserRecord } from './models/api-firebase-user-record';
 export type { apiHeatAssignmentCreate } from './models/api-heat-assignment-create';
 export type { apiHeatAssignmentModel } from './models/api-heat-assignment-model';
 export type { apiHeatAssignmentUpdate } from './models/api-heat-assignment-update';
+export type { apiHeatAttendanceModel } from './models/api-heat-attendance-model';
 export type { apiHeatsCreate } from './models/api-heats-create';
 export type { apiHeatsModel } from './models/api-heats-model';
 export type { apiHeatsSetupCreate } from './models/api-heats-setup-create';

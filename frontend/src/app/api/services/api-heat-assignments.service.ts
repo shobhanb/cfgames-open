@@ -28,11 +28,14 @@ import { getHeatAssignmentByIdHeatAssignmentsAssignmentIdGet } from '../fn/heat-
 import { GetHeatAssignmentByIdHeatAssignmentsAssignmentIdGet$Params } from '../fn/heat-assignments/get-heat-assignment-by-id-heat-assignments-assignment-id-get';
 import { getHeatAssignmentsListHeatAssignmentsGet } from '../fn/heat-assignments/get-heat-assignments-list-heat-assignments-get';
 import { GetHeatAssignmentsListHeatAssignmentsGet$Params } from '../fn/heat-assignments/get-heat-assignments-list-heat-assignments-get';
+import { getHeatAttendanceHeatAssignmentsHeatAttendanceGet } from '../fn/heat-assignments/get-heat-attendance-heat-assignments-heat-attendance-get';
+import { GetHeatAttendanceHeatAssignmentsHeatAttendanceGet$Params } from '../fn/heat-assignments/get-heat-attendance-heat-assignments-heat-attendance-get';
 import { getMyHeatAssignmentsAthleteHeatAssignmentsMeAthleteGet } from '../fn/heat-assignments/get-my-heat-assignments-athlete-heat-assignments-me-athlete-get';
 import { GetMyHeatAssignmentsAthleteHeatAssignmentsMeAthleteGet$Params } from '../fn/heat-assignments/get-my-heat-assignments-athlete-heat-assignments-me-athlete-get';
 import { getMyHeatAssignmentsJudgeHeatAssignmentsMeJudgeGet } from '../fn/heat-assignments/get-my-heat-assignments-judge-heat-assignments-me-judge-get';
 import { GetMyHeatAssignmentsJudgeHeatAssignmentsMeJudgeGet$Params } from '../fn/heat-assignments/get-my-heat-assignments-judge-heat-assignments-me-judge-get';
 import { apiHeatAssignmentModel } from '../models/api-heat-assignment-model';
+import { apiHeatAttendanceModel } from '../models/api-heat-attendance-model';
 import { apiRandomAssignmentResponse } from '../models/api-random-assignment-response';
 import { updateExistingHeatAssignmentHeatAssignmentsAssignmentIdPatch } from '../fn/heat-assignments/update-existing-heat-assignment-heat-assignments-assignment-id-patch';
 import { UpdateExistingHeatAssignmentHeatAssignmentsAssignmentIdPatch$Params } from '../fn/heat-assignments/update-existing-heat-assignment-heat-assignments-assignment-id-patch';
@@ -172,6 +175,39 @@ export class apiHeatAssignmentsService extends BaseService {
   createNewHeatAssignmentHeatAssignmentsPost(params: CreateNewHeatAssignmentHeatAssignmentsPost$Params, context?: HttpContext): Observable<apiHeatAssignmentModel> {
     return this.createNewHeatAssignmentHeatAssignmentsPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<apiHeatAssignmentModel>): apiHeatAssignmentModel => r.body)
+    );
+  }
+
+  /** Path part for operation `getHeatAttendanceHeatAssignmentsHeatAttendanceGet()` */
+  static readonly GetHeatAttendanceHeatAssignmentsHeatAttendanceGetPath = '/heat_assignments/heat-attendance';
+
+  /**
+   * Get Heat Attendance.
+   *
+   * Get heat attendance for a specific affiliate and year.
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getHeatAttendanceHeatAssignmentsHeatAttendanceGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getHeatAttendanceHeatAssignmentsHeatAttendanceGet$Response(params: GetHeatAttendanceHeatAssignmentsHeatAttendanceGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiHeatAttendanceModel>>> {
+    return getHeatAttendanceHeatAssignmentsHeatAttendanceGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get Heat Attendance.
+   *
+   * Get heat attendance for a specific affiliate and year.
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getHeatAttendanceHeatAssignmentsHeatAttendanceGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getHeatAttendanceHeatAssignmentsHeatAttendanceGet(params: GetHeatAttendanceHeatAssignmentsHeatAttendanceGet$Params, context?: HttpContext): Observable<Array<apiHeatAttendanceModel>> {
+    return this.getHeatAttendanceHeatAssignmentsHeatAttendanceGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiHeatAttendanceModel>>): Array<apiHeatAttendanceModel> => r.body)
     );
   }
 
