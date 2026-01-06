@@ -21,7 +21,19 @@ import {
   IonCard,
   IonChip,
   IonNote,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonIcon,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  peopleOutline,
+  womanOutline,
+  manOutline,
+  checkmarkCircle,
+} from 'ionicons/icons';
 import { apiAthleteDetail } from 'src/app/api/models';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { TeamNamePipe } from 'src/app/pipes/team-name.pipe';
@@ -36,6 +48,10 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./my-team.page.scss'],
   standalone: true,
   imports: [
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCardContent,
     IonNote,
     IonCard,
     IonSkeletonText,
@@ -59,6 +75,7 @@ import { AuthService } from 'src/app/services/auth.service';
     IonSelect,
     IonSelectOption,
     IonChip,
+    IonIcon,
   ],
 })
 export class MyTeamPage implements OnInit {
@@ -67,19 +84,16 @@ export class MyTeamPage implements OnInit {
   scoreFilter = inject(ScoreFilterService);
   athleteDataService = inject(AthleteDataService);
 
-  constructor() {}
+  constructor() {
+    addIcons({ peopleOutline, womanOutline, manOutline, checkmarkCircle });
+  }
 
   dataLoaded = computed(() => !this.athleteDataService.loading());
   myTeamName = this.authService.athlete()?.team_name || '';
   myCrossfitId = this.authService.userCustomClaims()?.crossfit_id;
 
-  teamSectionTitle = computed(
-    () =>
-      this.scoreFilter.filter().team.replace(/^\s*\d+\.?\s*/, '') +
-      ' - ' +
-      this.scoreFilter.filter().gender +
-      ' - ' +
-      this.scoreFilter.filter().ageCategory
+  teamSectionTitle = computed(() =>
+    this.scoreFilter.filter().team.replace(/^\s*\d+\.?\s*/, '')
   );
 
   teamsList = computed<string[]>(() => [
@@ -95,15 +109,22 @@ export class MyTeamPage implements OnInit {
       .athleteData()
       .filter(
         (value: apiAthleteDetail) =>
-          value.gender === this.scoreFilter.filter().gender &&
-          value.age_category === this.scoreFilter.filter().ageCategory &&
-          (this.scoreFilter.filter().team === 'All' ||
-            value.team_name === this.scoreFilter.filter().team)
+          this.scoreFilter.filter().team === 'All' ||
+          value.team_name === this.scoreFilter.filter().team
       )
       .sort((a: apiAthleteDetail, b: apiAthleteDetail) =>
         a.name > b.name ? 1 : -1
       )
   );
+
+  readonly filtereedAthletesByGender = computed<{
+    M: apiAthleteDetail[];
+    F: apiAthleteDetail[];
+  }>(() => {
+    const m = this.filteredAthletes().filter((a) => a.gender === 'M');
+    const f = this.filteredAthletes().filter((a) => a.gender === 'F');
+    return { M: m, F: f };
+  });
 
   ngOnInit() {
     this.getData();
@@ -119,16 +140,7 @@ export class MyTeamPage implements OnInit {
     this.scoreFilter.setFilter({ team: this.myTeamName });
   }
 
-  onSelectionChanged(
-    event: CustomEvent,
-    type: 'gender' | 'ageCategory' | 'team'
-  ) {
-    if (type === 'gender') {
-      this.scoreFilter.setFilter({ gender: event.detail.value });
-    } else if (type === 'ageCategory') {
-      this.scoreFilter.setFilter({ ageCategory: event.detail.value });
-    } else if (type === 'team') {
-      this.scoreFilter.setFilter({ team: event.detail.value });
-    }
+  onSelectionChanged(event: CustomEvent) {
+    this.scoreFilter.setFilter({ team: event.detail.value });
   }
 }

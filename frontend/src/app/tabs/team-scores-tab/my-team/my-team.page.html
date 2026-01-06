@@ -12,91 +12,138 @@
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-toolbar>
-    <ion-segment
-      [value]="scoreFilter.filter().gender"
-      (ionChange)="onSelectionChanged($event, 'gender')"
-    >
-      <ion-segment-button value="M">
-        <ion-label>M</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="F">
-        <ion-label>F</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
-  <ion-toolbar>
-    <ion-segment
-      [value]="scoreFilter.filter().ageCategory"
-      (ionChange)="onSelectionChanged($event, 'ageCategory')"
-    >
-      <ion-segment-button value="Open">
-        <ion-label>Open</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="Masters">
-        <ion-label>Masters</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="Masters 55+">
-        <ion-label>Masters 55+</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
-  <ion-toolbar>
-    <ion-select
-      label="Select Team"
-      labelPlacement="floating"
-      [value]="scoreFilter.filter().team"
-      (ionChange)="onSelectionChanged($event, 'team')"
-      interface="popover"
-      class="ion-margin-horizontal ion-padding-horizontal team-selection-filter"
-    >
-      @for (team of teamsList(); track $index) {
-      <ion-select-option [value]="team"
-        >{{ team | teamName }}</ion-select-option
+
+  <ion-card class="team-selector-card">
+    <ion-card-content>
+      <ion-select
+        label="Select Team"
+        labelPlacement="floating"
+        [value]="scoreFilter.filter().team"
+        (ionChange)="onSelectionChanged($event)"
+        interface="popover"
+        fill="outline"
       >
-      }
-    </ion-select>
-  </ion-toolbar>
+        @for (team of teamsList(); track $index) {
+        <ion-select-option [value]="team"
+          >{{ team | teamName }}</ion-select-option
+        >
+        }
+      </ion-select>
+    </ion-card-content>
+  </ion-card>
 
   @if ( dataLoaded()) {
-  <div class="section-title">
-    {{ teamSectionTitle() }}
-    <ion-chip>
+  <div class="section-header">
+    <h2 class="section-title">{{ teamSectionTitle() }}</h2>
+    <ion-chip color="primary">
+      <ion-icon name="people-outline"></ion-icon>
       <ion-label>{{ filteredAthletes().length }}</ion-label>
     </ion-chip>
   </div>
-  <ion-card>
+  <ion-card class="gender-card">
+    <ion-card-header>
+      <div class="card-title-row">
+        <div class="gender-badge female">
+          <ion-icon name="woman-outline"></ion-icon>
+          <span>Female</span>
+        </div>
+        <ion-chip color="secondary" class="count-chip">
+          <ion-label>{{ filtereedAthletesByGender().F.length }}</ion-label>
+        </ion-chip>
+      </div>
+    </ion-card-header>
     <ion-list [inset]="true">
-      @if (filteredAthletes().length === 0) {
-      <ion-item>
-        <ion-label>NA</ion-label>
+      @for (athlete of filtereedAthletesByGender().F; track $index) {
+      <ion-item lines="full">
+        <div class="athlete-info">
+          <ion-label class="athlete-name">{{ athlete.name }}</ion-label>
+          <div class="athlete-details">
+            @if (athlete.judge) {
+            <ion-chip size="small" color="tertiary">
+              <ion-icon name="checkmark-circle"></ion-icon>
+              <ion-label>Judge</ion-label>
+            </ion-chip>
+            }
+            <ion-chip size="small" outline="true">
+              <ion-label>{{ athlete.age_category }}</ion-label>
+            </ion-chip>
+          </div>
+        </div>
       </ion-item>
-      } @else { @for (athlete of filteredAthletes(); track $index) {
-      <ion-item>
-        <ion-label>{{ athlete.name }}</ion-label>
-        <ion-note>{{ athlete.judge ? "Judge" : "" }}</ion-note>
+      } @empty {
+      <ion-item lines="none">
+        <ion-label class="empty-state">No athletes registered yet</ion-label>
       </ion-item>
-      } }
+      }
+    </ion-list>
+  </ion-card>
+  <ion-card class="gender-card">
+    <ion-card-header>
+      <div class="card-title-row">
+        <div class="gender-badge male">
+          <ion-icon name="man-outline"></ion-icon>
+          <span>Male</span>
+        </div>
+        <ion-chip color="secondary" class="count-chip">
+          <ion-label>{{ filtereedAthletesByGender().M.length }}</ion-label>
+        </ion-chip>
+      </div>
+    </ion-card-header>
+    <ion-list [inset]="true">
+      @for (athlete of filtereedAthletesByGender().M; track $index) {
+      <ion-item lines="full">
+        <div class="athlete-info">
+          <ion-label class="athlete-name">{{ athlete.name }}</ion-label>
+          <div class="athlete-details">
+            @if (athlete.judge) {
+            <ion-chip size="small" color="tertiary">
+              <ion-icon name="checkmark-circle"></ion-icon>
+              <ion-label>Judge</ion-label>
+            </ion-chip>
+            }
+            <ion-chip size="small" outline="true">
+              <ion-label>{{ athlete.age_category }}</ion-label>
+            </ion-chip>
+          </div>
+        </div>
+      </ion-item>
+      } @empty {
+      <ion-item lines="none">
+        <ion-label class="empty-state">No athletes registered yet</ion-label>
+      </ion-item>
+      }
     </ion-list>
   </ion-card>
   } @else {
-  <div class="section-title">
+  <div class="section-header">
     <ion-skeleton-text
       [animated]="true"
-      style="width: 120px; height: 18px"
+      style="width: 180px; height: 28px; border-radius: 8px"
     ></ion-skeleton-text>
   </div>
-  <ion-list [inset]="true">
-    @for (item of [1,2,3,4,5]; track $index) {
-    <ion-item>
-      <ion-label>
-        <ion-skeleton-text
-          [animated]="true"
-          style="width: 80%; height: 18px; margin-bottom: 8px"
-        ></ion-skeleton-text>
-      </ion-label>
-    </ion-item>
-    }
-  </ion-list>
+  <ion-card class="gender-card">
+    <ion-card-header>
+      <ion-skeleton-text
+        [animated]="true"
+        style="width: 100px; height: 24px; border-radius: 6px"
+      ></ion-skeleton-text>
+    </ion-card-header>
+    <ion-list [inset]="true">
+      @for (item of [1,2,3,4,5]; track $index) {
+      <ion-item>
+        <div class="athlete-info">
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 60%; height: 20px; margin-bottom: 8px"
+          ></ion-skeleton-text>
+          <ion-skeleton-text
+            [animated]="true"
+            style="width: 40%; height: 16px"
+          ></ion-skeleton-text>
+        </div>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card>
   }
 </ion-content>
