@@ -69,6 +69,13 @@ export class AthleteDataService {
     return athlete?.crossfit_id || null;
   }
 
+  getTeamName(crossfitId: number): string | null {
+    const athlete = this.athleteData().find(
+      (a) => a.crossfit_id === crossfitId
+    );
+    return athlete?.team_name || null;
+  }
+
   constructor() {
     this.getData();
   }

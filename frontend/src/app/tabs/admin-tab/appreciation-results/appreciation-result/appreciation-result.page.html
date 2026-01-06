@@ -24,15 +24,21 @@
 
   <div class="medal-legend">
     <div class="legend-item">
-      <div class="medal-circle team mini"></div>
+      <ion-chip class="team mini">
+        <ion-label>0</ion-label>
+      </ion-chip>
       <span>Same Team</span>
     </div>
     <div class="legend-item">
-      <div class="medal-circle non-team mini"></div>
+      <ion-chip class="non-team mini">
+        <ion-label>0</ion-label>
+      </ion-chip>
       <span>Different Team</span>
     </div>
     <div class="legend-item">
-      <div class="medal-circle total mini"></div>
+      <ion-chip class="total mini">
+        <ion-label>0</ion-label>
+      </ion-chip>
       <span>Total</span>
     </div>
   </div>
@@ -66,13 +72,24 @@
       [routerLink]="'/admin/appreciation-results/' + year + '/' + ordinal + '/' + item.crossfit_id"
     >
       <ion-note slot="start">{{ $index + 1 }}</ion-note>
-      <ion-label
-        >{{ athleteDataService.getAthleteName(item.crossfit_id) }}</ion-label
-      >
+      <div class="athlete-info">
+        <ion-label class="athlete-name">
+          {{ athleteDataService.getAthleteName(item.crossfit_id) }}
+        </ion-label>
+        <ion-note class="team-name">
+          {{ athleteDataService.getTeamName(item.crossfit_id) }}
+        </ion-note>
+      </div>
       <div slot="end" class="scores-container">
-        <div class="medal-circle team">{{ item.team_votes }}</div>
-        <div class="medal-circle non-team">{{ item.non_team_votes }}</div>
-        <div class="medal-circle total">{{ item.total_votes }}</div>
+        <ion-chip class="team">
+          <ion-label>{{ item.team_votes }}</ion-label>
+        </ion-chip>
+        <ion-chip class="non-team">
+          <ion-label>{{ item.non_team_votes }}</ion-label>
+        </ion-chip>
+        <ion-chip class="total">
+          <ion-label>{{ item.total_votes }}</ion-label>
+        </ion-chip>
       </div>
     </ion-item>
     }
@@ -150,24 +167,28 @@
         [animated]="true"
         style="width: 20px; height: 16px"
       ></ion-skeleton-text>
-      <ion-label>
+      <div class="athlete-info">
         <ion-skeleton-text
           [animated]="true"
-          style="width: 70%; height: 16px"
+          style="width: 140px; height: 16px; margin-bottom: 4px"
         ></ion-skeleton-text>
-      </ion-label>
+        <ion-skeleton-text
+          [animated]="true"
+          style="width: 100px; height: 12px"
+        ></ion-skeleton-text>
+      </div>
       <div slot="end" class="scores-container">
         <ion-skeleton-text
           [animated]="true"
-          style="width: 36px; height: 36px; border-radius: 8px"
+          style="width: 50px; height: 28px; border-radius: 16px"
         ></ion-skeleton-text>
         <ion-skeleton-text
           [animated]="true"
-          style="width: 36px; height: 36px; border-radius: 8px"
+          style="width: 50px; height: 28px; border-radius: 16px"
         ></ion-skeleton-text>
         <ion-skeleton-text
           [animated]="true"
-          style="width: 36px; height: 36px; border-radius: 8px"
+          style="width: 50px; height: 28px; border-radius: 16px"
         ></ion-skeleton-text>
       </div>
     </ion-item>

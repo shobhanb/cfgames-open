@@ -1,63 +1,82 @@
 .scores-container {
-    display: flex;
-    flex-direction: row;
-    gap: 2px;
-    align-items: center;
-    justify-content: flex-end;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-end;
 }
 
+ion-chip {
+  font-size: 0.75rem;
+  height: 24px;
+  font-weight: 600;
+  margin: 0;
 
-.medal-circle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 8px; 
-    border: none;
-    color: white;
-    font-weight: 500;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
+  ion-label {
+    margin: 0;
+    font-size: 0.75rem;
+  }
 
+  &.team {
+    --background: linear-gradient(135deg, #4285f4, #357ae8);
+    --color: white;
+  }
 
-.team {
-    background: linear-gradient(135deg, #4285F4, #4285F4 60%, #357AE8);
-}
+  &.non-team {
+    --background: linear-gradient(135deg, #34a853, #2e7d32);
+    --color: white;
+  }
 
-.non-team {
-    background: linear-gradient(135deg, #34A853, #34A853 60%, #2E7D32);
-}
+  &.total {
+    --background: linear-gradient(135deg, #5e35b1, #7b1fa2);
+    --color: white;
+    margin-left: 6px;
+  }
 
-.total {
-    background: linear-gradient(135deg, #5E35B1, #7B1FA2); // Purple gradient
-    margin-left: 10px;
+  &.mini {
+    height: 20px;
+    min-height: 20px;
+
+    ion-label {
+      font-size: 0.7rem;
+    }
+  }
 }
 
 
 .medal-legend {
-    display: flex;
-    justify-content: space-around;
-    margin: 16px;
-    padding: 16px;
-    background-color: var(--ion-item-background);
-    border-radius: 16px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    position: relative;
-    overflow: hidden;
+  display: flex;
+  justify-content: space-around;
+  margin: 16px;
+  padding: 16px;
+  background-color: var(--ion-item-background);
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
 }
 
 .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  position: relative;
 }
 
-.mini {
-    width: 18px;
-    height: 18px;
-    border-radius: 4px; // Match the main circles with square-rounded look
+.athlete-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .athlete-name {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .team-name {
+    font-size: 0.8rem;
+    color: var(--ion-color-medium);
+  }
 }
 

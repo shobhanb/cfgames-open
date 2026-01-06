@@ -26,6 +26,7 @@ import {
   IonSelectOption,
   IonNote,
   IonRouterLink,
+  IonChip,
 } from '@ionic/angular/standalone';
 import { apiAppreciationService } from 'src/app/api/services';
 import { apiAppreciationResults } from 'src/app/api/models';
@@ -62,6 +63,7 @@ import { AppConfigService } from 'src/app/services/app-config.service';
     ToolbarButtonsComponent,
     RouterLink,
     IonRouterLink,
+    IonChip,
   ],
 })
 export class AppreciationResultPage implements OnInit {
