@@ -29,7 +29,6 @@ import {
   IonFab,
   IonFabButton,
   AlertController,
-  ModalController,
   IonButtons,
   IonBackButton,
   IonRefresher,
@@ -45,7 +44,7 @@ import {
   apiPreferredAthleteUpdate,
 } from 'src/app/api/models';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
-import { AthleteNameModalComponent } from 'src/app/shared/athlete-name-modal/athlete-name-modal.component';
+import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
 import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
@@ -86,7 +85,7 @@ import { ToastService } from 'src/app/services/toast.service';
 export class PreferredAthletesPage implements OnInit {
   private apiPreferredAthletes = inject(apiPreferredAthletesService);
   private alertController = inject(AlertController);
-  private modalController = inject(ModalController);
+  private athleteNameModalService = inject(AthleteNameModalService);
   private toastService = inject(ToastService);
   athleteDataService = inject(AthleteDataService);
 
@@ -173,30 +172,22 @@ export class PreferredAthletesPage implements OnInit {
   }
 
   async openAthleteModal(): Promise<void> {
-    const modal = await this.modalController.create({
-      component: AthleteNameModalComponent,
-      componentProps: {
-        athleteNames: this.availableAthletes,
-      },
-    });
-    await modal.present();
-    const { data } = await modal.onWillDismiss();
-    if (data) {
-      this.newAthleteName.set(data);
+    const selectedName =
+      await this.athleteNameModalService.openAthleteSelectModal(
+        this.availableAthletes
+      );
+    if (selectedName) {
+      this.newAthleteName.set(selectedName);
     }
   }
 
   async openEditAthleteModal(): Promise<void> {
-    const modal = await this.modalController.create({
-      component: AthleteNameModalComponent,
-      componentProps: {
-        athleteNames: this.availableAthletes,
-      },
-    });
-    await modal.present();
-    const { data } = await modal.onWillDismiss();
-    if (data) {
-      this.editName.set(data);
+    const selectedName =
+      await this.athleteNameModalService.openAthleteSelectModal(
+        this.availableAthletes
+      );
+    if (selectedName) {
+      this.editName.set(selectedName);
     }
   }
 
