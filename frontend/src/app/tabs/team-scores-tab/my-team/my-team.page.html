@@ -52,7 +52,7 @@
         </ion-chip>
       </div>
     </ion-card-header>
-    <ion-list [inset]="true">
+    <ion-list>
       @for (athlete of filtereedAthletesByGender().F; track $index) {
       <ion-item lines="full">
         <div class="athlete-info">
@@ -89,7 +89,7 @@
         </ion-chip>
       </div>
     </ion-card-header>
-    <ion-list [inset]="true">
+    <ion-list>
       @for (athlete of filtereedAthletesByGender().M; track $index) {
       <ion-item lines="full">
         <div class="athlete-info">
