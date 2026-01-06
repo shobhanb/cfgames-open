@@ -27,6 +27,7 @@ async def admin_refresh_cf_games_data(
     try:
         return await process_cf_data(db_session=db_session, affiliate_id=affiliate_id, year=year)
     except Exception as e:
+        log.exception("Error processing CF data: %s")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error processing CF data",
