@@ -44,23 +44,93 @@ async def cf_data_api(  # noqa: PLR0913
 ) -> None:
     total_pages = 1
     page = 1
+
+    log.info(
+        "Fetching CF data for affiliate %s, division %s",
+        affiliate_code,
+        division,
+    )
+
     while True:
         params = {"affiliate": affiliate_code, "page": page, "per_page": 100, "view": 0, "division": division}
-        response = await httpx_client.get(url=api_url, params=params)
 
-        json_response = response.json()
-        leaderboard_list = json_response.get("leaderboardRows", [])
-        entrants = [x.get("entrant") for x in leaderboard_list]
-        entrant_list.extend(entrants)
-        scores = [x.get("scores") for x in leaderboard_list]
-        scores_list.extend(scores)
+        try:
+            response = await httpx_client.get(url=api_url, params=params)
+            response.raise_for_status()
 
-        # Handle pagination
-        total_pages = json_response.get("pagination", {}).get("totalPages", 1)
-        if total_pages <= page:
-            break
+            log.debug(
+                "Successfully fetched page %s for affiliate %s, division %s (status: %s)",
+                page,
+                affiliate_code,
+                division,
+                response.status_code,
+            )
 
-        page += 1
+        except HTTPError:
+            log.exception(
+                "HTTP error fetching CF data for affiliate %s, division %s, page %s",
+                affiliate_code,
+                division,
+                page,
+            )
+            raise
+        except Exception:
+            log.exception(
+                "Unexpected error fetching CF data for affiliate %s, division %s, page %s",
+                affiliate_code,
+                division,
+                page,
+            )
+            raise
+
+        try:
+            json_response = response.json()
+        except Exception:
+            log.exception(
+                "Error parsing JSON response for affiliate %s, division %s, page %s",
+                affiliate_code,
+                division,
+                page,
+            )
+            raise
+
+        try:
+            leaderboard_list = json_response.get("leaderboardRows", [])
+            entrants = [x.get("entrant") for x in leaderboard_list]
+            entrant_list.extend(entrants)
+            scores = [x.get("scores") for x in leaderboard_list]
+            scores_list.extend(scores)
+
+            log.debug(
+                "Processed %s entrants from page %s for affiliate %s, division %s",
+                len(entrants),
+                page,
+                affiliate_code,
+                division,
+            )
+
+            # Handle pagination
+            total_pages = json_response.get("pagination", {}).get("totalPages", 1)
+            if total_pages <= page:
+                log.info(
+                    "Completed fetching all %s pages for affiliate %s, division %s (%s total entrants)",
+                    total_pages,
+                    affiliate_code,
+                    division,
+                    len(entrants),
+                )
+                break
+
+            page += 1
+
+        except Exception:
+            log.exception(
+                "Error processing response data for affiliate %s, division %s, page %s",
+                affiliate_code,
+                division,
+                page,
+            )
+            raise
 
 
 async def get_cf_data(affiliate_code: int, year: int) -> tuple[int, list[dict], list[dict]]:
