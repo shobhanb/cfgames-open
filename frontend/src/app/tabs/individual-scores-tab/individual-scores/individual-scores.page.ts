@@ -27,6 +27,11 @@ import {
   IonTitle,
   IonSelect,
   IonSelectOption,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonChip,
+  IonCardSubtitle,
 } from '@ionic/angular/standalone';
 import { EventService } from 'src/app/services/event.service';
 import { apiScoreService } from 'src/app/api/services';
@@ -46,6 +51,7 @@ import { AppConfigService } from 'src/app/services/app-config.service';
   styleUrls: ['./individual-scores.page.scss'],
   standalone: true,
   imports: [
+    IonCardSubtitle,
     IonTitle,
     IonButtons,
     IonBackButton,
@@ -67,6 +73,10 @@ import { AppConfigService } from 'src/app/services/app-config.service';
     ToolbarButtonsComponent,
     IonSelect,
     IonSelectOption,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonChip,
   ],
 })
 export class IndividualScoresPage implements OnInit {

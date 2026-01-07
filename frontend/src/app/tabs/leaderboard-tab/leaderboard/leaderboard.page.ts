@@ -29,6 +29,9 @@ import {
   IonBackButton,
   IonButtons,
   IonTitle,
+  IonCardContent,
+  IonCardSubtitle,
+  IonChip,
 } from '@ionic/angular/standalone';
 import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -70,6 +73,9 @@ import { AppConfigService } from 'src/app/services/app-config.service';
     IonContent,
     TeamNamePipe,
     ToolbarButtonsComponent,
+    IonCardContent,
+    IonCardSubtitle,
+    IonChip,
   ],
 })
 export class LeaderboardPage implements OnInit {

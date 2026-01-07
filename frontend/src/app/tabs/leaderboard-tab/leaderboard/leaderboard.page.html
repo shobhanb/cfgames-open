@@ -13,79 +13,107 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-toolbar>
-    <ion-segment
-      [value]="scoreFilter.filter().gender"
-      (ionChange)="onSelectionChanged($event, 'gender')"
-    >
-      <ion-segment-button value="M">
-        <ion-label>M</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="F">
-        <ion-label>F</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
-  <ion-toolbar>
-    <ion-segment
-      [value]="scoreFilter.filter().ageCategory"
-      (ionChange)="onSelectionChanged($event, 'ageCategory')"
-    >
-      <ion-segment-button value="Open">
-        <ion-label>Open</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="Masters">
-        <ion-label>Masters</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="Masters 55+">
-        <ion-label>Masters 55+</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
-  <ion-toolbar>
-    <ion-segment value="Top3" (ionChange)="onSelectionChanged($event, 'top3')">
-      <ion-segment-button value="Top3">
-        <ion-label>Top 3 Only</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="All">
-        <ion-label>Show All</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
-  <ion-button
-    expand="block"
-    fill="clear"
-    size="small"
-    [href]="movementStandardsLink()"
-    target="_blank"
-    >Movement Standards
-    <ion-icon slot="end" name="open-outline"></ion-icon>
-  </ion-button>
+  <ion-card class="filter-card">
+    <ion-card-header>
+      <ion-card-subtitle>Filters</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="filter-section">
+        <ion-label class="filter-label">Gender</ion-label>
+        <ion-segment
+          [value]="scoreFilter.filter().gender"
+          (ionChange)="onSelectionChanged($event, 'gender')"
+        >
+          <ion-segment-button value="M">
+            <ion-label>Male</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="F">
+            <ion-label>Female</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <div class="filter-section">
+        <ion-label class="filter-label">Age Category</ion-label>
+        <ion-segment
+          [value]="scoreFilter.filter().ageCategory"
+          (ionChange)="onSelectionChanged($event, 'ageCategory')"
+        >
+          <ion-segment-button value="Open">
+            <ion-label>Open</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="Masters">
+            <ion-label>Masters</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="Masters 55+">
+            <ion-label>55+</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <div class="filter-section">
+        <ion-label class="filter-label">Results</ion-label>
+        <ion-segment
+          value="Top3"
+          (ionChange)="onSelectionChanged($event, 'top3')"
+        >
+          <ion-segment-button value="Top3">
+            <ion-label>Top 3</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="All">
+            <ion-label>All</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <ion-button
+        expand="block"
+        fill="none"
+        size="small"
+        [href]="movementStandardsLink()"
+        target="_blank"
+        class="standards-button"
+      >
+        <ion-icon slot="start" name="open-outline"></ion-icon>
+        Movement Standards
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
 
   @if (dataLoaded()) { @if (leaderboardRX().length > 0) {
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>RX</ion-card-title>
-    </ion-card-header>
+  <div class="section-header">
+    <h2 class="section-title">RX</h2>
+    <ion-chip color="primary">
+      <ion-label>{{ leaderboardRX().length }}</ion-label>
+    </ion-chip>
+  </div>
+
+  <ion-card class="scores-card">
     <ion-list>
       @for (item of leaderboardRX(); track $index) {
-      <ion-item class="leaderboard-row">
-        <div class="" slot="start">
-          <span>{{ item.affiliate_rank }}</span>
+      <ion-item class="score-row" lines="full">
+        <div class="score-header">
+          <div class="score-rank" [class.podium]="item.affiliate_rank <= 3">
+            {{ item.affiliate_rank }}
+          </div>
+          <div class="athlete-details">
+            <ion-label
+              class="athlete-name"
+              [class.current-user]="item.crossfit_id === authService.userCustomClaims()?.crossfit_id"
+            >
+              {{ item.name }}
+            </ion-label>
+            <ion-note class="team-note">
+              {{ item.team_name | teamName }}
+            </ion-note>
+          </div>
         </div>
-        <ion-label>
-          <ion-label
-            class="leaderboard-name"
-            [color]="item.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'tertiary' : ''"
-          >
-            <strong>{{ item.name }}</strong><br />
-          </ion-label>
-          <ion-text>{{ item.team_name | teamName }}</ion-text>
-        </ion-label>
-        <div slot="end">
-          <ion-label class="ion-text-end">{{ item.score_display }}</ion-label>
+        <div class="score-info">
+          <ion-chip color="secondary" class="score-chip">
+            <ion-label>{{ item.score_display }}</ion-label>
+          </ion-chip>
           @if (item.tiebreak_ms) {
-          <ion-note>{{ 'Tiebreak ' + item.tiebreak_ms }}</ion-note>
+          <ion-note class="tiebreak-note">TB: {{ item.tiebreak_ms }}</ion-note>
           }
         </div>
       </ion-item>

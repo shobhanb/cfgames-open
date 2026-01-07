@@ -1,4 +1,21 @@
 .highlight-card {
-  border: 2px solid var(--ion-color-primary);
-  box-shadow: 0 0 8px rgba(var(--ion-color-primary-rgb), 0.3);
+  border: 2px solid var(--ion-color-tertiary);
+  box-shadow: 0 4px 12px rgba(var(--ion-color-tertiary-rgb), 0.25);
+
+  .card-header-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .current-badge {
+    height: 28px;
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    ion-icon {
+      font-size: 1rem;
+      margin-inline-end: 4px;
+    }
+  }
 }

@@ -25,6 +25,7 @@ import {
   IonTitle,
   IonCardHeader,
   IonCardTitle,
+  IonChip,
 } from '@ionic/angular/standalone';
 import { EventService } from 'src/app/services/event.service';
 import { apiScoreService } from 'src/app/api/services';
@@ -62,6 +63,7 @@ import { AppConfigService } from 'src/app/services/app-config.service';
     IonSkeletonText,
     TeamNamePipe,
     ToolbarButtonsComponent,
+    IonChip,
   ],
 })
 export class TeamScoresPage implements OnInit {

@@ -1,27 +1,52 @@
 @for (year of eventService.groupedEvents(); track $index) {
-<ion-list [inset]="true">
-  <ion-list-header>
-    <ion-label>{{ year.year }}</ion-label>
-  </ion-list-header>
-  @if (showTotals()) {
-  <ion-item
-    [routerLink]="[link(), year.year, 0]"
-    [button]="true"
-    [detail]="true"
-    class="total-item"
-  >
-    <ion-label color="primary">
-      <strong>{{ year.year + " Total" }}</strong>
-    </ion-label>
-  </ion-item>
-  } @for (event of year.events; track $index) {
-  <ion-item
-    [routerLink]="[link(), event.year, event.ordinal]"
-    [button]="true"
-    [detail]="true"
-  >
-    <ion-label>{{ event.event }}</ion-label>
-  </ion-item>
-  }
-</ion-list>
+<div class="section-header" [class.current-year]="year.year === config.year">
+  <div class="title-group">
+    <h2 class="section-title">{{ year.year }}</h2>
+    @if (year.year === config.year) {
+    <ion-chip color="tertiary" class="current-badge">
+      <ion-icon name="star"></ion-icon>
+      <ion-label>Current</ion-label>
+    </ion-chip>
+    }
+  </div>
+</div>
+
+<ion-card
+  class="events-card"
+  [class.current-year-card]="year.year === config.year"
+>
+  <ion-list>
+    @if (showTotals()) {
+    <ion-item
+      [routerLink]="[link(), year.year, 0]"
+      [button]="true"
+      [detail]="true"
+      class="total-item"
+      lines="full"
+    >
+      <div class="event-icon total-icon">
+        <ion-icon name="trophy"></ion-icon>
+      </div>
+      <ion-label class="event-label total-label">
+        {{ year.year + " Total" }}
+      </ion-label>
+    </ion-item>
+    } @for (event of year.events; track $index) {
+    <ion-item
+      [routerLink]="[link(), event.year, event.ordinal]"
+      [button]="true"
+      [detail]="true"
+      class="event-item"
+      lines="full"
+    >
+      <div class="event-icon">
+        <ion-icon name="barbell-outline"></ion-icon>
+      </div>
+      <ion-label class="event-label">
+        {{ event.event }}
+      </ion-label>
+    </ion-item>
+    }
+  </ion-list>
+</ion-card>
 }

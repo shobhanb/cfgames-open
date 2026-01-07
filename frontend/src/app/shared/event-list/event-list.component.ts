@@ -5,8 +5,13 @@ import {
   IonLabel,
   IonItem,
   IonRouterLink,
-  IonListHeader,
+  IonCard,
+  IonChip,
+  IonIcon,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { trophy, barbellOutline, star } from 'ionicons/icons';
+import { AppConfigService } from 'src/app/services/app-config.service';
 import { EventService } from 'src/app/services/event.service';
 
 @Component({
@@ -14,21 +19,26 @@ import { EventService } from 'src/app/services/event.service';
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.scss'],
   imports: [
-    IonListHeader,
     IonList,
     IonLabel,
     IonItem,
     RouterLink,
     IonRouterLink,
+    IonCard,
+    IonChip,
+    IonIcon,
   ],
 })
 export class EventListComponent implements OnInit {
   eventService = inject(EventService);
+  config = inject(AppConfigService);
 
   link = input.required<string>();
   showTotals = input<boolean>(false);
 
-  constructor() {}
+  constructor() {
+    addIcons({ trophy, barbellOutline, star });
+  }
 
   ngOnInit() {}
 }

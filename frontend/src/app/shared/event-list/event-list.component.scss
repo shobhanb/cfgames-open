@@ -1,4 +1,122 @@
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 8px;
+  margin-top: 8px;
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--ion-color-dark);
+  }
+
+  ion-chip {
+    font-weight: 600;
+    height: 32px;
+  }
+
+  .current-badge {
+    height: 28px;
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    ion-icon {
+      font-size: 1rem;
+      margin-inline-end: 4px;
+    }
+  }
+
+  &.current-year {
+    .section-title {
+      color: var(--ion-color-tertiary);
+    }
+  }
+}
+
+.events-card {
+  margin: 12px 16px 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  ion-list {
+    padding: 0;
+  }
+
+  &.current-year-card {
+    border: 2px solid var(--ion-color-tertiary);
+    box-shadow: 0 4px 12px rgba(var(--ion-color-tertiary-rgb), 0.25);
+  }
+}
+
 ion-item {
-    padding-top: 5px;
-    padding-bottom: 5px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 0;
+  --min-height: 60px;
+
+  &:first-child {
+    --border-radius: 12px 12px 0 0;
+  }
+
+  &:last-child {
+    --border-radius: 0 0 12px 12px;
+    --border-width: 0;
+  }
+}
+
+.event-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  background-color: var(--ion-color-light);
+  border-radius: 8px;
+  margin-right: 12px;
+
+  ion-icon {
+    font-size: 1.4rem;
+    color: var(--ion-color-medium);
+  }
+
+  &.total-icon {
+    background: linear-gradient(
+      135deg,
+      var(--ion-color-primary),
+      var(--ion-color-primary-shade)
+    );
+
+    ion-icon {
+      color: white;
+    }
+  }
+}
+
+.event-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ion-color-dark);
+
+  &.total-label {
+    font-weight: 700;
+    color: var(--ion-color-primary);
+  }
+}
+
+.total-item {
+  --background: rgba(var(--ion-color-primary-rgb), 0.05);
+}
+
+.event-item {
+  &:hover {
+    --background: var(--ion-color-light-tint);
+  }
 }
