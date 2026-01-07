@@ -40,7 +40,7 @@ async def cf_data_api(  # noqa: PLR0913
     affiliate_code: int,
     division: int,
     entrant_list: list[dict],
-    scores_list: list[dict],
+    scores_list: list[list[dict]],
 ) -> None:
     total_pages = 1
     page = 1
@@ -133,7 +133,7 @@ async def cf_data_api(  # noqa: PLR0913
             raise
 
 
-async def get_cf_data(affiliate_code: int, year: int) -> tuple[int, list[dict], list[dict]]:
+async def get_cf_data(affiliate_code: int, year: int) -> tuple[list[dict], list[list[dict]]]:
     """Get CF leaderboard data."""
     log.info("Getting CF Leaderboard data for year %s affiliate code %s", year, affiliate_code)
     entrant_list = []
@@ -169,15 +169,19 @@ async def get_cf_data(affiliate_code: int, year: int) -> tuple[int, list[dict], 
 
     log.info("Downloaded %s entrants, %s scores", len(entrant_list), len(scores_list))
     log.info("Time taken: %s", (end_time - start_time))
-    return year, entrant_list, scores_list
+    return entrant_list, scores_list
 
 
 async def process_cf_data(  # noqa: C901, PLR0912
     db_session: AsyncSession,
     affiliate_id: int,
     year: int,
+    entrant_list: list[dict] | None = None,
+    scores_list: list[list[dict]] | None = None,
 ) -> dict[str, Any]:
-    year, entrant_list, scores_list = await get_cf_data(affiliate_id, year)
+    """Process CF leaderboard data into the database."""
+    if entrant_list is None or scores_list is None:
+        entrant_list, scores_list = await get_cf_data(affiliate_id, year)
 
     for entrant, scores in zip(entrant_list, scores_list, strict=True):
         try:

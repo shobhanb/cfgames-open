@@ -1,8 +1,8 @@
 import logging
 from collections.abc import Sequence
-from typing import Any
+from typing import Annotated, Any
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Body, HTTPException, status
 
 from app.apikey_auth.dependencies import api_key_admin_dependency
 from app.cf_games.models import CfGamesData
@@ -35,7 +35,7 @@ async def admin_refresh_cf_games_data(
 
 
 @cf_games_router.post(
-    "/refresh",
+    "/apikey-refresh",
     status_code=status.HTTP_200_OK,
     response_model=CFDataCountModel,
     tags=["apikey"],
@@ -48,6 +48,35 @@ async def apikey_refresh_cf_games_data(
 ) -> dict[str, Any]:
     try:
         return await process_cf_data(db_session=db_session, affiliate_id=affiliate_id, year=year)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error processing CF data",
+        ) from e
+
+
+@cf_games_router.post(
+    "/apikey-manual-refresh",
+    status_code=status.HTTP_200_OK,
+    response_model=CFDataCountModel,
+    tags=["apikey"],
+)
+async def apikey_manual_refresh_cf_games_data(
+    _: api_key_admin_dependency,
+    db_session: db_dependency,
+    affiliate_id: int,
+    year: int,
+    entrant_list: Annotated[list[dict] | None, Body()] = None,
+    scores_list: Annotated[list[list[dict]] | None, Body()] = None,
+) -> dict[str, Any]:
+    try:
+        return await process_cf_data(
+            db_session=db_session,
+            affiliate_id=affiliate_id,
+            year=year,
+            entrant_list=entrant_list,
+            scores_list=scores_list,
+        )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
