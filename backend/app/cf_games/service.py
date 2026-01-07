@@ -281,6 +281,22 @@ async def apply_participation_score(
 ) -> None:
     config = await get_config_or_defaults(db_session=db_session, affiliate_id=affiliate_id, year=year)
 
+    reset_stmt = (
+        select(Score.id)
+        .join_from(
+            Score,
+            Athlete,
+            (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year),
+        )
+        .where(
+            (Athlete.year == year) & (Athlete.affiliate_id == affiliate_id),
+        )
+    )
+    remove_participation_stmt = (
+        update(Score).where(Score.id.in_(reset_stmt.scalar_subquery())).values(participation_score=0)
+    )
+    await db_session.execute(remove_participation_stmt)
+
     select_stmt = (
         select(Score.id)
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
@@ -317,10 +333,7 @@ async def apply_ranks(
         )
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .where(
-            (Athlete.year == year)
-            & (Athlete.affiliate_id == affiliate_id)
-            & (Athlete.team_name.not_in(IGNORE_TEAMS))
-            & (Score.score > 0),
+            (Athlete.year == year) & (Athlete.affiliate_id == affiliate_id) & (Score.score > 0),
         )
     )
     ranks = await db_session.execute(select_stmt)
@@ -337,17 +350,41 @@ async def apply_top3_score(
 ) -> None:
     config = await get_config_or_defaults(db_session=db_session, affiliate_id=affiliate_id, year=year)
 
-    select_stmt = (
+    reset_stmt = (
         select(Score.id)
+        .join_from(
+            Score,
+            Athlete,
+            (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year),
+        )
+        .where(
+            (Athlete.year == year) & (Athlete.affiliate_id == affiliate_id),
+        )
+    )
+    remove_top3_stmt = update(Score).where(Score.id.in_(reset_stmt.scalar_subquery())).values(top3_score=0)
+    await db_session.execute(remove_top3_stmt)
+
+    select_ranks_stmt = (
+        select(
+            Score.id,
+            func.rank()
+            .over(
+                partition_by=[Score.ordinal, Athlete.gender, Athlete.age_category, Score.affiliate_scaled],
+                order_by=[Score.scaled.asc(), Score.score.desc()],
+            )
+            .label("affiliate_rank"),
+        )
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .where(
             (Athlete.year == year)
             & (Athlete.affiliate_id == affiliate_id)
-            & (Athlete.team_name.not_in(IGNORE_TEAMS))
-            & (Score.affiliate_rank <= rank_cutoff),
+            & (Athlete.team_name.not_in(IGNORE_TEAMS) & (Score.score > 0)),
         )
     )
-    update_stmt = update(Score).where(Score.id.in_(select_stmt.scalar_subquery())).values(top3_score=config.top3_score)
+    subquery = select_ranks_stmt.subquery()
+    top3_stmt = select(subquery.c.id).where(subquery.c.affiliate_rank <= rank_cutoff)
+
+    update_stmt = update(Score).where(Score.id.in_(top3_stmt.scalar_subquery())).values(top3_score=config.top3_score)
     await db_session.execute(update_stmt)
     await db_session.commit()
 
@@ -358,6 +395,20 @@ async def apply_attendance_scores(
     year: int,
 ) -> None:
     config = await get_config_or_defaults(db_session=db_session, affiliate_id=affiliate_id, year=year)
+
+    reset_stmt = (
+        select(Score.id)
+        .join_from(
+            Score,
+            Athlete,
+            (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year),
+        )
+        .where(
+            (Athlete.year == year) & (Athlete.affiliate_id == affiliate_id),
+        )
+    )
+    remove_attendance_stmt = update(Score).where(Score.id.in_(reset_stmt.scalar_subquery())).values(attendance_score=0)
+    await db_session.execute(remove_attendance_stmt)
 
     select_stmt = (
         select(Score.id)
@@ -385,10 +436,26 @@ async def apply_judge_score(
 ) -> None:
     config = await get_config_or_defaults(db_session=db_session, affiliate_id=affiliate_id, year=year)
 
+    reset_stmt = (
+        select(Score.id)
+        .join_from(
+            Score,
+            Athlete,
+            (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year),
+        )
+        .where(
+            (Athlete.year == year) & (Athlete.affiliate_id == affiliate_id),
+        )
+    )
+    remove_judge_stmt = update(Score).where(Score.id.in_(reset_stmt.scalar_subquery())).values(judge_score=0)
+    await db_session.execute(remove_judge_stmt)
+
     select_judge_stmt = (
         select(Score.judge_name, Score.ordinal)
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
-        .where((Athlete.year == year) & (Athlete.affiliate_id == affiliate_id))
+        .where(
+            (Athlete.year == year) & (Athlete.affiliate_id == affiliate_id),
+        )
         .distinct()
     )
     result = await db_session.execute(select_judge_stmt)
@@ -401,7 +468,8 @@ async def apply_judge_score(
                 (Athlete.year == year)
                 & (Athlete.affiliate_id == affiliate_id)
                 & (Athlete.name == row.get("judge_name"))
-                & (Score.ordinal == row.get("ordinal")),
+                & (Score.ordinal == row.get("ordinal"))
+                & (Athlete.team_name.not_in(IGNORE_TEAMS)),
             )
         )
         update_stmt = (
@@ -419,7 +487,7 @@ async def apply_appreciation_score(
     affiliate_id: int,
     year: int,
 ) -> None:
-    all_scores_stmt = (
+    reset_stmt = (
         select(Score.id)
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .where(
@@ -427,7 +495,7 @@ async def apply_appreciation_score(
         )
     )
     remove_appreciation_stmt = (
-        update(Score).where(Score.id.in_(all_scores_stmt.scalar_subquery())).values(appreciation_score=0)
+        update(Score).where(Score.id.in_(reset_stmt.scalar_subquery())).values(appreciation_score=0)
     )
     await db_session.execute(remove_appreciation_stmt)
 
@@ -458,6 +526,27 @@ async def apply_side_scores(
     affiliate_id: int,
     year: int,
 ) -> None:
+    reset_stmt = (
+        select(Score.id)
+        .join_from(
+            Score,
+            Athlete,
+            (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year),
+        )
+        .where(
+            (Athlete.year == year) & (Athlete.affiliate_id == affiliate_id),
+        )
+    )
+    remove_side_scores_stmt = (
+        update(Score)
+        .where(Score.id.in_(reset_stmt.scalar_subquery()))
+        .values(
+            side_challenge_score=0,
+            spirit_score=0,
+        )
+    )
+    await db_session.execute(remove_side_scores_stmt)
+
     side_scores = await SideScore.find_all(async_session=db_session, affiliate_id=affiliate_id, year=year)
 
     for side_score in side_scores:
