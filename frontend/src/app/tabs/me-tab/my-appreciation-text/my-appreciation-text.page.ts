@@ -98,8 +98,6 @@ export class MyAppreciationTextPage implements OnInit {
 
   handleRefresh(event: any) {
     this.loadAppreciationText();
-    setTimeout(() => {
-      event.target.complete();
-    }, 1000);
+    (event.target as HTMLIonRefresherElement).complete();
   }
 }

@@ -104,15 +104,13 @@ export class CfdataRefreshPage implements OnInit {
 
   handleRefresh(event: RefresherCustomEvent) {
     this.loadData();
-    setTimeout(() => {
-      event.target.complete();
-    }, 500);
+    (event.target as HTMLIonRefresherElement).complete();
   }
 
   onClickRefreshData() {
     this.refreshing.set(true);
     this.apiCFGames
-      .adminRefreshCfGamesDataCfgamesAdminRefreshGet({
+      .adminRefreshCfGamesDataCfgamesAdminRefreshPost({
         affiliate_id: this.config.affiliateId,
         year: this.config.year,
       })
@@ -131,7 +129,7 @@ export class CfdataRefreshPage implements OnInit {
           console.error('Error refreshing data:', error);
           this.refreshing.set(false);
           this.toastService.showToast(
-            'Failed to refresh CF Games data',
+            'Failed to refresh CF Games data: ' + error.error?.detail,
             'danger'
           );
         },

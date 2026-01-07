@@ -145,9 +145,7 @@ export class AppreciationScorePage implements OnInit {
 
   handleRefresh(event: RefresherCustomEvent) {
     this.getData();
-    setTimeout(() => {
-      event.target.complete();
-    }, 500);
+    (event.target as HTMLIonRefresherElement).complete();
   }
 
   async openAthleteSelectModal() {

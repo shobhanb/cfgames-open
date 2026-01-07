@@ -646,9 +646,7 @@ Total Assignments: ${result.assigned_count}`;
 
   handleRefresh(event: RefresherCustomEvent) {
     this.loadHeats();
-    setTimeout(() => {
-      event.target.complete();
-    }, 500);
+    (event.target as HTMLIonRefresherElement).complete();
   }
 
   getEventName(ordinal: number): string {

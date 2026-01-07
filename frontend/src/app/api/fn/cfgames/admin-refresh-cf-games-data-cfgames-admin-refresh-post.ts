@@ -10,13 +10,13 @@ import { RequestBuilder } from '../../request-builder';
 
 import { apiCfDataCountModel } from '../../models/api-cf-data-count-model';
 
-export interface AdminRefreshCfGamesDataCfgamesAdminRefreshGet$Params {
+export interface AdminRefreshCfGamesDataCfgamesAdminRefreshPost$Params {
   affiliate_id: number;
   year: number;
 }
 
-export function adminRefreshCfGamesDataCfgamesAdminRefreshGet(http: HttpClient, rootUrl: string, params: AdminRefreshCfGamesDataCfgamesAdminRefreshGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiCfDataCountModel>> {
-  const rb = new RequestBuilder(rootUrl, adminRefreshCfGamesDataCfgamesAdminRefreshGet.PATH, 'get');
+export function adminRefreshCfGamesDataCfgamesAdminRefreshPost(http: HttpClient, rootUrl: string, params: AdminRefreshCfGamesDataCfgamesAdminRefreshPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiCfDataCountModel>> {
+  const rb = new RequestBuilder(rootUrl, adminRefreshCfGamesDataCfgamesAdminRefreshPost.PATH, 'post');
   if (params) {
     rb.query('affiliate_id', params.affiliate_id, {});
     rb.query('year', params.year, {});
@@ -32,4 +32,4 @@ export function adminRefreshCfGamesDataCfgamesAdminRefreshGet(http: HttpClient, 
   );
 }
 
-adminRefreshCfGamesDataCfgamesAdminRefreshGet.PATH = '/cfgames/admin-refresh';
+adminRefreshCfGamesDataCfgamesAdminRefreshPost.PATH = '/cfgames/admin-refresh';

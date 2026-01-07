@@ -139,9 +139,7 @@ export class SideScoresPage implements OnInit {
 
   handleRefresh(event: RefresherCustomEvent) {
     this.getData();
-    setTimeout(() => {
-      event.target.complete();
-    }, 500);
+    (event.target as HTMLIonRefresherElement).complete();
   }
 
   loadScore(sidescore: apiSideScoreModel) {
