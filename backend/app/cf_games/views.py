@@ -17,7 +17,7 @@ log = logging.getLogger("uvicorn.error")
 cf_games_router = APIRouter(prefix="/cfgames", tags=["cfgames"])
 
 
-@cf_games_router.get("/admin-refresh", status_code=status.HTTP_200_OK, response_model=CFDataCountModel)
+@cf_games_router.post("/admin-refresh", status_code=status.HTTP_200_OK, response_model=CFDataCountModel)
 async def admin_refresh_cf_games_data(
     _: admin_user_dependency,
     db_session: db_dependency,
@@ -34,7 +34,7 @@ async def admin_refresh_cf_games_data(
         ) from e
 
 
-@cf_games_router.get(
+@cf_games_router.post(
     "/refresh",
     status_code=status.HTTP_200_OK,
     response_model=CFDataCountModel,

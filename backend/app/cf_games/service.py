@@ -58,7 +58,7 @@ async def cf_data_api(  # noqa: PLR0913
             response = await httpx_client.get(url=api_url, params=params)
             response.raise_for_status()
 
-            log.debug(
+            log.info(
                 "Successfully fetched page %s for affiliate %s, division %s (status: %s)",
                 page,
                 affiliate_code,
@@ -101,7 +101,7 @@ async def cf_data_api(  # noqa: PLR0913
             scores = [x.get("scores") for x in leaderboard_list]
             scores_list.extend(scores)
 
-            log.debug(
+            log.info(
                 "Processed %s entrants from page %s for affiliate %s, division %s",
                 len(entrants),
                 page,

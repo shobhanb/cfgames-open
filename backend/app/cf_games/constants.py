@@ -14,6 +14,7 @@ IGNORE_TEAMS = [
     "Short-put Bai-kar",
     "Admin",
     "Other",
+    "zz",
 ]
 
 CF_DIVISION_MAP = {
@@ -36,4 +37,4 @@ CF_DIVISION_MAP = {
 
 # Throttle requests
 HTTPX_TIMEOUT = 10
-HTTPX_MAX_RATE_LIMIT_PER_SECOND = 5
+HTTPX_MAX_RATE_LIMIT_PER_SECOND = 1
