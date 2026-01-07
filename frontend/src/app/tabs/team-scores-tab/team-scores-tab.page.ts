@@ -11,9 +11,6 @@ import {
   IonCardTitle,
   IonCardSubtitle,
   IonRouterLink,
-  IonChip,
-  IonIcon,
-  IonLabel,
 } from '@ionic/angular/standalone';
 import { EventListComponent } from '../../shared/event-list/event-list.component';
 import { EventService } from 'src/app/services/event.service';
@@ -29,7 +26,6 @@ import { star } from 'ionicons/icons';
   styleUrls: ['./team-scores-tab.page.scss'],
   standalone: true,
   imports: [
-    IonLabel,
     IonCardSubtitle,
     IonCardTitle,
     IonCardHeader,
@@ -44,8 +40,6 @@ import { star } from 'ionicons/icons';
     ToolbarButtonsComponent,
     RouterLink,
     IonRouterLink,
-    IonChip,
-    IonIcon,
   ],
 })
 export class TeamScoresTabPage implements OnInit {

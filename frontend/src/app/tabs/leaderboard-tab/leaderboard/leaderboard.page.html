@@ -83,9 +83,6 @@
   @if (dataLoaded()) { @if (leaderboardRX().length > 0) {
   <div class="section-header">
     <h2 class="section-title">RX</h2>
-    <ion-chip color="primary">
-      <ion-label>{{ leaderboardRX().length }}</ion-label>
-    </ion-chip>
   </div>
 
   <ion-card class="scores-card">
@@ -121,30 +118,36 @@
     </ion-list>
   </ion-card>
   } @if (leaderboardScaled().length > 0) {
+  <div class="section-header">
+    <h2 class="section-title">Scaled</h2>
+  </div>
 
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Scaled</ion-card-title>
-    </ion-card-header>
+  <ion-card class="scores-card">
     <ion-list>
       @for (item of leaderboardScaled(); track $index) {
-      <ion-item class="leaderboard-row">
-        <div class="rank-wrapper" slot="start">
-          <span>{{ item.affiliate_rank }}</span>
+      <ion-item class="score-row" lines="full">
+        <div class="score-header">
+          <div class="score-rank" [class.podium]="item.affiliate_rank <= 3">
+            {{ item.affiliate_rank }}
+          </div>
+          <div class="athlete-details">
+            <ion-label
+              class="athlete-name"
+              [class.current-user]="item.crossfit_id === authService.userCustomClaims()?.crossfit_id"
+            >
+              {{ item.name }}
+            </ion-label>
+            <ion-note class="team-note">
+              {{ item.team_name | teamName }}
+            </ion-note>
+          </div>
         </div>
-        <ion-label>
-          <ion-label
-            class="leaderboard-name"
-            [color]="item.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'tertiary' : ''"
-          >
-            <strong>{{ item.name }}</strong><br />
-          </ion-label>
-          <ion-text>{{ item.team_name | teamName }}</ion-text>
-        </ion-label>
-        <div class="score-wrapper" slot="end">
-          <ion-label class="ion-text-end">{{ item.score_display }}</ion-label>
+        <div class="score-info">
+          <ion-chip color="secondary" class="score-chip">
+            <ion-label>{{ item.score_display }}</ion-label>
+          </ion-chip>
           @if (item.tiebreak_ms) {
-          <ion-note>{{ 'Tiebreak ' + item.tiebreak_ms }}</ion-note>
+          <ion-note class="tiebreak-note">TB: {{ item.tiebreak_ms }}</ion-note>
           }
         </div>
       </ion-item>

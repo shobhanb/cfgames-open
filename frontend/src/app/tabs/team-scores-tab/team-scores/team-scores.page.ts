@@ -23,8 +23,6 @@ import {
   IonButtons,
   IonToolbar,
   IonTitle,
-  IonCardHeader,
-  IonCardTitle,
   IonChip,
 } from '@ionic/angular/standalone';
 import { EventService } from 'src/app/services/event.service';
@@ -44,8 +42,6 @@ import { AppConfigService } from 'src/app/services/app-config.service';
   styleUrls: ['./team-scores.page.scss'],
   standalone: true,
   imports: [
-    IonCardTitle,
-    IonCardHeader,
     IonTitle,
     IonToolbar,
     IonButtons,
