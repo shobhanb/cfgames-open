@@ -51,6 +51,8 @@ import {
 } from 'src/app/api/models';
 import { JudgeSummaryModalComponent } from './judge-summary-modal/judge-summary-modal.component';
 import { UnassignedAthletesModalComponent } from './unassigned-athletes-modal/unassigned-athletes-modal.component';
+import { AthletePrefsModalComponent } from './athlete-prefs-modal/athlete-prefs-modal.component';
+import { JudgeAvailabilityModalComponent } from './judge-availability-modal/judge-availability-modal.component';
 import { addIcons } from 'ionicons';
 import {
   add,
@@ -217,9 +219,12 @@ export class ManageHeatsPage implements OnInit {
 
   // Get unassigned athletes for the current event
   unassignedAthletes = computed(() => {
+    const currentHeatIds = new Set(this.heats().map((h) => h.id));
     const assignedAthleteIds = new Set(
       this.heatAssignments()
-        .filter((a) => a.athlete_crossfit_id !== null)
+        .filter(
+          (a) => currentHeatIds.has(a.heat_id) && a.athlete_crossfit_id !== null
+        )
         .map((a) => a.athlete_crossfit_id)
     );
 
@@ -632,29 +637,161 @@ Total Assignments: ${result.assigned_count}`;
     return !firstAssignment.is_locked;
   }
 
+  private getAvailableAthletes(excludeAssignmentId?: string) {
+    const currentHeatIds = new Set(this.heats().map((h) => h.id));
+    const assignedAthleteIds = new Set(
+      this.heatAssignments()
+        .filter(
+          (a) =>
+            a.id !== excludeAssignmentId &&
+            currentHeatIds.has(a.heat_id) &&
+            a.athlete_crossfit_id !== null
+        )
+        .map((a) => a.athlete_crossfit_id)
+    );
+
+    return computed(() => {
+      const athletes = this.athleteDataService
+        .athleteData()
+        .filter((a) => !assignedAthleteIds.has(a.crossfit_id))
+        .map((a) => a.name);
+
+      return ['None', 'Add Non-Gym Athlete', ...athletes];
+    });
+  }
+
+  private async handleNonGymAthleteInput(
+    assignmentId: string,
+    heatId: string
+  ): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Add Non-Gym Athlete',
+      inputs: [
+        {
+          name: 'name',
+          type: 'text',
+          placeholder: 'Athlete Name',
+        },
+        {
+          name: 'crossfit_id',
+          type: 'number',
+          placeholder: 'CrossFit ID',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Add',
+          handler: (data) => {
+            if (!data.name || !data.crossfit_id) {
+              this.toastService.showToast('Please fill all fields', 'warning');
+              return false;
+            }
+
+            this.assignAthleteToHeat(
+              assignmentId,
+              heatId,
+              parseInt(data.crossfit_id),
+              data.name
+            );
+
+            return true;
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  private assignAthleteToHeat(
+    assignmentId: string | null,
+    heatId: string,
+    crossfitId: number,
+    athleteName: string
+  ): void {
+    if (assignmentId) {
+      // Update existing assignment
+      this.apiHeatAssignments
+        .updateExistingHeatAssignmentHeatAssignmentsAssignmentIdPatch$Response({
+          assignment_id: assignmentId,
+          body: {
+            athlete_crossfit_id: crossfitId,
+            athlete_name: athleteName,
+          },
+        })
+        .subscribe({
+          next: () => {
+            this.toastService.showToast(
+              `${athleteName} assigned to heat`,
+              'success'
+            );
+            this.loadHeatAssignments();
+          },
+          error: (error) => {
+            console.error('Error updating assignment:', error);
+            this.toastService.showToast(
+              'Error assigning athlete: ' +
+                (error?.error?.detail ? error.error.detail : 'Unknown error'),
+              'danger'
+            );
+          },
+        });
+    } else {
+      // Create new assignment
+      this.apiHeatAssignments
+        .createNewHeatAssignmentHeatAssignmentsPost$Response({
+          body: {
+            heat_id: heatId,
+            athlete_crossfit_id: crossfitId,
+            athlete_name: athleteName,
+          },
+        })
+        .subscribe({
+          next: () => {
+            this.toastService.showToast(
+              `${athleteName} added successfully`,
+              'success'
+            );
+            this.loadHeatAssignments();
+          },
+          error: (error) => {
+            console.error('Error adding athlete:', error);
+            this.toastService.showToast(
+              'Failed to add athlete: ' +
+                (error?.error?.detail ? error.error.detail : 'Unknown error'),
+              'danger'
+            );
+          },
+        });
+    }
+  }
+
   async addAthlete(heat: apiHeatsModel) {
     if (!this.isHeatEditable(heat)) {
       this.toastService.showToast('Cannot edit locked heat', 'warning');
       return;
     }
 
-    const assignedAthleteIds = new Set(
-      this.heatAssignments()
-        .map((a) => a.athlete_crossfit_id)
-        .filter((id): id is number => id !== null)
-    );
-
-    const availableAthletes = computed(() =>
-      this.athleteDataService
-        .athleteData()
-        .filter((a) => !assignedAthleteIds.has(a.crossfit_id))
-        .map((a) => a.name)
-    );
-
+    const availableAthletes = this.getAvailableAthletes();
     const selectedName = await this.athleteNameModal.openAthleteSelectModal(
       availableAthletes
     );
     if (!selectedName) return;
+
+    // Handle "None" selection - cancel
+    if (selectedName === 'None') {
+      return;
+    }
+
+    // Handle "Add Non-Gym Athlete" selection
+    if (selectedName === 'Add Non-Gym Athlete') {
+      await this.handleNonGymAthleteInput(null as any, heat.id);
+      return;
+    }
 
     const crossfitId = this.athleteDataService.getCrossfitId(selectedName);
     if (!crossfitId) {
@@ -662,30 +799,7 @@ Total Assignments: ${result.assigned_count}`;
       return;
     }
 
-    const heatId = heat.id;
-
-    this.apiHeatAssignments
-      .createNewHeatAssignmentHeatAssignmentsPost$Response({
-        body: {
-          heat_id: heatId,
-          athlete_crossfit_id: crossfitId,
-          athlete_name: selectedName,
-        },
-      })
-      .subscribe({
-        next: () => {
-          this.toastService.showToast('Athlete added successfully', 'success');
-          this.loadHeatAssignments();
-        },
-        error: (error) => {
-          console.error('Error adding athlete:', error);
-          this.toastService.showToast(
-            'Failed to add athlete: ' +
-              (error?.error?.detail ? error.error.detail : 'Unknown error'),
-            'danger'
-          );
-        },
-      });
+    this.assignAthleteToHeat(null, heat.id, crossfitId, selectedName);
   }
 
   removeAssignment(assignment: apiHeatAssignmentModel) {
@@ -747,22 +861,7 @@ Total Assignments: ${result.assigned_count}`;
       return;
     }
 
-    const assignedAthleteIds = new Set(
-      this.heatAssignments()
-        .filter((a) => a.id !== assignment.id)
-        .map((a) => a.athlete_crossfit_id)
-        .filter((id): id is number => id !== null)
-    );
-
-    const availableAthletes = computed(() => [
-      'None',
-      'Add Non-Gym Athlete',
-      ...this.athleteDataService
-        .athleteData()
-        .filter((a) => !assignedAthleteIds.has(a.crossfit_id))
-        .map((a) => a.name),
-    ]);
-
+    const availableAthletes = this.getAvailableAthletes(assignment.id);
     const selectedName = await this.athleteNameModal.openAthleteSelectModal(
       availableAthletes
     );
@@ -793,73 +892,7 @@ Total Assignments: ${result.assigned_count}`;
 
     // Handle "Add Non-Gym Athlete" selection
     if (selectedName === 'Add Non-Gym Athlete') {
-      const alert = await this.alertController.create({
-        header: 'Add Non-Gym Athlete',
-        inputs: [
-          {
-            name: 'name',
-            type: 'text',
-            placeholder: 'Athlete Name',
-          },
-          {
-            name: 'crossfit_id',
-            type: 'number',
-            placeholder: 'CrossFit ID',
-          },
-        ],
-        buttons: [
-          {
-            text: 'Cancel',
-            role: 'cancel',
-          },
-          {
-            text: 'Add',
-            handler: (data) => {
-              if (!data.name || !data.crossfit_id) {
-                this.toastService.showToast(
-                  'Please fill all fields',
-                  'warning'
-                );
-                return false;
-              }
-
-              this.apiHeatAssignments
-                .updateExistingHeatAssignmentHeatAssignmentsAssignmentIdPatch$Response(
-                  {
-                    assignment_id: assignment.id,
-                    body: {
-                      athlete_crossfit_id: parseInt(data.crossfit_id),
-                      athlete_name: data.name,
-                    },
-                  }
-                )
-                .subscribe({
-                  next: () => {
-                    this.toastService.showToast(
-                      `${data.name} assigned to heat`,
-                      'success'
-                    );
-                    this.loadHeatAssignments();
-                  },
-                  error: (error) => {
-                    console.error('Error updating assignment:', error);
-                    this.toastService.showToast(
-                      'Error assigning athlete: ' +
-                        (error?.error?.detail
-                          ? error.error.detail
-                          : 'Unknown error'),
-                      'danger'
-                    );
-                  },
-                });
-
-              return true;
-            },
-          },
-        ],
-      });
-
-      await alert.present();
+      await this.handleNonGymAthleteInput(assignment.id, heat.id);
       return;
     }
 
@@ -869,31 +902,7 @@ Total Assignments: ${result.assigned_count}`;
       return;
     }
 
-    this.apiHeatAssignments
-      .updateExistingHeatAssignmentHeatAssignmentsAssignmentIdPatch$Response({
-        assignment_id: assignment.id,
-        body: {
-          athlete_crossfit_id: crossfitId,
-          athlete_name: selectedName,
-        },
-      })
-      .subscribe({
-        next: () => {
-          this.toastService.showToast(
-            'Athlete updated successfully',
-            'success'
-          );
-          this.loadHeatAssignments();
-        },
-        error: (error) => {
-          console.error('Error updating athlete:', error);
-          this.toastService.showToast(
-            'Failed to update athlete: ' +
-              (error?.error?.detail ? error.error.detail : 'Unknown error'),
-            'danger'
-          );
-        },
-      });
+    this.assignAthleteToHeat(assignment.id, heat.id, crossfitId, selectedName);
   }
 
   async updateJudge(assignment: apiHeatAssignmentModel, heat: apiHeatsModel) {
@@ -1038,6 +1047,67 @@ Total Assignments: ${result.assigned_count}`;
       componentProps: {
         unassignedAthletes: this.unassignedAthletes,
       },
+    });
+
+    await modal.present();
+  }
+
+  async showAllAthletePrefs() {
+    // Group athlete preferences by heat short name (1st preference only)
+    const prefsByHeat = new Map<string, number>();
+    const allPrefs: Array<{
+      athleteName: string;
+      preferences: string[];
+      firstPreference: string;
+    }> = [];
+
+    this.athletePrefs().forEach((pref) => {
+      const athlete = this.athleteDataService
+        .athleteData()
+        .find((a) => a.crossfit_id === pref.crossfit_id);
+      if (!athlete) return;
+
+      // Get all preferences for this athlete
+      const athletePrefs = this.athletePrefs()
+        .filter((p) => p.crossfit_id === pref.crossfit_id)
+        .sort((a, b) => a.preference_nbr - b.preference_nbr);
+
+      // Only process each athlete once
+      if (athletePrefs[0].preference_nbr === pref.preference_nbr) {
+        const firstPref = athletePrefs[0].preference;
+        const count = prefsByHeat.get(firstPref) || 0;
+        prefsByHeat.set(firstPref, count + 1);
+
+        allPrefs.push({
+          athleteName: athlete.name,
+          preferences: athletePrefs.map((p) => p.preference),
+          firstPreference: firstPref,
+        });
+      }
+    });
+
+    // Sort summary by count descending
+    const summary = Array.from(prefsByHeat.entries())
+      .map(([heat, count]) => ({ heat, count }))
+      .sort((a, b) => b.count - a.count);
+
+    // Sort athletes by first preference
+    allPrefs.sort((a, b) => a.firstPreference.localeCompare(b.firstPreference));
+
+    const modal = await this.modalController.create({
+      component: AthletePrefsModalComponent,
+      componentProps: {
+        athletePrefs: signal(allPrefs),
+        summary: signal(summary),
+      },
+    });
+
+    await modal.present();
+  }
+
+  async showAllJudgeAvailability() {
+    const modal = await this.modalController.create({
+      component: JudgeAvailabilityModalComponent,
     });
 
     await modal.present();

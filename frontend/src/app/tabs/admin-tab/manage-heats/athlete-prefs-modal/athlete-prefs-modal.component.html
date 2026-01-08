@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <ion-icon
+        name="person"
+        style="vertical-align: middle; margin-right: 8px"
+      ></ion-icon>
+      Athlete Preferences
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Summary Card -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="stats-chart"></ion-icon>
+        1st Preference Summary
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="summary-grid">
+        @for (item of summary(); track item.heat) {
+        <div class="summary-item" (click)="scrollToPreference(item.heat)">
+          <div class="summary-label">{{ item.heat }}</div>
+          <ion-badge color="primary">{{ item.count }}</ion-badge>
+        </div>
+        }
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Grouped Athletes -->
+  @for (group of groupedAthletes(); track group.preference) {
+  <div class="preference-group" id="pref-{{ group.preference }}">
+    <div class="group-header">
+      <h3>{{ group.preference }}</h3>
+      <ion-badge color="medium">{{ group.athletes.length }}</ion-badge>
+    </div>
+
+    <ion-list>
+      @for (athlete of group.athletes; track athlete.athleteName) {
+      <ion-item>
+        <ion-label>
+          <h2>{{ athlete.athleteName }}</h2>
+          <p>{{ athlete.preferences.join(", ") }}</p>
+        </ion-label>
+      </ion-item>
+      }
+    </ion-list>
+  </div>
+  }
+</ion-content>

@@ -1,3 +1,10 @@
+.filters-actions-card {
+  ion-grid {
+    --ion-grid-padding: 0;
+  }
+}
+
+
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -166,16 +173,6 @@
         padding: 16px 8px;
       }
     }
-  }
-}
-
-.compact-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  ion-button {
-    width: 100%;
   }
 }
 

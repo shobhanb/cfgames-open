@@ -1,0 +1,121 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <ion-icon
+        name="school"
+        style="vertical-align: middle; margin-right: 8px"
+      ></ion-icon>
+      Judge Availability
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if (loading()) {
+  <div class="loading-container">
+    <ion-spinner></ion-spinner>
+    <p>Loading judge availability...</p>
+  </div>
+  } @else {
+  <!-- Pivoted by Time Slot -->
+  @for (slot of pivotedByTimeSlot(); track slot.timeSlot) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        {{ slot.timeSlot }}
+      </ion-card-title>
+      <div class="summary-counts">
+        <ion-badge color="success">
+          <ion-icon name="checkmark-circle"></ion-icon>
+          {{ slot.totalAvailable }} Available
+        </ion-badge>
+        <ion-badge color="danger">
+          <ion-icon name="close-circle"></ion-icon>
+          {{ slot.totalUnavailable }} Unavailable
+        </ion-badge>
+      </div>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-accordion-group>
+        <!-- Available Judges Accordion -->
+        @if (slot.availableJudges.length > 0) {
+        <ion-accordion value="available">
+          <ion-item slot="header" color="light">
+            <ion-icon
+              slot="start"
+              name="checkmark-circle"
+              color="success"
+            ></ion-icon>
+            <ion-label>
+              <h3>Available Judges ({{ slot.totalAvailable }})</h3>
+            </ion-label>
+          </ion-item>
+          <div slot="content" class="accordion-content">
+            <ion-list>
+              @for (judge of slot.availableJudges; track judge.id) {
+              <ion-item>
+                <ion-icon slot="start" name="person" color="success"></ion-icon>
+                <ion-label>
+                  <h3>{{ judge.name }}</h3>
+                </ion-label>
+                @if (judge.preferred) {
+                <ion-badge slot="end" color="warning">Preferred</ion-badge>
+                }
+              </ion-item>
+              }
+            </ion-list>
+          </div>
+        </ion-accordion>
+        }
+
+        <!-- Unavailable Judges Accordion -->
+        @if (slot.unavailableJudges.length > 0) {
+        <ion-accordion value="unavailable">
+          <ion-item slot="header" color="light">
+            <ion-icon
+              slot="start"
+              name="close-circle"
+              color="danger"
+            ></ion-icon>
+            <ion-label>
+              <h3>Unavailable Judges ({{ slot.totalUnavailable }})</h3>
+            </ion-label>
+          </ion-item>
+          <div slot="content" class="accordion-content">
+            <ion-list>
+              @for (judge of slot.unavailableJudges; track judge.id) {
+              <ion-item>
+                <ion-icon slot="start" name="person" color="danger"></ion-icon>
+                <ion-label>
+                  <h3>{{ judge.name }}</h3>
+                </ion-label>
+                @if (judge.preferred) {
+                <ion-badge slot="end" color="warning">Preferred</ion-badge>
+                }
+              </ion-item>
+              }
+            </ion-list>
+          </div>
+        </ion-accordion>
+        }
+      </ion-accordion-group>
+
+      @if (slot.availableJudges.length === 0 && slot.unavailableJudges.length
+      === 0) {
+      <p class="empty-message">No judge data for this time slot.</p>
+      }
+    </ion-card-content>
+  </ion-card>
+  } @empty {
+  <ion-card>
+    <ion-card-content>
+      <p class="empty-message">No judge availability data found.</p>
+    </ion-card-content>
+  </ion-card>
+  } }
+</ion-content>

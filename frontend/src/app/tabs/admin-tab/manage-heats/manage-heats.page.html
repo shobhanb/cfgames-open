@@ -40,83 +40,93 @@
 
   @if (selectedOrdinal() && dataLoaded() && heats().length > 0) {
   <!-- Search Bar & Actions -->
-  <ion-card>
+  <ion-card class="filters-actions-card">
     <ion-card-header>
       <ion-card-title>Filters & Actions</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-searchbar
-        [ngModel]="searchTerm()"
-        (ionInput)="onSearchChange($event)"
-        placeholder="Search by athlete or judge name"
-        debounce="300"
-        animated="true"
-        style="padding: 0 0 12px 0"
-      ></ion-searchbar>
-
-      <ion-button
-        expand="block"
-        color="primary"
-        fill="outline"
-        [disabled]="loading()"
-        (click)="assignAthletes()"
-      >
-        <ion-icon slot="start" name="person"></ion-icon>
-        Assign Athletes
-      </ion-button>
-      <ion-button
-        expand="block"
-        color="primary"
-        fill="outline"
-        [disabled]="loading()"
-        (click)="assignJudges()"
-      >
-        <ion-icon slot="start" name="school"></ion-icon>
-        Assign Judges
-      </ion-button>
-      <ion-button
-        expand="block"
-        color="primary"
-        fill="outline"
-        [disabled]="loading()"
-        (click)="assignRandom()"
-      >
-        <ion-icon slot="start" name="person"></ion-icon>
-        <ion-icon slot="start" name="school"></ion-icon>
-        Assign Athletes & Judges
-      </ion-button>
-      <ion-button
-        expand="block"
-        color="danger"
-        fill="outline"
-        [disabled]="loading()"
-        (click)="deleteAllAssignments()"
-      >
-        <ion-icon slot="start" name="trash"></ion-icon>
-        Delete All Assignments
-      </ion-button>
-      <div class="compact-actions">
-        <ion-button
-          size="small"
-          color="medium"
-          fill="outline"
-          [disabled]="loading() || !hasAnyAssignments()"
-          (click)="toggleAllLocked()"
-        >
-          <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
-          {{ allHeatsLocked() ? 'Unlock All' : 'Lock All' }}
-        </ion-button>
-        <ion-button
-          size="small"
-          color="medium"
-          fill="outline"
-          [disabled]="loading() || !hasAnyAssignments()"
-          (click)="toggleAllPublished()"
-        >
-          <ion-icon slot="start" name="cloud-done-outline"></ion-icon>
-          {{ allHeatsPublished() ? 'Unpublish All' : 'Publish All' }}
-        </ion-button>
-      </div>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-searchbar
+              [ngModel]="searchTerm()"
+              (ionInput)="onSearchChange($event)"
+              placeholder="Search by athlete or judge name"
+              debounce="300"
+              animated="true"
+              style="padding: 0 0 12px 0"
+            ></ion-searchbar>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button
+              expand="block"
+              color="primary"
+              fill="outline"
+              [disabled]="loading()"
+              (click)="assignAthletes()"
+            >
+              <ion-icon slot="start" name="person"></ion-icon>
+              Assign Athletes
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button
+              expand="block"
+              color="primary"
+              fill="outline"
+              [disabled]="loading()"
+              (click)="assignJudges()"
+            >
+              <ion-icon slot="start" name="school"></ion-icon>
+              Assign Judges
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button
+              expand="block"
+              color="danger"
+              fill="outline"
+              [disabled]="loading()"
+              (click)="deleteAllAssignments()"
+            >
+              <ion-icon slot="start" name="trash"></ion-icon>
+              Delete All Assignments
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button
+              expand="block"
+              size="small"
+              color="medium"
+              fill="outline"
+              [disabled]="loading() || !hasAnyAssignments()"
+              (click)="toggleAllLocked()"
+            >
+              <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+              {{ allHeatsLocked() ? 'Unlock All' : 'Lock All' }}
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button
+              expand="block"
+              size="small"
+              color="medium"
+              fill="outline"
+              [disabled]="loading() || !hasAnyAssignments()"
+              (click)="toggleAllPublished()"
+            >
+              <ion-icon slot="start" name="cloud-done-outline"></ion-icon>
+              {{ allHeatsPublished() ? 'Unpublish All' : 'Publish All' }}
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-card-content>
   </ion-card>
   <!-- Assignment Summary -->
@@ -168,6 +178,26 @@
               <div class="stat-value">{{ totalAthletesAssigned() }}</div>
               <div class="stat-label">Athletes Assigned</div>
             </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button
+              expand="block"
+              fill="outline"
+              color="medium"
+              (click)="showAllAthletePrefs()"
+              >Show Athlete Prefs</ion-button
+            >
+          </ion-col>
+          <ion-col>
+            <ion-button
+              expand="block"
+              fill="outline"
+              color="medium"
+              (click)="showAllJudgeAvailability()"
+              >Show Judge Availability</ion-button
+            >
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -342,9 +372,6 @@
                         >
                           <ng-template>
                             <ion-content class="prefs-popover">
-                              @if
-                              (getAthletePreferences(assignment.athlete_crossfit_id))
-                              {
                               <ion-list>
                                 <ion-item lines="none">
                                   <ion-label class="ion-text-wrap">
@@ -354,7 +381,6 @@
                                   </ion-label>
                                 </ion-item>
                               </ion-list>
-                              }
                             </ion-content>
                           </ng-template>
                         </ion-popover>
@@ -362,7 +388,6 @@
                       <td
                         (contextmenu)="setHoveredJudge(assignment.judge_name); $event.preventDefault()"
                         (click)="updateJudge(assignment, heat)"
-                        (contextmenu)="setHoveredJudge(assignment.judge_name); $event.preventDefault()"
                         class="clickable"
                         [class.missing-judge]="!assignment.judge_name"
                         [class.highlighted-judge]="
