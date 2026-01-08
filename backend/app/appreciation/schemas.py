@@ -42,4 +42,4 @@ class AppreciationResultDetail(CustomBaseModel):
 class AppreciationResultNotes(CustomBaseModel):
     year: int
     ordinal: int
-    text: str
+    text: str | None

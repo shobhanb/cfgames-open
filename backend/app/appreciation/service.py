@@ -31,14 +31,18 @@ async def get_db_appreciation_text(
     year: int,
 ) -> list[dict[str, Any]]:
     stmt_team = select(Appreciation.year, Appreciation.ordinal, Appreciation.team_vote_text.label("text")).where(
-        (Appreciation.team_vote_crossfit_id == crossfit_id) & (Appreciation.year == year),
+        (Appreciation.team_vote_crossfit_id == crossfit_id)
+        & (Appreciation.year == year)
+        & (Appreciation.team_vote_text.is_not(None)),
     )
     stmt_non_team = select(
         Appreciation.year,
         Appreciation.ordinal,
         Appreciation.non_team_vote_text.label("text"),
     ).where(
-        (Appreciation.non_team_vote_crossfit_id == crossfit_id) & (Appreciation.year == year),
+        (Appreciation.non_team_vote_crossfit_id == crossfit_id)
+        & (Appreciation.year == year)
+        & (Appreciation.non_team_vote_text.is_not(None)),
     )
     ret = await db_session.execute(stmt_team.union_all(stmt_non_team))
     results = ret.mappings().all()
