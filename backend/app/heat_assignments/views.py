@@ -210,7 +210,6 @@ async def delete_existing_heat_assignment(
     "/assign-random",
     status_code=status.HTTP_200_OK,
     response_model=RandomAssignmentResponse,
-    deprecated=True,
 )
 async def assign_athletes_and_judges(
     db_session: db_dependency,

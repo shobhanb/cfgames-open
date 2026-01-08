@@ -36,6 +36,7 @@ import { EventService } from 'src/app/services/event.service';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
 import { RouterLink } from '@angular/router';
 import { AppConfigService } from 'src/app/services/app-config.service';
+import { TeamNamePipe } from '../../../../pipes/team-name.pipe';
 
 @Component({
   selector: 'app-appreciation-result',
@@ -64,6 +65,7 @@ import { AppConfigService } from 'src/app/services/app-config.service';
     RouterLink,
     IonRouterLink,
     IonChip,
+    TeamNamePipe,
   ],
 })
 export class AppreciationResultPage implements OnInit {

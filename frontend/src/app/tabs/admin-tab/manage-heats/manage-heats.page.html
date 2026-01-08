@@ -57,15 +57,7 @@
       <ion-button
         expand="block"
         color="primary"
-        [disabled]="loading()"
-        (click)="assignRandom()"
-      >
-        <ion-icon slot="start" name="person"></ion-icon>
-        Assign Athletes & Judges
-      </ion-button>
-      <ion-button
-        expand="block"
-        color="primary"
+        fill="outline"
         [disabled]="loading()"
         (click)="assignAthletes()"
       >
@@ -75,11 +67,23 @@
       <ion-button
         expand="block"
         color="primary"
+        fill="outline"
         [disabled]="loading()"
         (click)="assignJudges()"
       >
         <ion-icon slot="start" name="school"></ion-icon>
         Assign Judges
+      </ion-button>
+      <ion-button
+        expand="block"
+        color="primary"
+        fill="outline"
+        [disabled]="loading()"
+        (click)="assignRandom()"
+      >
+        <ion-icon slot="start" name="person"></ion-icon>
+        <ion-icon slot="start" name="school"></ion-icon>
+        Assign Athletes & Judges
       </ion-button>
       <ion-button
         expand="block"

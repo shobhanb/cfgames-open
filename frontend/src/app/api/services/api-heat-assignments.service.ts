@@ -402,8 +402,6 @@ export class apiHeatAssignmentsService extends BaseService {
    * To access only the response body, use `assignAthletesAndJudgesHeatAssignmentsAssignRandomPost()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
-   *
-   * @deprecated
    */
   assignAthletesAndJudgesHeatAssignmentsAssignRandomPost$Response(params: AssignAthletesAndJudgesHeatAssignmentsAssignRandomPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiRandomAssignmentResponse>> {
     return assignAthletesAndJudgesHeatAssignmentsAssignRandomPost(this.http, this.rootUrl, params, context);
@@ -426,8 +424,6 @@ export class apiHeatAssignmentsService extends BaseService {
    * To access the full response (for headers, for example), `assignAthletesAndJudgesHeatAssignmentsAssignRandomPost$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
-   *
-   * @deprecated
    */
   assignAthletesAndJudgesHeatAssignmentsAssignRandomPost(params: AssignAthletesAndJudgesHeatAssignmentsAssignRandomPost$Params, context?: HttpContext): Observable<apiRandomAssignmentResponse> {
     return this.assignAthletesAndJudgesHeatAssignmentsAssignRandomPost$Response(params, context).pipe(

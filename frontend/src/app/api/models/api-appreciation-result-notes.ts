@@ -4,6 +4,6 @@
 
 export interface apiAppreciationResultNotes {
   ordinal: number;
-  text: string;
+  text: (string | null);
   year: number;
 }

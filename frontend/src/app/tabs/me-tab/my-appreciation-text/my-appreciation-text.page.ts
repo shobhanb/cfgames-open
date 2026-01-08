@@ -88,7 +88,9 @@ export class MyAppreciationTextPage implements OnInit {
           texts: [],
         });
       }
-      grouped.get(result.ordinal)!.texts.push(result.text);
+      if (result.text !== null) {
+        grouped.get(result.ordinal)!.texts.push(result.text);
+      }
     });
 
     // Convert to array and sort by ordinal

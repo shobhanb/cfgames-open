@@ -77,7 +77,8 @@
           {{ athleteDataService.getAthleteName(item.crossfit_id) }}
         </ion-label>
         <ion-note class="team-name">
-          {{ athleteDataService.getTeamName(item.crossfit_id) }}
+          {{ (athleteDataService.getTeamName(item.crossfit_id) ?? '') |
+          teamName}}
         </ion-note>
       </div>
       <div slot="end" class="scores-container">
