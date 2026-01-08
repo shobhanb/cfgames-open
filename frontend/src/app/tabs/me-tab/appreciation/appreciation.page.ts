@@ -158,7 +158,7 @@ export class AppreciationPage implements OnInit {
               if (a.year !== b.year) {
                 return b.year - a.year; // Sort by year descending
               }
-              return b.ordinal - a.ordinal; // Sort by ordinal descending
+              return a.ordinal - b.ordinal; // Sort by ordinal ascending
             })
           );
           appreciationDataLoaded = true;

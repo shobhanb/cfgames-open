@@ -34,16 +34,20 @@
       You haven't received any appreciation comments for {{ currentYear }} yet.
     </ion-card-content>
   </ion-card>
-  } @else { @for (result of appreciationResults(); track result.ordinal) {
+  } @else { @for (group of groupedResults(); track group.ordinal) {
   <ion-card>
     <ion-card-header>
       <ion-card-title>
-        {{ eventService.getWeekendEventName(result.ordinal, result.year) }}
+        {{ eventService.getWeekendEventName(group.ordinal, group.year) }}
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-list>
-        <ion-item>{{ result.text }}</ion-item>
+      <ion-list [inset]="true">
+        @for (text of group.texts; track $index) {
+        <ion-item lines="full">
+          <ion-label class="ion-text-wrap">{{ text }}</ion-label>
+        </ion-item>
+        }
       </ion-list>
     </ion-card-content>
   </ion-card>

@@ -4,6 +4,7 @@ import {
   OnInit,
   signal,
   ChangeDetectionStrategy,
+  computed,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -24,6 +25,7 @@ import {
   IonList,
   IonItem,
   IonText,
+  IonLabel,
 } from '@ionic/angular/standalone';
 import { apiAppreciationService } from 'src/app/api/services';
 import { apiAppreciationResultNotes } from 'src/app/api/models';
@@ -38,6 +40,7 @@ import { AppConfigService } from 'src/app/services/app-config.service';
   styleUrls: ['./my-appreciation-text.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    IonLabel,
     IonText,
     IonItem,
     IonList,
@@ -68,6 +71,29 @@ export class MyAppreciationTextPage implements OnInit {
   currentYear = this.config.year;
   appreciationResults = signal<apiAppreciationResultNotes[]>([]);
   dataLoaded = signal(false);
+
+  // Group appreciation results by ordinal
+  groupedResults = computed(() => {
+    const results = this.appreciationResults();
+    const grouped = new Map<
+      number,
+      { ordinal: number; year: number; texts: string[] }
+    >();
+
+    results.forEach((result) => {
+      if (!grouped.has(result.ordinal)) {
+        grouped.set(result.ordinal, {
+          ordinal: result.ordinal,
+          year: result.year,
+          texts: [],
+        });
+      }
+      grouped.get(result.ordinal)!.texts.push(result.text);
+    });
+
+    // Convert to array and sort by ordinal
+    return Array.from(grouped.values()).sort((a, b) => a.ordinal - b.ordinal);
+  });
 
   ngOnInit() {
     this.loadAppreciationText();
