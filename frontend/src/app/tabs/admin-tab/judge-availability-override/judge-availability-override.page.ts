@@ -27,7 +27,6 @@ import {
   IonCheckbox,
   IonLabel,
   IonSkeletonText,
-  ModalController,
 } from '@ionic/angular/standalone';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import {
@@ -37,6 +36,7 @@ import {
 import { apiJudgeAvailabilityModel, apiJudgesModel } from 'src/app/api/models';
 import { ToastService } from 'src/app/services/toast.service';
 import { CheckboxCustomEvent } from '@ionic/angular';
+import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
 
 @Component({
   selector: 'app-judge-availability-override',
@@ -71,12 +71,14 @@ export class JudgeAvailabilityOverridePage implements OnInit {
   private apiJudges = inject(apiJudgesService);
   private apiJudgeAvailability = inject(apiJudgeAvailabilityService);
   private toastService = inject(ToastService);
-  private modalController = inject(ModalController);
+  private athleteNameModalService = inject(AthleteNameModalService);
 
   readonly judges = signal<apiJudgesModel[]>([]);
   readonly selectedJudge = signal<apiJudgesModel | null>(null);
   readonly availabilities = signal<apiJudgeAvailabilityModel[]>([]);
   readonly dataLoaded = signal<boolean>(false);
+
+  readonly judgeNames = computed(() => this.judges().map((j) => j.name));
 
   readonly selectedJudgeName = computed(
     () => this.selectedJudge()?.name ?? null
@@ -115,27 +117,18 @@ export class JudgeAvailabilityOverridePage implements OnInit {
       return;
     }
 
-    const buttons = judgesList.map((judge) => ({
-      text: judge.name,
-      handler: () => {
+    const selectedName =
+      await this.athleteNameModalService.openAthleteSelectModal(
+        this.judgeNames
+      );
+
+    if (selectedName) {
+      const judge = judgesList.find((j) => j.name === selectedName);
+      if (judge) {
         this.selectedJudge.set(judge);
         this.loadJudgeAvailabilities(judge.id);
-      },
-    }));
-
-    buttons.push({
-      text: 'Cancel',
-      role: 'cancel' as const,
-      handler: () => {},
-    } as any);
-
-    const actionSheet = document.createElement('ion-action-sheet');
-    actionSheet.header = 'Select a Judge';
-    actionSheet.buttons = buttons;
-    document.body.appendChild(actionSheet);
-    await actionSheet.present();
-    await actionSheet.onDidDismiss();
-    actionSheet.remove();
+      }
+    }
   }
 
   private loadJudgeAvailabilities(judgeId: string) {

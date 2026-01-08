@@ -25,6 +25,7 @@ import {
   IonCardTitle,
   IonCardHeader,
   IonCardContent,
+  IonButton,
 } from '@ionic/angular/standalone';
 import { apiJudgeAvailabilityService } from 'src/app/api/services';
 import { apiJudgeAvailabilityModel } from 'src/app/api/models';
@@ -55,6 +56,7 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
     IonItem,
     IonCheckbox,
     IonLabel,
+    IonButton,
     CommonModule,
     FormsModule,
     ToolbarButtonsComponent,
@@ -134,5 +136,71 @@ export class JudgeAvailabilityPage implements OnInit {
           );
         },
       });
+  }
+
+  onSelectAll() {
+    const avails = this.availabilities();
+
+    avails.forEach((availability) => {
+      if (!availability.available) {
+        this.apiJudgeAvailability
+          .updateMyJudgeAvailabilityJudgeAvailabilityMeAvailabilityIdPatch({
+            availability_id: availability.id,
+            body: {
+              available: true,
+            },
+          })
+          .subscribe({
+            next: (updated) => {
+              this.availabilities.update((avails) =>
+                avails.map((a) => (a.id === updated.id ? updated : a))
+              );
+            },
+            error: (err) => {
+              this.toastService.showToast(
+                'Error updating availability: ' + (err?.error?.detail ?? ''),
+                'danger',
+                null,
+                3000
+              );
+            },
+          });
+      }
+    });
+
+    this.toastService.showToast('All slots selected', 'success', null, 2000);
+  }
+
+  onDeselectAll() {
+    const avails = this.availabilities();
+
+    avails.forEach((availability) => {
+      if (availability.available) {
+        this.apiJudgeAvailability
+          .updateMyJudgeAvailabilityJudgeAvailabilityMeAvailabilityIdPatch({
+            availability_id: availability.id,
+            body: {
+              available: false,
+            },
+          })
+          .subscribe({
+            next: (updated) => {
+              this.availabilities.update((avails) =>
+                avails.map((a) => (a.id === updated.id ? updated : a))
+              );
+            },
+            error: (err) => {
+              this.toastService.showToast(
+                'Error updating availability: ' + (err?.error?.detail ?? ''),
+                'danger',
+                null,
+                3000
+              );
+            },
+          });
+      }
+    });
+
+    this.toastService.showToast('All slots deselected', 'success', null, 2000);
   }
 }
