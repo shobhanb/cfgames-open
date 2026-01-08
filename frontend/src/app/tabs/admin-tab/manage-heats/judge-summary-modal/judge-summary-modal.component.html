@@ -9,12 +9,12 @@
 
 <ion-content>
   <ion-list>
-    @for (judge of judgeSummary; track judge.judgeName) {
+    @for (judge of completeSummary(); track judge.judgeName) {
     <ion-item>
-      <ion-label>
+      <ion-label [class.unassigned]="judge.count === 0">
         {{ judge.judgeName }}
       </ion-label>
-      <ion-label slot="end">
+      <ion-label slot="end" [class.unassigned]="judge.count === 0">
         {{ judge.count }}
         {{ judge.count === 1 ? "assignment" : "assignments" }}
       </ion-label>

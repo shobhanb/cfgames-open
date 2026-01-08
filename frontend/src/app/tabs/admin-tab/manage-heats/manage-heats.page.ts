@@ -408,6 +408,76 @@ export class ManageHeatsPage implements OnInit {
       });
   }
 
+  assignAthletes() {
+    if (!this.selectedOrdinal()) {
+      this.toastService.showToast('Select an event first', 'warning');
+      return;
+    }
+
+    this.loading.set(true);
+    this.dataLoaded.set(false);
+
+    const affiliate_id = this.appConfig.affiliateId;
+    const year = this.appConfig.year;
+    const ordinal = this.selectedOrdinal()!;
+
+    this.apiHeatAssignments
+      .assignAthletesHeatAssignmentsAssignAthletesPost({
+        body: { affiliate_id, year, ordinal },
+      })
+      .subscribe({
+        next: async (result) => {
+          await this.showAssignmentResults(result);
+          this.loadHeats();
+        },
+        error: (error) => {
+          console.error('Error assigning athletes:', error);
+          this.toastService.showToast(
+            'Failed to assign athletes: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger'
+          );
+          this.loading.set(false);
+          this.dataLoaded.set(true);
+        },
+      });
+  }
+
+  assignJudges() {
+    if (!this.selectedOrdinal()) {
+      this.toastService.showToast('Select an event first', 'warning');
+      return;
+    }
+
+    this.loading.set(true);
+    this.dataLoaded.set(false);
+
+    const affiliate_id = this.appConfig.affiliateId;
+    const year = this.appConfig.year;
+    const ordinal = this.selectedOrdinal()!;
+
+    this.apiHeatAssignments
+      .assignJudgesHeatAssignmentsAssignJudgesPost({
+        body: { affiliate_id, year, ordinal },
+      })
+      .subscribe({
+        next: async (result) => {
+          await this.showAssignmentResults(result);
+          this.loadHeats();
+        },
+        error: (error) => {
+          console.error('Error assigning judges:', error);
+          this.toastService.showToast(
+            'Failed to assign judges: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger'
+          );
+          this.loading.set(false);
+          this.dataLoaded.set(true);
+        },
+      });
+  }
+
   async showAssignmentResults(result: any) {
     const skippedCount = result.skipped_athletes?.length ?? 0;
     let message = `Assignment Complete!
@@ -927,6 +997,7 @@ Total Assignments: ${result.assigned_count}`;
       componentProps: {
         shortName: shortName,
         judgeSummary: judgeSummary,
+        allJudgeNames: this.judgeNames(),
       },
     });
 
@@ -954,6 +1025,7 @@ Total Assignments: ${result.assigned_count}`;
       componentProps: {
         shortName: 'All Heats',
         judgeSummary: judgeSummary,
+        allJudgeNames: this.judgeNames(),
       },
     });
 

@@ -657,22 +657,20 @@ def _assign_athlete_to_heat(
     return None, 0
 
 
-async def assign_athletes_and_judges_randomly(
+async def assign_athletes_randomly(
     db_session: AsyncSession,
     affiliate_id: int,
     year: int,
     ordinal: int,
 ) -> dict[str, Any]:
     """
-        Assign athletes and judges to heats based on their time preferences.
+    Assign athletes to heats based on their time preferences.
 
-        Rules:
-        1. Pull athlete time preferences (AthleteTimePref)
-        2. Skip athletes with "NA" at preference_nbr 0
-        3. Assign preferred athletes first (PreferredAthletes), then judges, then others
-    ) -> dict[str, Any]:  # noqa: C901, PLR0912, PLR0915
-        5. Ensure judges are not assigned to judge heats within 45 minutes of their athlete assignments
-        6. Respect max_athletes limit of each heat
+    Rules:
+    1. Pull athlete time preferences (AthleteTimePref)
+    2. Skip athletes with "NA" at preference_nbr 0
+    3. Assign preferred athletes first (PreferredAthletes), then preferred judges, then others
+    4. Respect max_athletes limit of each heat
     """
     # Get all heats for the given criteria
     heats_stmt = (
@@ -736,9 +734,6 @@ async def assign_athletes_and_judges_randomly(
         cid: data for cid, data in remaining_after_preferred.items() if cid not in preferred_judge_ids
     }
 
-    # Create a heat time index for quick lookup
-    heat_times = {heat.id: heat.start_time for heat in heats}
-
     # Track athlete assignments for judges (to enforce buffer)
     judge_athlete_assignments: dict[int, list[UUID]] = {judge.crossfit_id: [] for judge in all_judges}
 
@@ -771,9 +766,7 @@ async def assign_athletes_and_judges_randomly(
         if assignment.judge_crossfit_id:
             heat_judges[assignment.heat_id].add(assignment.judge_crossfit_id)
 
-    assigned_count = 0
     athletes_assigned = 0
-    judges_assigned = 0
 
     # Assign preferred athletes first using their start_time preferences (skip already assigned)
     preferred_list = sorted(
@@ -808,7 +801,6 @@ async def assign_athletes_and_judges_randomly(
 
         if assignment:
             new_assignments.append(assignment)
-            assigned_count += count
             athletes_assigned += count
 
     # Assign preferred judges who are also athletes next (skip already assigned)
@@ -827,7 +819,6 @@ async def assign_athletes_and_judges_randomly(
         )
         if assignment:
             new_assignments.append(assignment)
-            assigned_count += count
             athletes_assigned += count
 
     # Then, assign regular athletes (including non-preferred judges) (skip already assigned)
@@ -845,10 +836,79 @@ async def assign_athletes_and_judges_randomly(
         )
         if assignment:
             new_assignments.append(assignment)
-            assigned_count += count
             athletes_assigned += count
 
-    # Get all judge availability data
+    await db_session.commit()
+
+    return {
+        "heats_processed": len(heats),
+        "athletes_assigned": athletes_assigned,
+        "skipped_athletes": skipped_athletes,
+    }
+
+
+async def assign_judges_randomly(
+    db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
+    ordinal: int,
+) -> dict[str, Any]:
+    """
+    Assign judges to heats based on judge availability and athlete assignments.
+
+    Rules:
+    1. Ensure judges are not assigned to judge heats within 45 minutes of their athlete assignments
+    2. Prefer assigning judges who have marked themselves as available for that time slot
+    3. Distribute assignments evenly among preferred judges
+    4. Avoid back-to-back judge assignments
+    """
+    # Get all heats for the given criteria
+    heats_stmt = (
+        select(Heats)
+        .where(
+            (Heats.affiliate_id == affiliate_id) & (Heats.year == year) & (Heats.ordinal == ordinal),
+        )
+        .order_by(Heats.start_time)
+    )
+    heats_result = await db_session.execute(heats_stmt)
+    heats = list(heats_result.scalars().all())
+
+    if not heats:
+        msg = f"No heats found for affiliate_id={affiliate_id}, year={year}, ordinal={ordinal}"
+        raise not_found_exception(msg)
+
+    # Get all judges
+    judges_stmt = select(Judges)
+    judges_result = await db_session.execute(judges_stmt)
+    all_judges = list(judges_result.scalars().all())
+    judge_crossfit_ids = {judge.crossfit_id for judge in all_judges}
+
+    # Create a heat time index for quick lookup
+    heat_times = {heat.id: heat.start_time for heat in heats}
+
+    # Track athlete assignments for judges (to enforce buffer)
+    judge_athlete_assignments: dict[int, list[UUID]] = {judge.crossfit_id: [] for judge in all_judges}
+
+    # Get existing assignments
+    existing_assignments_stmt = (
+        select(HeatAssignments)
+        .join(Heats, HeatAssignments.heat_id == Heats.id)
+        .where(
+            (Heats.affiliate_id == affiliate_id) & (Heats.year == year) & (Heats.ordinal == ordinal),
+        )
+    )
+    existing_result = await db_session.execute(existing_assignments_stmt)
+    existing_assignments = list(existing_result.scalars().all())
+
+    # Track current assignments per heat
+    heat_judges: dict[UUID, set[int]] = {heat.id: set() for heat in heats}
+
+    # Build judge athlete assignments map
+    for assignment in existing_assignments:
+        if assignment.athlete_crossfit_id and assignment.athlete_crossfit_id in judge_crossfit_ids:
+            judge_athlete_assignments[assignment.athlete_crossfit_id].append(assignment.heat_id)
+        if assignment.judge_crossfit_id:
+            heat_judges[assignment.heat_id].add(assignment.judge_crossfit_id)
     judge_availability_stmt = select(JudgeAvailability)
     judge_availability_result = await db_session.execute(judge_availability_stmt)
     all_judge_availability = list(judge_availability_result.scalars().all())
@@ -872,11 +932,12 @@ async def assign_athletes_and_judges_randomly(
             judge_judging_assignments[assignment.judge_crossfit_id].append(assignment.heat_id)
             judge_assignment_counts[assignment.judge_crossfit_id] += 1
 
-    # Finally, assign judges to every athlete assignment (ensuring buffer and availability)
-    all_assignments = existing_assignments + new_assignments
+    judges_assigned = 0
+
+    # Assign judges to every athlete assignment that doesn't have a judge yet
     slots_needing_judges = [
         assignment
-        for assignment in all_assignments
+        for assignment in existing_assignments
         if assignment.athlete_crossfit_id is not None and assignment.judge_crossfit_id is None
     ]
 
@@ -946,7 +1007,6 @@ async def assign_athletes_and_judges_randomly(
         heat_judges[assignment.heat_id].add(chosen_judge.crossfit_id)
         judge_judging_assignments[chosen_judge.crossfit_id].append(assignment.heat_id)
         judge_assignment_counts[chosen_judge.crossfit_id] += 1
-        assigned_count += 1
         judges_assigned += 1
         log.info(
             "Assigned judge %s to heat %s for athlete %s (total assignments: %d)",
@@ -959,11 +1019,8 @@ async def assign_athletes_and_judges_randomly(
     await db_session.commit()
 
     return {
-        "assigned_count": assigned_count,
         "heats_processed": len(heats),
-        "athletes_assigned": athletes_assigned,
         "judges_assigned": judges_assigned,
-        "skipped_athletes": skipped_athletes,
     }
 
 

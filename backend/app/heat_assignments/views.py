@@ -7,6 +7,10 @@ from app.database.dependencies import db_dependency
 from app.firebase_auth.dependencies import admin_user_dependency, verified_user_dependency
 
 from .schemas import (
+    AssignAthletesRequest,
+    AssignAthletesResponse,
+    AssignJudgesRequest,
+    AssignJudgesResponse,
     DeleteAssignmentsByCriteriaRequest,
     DeleteAssignmentsByCriteriaResponse,
     HeatAssignmentCreate,
@@ -17,7 +21,8 @@ from .schemas import (
     RandomAssignmentResponse,
 )
 from .service import (
-    assign_athletes_and_judges_randomly,
+    assign_athletes_randomly,
+    assign_judges_randomly,
     clear_athlete_from_assignment,
     clear_judge_from_assignment,
     create_heat_assignment,
@@ -205,6 +210,7 @@ async def delete_existing_heat_assignment(
     "/assign-random",
     status_code=status.HTTP_200_OK,
     response_model=RandomAssignmentResponse,
+    deprecated=True,
 )
 async def assign_athletes_and_judges(
     db_session: db_dependency,
@@ -214,13 +220,87 @@ async def assign_athletes_and_judges(
     """
     Randomly assign athletes and judges to heats based on preferences.
 
+    DEPRECATED: Use /assign-athletes and /assign-judges endpoints instead.
+
     Rules:
     - Athletes with "NA" at preference_nbr 0 are skipped
     - Judges are assigned as athletes first (priority)
     - Judges cannot be assigned to judge heats within 45 minutes of their athlete assignments
     - Respects max_athletes limit of each heat
     """
-    return await assign_athletes_and_judges_randomly(
+    # Call assign_athletes_randomly
+    athlete_result = await assign_athletes_randomly(
+        db_session=db_session,
+        affiliate_id=request.affiliate_id,
+        year=request.year,
+        ordinal=request.ordinal,
+    )
+
+    # Call assign_judges_randomly
+    judge_result = await assign_judges_randomly(
+        db_session=db_session,
+        affiliate_id=request.affiliate_id,
+        year=request.year,
+        ordinal=request.ordinal,
+    )
+
+    return {
+        "assigned_count": athlete_result["athletes_assigned"] + judge_result["judges_assigned"],
+        "heats_processed": athlete_result["heats_processed"],
+        "athletes_assigned": athlete_result["athletes_assigned"],
+        "judges_assigned": judge_result["judges_assigned"],
+        "skipped_athletes": athlete_result["skipped_athletes"],
+    }
+
+
+@heat_assignments_router.post(
+    "/assign-athletes",
+    status_code=status.HTTP_200_OK,
+    response_model=AssignAthletesResponse,
+)
+async def assign_athletes(
+    db_session: db_dependency,
+    _: admin_user_dependency,
+    request: AssignAthletesRequest,
+) -> dict[str, Any]:
+    """
+    Randomly assign athletes to heats based on their time preferences.
+
+    Rules:
+    - Athletes with "NA" at preference_nbr 0 are skipped
+    - Preferred athletes are assigned first using their start_time preferences
+    - Preferred judges (as athletes) are assigned next
+    - Regular athletes (including non-preferred judges) are assigned last
+    - Respects max_athletes limit of each heat
+    """
+    return await assign_athletes_randomly(
+        db_session=db_session,
+        affiliate_id=request.affiliate_id,
+        year=request.year,
+        ordinal=request.ordinal,
+    )
+
+
+@heat_assignments_router.post(
+    "/assign-judges",
+    status_code=status.HTTP_200_OK,
+    response_model=AssignJudgesResponse,
+)
+async def assign_judges(
+    db_session: db_dependency,
+    _: admin_user_dependency,
+    request: AssignJudgesRequest,
+) -> dict[str, Any]:
+    """
+    Randomly assign judges to heats based on judge availability and athlete assignments.
+
+    Rules:
+    - Ensures judges are not assigned to judge heats within 45 minutes of their athlete assignments
+    - Prefers assigning judges who have marked themselves as available for that time slot
+    - Distributes assignments evenly among preferred judges
+    - Avoids back-to-back judge assignments
+    """
+    return await assign_judges_randomly(
         db_session=db_session,
         affiliate_id=request.affiliate_id,
         year=request.year,

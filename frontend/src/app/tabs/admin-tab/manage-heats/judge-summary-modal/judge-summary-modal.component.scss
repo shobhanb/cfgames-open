@@ -19,4 +19,9 @@ ion-item {
   p {
     color: var(--ion-color-medium);
   }
+
+  ion-label.unassigned {
+    color: var(--ion-color-medium);
+    font-style: italic;
+  }
 }

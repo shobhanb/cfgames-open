@@ -52,6 +52,29 @@ class RandomAssignmentResponse(CustomBaseModel):
     skipped_athletes: list[dict[str, str | int]]
 
 
+class AssignAthletesRequest(CustomBaseModel):
+    affiliate_id: int
+    year: int
+    ordinal: int
+
+
+class AssignAthletesResponse(CustomBaseModel):
+    heats_processed: int
+    athletes_assigned: int
+    skipped_athletes: list[dict[str, str | int]]
+
+
+class AssignJudgesRequest(CustomBaseModel):
+    affiliate_id: int
+    year: int
+    ordinal: int
+
+
+class AssignJudgesResponse(CustomBaseModel):
+    heats_processed: int
+    judges_assigned: int
+
+
 class DeleteAssignmentsByCriteriaRequest(CustomBaseModel):
     affiliate_id: int
     year: int

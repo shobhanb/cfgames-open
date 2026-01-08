@@ -13,6 +13,12 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { assignAthletesAndJudgesHeatAssignmentsAssignRandomPost } from '../fn/heat-assignments/assign-athletes-and-judges-heat-assignments-assign-random-post';
 import { AssignAthletesAndJudgesHeatAssignmentsAssignRandomPost$Params } from '../fn/heat-assignments/assign-athletes-and-judges-heat-assignments-assign-random-post';
+import { assignAthletesHeatAssignmentsAssignAthletesPost } from '../fn/heat-assignments/assign-athletes-heat-assignments-assign-athletes-post';
+import { AssignAthletesHeatAssignmentsAssignAthletesPost$Params } from '../fn/heat-assignments/assign-athletes-heat-assignments-assign-athletes-post';
+import { apiAssignAthletesResponse } from '../models/api-assign-athletes-response';
+import { assignJudgesHeatAssignmentsAssignJudgesPost } from '../fn/heat-assignments/assign-judges-heat-assignments-assign-judges-post';
+import { AssignJudgesHeatAssignmentsAssignJudgesPost$Params } from '../fn/heat-assignments/assign-judges-heat-assignments-assign-judges-post';
+import { apiAssignJudgesResponse } from '../models/api-assign-judges-response';
 import { clearAthleteHeatAssignmentsAssignmentIdClearAthletePatch } from '../fn/heat-assignments/clear-athlete-heat-assignments-assignment-id-clear-athlete-patch';
 import { ClearAthleteHeatAssignmentsAssignmentIdClearAthletePatch$Params } from '../fn/heat-assignments/clear-athlete-heat-assignments-assignment-id-clear-athlete-patch';
 import { clearJudgeHeatAssignmentsAssignmentIdClearJudgePatch } from '../fn/heat-assignments/clear-judge-heat-assignments-assignment-id-clear-judge-patch';
@@ -384,6 +390,8 @@ export class apiHeatAssignmentsService extends BaseService {
    *
    * Randomly assign athletes and judges to heats based on preferences.
    *
+   * DEPRECATED: Use /assign-athletes and /assign-judges endpoints instead.
+   *
    * Rules:
    * - Athletes with "NA" at preference_nbr 0 are skipped
    * - Judges are assigned as athletes first (priority)
@@ -394,6 +402,8 @@ export class apiHeatAssignmentsService extends BaseService {
    * To access only the response body, use `assignAthletesAndJudgesHeatAssignmentsAssignRandomPost()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
+   *
+   * @deprecated
    */
   assignAthletesAndJudgesHeatAssignmentsAssignRandomPost$Response(params: AssignAthletesAndJudgesHeatAssignmentsAssignRandomPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiRandomAssignmentResponse>> {
     return assignAthletesAndJudgesHeatAssignmentsAssignRandomPost(this.http, this.rootUrl, params, context);
@@ -403,6 +413,8 @@ export class apiHeatAssignmentsService extends BaseService {
    * Assign Athletes And Judges.
    *
    * Randomly assign athletes and judges to heats based on preferences.
+   *
+   * DEPRECATED: Use /assign-athletes and /assign-judges endpoints instead.
    *
    * Rules:
    * - Athletes with "NA" at preference_nbr 0 are skipped
@@ -414,10 +426,104 @@ export class apiHeatAssignmentsService extends BaseService {
    * To access the full response (for headers, for example), `assignAthletesAndJudgesHeatAssignmentsAssignRandomPost$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
+   *
+   * @deprecated
    */
   assignAthletesAndJudgesHeatAssignmentsAssignRandomPost(params: AssignAthletesAndJudgesHeatAssignmentsAssignRandomPost$Params, context?: HttpContext): Observable<apiRandomAssignmentResponse> {
     return this.assignAthletesAndJudgesHeatAssignmentsAssignRandomPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<apiRandomAssignmentResponse>): apiRandomAssignmentResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `assignAthletesHeatAssignmentsAssignAthletesPost()` */
+  static readonly AssignAthletesHeatAssignmentsAssignAthletesPostPath = '/heat_assignments/assign-athletes';
+
+  /**
+   * Assign Athletes.
+   *
+   * Randomly assign athletes to heats based on their time preferences.
+   *
+   * Rules:
+   * - Athletes with "NA" at preference_nbr 0 are skipped
+   * - Preferred athletes are assigned first using their start_time preferences
+   * - Preferred judges (as athletes) are assigned next
+   * - Regular athletes (including non-preferred judges) are assigned last
+   * - Respects max_athletes limit of each heat
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `assignAthletesHeatAssignmentsAssignAthletesPost()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  assignAthletesHeatAssignmentsAssignAthletesPost$Response(params: AssignAthletesHeatAssignmentsAssignAthletesPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAssignAthletesResponse>> {
+    return assignAthletesHeatAssignmentsAssignAthletesPost(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Assign Athletes.
+   *
+   * Randomly assign athletes to heats based on their time preferences.
+   *
+   * Rules:
+   * - Athletes with "NA" at preference_nbr 0 are skipped
+   * - Preferred athletes are assigned first using their start_time preferences
+   * - Preferred judges (as athletes) are assigned next
+   * - Regular athletes (including non-preferred judges) are assigned last
+   * - Respects max_athletes limit of each heat
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `assignAthletesHeatAssignmentsAssignAthletesPost$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  assignAthletesHeatAssignmentsAssignAthletesPost(params: AssignAthletesHeatAssignmentsAssignAthletesPost$Params, context?: HttpContext): Observable<apiAssignAthletesResponse> {
+    return this.assignAthletesHeatAssignmentsAssignAthletesPost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiAssignAthletesResponse>): apiAssignAthletesResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `assignJudgesHeatAssignmentsAssignJudgesPost()` */
+  static readonly AssignJudgesHeatAssignmentsAssignJudgesPostPath = '/heat_assignments/assign-judges';
+
+  /**
+   * Assign Judges.
+   *
+   * Randomly assign judges to heats based on judge availability and athlete assignments.
+   *
+   * Rules:
+   * - Ensures judges are not assigned to judge heats within 45 minutes of their athlete assignments
+   * - Prefers assigning judges who have marked themselves as available for that time slot
+   * - Distributes assignments evenly among preferred judges
+   * - Avoids back-to-back judge assignments
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `assignJudgesHeatAssignmentsAssignJudgesPost()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  assignJudgesHeatAssignmentsAssignJudgesPost$Response(params: AssignJudgesHeatAssignmentsAssignJudgesPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiAssignJudgesResponse>> {
+    return assignJudgesHeatAssignmentsAssignJudgesPost(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Assign Judges.
+   *
+   * Randomly assign judges to heats based on judge availability and athlete assignments.
+   *
+   * Rules:
+   * - Ensures judges are not assigned to judge heats within 45 minutes of their athlete assignments
+   * - Prefers assigning judges who have marked themselves as available for that time slot
+   * - Distributes assignments evenly among preferred judges
+   * - Avoids back-to-back judge assignments
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `assignJudgesHeatAssignmentsAssignJudgesPost$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  assignJudgesHeatAssignmentsAssignJudgesPost(params: AssignJudgesHeatAssignmentsAssignJudgesPost$Params, context?: HttpContext): Observable<apiAssignJudgesResponse> {
+    return this.assignJudgesHeatAssignmentsAssignJudgesPost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiAssignJudgesResponse>): apiAssignJudgesResponse => r.body)
     );
   }
 
