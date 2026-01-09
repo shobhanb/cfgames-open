@@ -23,7 +23,10 @@ import {
   ActionSheetController,
 } from '@ionic/angular/standalone';
 import { apiFireauthService } from 'src/app/api/services';
-import { apiFirebaseUserRecord } from 'src/app/api/models';
+import {
+  apiFirebaseUserRecord,
+  apiAthleteNotSignedUp,
+} from 'src/app/api/models';
 import { AuthService } from 'src/app/services/auth.service';
 import { addIcons } from 'ionicons';
 import { ellipsisHorizontalOutline } from 'ionicons/icons';
@@ -72,6 +75,7 @@ export class UsersPage implements OnInit {
   dataLoaded = signal<boolean>(false);
 
   private allUsers = signal<apiFirebaseUserRecord[]>([]);
+  private athletesNotSignedUp = signal<apiAthleteNotSignedUp[]>([]);
 
   readonly filteredUsers = computed<apiFirebaseUserRecord[]>(() => {
     const users = this.allUsers();
@@ -92,11 +96,29 @@ export class UsersPage implements OnInit {
     }
   });
 
-  filterAdmin = signal<'admin' | 'notVerified' | 'all'>('all');
+  readonly filteredAthletesNotSignedUp = computed<apiAthleteNotSignedUp[]>(
+    () => {
+      const athletes = this.athletesNotSignedUp();
+      const search = this.searchText();
+      if (search) {
+        return athletes.filter(
+          (athlete) =>
+            athlete.name?.toLowerCase().includes(search) ||
+            athlete.crossfit_id?.toString().includes(search)
+        );
+      }
+      return athletes;
+    }
+  );
+
+  filterAdmin = signal<'admin' | 'notVerified' | 'notSignedUp' | 'all'>('all');
   searchText = signal<string | null>(null);
 
   onSelectionChanged(event: CustomEvent) {
     this.filterAdmin.set(event.detail.value);
+    if (event.detail.value === 'notSignedUp') {
+      this.getAthletesNotSignedUp();
+    }
   }
 
   onSearchBarInput(event: Event) {
@@ -229,6 +251,29 @@ export class UsersPage implements OnInit {
         this.toastService.showToast(err.message, 'danger', null, 3000);
       },
     });
+  }
+
+  private getAthletesNotSignedUp() {
+    this.apiFireAuth
+      .getAthletesNotSignedUpFireauthAthletesNotSignedUpGet({
+        affiliate_id: this.config.affiliateId,
+        year: this.config.year,
+      })
+      .subscribe({
+        next: (data: apiAthleteNotSignedUp[]) => {
+          this.athletesNotSignedUp.set(
+            data.sort((a: apiAthleteNotSignedUp, b: apiAthleteNotSignedUp) => {
+              const nameA = a.name?.toLowerCase() || '';
+              const nameB = b.name?.toLowerCase() || '';
+              return nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
+            })
+          );
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.toastService.showToast(err.message, 'danger', null, 3000);
+        },
+      });
   }
 
   handleRefresh(event: CustomEvent) {

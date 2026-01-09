@@ -24,6 +24,9 @@
       <ion-segment-button value="notVerified">
         <ion-label>Not Verified</ion-label>
       </ion-segment-button>
+      <ion-segment-button value="notSignedUp">
+        <ion-label>Not Signed Up</ion-label>
+      </ion-segment-button>
       <ion-segment-button value="all">
         <ion-label>All</ion-label>
       </ion-segment-button>
@@ -38,7 +41,15 @@
 
   @if (dataLoaded()) {
   <ion-list>
-    @for (user of filteredUsers(); track user.uid) {
+    @if (filterAdmin() === 'notSignedUp') { @for (athlete of
+    filteredAthletesNotSignedUp(); track athlete.crossfit_id) {
+    <ion-item>
+      <ion-label>
+        <ion-label><strong> {{ athlete.name }}</strong></ion-label>
+      </ion-label>
+      <ion-label slot="end" color="medium">Not Signed Up</ion-label>
+    </ion-item>
+    } } @else { @for (user of filteredUsers(); track user.uid) {
     <ion-item>
       <ion-label
         [color]="user.custom_claims?.crossfit_id === authService.userCustomClaims()?.crossfit_id ? 'tertiary' : ''"
@@ -61,7 +72,7 @@
       </ion-button>
     </ion-item>
 
-    }
+    } }
   </ion-list>
   } @else {
   <ion-list>

@@ -30,3 +30,14 @@ class CreateUser(CustomBaseModel):
     crossfit_id: int
     affiliate_id: int
     affiliate_name: str
+
+
+class AthleteNotSignedUp(CustomBaseModel):
+    crossfit_id: int
+    name: str
+    first_name: str
+    last_name: str
+    gender: str
+    age: int
+    division_id: int
+    team_name: str

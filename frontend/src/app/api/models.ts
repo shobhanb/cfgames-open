@@ -17,6 +17,7 @@ export type { apiAssignAthletesResponse } from './models/api-assign-athletes-res
 export type { apiAssignJudgesRequest } from './models/api-assign-judges-request';
 export type { apiAssignJudgesResponse } from './models/api-assign-judges-response';
 export type { apiAthleteDetail } from './models/api-athlete-detail';
+export type { apiAthleteNotSignedUp } from './models/api-athlete-not-signed-up';
 export type { apiAthletePrefsModel } from './models/api-athlete-prefs-model';
 export type { apiAthletePrefsOutputModel } from './models/api-athlete-prefs-output-model';
 export type { apiAthleteSummaryCounts } from './models/api-athlete-summary-counts';

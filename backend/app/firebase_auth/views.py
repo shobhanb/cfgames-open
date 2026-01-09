@@ -6,13 +6,15 @@ from firebase_admin.auth import ListUsersPage, UserRecord
 from firebase_admin.exceptions import FirebaseError
 
 from app.apikey_auth.dependencies import api_key_admin_dependency
+from app.athlete.models import Athlete
 from app.database.dependencies import db_dependency
 from app.settings import admin_user_settings
 
 from .dependencies import admin_user_dependency
 from .exceptions import already_assigned_exception, firebase_error, invalid_input_exception
 from .models import FirebaseUser
-from .schemas import CreateUser, FirebaseCustomClaims, FirebaseUserRecord
+from .schemas import AthleteNotSignedUp, CreateUser, FirebaseCustomClaims, FirebaseUserRecord
+from .service import get_db_athletes_not_signed_up
 
 log = logging.getLogger("uvicorn.error")
 
@@ -136,3 +138,17 @@ async def refresh_all_firebase_userdata(
             db_session.add(firebase_user)
 
     await db_session.commit()
+
+
+@firebase_auth_router.get(
+    "/athletes-not-signed-up",
+    status_code=status.HTTP_200_OK,
+    response_model=list[AthleteNotSignedUp],
+)
+async def get_athletes_not_signed_up(
+    _: admin_user_dependency,
+    db_session: db_dependency,
+    affiliate_id: int,
+    year: int,
+) -> list[Athlete]:
+    return await get_db_athletes_not_signed_up(db_session, affiliate_id, year)

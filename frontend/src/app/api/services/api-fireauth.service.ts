@@ -11,6 +11,7 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { apiAthleteNotSignedUp } from '../models/api-athlete-not-signed-up';
 import { createUserFireauthSignupPost } from '../fn/fireauth/create-user-fireauth-signup-post';
 import { CreateUserFireauthSignupPost$Params } from '../fn/fireauth/create-user-fireauth-signup-post';
 import { deleteUserFireauthUserUidDelete } from '../fn/fireauth/delete-user-fireauth-user-uid-delete';
@@ -18,6 +19,8 @@ import { DeleteUserFireauthUserUidDelete$Params } from '../fn/fireauth/delete-us
 import { apiFirebaseUserRecord } from '../models/api-firebase-user-record';
 import { getAllUsersFireauthAllGet } from '../fn/fireauth/get-all-users-fireauth-all-get';
 import { GetAllUsersFireauthAllGet$Params } from '../fn/fireauth/get-all-users-fireauth-all-get';
+import { getAthletesNotSignedUpFireauthAthletesNotSignedUpGet } from '../fn/fireauth/get-athletes-not-signed-up-fireauth-athletes-not-signed-up-get';
+import { GetAthletesNotSignedUpFireauthAthletesNotSignedUpGet$Params } from '../fn/fireauth/get-athletes-not-signed-up-fireauth-athletes-not-signed-up-get';
 import { getUserInfoFireauthUserUidGet } from '../fn/fireauth/get-user-info-fireauth-user-uid-get';
 import { GetUserInfoFireauthUserUidGet$Params } from '../fn/fireauth/get-user-info-fireauth-user-uid-get';
 import { refreshAllFirebaseUserdataFireauthRefreshAllPost } from '../fn/fireauth/refresh-all-firebase-userdata-fireauth-refresh-all-post';
@@ -226,6 +229,39 @@ export class apiFireauthService extends BaseService {
   refreshAllFirebaseUserdataFireauthRefreshAllPost(params?: RefreshAllFirebaseUserdataFireauthRefreshAllPost$Params, context?: HttpContext): Observable<any> {
     return this.refreshAllFirebaseUserdataFireauthRefreshAllPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<any>): any => r.body)
+    );
+  }
+
+  /** Path part for operation `getAthletesNotSignedUpFireauthAthletesNotSignedUpGet()` */
+  static readonly GetAthletesNotSignedUpFireauthAthletesNotSignedUpGetPath = '/fireauth/athletes-not-signed-up';
+
+  /**
+   * Get Athletes Not Signed Up.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAthletesNotSignedUpFireauthAthletesNotSignedUpGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAthletesNotSignedUpFireauthAthletesNotSignedUpGet$Response(params: GetAthletesNotSignedUpFireauthAthletesNotSignedUpGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAthleteNotSignedUp>>> {
+    return getAthletesNotSignedUpFireauthAthletesNotSignedUpGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get Athletes Not Signed Up.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAthletesNotSignedUpFireauthAthletesNotSignedUpGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAthletesNotSignedUpFireauthAthletesNotSignedUpGet(params: GetAthletesNotSignedUpFireauthAthletesNotSignedUpGet$Params, context?: HttpContext): Observable<Array<apiAthleteNotSignedUp>> {
+    return this.getAthletesNotSignedUpFireauthAthletesNotSignedUpGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<apiAthleteNotSignedUp>>): Array<apiAthleteNotSignedUp> => r.body)
     );
   }
 
