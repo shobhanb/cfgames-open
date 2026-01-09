@@ -21,6 +21,9 @@ import {
   IonCardContent,
   IonCardHeader,
   IonIcon,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -66,6 +69,9 @@ import { AuthService } from 'src/app/services/auth.service';
     IonSelectOption,
     IonChip,
     IonIcon,
+    IonGrid,
+    IonRow,
+    IonCol,
   ],
 })
 export class MyTeamPage implements OnInit {
@@ -114,6 +120,44 @@ export class MyTeamPage implements OnInit {
     const m = this.filteredAthletes().filter((a) => a.gender === 'M');
     const f = this.filteredAthletes().filter((a) => a.gender === 'F');
     return { M: m, F: f };
+  });
+
+  readonly summaryMetrics = computed(() => {
+    const athletes = this.filteredAthletes();
+    const maleOpen = athletes.filter(
+      (a) => a.gender === 'M' && a.age_category === 'Open'
+    ).length;
+    const maleMasters = athletes.filter(
+      (a) => a.gender === 'M' && a.age_category === 'Masters'
+    ).length;
+    const maleMasters55 = athletes.filter(
+      (a) => a.gender === 'M' && a.age_category === 'Masters 55+'
+    ).length;
+    const femaleOpen = athletes.filter(
+      (a) => a.gender === 'F' && a.age_category === 'Open'
+    ).length;
+    const femaleMasters = athletes.filter(
+      (a) => a.gender === 'F' && a.age_category === 'Masters'
+    ).length;
+    const femaleMasters55 = athletes.filter(
+      (a) => a.gender === 'F' && a.age_category === 'Masters 55+'
+    ).length;
+    const totalJudges = athletes.filter((a) => a.judge).length;
+
+    return {
+      total: athletes.length,
+      male: {
+        Open: maleOpen,
+        Masters: maleMasters,
+        'Masters 55+': maleMasters55,
+      },
+      female: {
+        Open: femaleOpen,
+        Masters: femaleMasters,
+        'Masters 55+': femaleMasters55,
+      },
+      judges: totalJudges,
+    };
   });
 
   ngOnInit() {
