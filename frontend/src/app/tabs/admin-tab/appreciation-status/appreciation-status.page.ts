@@ -66,19 +66,19 @@ export class AppreciationStatusPage implements OnInit {
   appreciationStatus = signal<apiAppreciationStatusModel[]>([]);
 
   readonly eventStatus = computed(() =>
-    this.eventService.currentYearWeekendEvents().map((event) => ({
+    this.eventService.currentYearWeekendAllEvents().map((event) => ({
       event,
       isEnabled: this.appreciationStatus().some(
         (status) =>
           status.year === event.year && status.ordinal === event.ordinal
       ),
-      name: this.eventService.getWeekendEventName(event.ordinal, event.year),
+      name: event.event,
     }))
   );
 
   readonly availableEvents = computed<apiEventsModel[]>(() =>
     this.eventService
-      .currentYearWeekendEvents()
+      .currentYearWeekendAllEvents()
       .filter(
         (event: apiEventsModel) =>
           !this.appreciationStatus().some(

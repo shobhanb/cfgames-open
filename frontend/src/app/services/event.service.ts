@@ -8,11 +8,18 @@ import { apiCfeventsService } from '../api/services';
 })
 export class EventService {
   private events = signal<apiEventsModel[]>([]);
+  private allEvents = signal<apiEventsModel[]>([]);
   private config = inject(AppConfigService);
   private apiEvents = inject(apiCfeventsService);
 
   readonly currentYearEvents = computed(() =>
     this.events().filter((event) => event.year === this.config.year)
+  );
+
+  readonly allEventsData = computed(() => this.allEvents());
+
+  readonly currentYearAllEvents = computed(() =>
+    this.allEvents().filter((event) => event.year === this.config.year)
   );
 
   readonly currentYearWeekendEvents = computed<apiEventsModel[]>(() => {
@@ -27,6 +34,17 @@ export class EventService {
       .map((event) => ({ ...event, event: event.event.slice(0, 4) }));
   });
 
+  readonly currentYearWeekendAllEvents = computed<apiEventsModel[]>(() => {
+    const seen = new Set<string>();
+    return this.currentYearAllEvents()
+      .filter((event) => {
+        const weekend = event.event.slice(0, 4);
+        if (seen.has(weekend)) return false;
+        seen.add(weekend);
+        return true;
+      })
+      .map((event) => ({ ...event, event: event.event.slice(0, 4) }));
+  });
   readonly baseURL = 'https://games.crossfit.com/workouts/open';
 
   readonly eventsLoaded = computed<boolean>(() => this.events().length > 0);
@@ -60,7 +78,7 @@ export class EventService {
     if (year === null) {
       year = this.config.year;
     }
-    const event = this.events().find(
+    const event = this.allEvents().find(
       (e: apiEventsModel) => e.year === year && e.ordinal === ordinal
     );
     return event ? event.event : null;
@@ -70,7 +88,7 @@ export class EventService {
     if (year === null) {
       year = this.config.year;
     }
-    const event = this.events().find(
+    const event = this.allEvents().find(
       (e: apiEventsModel) => e.year === year && e.ordinal === ordinal
     );
     return event ? event.event.slice(0, 4) : null;
@@ -78,7 +96,7 @@ export class EventService {
 
   getOrdinalFromEvent(event: string): number | null {
     const [year, ordinal] = event.split('.');
-    const eventModel = this.events().find(
+    const eventModel = this.allEvents().find(
       (e: apiEventsModel) => e.year === +year && e.event === event
     );
     return eventModel ? eventModel.ordinal : null;
@@ -96,7 +114,9 @@ export class EventService {
       .getEventsWithDataCfeventsGet({ affiliate_id: this.config.affiliateId })
       .subscribe({
         next: (events) => {
-          this.events.set(events);
+          this.events.set(
+            events.sort((a, b) => b.year - a.year || a.ordinal - b.ordinal)
+          );
         },
         error: (error) => {
           console.error('Error fetching events:', error);
@@ -104,7 +124,21 @@ export class EventService {
       });
   }
 
+  getAllData() {
+    this.apiEvents.getAllCfeventsCfeventsAllGet().subscribe({
+      next: (events) => {
+        this.allEvents.set(
+          events.sort((a, b) => b.year - a.year || a.ordinal - b.ordinal)
+        );
+      },
+      error: (error) => {
+        console.error('Error fetching all events:', error);
+      },
+    });
+  }
+
   constructor() {
     this.getData();
+    this.getAllData();
   }
 }

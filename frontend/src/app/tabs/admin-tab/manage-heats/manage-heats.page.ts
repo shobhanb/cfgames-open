@@ -128,7 +128,7 @@ export class ManageHeatsPage implements OnInit {
   searchTerm = signal<string>('');
 
   // Computed
-  currentYearEvents = this.eventService.currentYearWeekendEvents;
+  currentYearEvents = this.eventService.currentYearWeekendAllEvents;
 
   athleteNames = computed(() =>
     this.athleteDataService.athleteData().map((a) => a.name)
