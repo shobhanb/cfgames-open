@@ -225,28 +225,28 @@
       <div class="group-actions">
         <ion-button
           size="small"
-          [fill]="getAssignmentsForHeat(group.heats[0])[0]?.is_locked ? 'solid' : 'outline'"
-          [color]="getAssignmentsForHeat(group.heats[0])[0]?.is_locked ? 'danger' : ''"
+          [fill]="(getAssignmentsForHeat(group.heats[0])[0]?.is_locked ?? false) ? 'solid' : 'outline'"
+          [color]="(getAssignmentsForHeat(group.heats[0])[0]?.is_locked ?? false) ? 'danger' : ''"
           (click)="toggleLockedForGroup(group.shortName)"
           [disabled]="getAssignmentsForHeat(group.heats[0]).length === 0"
           title="Lock all heats in group"
         >
           <ion-icon
             slot="icon-only"
-            [name]="getAssignmentsForHeat(group.heats[0])[0]?.is_locked ? 'lock-closed-outline' : 'lock-open-outline'"
+            [name]="(getAssignmentsForHeat(group.heats[0])[0]?.is_locked ?? false) ? 'lock-closed-outline' : 'lock-open-outline'"
           ></ion-icon>
         </ion-button>
         <ion-button
           size="small"
-          [fill]="getAssignmentsForHeat(group.heats[0])[0]?.is_published ? 'solid' : 'outline'"
-          [color]="getAssignmentsForHeat(group.heats[0])[0]?.is_published ? 'danger' : ''"
+          [fill]="(getAssignmentsForHeat(group.heats[0])[0]?.is_published ?? false) ? 'solid' : 'outline'"
+          [color]="(getAssignmentsForHeat(group.heats[0])[0]?.is_published ?? false) ? 'danger' : ''"
           (click)="togglePublishedForGroup(group.shortName)"
           [disabled]="getAssignmentsForHeat(group.heats[0]).length === 0"
           title="Publish all heats in group"
         >
           <ion-icon
             slot="icon-only"
-            [name]="getAssignmentsForHeat(group.heats[0])[0]?.is_published ? 'cloud-done-outline' : 'cloud-offline-outline'"
+            [name]="(getAssignmentsForHeat(group.heats[0])[0]?.is_published ?? false) ? 'cloud-done-outline' : 'cloud-offline-outline'"
           ></ion-icon>
         </ion-button>
         <ion-button
@@ -274,35 +274,35 @@
                   size="small"
                   fill="clear"
                   (click)="editHeat(heat)"
-                  [disabled]="getAssignmentsForHeat(heat)[0]?.is_locked"
+                  [disabled]="getAssignmentsForHeat(heat)[0]?.is_locked ?? false"
                   title="Edit heat time"
                 >
                   <ion-icon slot="icon-only" name="create-outline"></ion-icon>
                 </ion-button>
                 <ion-button
                   size="small"
-                  [fill]="getAssignmentsForHeat(heat)[0]?.is_locked ? 'solid' : 'clear'"
-                  [color]="getAssignmentsForHeat(heat)[0]?.is_locked ? 'danger' : ''"
+                  [fill]="(getAssignmentsForHeat(heat)[0]?.is_locked ?? false) ? 'solid' : 'clear'"
+                  [color]="(getAssignmentsForHeat(heat)[0]?.is_locked ?? false) ? 'danger' : ''"
                   (click)="toggleLocked(heat)"
                   [disabled]="getAssignmentsForHeat(heat).length === 0"
                   title="Lock this heat"
                 >
                   <ion-icon
                     slot="icon-only"
-                    [name]="getAssignmentsForHeat(heat)[0]?.is_locked ? 'lock-closed-outline' : 'lock-open-outline'"
+                    [name]="(getAssignmentsForHeat(heat)[0]?.is_locked ?? false) ? 'lock-closed-outline' : 'lock-open-outline'"
                   ></ion-icon>
                 </ion-button>
                 <ion-button
                   size="small"
-                  [fill]="getAssignmentsForHeat(heat)[0]?.is_published ? 'solid' : 'clear'"
-                  [color]="getAssignmentsForHeat(heat)[0]?.is_published ? 'danger' : ''"
+                  [fill]="(getAssignmentsForHeat(heat)[0]?.is_published ?? false) ? 'solid' : 'clear'"
+                  [color]="(getAssignmentsForHeat(heat)[0]?.is_published ?? false) ? 'danger' : ''"
                   (click)="togglePublished(heat)"
                   [disabled]="getAssignmentsForHeat(heat).length === 0"
                   title="Publish this heat"
                 >
                   <ion-icon
                     slot="icon-only"
-                    [name]="getAssignmentsForHeat(heat)[0]?.is_published ? 'cloud-done-outline' : 'cloud-offline-outline'"
+                    [name]="(getAssignmentsForHeat(heat)[0]?.is_published ?? false) ? 'cloud-done-outline' : 'cloud-offline-outline'"
                   ></ion-icon>
                 </ion-button>
               </div>
