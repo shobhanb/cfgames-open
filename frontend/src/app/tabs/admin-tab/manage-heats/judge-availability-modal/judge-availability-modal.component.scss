@@ -23,14 +23,6 @@
   padding: 12px;
   background: var(--ion-color-light);
   border-radius: 8px;
-
-  &.available {
-    background: rgba(144, 238, 144, 0.2);
-  }
-
-  &.unavailable {
-    background: rgba(255, 182, 193, 0.2);
-  }
 }
 
 .stat-label {

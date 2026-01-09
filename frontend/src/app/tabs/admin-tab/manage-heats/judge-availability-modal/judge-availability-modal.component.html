@@ -30,11 +30,11 @@
         {{ slot.timeSlot }}
       </ion-card-title>
       <div class="summary-counts">
-        <ion-badge color="success">
+        <ion-badge color="medium">
           <ion-icon name="checkmark-circle"></ion-icon>
           {{ slot.totalAvailable }} Available
         </ion-badge>
-        <ion-badge color="danger">
+        <ion-badge color="primary">
           <ion-icon name="close-circle"></ion-icon>
           {{ slot.totalUnavailable }} Unavailable
         </ion-badge>
@@ -46,11 +46,7 @@
         @if (slot.availableJudges.length > 0) {
         <ion-accordion value="available">
           <ion-item slot="header" color="light">
-            <ion-icon
-              slot="start"
-              name="checkmark-circle"
-              color="success"
-            ></ion-icon>
+            <ion-icon slot="start" name="checkmark-circle"></ion-icon>
             <ion-label>
               <h3>Available Judges ({{ slot.totalAvailable }})</h3>
             </ion-label>
@@ -59,7 +55,7 @@
             <ion-list>
               @for (judge of slot.availableJudges; track judge.id) {
               <ion-item>
-                <ion-icon slot="start" name="person" color="success"></ion-icon>
+                <ion-icon slot="start" name="person"></ion-icon>
                 <ion-label>
                   <h3>{{ judge.name }}</h3>
                 </ion-label>
@@ -80,7 +76,7 @@
             <ion-icon
               slot="start"
               name="close-circle"
-              color="danger"
+              color="primary"
             ></ion-icon>
             <ion-label>
               <h3>Unavailable Judges ({{ slot.totalUnavailable }})</h3>
@@ -90,7 +86,7 @@
             <ion-list>
               @for (judge of slot.unavailableJudges; track judge.id) {
               <ion-item>
-                <ion-icon slot="start" name="person" color="danger"></ion-icon>
+                <ion-icon slot="start" name="person" color="primary"></ion-icon>
                 <ion-label>
                   <h3>{{ judge.name }}</h3>
                 </ion-label>
