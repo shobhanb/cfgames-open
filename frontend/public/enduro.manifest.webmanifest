@@ -21,18 +21,6 @@
       "purpose": "maskable any"
     }
   ],
-  "shortcuts": [
-    {
-      "name": "Leaderboard",
-      "url": "/leaderboard",
-      "description": "Leaderboard"
-    },
-    {
-      "name": "Team Scores",
-      "url": "/team-scores",
-      "description": "Team Scores"
-    }
-  ],
   "theme_color": "#696969",
   "background_color": "#696969",
   "display_override": [
