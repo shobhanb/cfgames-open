@@ -28,6 +28,7 @@ from .service import (
     create_heat_assignment,
     delete_heat_assignment,
     delete_heat_assignments_by_criteria,
+    delete_unlocked_heat_assignments,
     get_all_heat_assignments,
     get_db_heat_attendance,
     get_heat_assignment,
@@ -319,6 +320,25 @@ async def delete_assignments_by_criteria(
 ) -> dict[str, Any]:
     """Delete all heat assignments for a specific affiliate, year, and ordinal."""
     return await delete_heat_assignments_by_criteria(
+        db_session=db_session,
+        affiliate_id=request.affiliate_id,
+        year=request.year,
+        ordinal=request.ordinal,
+    )
+
+
+@heat_assignments_router.post(
+    "/delete-unlocked",
+    status_code=status.HTTP_200_OK,
+    response_model=DeleteAssignmentsByCriteriaResponse,
+)
+async def delete_unlocked_assignments(
+    db_session: db_dependency,
+    _: admin_user_dependency,
+    request: DeleteAssignmentsByCriteriaRequest,
+) -> dict[str, Any]:
+    """Delete unlocked heat assignments for a specific affiliate, year, and ordinal."""
+    return await delete_unlocked_heat_assignments(
         db_session=db_session,
         affiliate_id=request.affiliate_id,
         year=request.year,

@@ -30,6 +30,8 @@ import { DeleteAssignmentsByCriteriaHeatAssignmentsDeleteByCriteriaPost$Params }
 import { apiDeleteAssignmentsByCriteriaResponse } from '../models/api-delete-assignments-by-criteria-response';
 import { deleteExistingHeatAssignmentHeatAssignmentsAssignmentIdDelete } from '../fn/heat-assignments/delete-existing-heat-assignment-heat-assignments-assignment-id-delete';
 import { DeleteExistingHeatAssignmentHeatAssignmentsAssignmentIdDelete$Params } from '../fn/heat-assignments/delete-existing-heat-assignment-heat-assignments-assignment-id-delete';
+import { deleteUnlockedAssignmentsHeatAssignmentsDeleteUnlockedPost } from '../fn/heat-assignments/delete-unlocked-assignments-heat-assignments-delete-unlocked-post';
+import { DeleteUnlockedAssignmentsHeatAssignmentsDeleteUnlockedPost$Params } from '../fn/heat-assignments/delete-unlocked-assignments-heat-assignments-delete-unlocked-post';
 import { getHeatAssignmentByIdHeatAssignmentsAssignmentIdGet } from '../fn/heat-assignments/get-heat-assignment-by-id-heat-assignments-assignment-id-get';
 import { GetHeatAssignmentByIdHeatAssignmentsAssignmentIdGet$Params } from '../fn/heat-assignments/get-heat-assignment-by-id-heat-assignments-assignment-id-get';
 import { getHeatAssignmentsListHeatAssignmentsGet } from '../fn/heat-assignments/get-heat-assignments-list-heat-assignments-get';
@@ -552,6 +554,39 @@ export class apiHeatAssignmentsService extends BaseService {
    */
   deleteAssignmentsByCriteriaHeatAssignmentsDeleteByCriteriaPost(params: DeleteAssignmentsByCriteriaHeatAssignmentsDeleteByCriteriaPost$Params, context?: HttpContext): Observable<apiDeleteAssignmentsByCriteriaResponse> {
     return this.deleteAssignmentsByCriteriaHeatAssignmentsDeleteByCriteriaPost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiDeleteAssignmentsByCriteriaResponse>): apiDeleteAssignmentsByCriteriaResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `deleteUnlockedAssignmentsHeatAssignmentsDeleteUnlockedPost()` */
+  static readonly DeleteUnlockedAssignmentsHeatAssignmentsDeleteUnlockedPostPath = '/heat_assignments/delete-unlocked';
+
+  /**
+   * Delete Unlocked Assignments.
+   *
+   * Delete unlocked heat assignments for a specific affiliate, year, and ordinal.
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deleteUnlockedAssignmentsHeatAssignmentsDeleteUnlockedPost()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  deleteUnlockedAssignmentsHeatAssignmentsDeleteUnlockedPost$Response(params: DeleteUnlockedAssignmentsHeatAssignmentsDeleteUnlockedPost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiDeleteAssignmentsByCriteriaResponse>> {
+    return deleteUnlockedAssignmentsHeatAssignmentsDeleteUnlockedPost(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Delete Unlocked Assignments.
+   *
+   * Delete unlocked heat assignments for a specific affiliate, year, and ordinal.
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deleteUnlockedAssignmentsHeatAssignmentsDeleteUnlockedPost$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  deleteUnlockedAssignmentsHeatAssignmentsDeleteUnlockedPost(params: DeleteUnlockedAssignmentsHeatAssignmentsDeleteUnlockedPost$Params, context?: HttpContext): Observable<apiDeleteAssignmentsByCriteriaResponse> {
+    return this.deleteUnlockedAssignmentsHeatAssignmentsDeleteUnlockedPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<apiDeleteAssignmentsByCriteriaResponse>): apiDeleteAssignmentsByCriteriaResponse => r.body)
     );
   }

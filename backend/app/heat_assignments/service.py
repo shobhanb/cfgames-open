@@ -333,6 +333,50 @@ async def delete_heat_assignments_by_criteria(
     }
 
 
+async def delete_unlocked_heat_assignments(
+    db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
+    ordinal: int,
+) -> dict[str, Any]:
+    """Delete unlocked heat assignments for heats matching affiliate_id, year, and ordinal."""
+    # Get all heats matching the criteria
+    heats_stmt = select(Heats).where(
+        (Heats.affiliate_id == affiliate_id) & (Heats.year == year) & (Heats.ordinal == ordinal),
+    )
+    heats_result = await db_session.execute(heats_stmt)
+    heats = list(heats_result.scalars().all())
+
+    if not heats:
+        return {
+            "deleted_count": 0,
+            "heats_found": 0,
+            "message": f"No heats found for affiliate_id={affiliate_id}, year={year}, ordinal={ordinal}",
+        }
+
+    heat_ids = [heat.id for heat in heats]
+
+    # Get only unlocked assignments for these heats
+    assignments_stmt = select(HeatAssignments).where(
+        HeatAssignments.heat_id.in_(heat_ids),
+        HeatAssignments.is_locked.is_(False),
+    )
+    assignments_result = await db_session.execute(assignments_stmt)
+    assignments = list(assignments_result.scalars().all())
+
+    # Delete unlocked assignments
+    for assignment in assignments:
+        await assignment.delete(async_session=db_session)
+
+    await db_session.commit()
+
+    return {
+        "deleted_count": len(assignments),
+        "heats_found": len(heats),
+        "message": f"Deleted {len(assignments)} unlocked heat assignments from {len(heats)} heats",
+    }
+
+
 def _organize_athlete_preferences(
     athletes_data: Sequence[tuple[Athlete, AthleteTimePref]],
 ) -> dict[int, dict[str, Any]]:

@@ -510,7 +510,7 @@ Total Assignments: ${result.assigned_count}`;
     await alert.present();
   }
 
-  async deleteAllAssignments() {
+  async deleteAllUnlockedAssignments() {
     if (!this.selectedOrdinal()) {
       this.toastService.showToast('Select an event first', 'warning');
       return;
@@ -530,7 +530,7 @@ Total Assignments: ${result.assigned_count}`;
     const ordinal = this.selectedOrdinal()!;
 
     this.apiHeatAssignments
-      .deleteAssignmentsByCriteriaHeatAssignmentsDeleteByCriteriaPost({
+      .deleteUnlockedAssignmentsHeatAssignmentsDeleteUnlockedPost({
         body: { affiliate_id, year, ordinal },
       })
       .subscribe({
