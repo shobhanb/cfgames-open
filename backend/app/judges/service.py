@@ -46,7 +46,8 @@ async def get_judge(
     result = await db_session.execute(stmt)
     row = result.mappings().first()
     if not row:
-        raise not_found_exception("Judge not found")
+        msg = "Judge not found"
+        raise not_found_exception(msg)
     return dict(row)
 
 
@@ -68,7 +69,8 @@ async def get_judge_by_crossfit_id(
     result = await db_session.execute(stmt)
     row = result.mappings().first()
     if not row:
-        raise not_found_exception("Judge not found")
+        msg = "Judge not found"
+        raise not_found_exception(msg)
     return dict(row)
 
 
@@ -142,8 +144,7 @@ async def update_judge(
     await db_session.refresh(judge)
 
     # Fetch the judge
-    result = await get_judge(db_session=db_session, judge_id=judge.id)
-    return result
+    return await get_judge(db_session=db_session, judge_id=judge.id)
 
 
 async def delete_judge(
