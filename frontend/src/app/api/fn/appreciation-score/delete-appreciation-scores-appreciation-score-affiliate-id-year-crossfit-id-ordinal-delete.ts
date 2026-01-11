@@ -9,14 +9,18 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface DeleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Params {
+export interface DeleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete$Params {
+  affiliate_id: number;
+  year: number;
   crossfit_id: number;
   ordinal: number;
 }
 
-export function deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete(http: HttpClient, rootUrl: string, params: DeleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-  const rb = new RequestBuilder(rootUrl, deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete.PATH, 'delete');
+export function deleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete(http: HttpClient, rootUrl: string, params: DeleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  const rb = new RequestBuilder(rootUrl, deleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete.PATH, 'delete');
   if (params) {
+    rb.path('affiliate_id', params.affiliate_id, {});
+    rb.path('year', params.year, {});
     rb.path('crossfit_id', params.crossfit_id, {});
     rb.path('ordinal', params.ordinal, {});
   }
@@ -31,4 +35,4 @@ export function deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete
   );
 }
 
-deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete.PATH = '/appreciation_score/{crossfit_id}/{ordinal}';
+deleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete.PATH = '/appreciation_score/{affiliate_id}/{year}/{crossfit_id}/{ordinal}';

@@ -23,12 +23,16 @@ async def get_db_appreciation(
 
 async def update_db_appreciation(
     db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
     crossfit_id: int,
     ordinal: int,
     score: int,
 ) -> None:
     appreciation = await AppreciationScore.find(
         async_session=db_session,
+        affiliate_id=affiliate_id,
+        year=year,
         crossfit_id=crossfit_id,
         ordinal=ordinal,
     )
@@ -38,6 +42,8 @@ async def update_db_appreciation(
         await db_session.commit()
     else:
         new_appreciation = AppreciationScore(
+            affiliate_id=affiliate_id,
+            year=year,
             crossfit_id=crossfit_id,
             ordinal=ordinal,
             score=score,
@@ -48,11 +54,15 @@ async def update_db_appreciation(
 
 async def delete_db_appreciation(
     db_session: AsyncSession,
+    affiliate_id: int,
+    year: int,
     crossfit_id: int,
     ordinal: int,
 ) -> None:
     appreciation = await AppreciationScore.find_or_raise(
         async_session=db_session,
+        affiliate_id=affiliate_id,
+        year=year,
         crossfit_id=crossfit_id,
         ordinal=ordinal,
     )

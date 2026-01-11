@@ -7,8 +7,10 @@ from app.database.base import Base
 
 
 class AppreciationScore(Base):
-    __table_args__ = (UniqueConstraint("crossfit_id", "ordinal"),)
+    __table_args__ = (UniqueConstraint("year", "affiliate_id", "crossfit_id", "ordinal"),)
 
+    year: Mapped[int] = mapped_column(Integer)
+    affiliate_id: Mapped[int] = mapped_column(Integer)
     crossfit_id: Mapped[int] = mapped_column(Integer)
     ordinal: Mapped[int] = mapped_column(Integer)
     score: Mapped[int] = mapped_column(Integer)

@@ -14,12 +14,12 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { applyAppreciationAppreciationScoreApplyPost } from '../fn/appreciation-score/apply-appreciation-appreciation-score-apply-post';
 import { ApplyAppreciationAppreciationScoreApplyPost$Params } from '../fn/appreciation-score/apply-appreciation-appreciation-score-apply-post';
 import { apiAppreciationScoreModel } from '../models/api-appreciation-score-model';
-import { deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete } from '../fn/appreciation-score/delete-appreciation-scores-appreciation-score-crossfit-id-ordinal-delete';
-import { DeleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Params } from '../fn/appreciation-score/delete-appreciation-scores-appreciation-score-crossfit-id-ordinal-delete';
+import { deleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete } from '../fn/appreciation-score/delete-appreciation-scores-appreciation-score-affiliate-id-year-crossfit-id-ordinal-delete';
+import { DeleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete$Params } from '../fn/appreciation-score/delete-appreciation-scores-appreciation-score-affiliate-id-year-crossfit-id-ordinal-delete';
 import { getAppreciationScoresAppreciationScoreAffiliateIdYearGet } from '../fn/appreciation-score/get-appreciation-scores-appreciation-score-affiliate-id-year-get';
 import { GetAppreciationScoresAppreciationScoreAffiliateIdYearGet$Params } from '../fn/appreciation-score/get-appreciation-scores-appreciation-score-affiliate-id-year-get';
-import { updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost } from '../fn/appreciation-score/update-appreciation-scores-appreciation-score-crossfit-id-ordinal-score-post';
-import { UpdateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Params } from '../fn/appreciation-score/update-appreciation-scores-appreciation-score-crossfit-id-ordinal-score-post';
+import { updateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePost } from '../fn/appreciation-score/update-appreciation-scores-appreciation-score-affiliate-id-year-crossfit-id-ordinal-score-post';
+import { UpdateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePost$Params } from '../fn/appreciation-score/update-appreciation-scores-appreciation-score-affiliate-id-year-crossfit-id-ordinal-score-post';
 
 @Injectable({ providedIn: 'root' })
 export class apiAppreciationScoreService extends BaseService {
@@ -60,8 +60,8 @@ export class apiAppreciationScoreService extends BaseService {
     );
   }
 
-  /** Path part for operation `updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost()` */
-  static readonly UpdateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePostPath = '/appreciation_score/{crossfit_id}/{ordinal}/{score}';
+  /** Path part for operation `updateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePost()` */
+  static readonly UpdateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePostPath = '/appreciation_score/{affiliate_id}/{year}/{crossfit_id}/{ordinal}/{score}';
 
   /**
    * Update Appreciation Scores.
@@ -69,12 +69,12 @@ export class apiAppreciationScoreService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost()` instead.
+   * To access only the response body, use `updateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePost()` instead.
    *
    * This method doesn't expect any request body.
    */
-  updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Response(params: UpdateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
-    return updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost(this.http, this.rootUrl, params, context);
+  updateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePost$Response(params: UpdateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+    return updateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePost(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -83,18 +83,18 @@ export class apiAppreciationScoreService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Response()` instead.
+   * To access the full response (for headers, for example), `updateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePost$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost(params: UpdateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Params, context?: HttpContext): Observable<any> {
-    return this.updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost$Response(params, context).pipe(
+  updateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePost(params: UpdateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePost$Params, context?: HttpContext): Observable<any> {
+    return this.updateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePost$Response(params, context).pipe(
       map((r: StrictHttpResponse<any>): any => r.body)
     );
   }
 
-  /** Path part for operation `deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete()` */
-  static readonly DeleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDeletePath = '/appreciation_score/{crossfit_id}/{ordinal}';
+  /** Path part for operation `deleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete()` */
+  static readonly DeleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDeletePath = '/appreciation_score/{affiliate_id}/{year}/{crossfit_id}/{ordinal}';
 
   /**
    * Delete Appreciation Scores.
@@ -102,12 +102,12 @@ export class apiAppreciationScoreService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete()` instead.
+   * To access only the response body, use `deleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete()` instead.
    *
    * This method doesn't expect any request body.
    */
-  deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Response(params: DeleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete(this.http, this.rootUrl, params, context);
+  deleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete$Response(params: DeleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -116,12 +116,12 @@ export class apiAppreciationScoreService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Response()` instead.
+   * To access the full response (for headers, for example), `deleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete(params: DeleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Params, context?: HttpContext): Observable<void> {
-    return this.deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete$Response(params, context).pipe(
+  deleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete(params: DeleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete$Params, context?: HttpContext): Observable<void> {
+    return this.deleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }

@@ -197,10 +197,14 @@ export class AppreciationScorePage implements OnInit {
     if (!appreciationScore) return;
 
     this.apiAppreciationScore
-      .deleteAppreciationScoresAppreciationScoreCrossfitIdOrdinalDelete({
-        crossfit_id: appreciationScore.crossfit_id,
-        ordinal: appreciationScore.ordinal,
-      })
+      .deleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete(
+        {
+          affiliate_id: this.appConfig.affiliateId,
+          year: this.appConfig.year,
+          crossfit_id: appreciationScore.crossfit_id,
+          ordinal: appreciationScore.ordinal,
+        }
+      )
       .subscribe({
         next: () => {
           this.toastService.showToast(
@@ -233,11 +237,15 @@ export class AppreciationScorePage implements OnInit {
     }
 
     this.apiAppreciationScore
-      .updateAppreciationScoresAppreciationScoreCrossfitIdOrdinalScorePost({
-        crossfit_id: this.selectedCrossfitId()!,
-        ordinal: this.selectedOrdinal()!,
-        score: this.score()!,
-      })
+      .updateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePost(
+        {
+          affiliate_id: this.appConfig.affiliateId,
+          year: this.appConfig.year,
+          crossfit_id: this.selectedCrossfitId()!,
+          ordinal: this.selectedOrdinal()!,
+          score: this.score()!,
+        }
+      )
       .subscribe({
         next: () => {
           this.toastService.showToast(
