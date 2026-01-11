@@ -30,6 +30,36 @@
   @if (selectedAthleteName() && dataLoaded()) {
   <ion-card>
     <ion-card-header>
+      <ion-card-title>Schedule Preferences</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-note>
+        NOTE: These are just scheduling preferences. Athletes will be assigned a
+        time slot based on their preferences, heat/gear planning, luck, and
+        several other factors.
+      </ion-note>
+      <br />
+      <ion-label
+        >If the athlete will not be participating this weekend, select NA as their first
+        preference or click on the "Not available" button</ion-label
+      >
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button
+    size="medium"
+    fill="outline"
+    expand="block"
+    class="ion-margin-horizontal"
+    [color]="isNotAvailable() ? 'primary' : 'danger'"
+    (click)="onToggleAvailability()"
+  >
+    {{ isNotAvailable() ? 'Athlete is available this weekend' : 'Athlete is not available
+    this weekend' }}
+  </ion-button>
+
+  <ion-card>
+    <ion-card-header>
       <ion-card-title>{{ selectedAthleteName() }}'s Preferences</ion-card-title>
       <div class="button-container">
         @if (editPrefs()) {

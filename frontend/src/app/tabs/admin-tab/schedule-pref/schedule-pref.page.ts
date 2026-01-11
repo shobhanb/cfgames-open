@@ -79,6 +79,7 @@ export class SchedulePrefPage implements OnInit {
   private initialPrefs: string[] = [];
 
   dataLoaded = signal<boolean>(false);
+  isNotAvailable = computed(() => this.prefs()[0] === 'NA');
   editPrefs = signal<boolean>(false);
 
   constructor() {}
@@ -183,6 +184,65 @@ export class SchedulePrefPage implements OnInit {
             null,
             3000
           );
+        },
+      });
+  }
+
+  onToggleAvailability() {
+    if (!this.selectedCrossfitId()) return;
+
+    const currentPrefs = [...this.prefs()];
+    const naIndex = currentPrefs.indexOf('NA');
+
+    if (naIndex === 0) {
+      // NA is at top, move to bottom
+      currentPrefs.splice(0, 1);
+      currentPrefs.push('NA');
+    } else if (naIndex > 0) {
+      // NA is somewhere else, move to top
+      currentPrefs.splice(naIndex, 1);
+      currentPrefs.unshift('NA');
+    } else {
+      // NA doesn't exist, shouldn't happen but handle gracefully
+      return;
+    }
+
+    this.prefs.set(currentPrefs);
+    this.initialPrefs = [...currentPrefs];
+
+    const updatedPrefs: apiAthletePrefsModel[] = currentPrefs.map(
+      (pref, index) => ({
+        preference: pref,
+        preference_nbr: index,
+      })
+    );
+
+    this.apiPrefs
+      .updateAthletePrefsAthletePrefsCrossfitIdPost({
+        crossfit_id: this.selectedCrossfitId()!,
+        body: updatedPrefs,
+      })
+      .subscribe({
+        next: () => {
+          this.toastService.showToast(
+            this.isNotAvailable()
+              ? 'Athlete is now unavailable this weekend'
+              : 'Athlete is now available this weekend',
+            'success'
+          );
+        },
+        error: (error) => {
+          console.error('Error updating preferences:', error);
+          this.toastService.showToast(
+            `Failed to update availability${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
+            'danger',
+            null,
+            3000
+          );
+          // Revert on error
+          this.prefs.set([...this.initialPrefs]);
         },
       });
   }
