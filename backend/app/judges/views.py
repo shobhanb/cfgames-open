@@ -25,19 +25,20 @@ judges_router = APIRouter(prefix="/judges", tags=["judges"])
 
 
 @judges_router.get(
-    "/",
+    "/all",
     status_code=status.HTTP_200_OK,
     response_model=list[JudgesModel],
 )
 async def get_judges_list(
     db_session: db_dependency,
+    affiliate_id: int,
 ) -> list[dict[str, Any]]:
     """Get all judges."""
-    return await get_all_judges(db_session=db_session)
+    return await get_all_judges(db_session=db_session, affiliate_id=affiliate_id)
 
 
 @judges_router.get(
-    "/{judge_id}",
+    "/judge/{judge_id}",
     status_code=status.HTTP_200_OK,
     response_model=JudgesModel,
 )
@@ -50,16 +51,17 @@ async def get_judge_by_id(
 
 
 @judges_router.get(
-    "/crossfit_id/{crossfit_id}",
+    "/{affiliate_id}/crossfit_id/{crossfit_id}",
     status_code=status.HTTP_200_OK,
     response_model=JudgesModel,
 )
 async def get_judge_by_id_crossfit(
     db_session: db_dependency,
+    affiliate_id: int,
     crossfit_id: int,
 ) -> dict[str, Any]:
     """Get a judge by crossfit_id."""
-    return await get_judge_by_crossfit_id(db_session=db_session, crossfit_id=crossfit_id)
+    return await get_judge_by_crossfit_id(db_session=db_session, affiliate_id=affiliate_id, crossfit_id=crossfit_id)
 
 
 @judges_router.post(
@@ -109,15 +111,17 @@ async def delete_existing_judge(
 
 
 @judges_router.post(
-    "/initialize",
+    "/initialize/{affiliate_id}",
     status_code=status.HTTP_200_OK,
 )
 async def init_judges(
     db_session: db_dependency,
     _: api_key_admin_dependency,
+    affiliate_id: int,
 ) -> dict[str, str]:
     """Initialize judge information for all athletes based on scoring history."""
     await initialize_judges(
         db_session=db_session,
+        affiliate_id=affiliate_id,
     )
     return {"message": "Judge information initialized successfully"}

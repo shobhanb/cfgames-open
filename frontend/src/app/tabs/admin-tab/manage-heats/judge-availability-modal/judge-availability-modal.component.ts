@@ -86,6 +86,7 @@ export interface JudgeInfo {
 export class JudgeAvailabilityModalComponent {
   private apiJudgeAvailability = inject(apiJudgeAvailabilityService);
   private apiJudges = inject(apiJudgesService);
+  private config = inject(AppConfigService);
   private modalController = inject(ModalController);
 
   judgeAvailabilities = signal<apiJudgeAvailabilityModel[]>([]);
@@ -172,7 +173,9 @@ export class JudgeAvailabilityModalComponent {
     forkJoin({
       availabilities:
         this.apiJudgeAvailability.getJudgeAvailabilitiesListJudgeAvailabilityGet(),
-      judges: this.apiJudges.getJudgesListJudgesGet(),
+      judges: this.apiJudges.getJudgesListJudgesAllGet({
+        affiliate_id: this.config.affiliateId,
+      }),
     }).subscribe({
       next: (data) => {
         this.judgeAvailabilities.set(data.availabilities);

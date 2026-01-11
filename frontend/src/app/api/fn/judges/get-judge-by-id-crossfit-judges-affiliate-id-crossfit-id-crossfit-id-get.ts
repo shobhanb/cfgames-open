@@ -10,14 +10,16 @@ import { RequestBuilder } from '../../request-builder';
 
 import { apiJudgesModel } from '../../models/api-judges-model';
 
-export interface GetJudgeByIdJudgesJudgeIdGet$Params {
-  judge_id: string;
+export interface GetJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet$Params {
+  affiliate_id: number;
+  crossfit_id: number;
 }
 
-export function getJudgeByIdJudgesJudgeIdGet(http: HttpClient, rootUrl: string, params: GetJudgeByIdJudgesJudgeIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiJudgesModel>> {
-  const rb = new RequestBuilder(rootUrl, getJudgeByIdJudgesJudgeIdGet.PATH, 'get');
+export function getJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet(http: HttpClient, rootUrl: string, params: GetJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiJudgesModel>> {
+  const rb = new RequestBuilder(rootUrl, getJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet.PATH, 'get');
   if (params) {
-    rb.path('judge_id', params.judge_id, {});
+    rb.path('affiliate_id', params.affiliate_id, {});
+    rb.path('crossfit_id', params.crossfit_id, {});
   }
 
   return http.request(
@@ -30,4 +32,4 @@ export function getJudgeByIdJudgesJudgeIdGet(http: HttpClient, rootUrl: string, 
   );
 }
 
-getJudgeByIdJudgesJudgeIdGet.PATH = '/judges/{judge_id}';
+getJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet.PATH = '/judges/{affiliate_id}/crossfit_id/{crossfit_id}';

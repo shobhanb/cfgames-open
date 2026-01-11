@@ -10,12 +10,14 @@ import { RequestBuilder } from '../../request-builder';
 
 import { apiPreferredAthletesInitResponse } from '../../models/api-preferred-athletes-init-response';
 
-export interface InitializePreferredAthletesPreferredAthletesInitializePost$Params {
+export interface InitializePreferredAthletesPreferredAthletesAffiliateIdInitializePost$Params {
+  affiliate_id: number;
 }
 
-export function initializePreferredAthletesPreferredAthletesInitializePost(http: HttpClient, rootUrl: string, params?: InitializePreferredAthletesPreferredAthletesInitializePost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiPreferredAthletesInitResponse>> {
-  const rb = new RequestBuilder(rootUrl, initializePreferredAthletesPreferredAthletesInitializePost.PATH, 'post');
+export function initializePreferredAthletesPreferredAthletesAffiliateIdInitializePost(http: HttpClient, rootUrl: string, params: InitializePreferredAthletesPreferredAthletesAffiliateIdInitializePost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiPreferredAthletesInitResponse>> {
+  const rb = new RequestBuilder(rootUrl, initializePreferredAthletesPreferredAthletesAffiliateIdInitializePost.PATH, 'post');
   if (params) {
+    rb.path('affiliate_id', params.affiliate_id, {});
   }
 
   return http.request(
@@ -28,4 +30,4 @@ export function initializePreferredAthletesPreferredAthletesInitializePost(http:
   );
 }
 
-initializePreferredAthletesPreferredAthletesInitializePost.PATH = '/preferred_athletes/initialize';
+initializePreferredAthletesPreferredAthletesAffiliateIdInitializePost.PATH = '/preferred_athletes/{affiliate_id}/initialize';

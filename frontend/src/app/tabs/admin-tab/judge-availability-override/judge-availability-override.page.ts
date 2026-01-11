@@ -37,6 +37,7 @@ import { apiJudgeAvailabilityModel, apiJudgesModel } from 'src/app/api/models';
 import { ToastService } from 'src/app/services/toast.service';
 import { CheckboxCustomEvent } from '@ionic/angular';
 import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-judge-availability-override',
@@ -71,6 +72,7 @@ export class JudgeAvailabilityOverridePage implements OnInit {
   private apiJudges = inject(apiJudgesService);
   private apiJudgeAvailability = inject(apiJudgeAvailabilityService);
   private toastService = inject(ToastService);
+  private config = inject(AppConfigService);
   private athleteNameModalService = inject(AthleteNameModalService);
 
   readonly judges = signal<apiJudgesModel[]>([]);
@@ -94,20 +96,24 @@ export class JudgeAvailabilityOverridePage implements OnInit {
   }
 
   private loadJudges() {
-    this.apiJudges.getJudgesListJudgesGet().subscribe({
-      next: (data) => {
-        this.judges.set(data.sort((a, b) => a.name.localeCompare(b.name)));
-      },
-      error: (error) => {
-        this.toastService.showToast(
-          'Error loading judges list: ' +
-            (error?.error?.detail ? error.error.detail : 'Unknown error'),
-          'danger',
-          null,
-          3000
-        );
-      },
-    });
+    this.apiJudges
+      .getJudgesListJudgesAllGet({
+        affiliate_id: this.config.affiliateId,
+      })
+      .subscribe({
+        next: (data) => {
+          this.judges.set(data.sort((a, b) => a.name.localeCompare(b.name)));
+        },
+        error: (error) => {
+          this.toastService.showToast(
+            'Error loading judges list: ' +
+              (error?.error?.detail ? error.error.detail : 'Unknown error'),
+            'danger',
+            null,
+            3000
+          );
+        },
+      });
   }
 
   async onSelectJudge() {

@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 
 class Judges(Base):
+    affiliate_id: Mapped[int] = mapped_column(Integer)
     crossfit_id: Mapped[int] = mapped_column(Integer, unique=True)
     name: Mapped[str] = mapped_column(String)
     preferred: Mapped[bool] = mapped_column(Boolean, default=False)

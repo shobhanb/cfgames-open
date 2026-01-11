@@ -22,28 +22,30 @@ preferred_athletes_router = APIRouter(prefix="/preferred_athletes", tags=["prefe
 
 
 @preferred_athletes_router.get(
-    "/",
+    "/{affiliate_id}",
     status_code=status.HTTP_200_OK,
     response_model=list[PreferredAthleteModel],
 )
 async def list_preferred_athletes(
     db_session: db_dependency,
     _: admin_user_dependency,
+    affiliate_id: int,
 ) -> list[dict[str, Any]]:
-    return await get_all_preferred_athletes(db_session=db_session)
+    return await get_all_preferred_athletes(db_session=db_session, affiliate_id=affiliate_id)
 
 
 @preferred_athletes_router.get(
-    "/{crossfit_id}",
+    "/{affiliate_id}/{crossfit_id}",
     status_code=status.HTTP_200_OK,
     response_model=PreferredAthleteModel,
 )
 async def get_preferred_athlete_by_id(
     db_session: db_dependency,
     _: admin_user_dependency,
+    affiliate_id: int,
     crossfit_id: int,
 ) -> dict[str, Any]:
-    return await get_preferred_athlete(db_session=db_session, crossfit_id=crossfit_id)
+    return await get_preferred_athlete(db_session=db_session, affiliate_id=affiliate_id, crossfit_id=crossfit_id)
 
 
 @preferred_athletes_router.post(
@@ -60,38 +62,46 @@ async def create_preferred_athlete_entry(
 
 
 @preferred_athletes_router.post(
-    "/initialize",
+    "/{affiliate_id}/initialize",
     status_code=status.HTTP_200_OK,
     response_model=PreferredAthletesInitResponse,
 )
 async def initialize_preferred_athletes(
     db_session: db_dependency,
     _: api_key_admin_dependency,
+    affiliate_id: int,
 ) -> dict[str, int]:
-    return await initialize_preferred_athletes_from_judges(db_session=db_session)
+    return await initialize_preferred_athletes_from_judges(db_session=db_session, affiliate_id=affiliate_id)
 
 
 @preferred_athletes_router.patch(
-    "/{crossfit_id}",
+    "/{affiliate_id}/{crossfit_id}",
     status_code=status.HTTP_200_OK,
     response_model=PreferredAthleteModel,
 )
 async def update_preferred_athlete_entry(
     db_session: db_dependency,
     _: admin_user_dependency,
+    affiliate_id: int,
     crossfit_id: int,
     data: PreferredAthleteUpdate,
 ) -> dict[str, Any]:
-    return await update_preferred_athlete(db_session=db_session, crossfit_id=crossfit_id, data=data)
+    return await update_preferred_athlete(
+        db_session=db_session,
+        affiliate_id=affiliate_id,
+        crossfit_id=crossfit_id,
+        data=data,
+    )
 
 
 @preferred_athletes_router.delete(
-    "/{crossfit_id}",
+    "/{affiliate_id}/{crossfit_id}",
     status_code=status.HTTP_204_NO_CONTENT,
 )
 async def delete_preferred_athlete_entry(
     db_session: db_dependency,
     _: admin_user_dependency,
+    affiliate_id: int,
     crossfit_id: int,
 ) -> None:
-    await delete_preferred_athlete(db_session=db_session, crossfit_id=crossfit_id)
+    await delete_preferred_athlete(db_session=db_session, affiliate_id=affiliate_id, crossfit_id=crossfit_id)

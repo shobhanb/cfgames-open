@@ -10,13 +10,15 @@ import { RequestBuilder } from '../../request-builder';
 
 import { apiPreferredAthleteModel } from '../../models/api-preferred-athlete-model';
 
-export interface GetPreferredAthleteByIdPreferredAthletesCrossfitIdGet$Params {
+export interface GetPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet$Params {
+  affiliate_id: number;
   crossfit_id: number;
 }
 
-export function getPreferredAthleteByIdPreferredAthletesCrossfitIdGet(http: HttpClient, rootUrl: string, params: GetPreferredAthleteByIdPreferredAthletesCrossfitIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiPreferredAthleteModel>> {
-  const rb = new RequestBuilder(rootUrl, getPreferredAthleteByIdPreferredAthletesCrossfitIdGet.PATH, 'get');
+export function getPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet(http: HttpClient, rootUrl: string, params: GetPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiPreferredAthleteModel>> {
+  const rb = new RequestBuilder(rootUrl, getPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet.PATH, 'get');
   if (params) {
+    rb.path('affiliate_id', params.affiliate_id, {});
     rb.path('crossfit_id', params.crossfit_id, {});
   }
 
@@ -30,4 +32,4 @@ export function getPreferredAthleteByIdPreferredAthletesCrossfitIdGet(http: Http
   );
 }
 
-getPreferredAthleteByIdPreferredAthletesCrossfitIdGet.PATH = '/preferred_athletes/{crossfit_id}';
+getPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet.PATH = '/preferred_athletes/{affiliate_id}/{crossfit_id}';

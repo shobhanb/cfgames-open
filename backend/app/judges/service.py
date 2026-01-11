@@ -4,6 +4,7 @@ from uuid import UUID
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.athlete.models import Athlete
 from app.exceptions import not_found_exception
 from app.judge_availability.constants import JUDGE_TIMESLOTS
 from app.judge_availability.models import JudgeAvailability
@@ -15,14 +16,20 @@ from .schemas import JudgesCreate, JudgesUpdate
 
 async def get_all_judges(
     db_session: AsyncSession,
+    affiliate_id: int,
 ) -> list[dict[str, Any]]:
     """Get all judges."""
-    stmt = select(
-        Judges.id,
-        Judges.crossfit_id,
-        Judges.name,
-        Judges.preferred,
-    ).distinct()
+    stmt = (
+        select(
+            Judges.id,
+            Judges.affiliate_id,
+            Judges.crossfit_id,
+            Judges.name,
+            Judges.preferred,
+        )
+        .where(Judges.affiliate_id == affiliate_id)
+        .distinct()
+    )
     result = await db_session.execute(stmt)
     rows = result.mappings().all()
     return [dict(row) for row in rows]
@@ -36,6 +43,7 @@ async def get_judge(
     stmt = (
         select(
             Judges.id,
+            Judges.affiliate_id,
             Judges.crossfit_id,
             Judges.name,
             Judges.preferred,
@@ -53,17 +61,19 @@ async def get_judge(
 
 async def get_judge_by_crossfit_id(
     db_session: AsyncSession,
+    affiliate_id: int,
     crossfit_id: int,
 ) -> dict[str, Any]:
     """Get a judge by crossfit_id."""
     stmt = (
         select(
             Judges.id,
+            Judges.affiliate_id,
             Judges.crossfit_id,
             Judges.name,
             Judges.preferred,
         )
-        .where(Judges.crossfit_id == crossfit_id)
+        .where((Judges.affiliate_id == affiliate_id) & (Judges.crossfit_id == crossfit_id))
         .distinct()
     )
     result = await db_session.execute(stmt)
@@ -106,6 +116,7 @@ async def create_judge(
 ) -> dict[str, Any]:
     """Create a new judge."""
     new_judge = Judges(
+        affiliate_id=judge_data.affiliate_id,
         crossfit_id=judge_data.crossfit_id,
         name=judge_data.name,
         preferred=judge_data.preferred,
@@ -132,6 +143,8 @@ async def update_judge(
     """Update an existing judge."""
     judge = await Judges.find_or_raise(async_session=db_session, id=judge_id)
 
+    if judge_data.affiliate_id is not None:
+        judge.affiliate_id = judge_data.affiliate_id
     if judge_data.crossfit_id is not None:
         judge.crossfit_id = judge_data.crossfit_id
     if judge_data.name is not None:
@@ -158,11 +171,15 @@ async def delete_judge(
 
 async def initialize_judges(
     db_session: AsyncSession,
+    affiliate_id: int,
 ) -> None:
     """Initialize judge information for all athletes based on scoring history."""
     # Get all unique judge_user_ids from scores
     select_judge_ids_stmt = (
-        select(Score.judge_user_id, Score.judge_name).where(Score.judge_user_id.is_not(None)).distinct()
+        select(Score.judge_user_id, Score.judge_name)
+        .join_from(Score, Athlete, Score.crossfit_id == Athlete.crossfit_id)
+        .where((Athlete.affiliate_id == affiliate_id) & (Score.judge_user_id.is_not(None)))
+        .distinct()
     )
     result = await db_session.execute(select_judge_ids_stmt)
     judge_data = [(row[0], row[1]) for row in result.all()]
@@ -173,12 +190,17 @@ async def initialize_judges(
     # For each judge_user_id, create a Judges record if it doesn't exist
     for judge_user_id, judge_name in judge_data:
         # Check if judge already exists in Judges table
-        existing_judge = await Judges.find(async_session=db_session, crossfit_id=judge_user_id)
+        existing_judge = await Judges.find(
+            async_session=db_session,
+            affiliate_id=affiliate_id,
+            crossfit_id=judge_user_id,
+        )
         if existing_judge:
             continue
 
         # Create a new Judges record
         new_judge = Judges(
+            affiliate_id=affiliate_id,
             crossfit_id=judge_user_id,
             name=judge_name,
         )

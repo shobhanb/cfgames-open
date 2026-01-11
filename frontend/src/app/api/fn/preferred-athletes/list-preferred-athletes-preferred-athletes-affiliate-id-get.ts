@@ -10,12 +10,14 @@ import { RequestBuilder } from '../../request-builder';
 
 import { apiPreferredAthleteModel } from '../../models/api-preferred-athlete-model';
 
-export interface ListPreferredAthletesPreferredAthletesGet$Params {
+export interface ListPreferredAthletesPreferredAthletesAffiliateIdGet$Params {
+  affiliate_id: number;
 }
 
-export function listPreferredAthletesPreferredAthletesGet(http: HttpClient, rootUrl: string, params?: ListPreferredAthletesPreferredAthletesGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiPreferredAthleteModel>>> {
-  const rb = new RequestBuilder(rootUrl, listPreferredAthletesPreferredAthletesGet.PATH, 'get');
+export function listPreferredAthletesPreferredAthletesAffiliateIdGet(http: HttpClient, rootUrl: string, params: ListPreferredAthletesPreferredAthletesAffiliateIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiPreferredAthleteModel>>> {
+  const rb = new RequestBuilder(rootUrl, listPreferredAthletesPreferredAthletesAffiliateIdGet.PATH, 'get');
   if (params) {
+    rb.path('affiliate_id', params.affiliate_id, {});
   }
 
   return http.request(
@@ -28,4 +30,4 @@ export function listPreferredAthletesPreferredAthletesGet(http: HttpClient, root
   );
 }
 
-listPreferredAthletesPreferredAthletesGet.PATH = '/preferred_athletes/';
+listPreferredAthletesPreferredAthletesAffiliateIdGet.PATH = '/preferred_athletes/{affiliate_id}';

@@ -15,14 +15,14 @@ import { createNewJudgeJudgesPost } from '../fn/judges/create-new-judge-judges-p
 import { CreateNewJudgeJudgesPost$Params } from '../fn/judges/create-new-judge-judges-post';
 import { deleteExistingJudgeJudgesJudgeIdDelete } from '../fn/judges/delete-existing-judge-judges-judge-id-delete';
 import { DeleteExistingJudgeJudgesJudgeIdDelete$Params } from '../fn/judges/delete-existing-judge-judges-judge-id-delete';
-import { getJudgeByIdCrossfitJudgesCrossfitIdCrossfitIdGet } from '../fn/judges/get-judge-by-id-crossfit-judges-crossfit-id-crossfit-id-get';
-import { GetJudgeByIdCrossfitJudgesCrossfitIdCrossfitIdGet$Params } from '../fn/judges/get-judge-by-id-crossfit-judges-crossfit-id-crossfit-id-get';
-import { getJudgeByIdJudgesJudgeIdGet } from '../fn/judges/get-judge-by-id-judges-judge-id-get';
-import { GetJudgeByIdJudgesJudgeIdGet$Params } from '../fn/judges/get-judge-by-id-judges-judge-id-get';
-import { getJudgesListJudgesGet } from '../fn/judges/get-judges-list-judges-get';
-import { GetJudgesListJudgesGet$Params } from '../fn/judges/get-judges-list-judges-get';
-import { initJudgesJudgesInitializePost } from '../fn/judges/init-judges-judges-initialize-post';
-import { InitJudgesJudgesInitializePost$Params } from '../fn/judges/init-judges-judges-initialize-post';
+import { getJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet } from '../fn/judges/get-judge-by-id-crossfit-judges-affiliate-id-crossfit-id-crossfit-id-get';
+import { GetJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet$Params } from '../fn/judges/get-judge-by-id-crossfit-judges-affiliate-id-crossfit-id-crossfit-id-get';
+import { getJudgeByIdJudgesJudgeJudgeIdGet } from '../fn/judges/get-judge-by-id-judges-judge-judge-id-get';
+import { GetJudgeByIdJudgesJudgeJudgeIdGet$Params } from '../fn/judges/get-judge-by-id-judges-judge-judge-id-get';
+import { getJudgesListJudgesAllGet } from '../fn/judges/get-judges-list-judges-all-get';
+import { GetJudgesListJudgesAllGet$Params } from '../fn/judges/get-judges-list-judges-all-get';
+import { initJudgesJudgesInitializeAffiliateIdPost } from '../fn/judges/init-judges-judges-initialize-affiliate-id-post';
+import { InitJudgesJudgesInitializeAffiliateIdPost$Params } from '../fn/judges/init-judges-judges-initialize-affiliate-id-post';
 import { apiJudgesModel } from '../models/api-judges-model';
 import { updateExistingJudgeJudgesJudgeIdPatch } from '../fn/judges/update-existing-judge-judges-judge-id-patch';
 import { UpdateExistingJudgeJudgesJudgeIdPatch$Params } from '../fn/judges/update-existing-judge-judges-judge-id-patch';
@@ -33,8 +33,8 @@ export class apiJudgesService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getJudgesListJudgesGet()` */
-  static readonly GetJudgesListJudgesGetPath = '/judges/';
+  /** Path part for operation `getJudgesListJudgesAllGet()` */
+  static readonly GetJudgesListJudgesAllGetPath = '/judges/all';
 
   /**
    * Get Judges List.
@@ -42,12 +42,12 @@ export class apiJudgesService extends BaseService {
    * Get all judges.
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getJudgesListJudgesGet()` instead.
+   * To access only the response body, use `getJudgesListJudgesAllGet()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getJudgesListJudgesGet$Response(params?: GetJudgesListJudgesGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiJudgesModel>>> {
-    return getJudgesListJudgesGet(this.http, this.rootUrl, params, context);
+  getJudgesListJudgesAllGet$Response(params: GetJudgesListJudgesAllGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiJudgesModel>>> {
+    return getJudgesListJudgesAllGet(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -56,13 +56,79 @@ export class apiJudgesService extends BaseService {
    * Get all judges.
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getJudgesListJudgesGet$Response()` instead.
+   * To access the full response (for headers, for example), `getJudgesListJudgesAllGet$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getJudgesListJudgesGet(params?: GetJudgesListJudgesGet$Params, context?: HttpContext): Observable<Array<apiJudgesModel>> {
-    return this.getJudgesListJudgesGet$Response(params, context).pipe(
+  getJudgesListJudgesAllGet(params: GetJudgesListJudgesAllGet$Params, context?: HttpContext): Observable<Array<apiJudgesModel>> {
+    return this.getJudgesListJudgesAllGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<apiJudgesModel>>): Array<apiJudgesModel> => r.body)
+    );
+  }
+
+  /** Path part for operation `getJudgeByIdJudgesJudgeJudgeIdGet()` */
+  static readonly GetJudgeByIdJudgesJudgeJudgeIdGetPath = '/judges/judge/{judge_id}';
+
+  /**
+   * Get Judge By Id.
+   *
+   * Get a judge by ID.
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getJudgeByIdJudgesJudgeJudgeIdGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getJudgeByIdJudgesJudgeJudgeIdGet$Response(params: GetJudgeByIdJudgesJudgeJudgeIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiJudgesModel>> {
+    return getJudgeByIdJudgesJudgeJudgeIdGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get Judge By Id.
+   *
+   * Get a judge by ID.
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getJudgeByIdJudgesJudgeJudgeIdGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getJudgeByIdJudgesJudgeJudgeIdGet(params: GetJudgeByIdJudgesJudgeJudgeIdGet$Params, context?: HttpContext): Observable<apiJudgesModel> {
+    return this.getJudgeByIdJudgesJudgeJudgeIdGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiJudgesModel>): apiJudgesModel => r.body)
+    );
+  }
+
+  /** Path part for operation `getJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet()` */
+  static readonly GetJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGetPath = '/judges/{affiliate_id}/crossfit_id/{crossfit_id}';
+
+  /**
+   * Get Judge By Id Crossfit.
+   *
+   * Get a judge by crossfit_id.
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet$Response(params: GetJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiJudgesModel>> {
+    return getJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get Judge By Id Crossfit.
+   *
+   * Get a judge by crossfit_id.
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet(params: GetJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet$Params, context?: HttpContext): Observable<apiJudgesModel> {
+    return this.getJudgeByIdCrossfitJudgesAffiliateIdCrossfitIdCrossfitIdGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiJudgesModel>): apiJudgesModel => r.body)
     );
   }
 
@@ -95,39 +161,6 @@ export class apiJudgesService extends BaseService {
    */
   createNewJudgeJudgesPost(params: CreateNewJudgeJudgesPost$Params, context?: HttpContext): Observable<apiJudgesModel> {
     return this.createNewJudgeJudgesPost$Response(params, context).pipe(
-      map((r: StrictHttpResponse<apiJudgesModel>): apiJudgesModel => r.body)
-    );
-  }
-
-  /** Path part for operation `getJudgeByIdJudgesJudgeIdGet()` */
-  static readonly GetJudgeByIdJudgesJudgeIdGetPath = '/judges/{judge_id}';
-
-  /**
-   * Get Judge By Id.
-   *
-   * Get a judge by ID.
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getJudgeByIdJudgesJudgeIdGet()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getJudgeByIdJudgesJudgeIdGet$Response(params: GetJudgeByIdJudgesJudgeIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiJudgesModel>> {
-    return getJudgeByIdJudgesJudgeIdGet(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Get Judge By Id.
-   *
-   * Get a judge by ID.
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getJudgeByIdJudgesJudgeIdGet$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getJudgeByIdJudgesJudgeIdGet(params: GetJudgeByIdJudgesJudgeIdGet$Params, context?: HttpContext): Observable<apiJudgesModel> {
-    return this.getJudgeByIdJudgesJudgeIdGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<apiJudgesModel>): apiJudgesModel => r.body)
     );
   }
@@ -198,41 +231,8 @@ export class apiJudgesService extends BaseService {
     );
   }
 
-  /** Path part for operation `getJudgeByIdCrossfitJudgesCrossfitIdCrossfitIdGet()` */
-  static readonly GetJudgeByIdCrossfitJudgesCrossfitIdCrossfitIdGetPath = '/judges/crossfit_id/{crossfit_id}';
-
-  /**
-   * Get Judge By Id Crossfit.
-   *
-   * Get a judge by crossfit_id.
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getJudgeByIdCrossfitJudgesCrossfitIdCrossfitIdGet()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getJudgeByIdCrossfitJudgesCrossfitIdCrossfitIdGet$Response(params: GetJudgeByIdCrossfitJudgesCrossfitIdCrossfitIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiJudgesModel>> {
-    return getJudgeByIdCrossfitJudgesCrossfitIdCrossfitIdGet(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Get Judge By Id Crossfit.
-   *
-   * Get a judge by crossfit_id.
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getJudgeByIdCrossfitJudgesCrossfitIdCrossfitIdGet$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getJudgeByIdCrossfitJudgesCrossfitIdCrossfitIdGet(params: GetJudgeByIdCrossfitJudgesCrossfitIdCrossfitIdGet$Params, context?: HttpContext): Observable<apiJudgesModel> {
-    return this.getJudgeByIdCrossfitJudgesCrossfitIdCrossfitIdGet$Response(params, context).pipe(
-      map((r: StrictHttpResponse<apiJudgesModel>): apiJudgesModel => r.body)
-    );
-  }
-
-  /** Path part for operation `initJudgesJudgesInitializePost()` */
-  static readonly InitJudgesJudgesInitializePostPath = '/judges/initialize';
+  /** Path part for operation `initJudgesJudgesInitializeAffiliateIdPost()` */
+  static readonly InitJudgesJudgesInitializeAffiliateIdPostPath = '/judges/initialize/{affiliate_id}';
 
   /**
    * Init Judges.
@@ -240,14 +240,14 @@ export class apiJudgesService extends BaseService {
    * Initialize judge information for all athletes based on scoring history.
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `initJudgesJudgesInitializePost()` instead.
+   * To access only the response body, use `initJudgesJudgesInitializeAffiliateIdPost()` instead.
    *
    * This method doesn't expect any request body.
    */
-  initJudgesJudgesInitializePost$Response(params?: InitJudgesJudgesInitializePost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+  initJudgesJudgesInitializeAffiliateIdPost$Response(params: InitJudgesJudgesInitializeAffiliateIdPost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: string;
 }>> {
-    return initJudgesJudgesInitializePost(this.http, this.rootUrl, params, context);
+    return initJudgesJudgesInitializeAffiliateIdPost(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -256,14 +256,14 @@ export class apiJudgesService extends BaseService {
    * Initialize judge information for all athletes based on scoring history.
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `initJudgesJudgesInitializePost$Response()` instead.
+   * To access the full response (for headers, for example), `initJudgesJudgesInitializeAffiliateIdPost$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  initJudgesJudgesInitializePost(params?: InitJudgesJudgesInitializePost$Params, context?: HttpContext): Observable<{
+  initJudgesJudgesInitializeAffiliateIdPost(params: InitJudgesJudgesInitializeAffiliateIdPost$Params, context?: HttpContext): Observable<{
 [key: string]: string;
 }> {
-    return this.initJudgesJudgesInitializePost$Response(params, context).pipe(
+    return this.initJudgesJudgesInitializeAffiliateIdPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<{
 [key: string]: string;
 }>): {

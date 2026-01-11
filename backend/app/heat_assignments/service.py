@@ -922,7 +922,7 @@ async def assign_judges_randomly(
         raise not_found_exception(msg)
 
     # Get all judges
-    judges_stmt = select(Judges)
+    judges_stmt = select(Judges).where(Judges.affiliate_id == affiliate_id)
     judges_result = await db_session.execute(judges_stmt)
     all_judges = list(judges_result.scalars().all())
     judge_crossfit_ids = {judge.crossfit_id for judge in all_judges}

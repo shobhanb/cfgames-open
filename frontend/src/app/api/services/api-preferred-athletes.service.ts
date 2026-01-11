@@ -13,18 +13,18 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { createPreferredAthleteEntryPreferredAthletesPost } from '../fn/preferred-athletes/create-preferred-athlete-entry-preferred-athletes-post';
 import { CreatePreferredAthleteEntryPreferredAthletesPost$Params } from '../fn/preferred-athletes/create-preferred-athlete-entry-preferred-athletes-post';
-import { deletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete } from '../fn/preferred-athletes/delete-preferred-athlete-entry-preferred-athletes-crossfit-id-delete';
-import { DeletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete$Params } from '../fn/preferred-athletes/delete-preferred-athlete-entry-preferred-athletes-crossfit-id-delete';
-import { getPreferredAthleteByIdPreferredAthletesCrossfitIdGet } from '../fn/preferred-athletes/get-preferred-athlete-by-id-preferred-athletes-crossfit-id-get';
-import { GetPreferredAthleteByIdPreferredAthletesCrossfitIdGet$Params } from '../fn/preferred-athletes/get-preferred-athlete-by-id-preferred-athletes-crossfit-id-get';
-import { initializePreferredAthletesPreferredAthletesInitializePost } from '../fn/preferred-athletes/initialize-preferred-athletes-preferred-athletes-initialize-post';
-import { InitializePreferredAthletesPreferredAthletesInitializePost$Params } from '../fn/preferred-athletes/initialize-preferred-athletes-preferred-athletes-initialize-post';
-import { listPreferredAthletesPreferredAthletesGet } from '../fn/preferred-athletes/list-preferred-athletes-preferred-athletes-get';
-import { ListPreferredAthletesPreferredAthletesGet$Params } from '../fn/preferred-athletes/list-preferred-athletes-preferred-athletes-get';
+import { deletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete } from '../fn/preferred-athletes/delete-preferred-athlete-entry-preferred-athletes-affiliate-id-crossfit-id-delete';
+import { DeletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete$Params } from '../fn/preferred-athletes/delete-preferred-athlete-entry-preferred-athletes-affiliate-id-crossfit-id-delete';
+import { getPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet } from '../fn/preferred-athletes/get-preferred-athlete-by-id-preferred-athletes-affiliate-id-crossfit-id-get';
+import { GetPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet$Params } from '../fn/preferred-athletes/get-preferred-athlete-by-id-preferred-athletes-affiliate-id-crossfit-id-get';
+import { initializePreferredAthletesPreferredAthletesAffiliateIdInitializePost } from '../fn/preferred-athletes/initialize-preferred-athletes-preferred-athletes-affiliate-id-initialize-post';
+import { InitializePreferredAthletesPreferredAthletesAffiliateIdInitializePost$Params } from '../fn/preferred-athletes/initialize-preferred-athletes-preferred-athletes-affiliate-id-initialize-post';
+import { listPreferredAthletesPreferredAthletesAffiliateIdGet } from '../fn/preferred-athletes/list-preferred-athletes-preferred-athletes-affiliate-id-get';
+import { ListPreferredAthletesPreferredAthletesAffiliateIdGet$Params } from '../fn/preferred-athletes/list-preferred-athletes-preferred-athletes-affiliate-id-get';
 import { apiPreferredAthleteModel } from '../models/api-preferred-athlete-model';
 import { apiPreferredAthletesInitResponse } from '../models/api-preferred-athletes-init-response';
-import { updatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch } from '../fn/preferred-athletes/update-preferred-athlete-entry-preferred-athletes-crossfit-id-patch';
-import { UpdatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch$Params } from '../fn/preferred-athletes/update-preferred-athlete-entry-preferred-athletes-crossfit-id-patch';
+import { updatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch } from '../fn/preferred-athletes/update-preferred-athlete-entry-preferred-athletes-affiliate-id-crossfit-id-patch';
+import { UpdatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch$Params } from '../fn/preferred-athletes/update-preferred-athlete-entry-preferred-athletes-affiliate-id-crossfit-id-patch';
 
 @Injectable({ providedIn: 'root' })
 export class apiPreferredAthletesService extends BaseService {
@@ -32,8 +32,8 @@ export class apiPreferredAthletesService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `listPreferredAthletesPreferredAthletesGet()` */
-  static readonly ListPreferredAthletesPreferredAthletesGetPath = '/preferred_athletes/';
+  /** Path part for operation `listPreferredAthletesPreferredAthletesAffiliateIdGet()` */
+  static readonly ListPreferredAthletesPreferredAthletesAffiliateIdGetPath = '/preferred_athletes/{affiliate_id}';
 
   /**
    * List Preferred Athletes.
@@ -41,12 +41,12 @@ export class apiPreferredAthletesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `listPreferredAthletesPreferredAthletesGet()` instead.
+   * To access only the response body, use `listPreferredAthletesPreferredAthletesAffiliateIdGet()` instead.
    *
    * This method doesn't expect any request body.
    */
-  listPreferredAthletesPreferredAthletesGet$Response(params?: ListPreferredAthletesPreferredAthletesGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiPreferredAthleteModel>>> {
-    return listPreferredAthletesPreferredAthletesGet(this.http, this.rootUrl, params, context);
+  listPreferredAthletesPreferredAthletesAffiliateIdGet$Response(params: ListPreferredAthletesPreferredAthletesAffiliateIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiPreferredAthleteModel>>> {
+    return listPreferredAthletesPreferredAthletesAffiliateIdGet(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -55,13 +55,112 @@ export class apiPreferredAthletesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `listPreferredAthletesPreferredAthletesGet$Response()` instead.
+   * To access the full response (for headers, for example), `listPreferredAthletesPreferredAthletesAffiliateIdGet$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  listPreferredAthletesPreferredAthletesGet(params?: ListPreferredAthletesPreferredAthletesGet$Params, context?: HttpContext): Observable<Array<apiPreferredAthleteModel>> {
-    return this.listPreferredAthletesPreferredAthletesGet$Response(params, context).pipe(
+  listPreferredAthletesPreferredAthletesAffiliateIdGet(params: ListPreferredAthletesPreferredAthletesAffiliateIdGet$Params, context?: HttpContext): Observable<Array<apiPreferredAthleteModel>> {
+    return this.listPreferredAthletesPreferredAthletesAffiliateIdGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<apiPreferredAthleteModel>>): Array<apiPreferredAthleteModel> => r.body)
+    );
+  }
+
+  /** Path part for operation `getPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet()` */
+  static readonly GetPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGetPath = '/preferred_athletes/{affiliate_id}/{crossfit_id}';
+
+  /**
+   * Get Preferred Athlete By Id.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet$Response(params: GetPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiPreferredAthleteModel>> {
+    return getPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get Preferred Athlete By Id.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet(params: GetPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet$Params, context?: HttpContext): Observable<apiPreferredAthleteModel> {
+    return this.getPreferredAthleteByIdPreferredAthletesAffiliateIdCrossfitIdGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiPreferredAthleteModel>): apiPreferredAthleteModel => r.body)
+    );
+  }
+
+  /** Path part for operation `deletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete()` */
+  static readonly DeletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDeletePath = '/preferred_athletes/{affiliate_id}/{crossfit_id}';
+
+  /**
+   * Delete Preferred Athlete Entry.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete$Response(params: DeletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Delete Preferred Athlete Entry.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete(params: DeletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete$Params, context?: HttpContext): Observable<void> {
+    return this.deletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `updatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch()` */
+  static readonly UpdatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatchPath = '/preferred_athletes/{affiliate_id}/{crossfit_id}';
+
+  /**
+   * Update Preferred Athlete Entry.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch$Response(params: UpdatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch$Params, context?: HttpContext): Observable<StrictHttpResponse<apiPreferredAthleteModel>> {
+    return updatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Update Preferred Athlete Entry.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch(params: UpdatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch$Params, context?: HttpContext): Observable<apiPreferredAthleteModel> {
+    return this.updatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch$Response(params, context).pipe(
+      map((r: StrictHttpResponse<apiPreferredAthleteModel>): apiPreferredAthleteModel => r.body)
     );
   }
 
@@ -98,107 +197,8 @@ export class apiPreferredAthletesService extends BaseService {
     );
   }
 
-  /** Path part for operation `getPreferredAthleteByIdPreferredAthletesCrossfitIdGet()` */
-  static readonly GetPreferredAthleteByIdPreferredAthletesCrossfitIdGetPath = '/preferred_athletes/{crossfit_id}';
-
-  /**
-   * Get Preferred Athlete By Id.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getPreferredAthleteByIdPreferredAthletesCrossfitIdGet()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getPreferredAthleteByIdPreferredAthletesCrossfitIdGet$Response(params: GetPreferredAthleteByIdPreferredAthletesCrossfitIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiPreferredAthleteModel>> {
-    return getPreferredAthleteByIdPreferredAthletesCrossfitIdGet(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Get Preferred Athlete By Id.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getPreferredAthleteByIdPreferredAthletesCrossfitIdGet$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getPreferredAthleteByIdPreferredAthletesCrossfitIdGet(params: GetPreferredAthleteByIdPreferredAthletesCrossfitIdGet$Params, context?: HttpContext): Observable<apiPreferredAthleteModel> {
-    return this.getPreferredAthleteByIdPreferredAthletesCrossfitIdGet$Response(params, context).pipe(
-      map((r: StrictHttpResponse<apiPreferredAthleteModel>): apiPreferredAthleteModel => r.body)
-    );
-  }
-
-  /** Path part for operation `deletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete()` */
-  static readonly DeletePreferredAthleteEntryPreferredAthletesCrossfitIdDeletePath = '/preferred_athletes/{crossfit_id}';
-
-  /**
-   * Delete Preferred Athlete Entry.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `deletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  deletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete$Response(params: DeletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return deletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Delete Preferred Athlete Entry.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `deletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  deletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete(params: DeletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete$Params, context?: HttpContext): Observable<void> {
-    return this.deletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete$Response(params, context).pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
-  }
-
-  /** Path part for operation `updatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch()` */
-  static readonly UpdatePreferredAthleteEntryPreferredAthletesCrossfitIdPatchPath = '/preferred_athletes/{crossfit_id}';
-
-  /**
-   * Update Preferred Athlete Entry.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  updatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch$Response(params: UpdatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch$Params, context?: HttpContext): Observable<StrictHttpResponse<apiPreferredAthleteModel>> {
-    return updatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Update Preferred Athlete Entry.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  updatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch(params: UpdatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch$Params, context?: HttpContext): Observable<apiPreferredAthleteModel> {
-    return this.updatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch$Response(params, context).pipe(
-      map((r: StrictHttpResponse<apiPreferredAthleteModel>): apiPreferredAthleteModel => r.body)
-    );
-  }
-
-  /** Path part for operation `initializePreferredAthletesPreferredAthletesInitializePost()` */
-  static readonly InitializePreferredAthletesPreferredAthletesInitializePostPath = '/preferred_athletes/initialize';
+  /** Path part for operation `initializePreferredAthletesPreferredAthletesAffiliateIdInitializePost()` */
+  static readonly InitializePreferredAthletesPreferredAthletesAffiliateIdInitializePostPath = '/preferred_athletes/{affiliate_id}/initialize';
 
   /**
    * Initialize Preferred Athletes.
@@ -206,12 +206,12 @@ export class apiPreferredAthletesService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `initializePreferredAthletesPreferredAthletesInitializePost()` instead.
+   * To access only the response body, use `initializePreferredAthletesPreferredAthletesAffiliateIdInitializePost()` instead.
    *
    * This method doesn't expect any request body.
    */
-  initializePreferredAthletesPreferredAthletesInitializePost$Response(params?: InitializePreferredAthletesPreferredAthletesInitializePost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiPreferredAthletesInitResponse>> {
-    return initializePreferredAthletesPreferredAthletesInitializePost(this.http, this.rootUrl, params, context);
+  initializePreferredAthletesPreferredAthletesAffiliateIdInitializePost$Response(params: InitializePreferredAthletesPreferredAthletesAffiliateIdInitializePost$Params, context?: HttpContext): Observable<StrictHttpResponse<apiPreferredAthletesInitResponse>> {
+    return initializePreferredAthletesPreferredAthletesAffiliateIdInitializePost(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -220,12 +220,12 @@ export class apiPreferredAthletesService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `initializePreferredAthletesPreferredAthletesInitializePost$Response()` instead.
+   * To access the full response (for headers, for example), `initializePreferredAthletesPreferredAthletesAffiliateIdInitializePost$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  initializePreferredAthletesPreferredAthletesInitializePost(params?: InitializePreferredAthletesPreferredAthletesInitializePost$Params, context?: HttpContext): Observable<apiPreferredAthletesInitResponse> {
-    return this.initializePreferredAthletesPreferredAthletesInitializePost$Response(params, context).pipe(
+  initializePreferredAthletesPreferredAthletesAffiliateIdInitializePost(params: InitializePreferredAthletesPreferredAthletesAffiliateIdInitializePost$Params, context?: HttpContext): Observable<apiPreferredAthletesInitResponse> {
+    return this.initializePreferredAthletesPreferredAthletesAffiliateIdInitializePost$Response(params, context).pipe(
       map((r: StrictHttpResponse<apiPreferredAthletesInitResponse>): apiPreferredAthletesInitResponse => r.body)
     );
   }

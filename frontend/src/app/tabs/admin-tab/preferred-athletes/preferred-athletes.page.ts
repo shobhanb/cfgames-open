@@ -46,6 +46,7 @@ import {
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-preferred-athletes',
@@ -87,6 +88,7 @@ export class PreferredAthletesPage implements OnInit {
   private alertController = inject(AlertController);
   private athleteNameModalService = inject(AthleteNameModalService);
   private toastService = inject(ToastService);
+  private config = inject(AppConfigService);
   athleteDataService = inject(AthleteDataService);
 
   readonly preferredAthletes = signal<apiPreferredAthleteModel[]>([]);
@@ -145,7 +147,9 @@ export class PreferredAthletesPage implements OnInit {
   loadPreferredAthletes(): void {
     this.loading.set(true);
     this.apiPreferredAthletes
-      .listPreferredAthletesPreferredAthletesGet()
+      .listPreferredAthletesPreferredAthletesAffiliateIdGet({
+        affiliate_id: this.config.affiliateId,
+      })
       .subscribe({
         next: (data) => {
           this.preferredAthletes.set(
@@ -210,6 +214,7 @@ export class PreferredAthletesPage implements OnInit {
     }
 
     const newAthlete: apiPreferredAthleteCreate = {
+      affiliate_id: this.config.affiliateId,
       crossfit_id: crossfitId,
       name: name,
       start_time: startTime,
@@ -268,7 +273,8 @@ export class PreferredAthletesPage implements OnInit {
 
     this.loading.set(true);
     this.apiPreferredAthletes
-      .updatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch({
+      .updatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch({
+        affiliate_id: this.config.affiliateId,
         crossfit_id: athlete.crossfit_id,
         body: update,
       })
@@ -305,9 +311,12 @@ export class PreferredAthletesPage implements OnInit {
           handler: () => {
             this.loading.set(true);
             this.apiPreferredAthletes
-              .deletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete({
-                crossfit_id: athlete.crossfit_id,
-              })
+              .deletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete(
+                {
+                  affiliate_id: this.config.affiliateId,
+                  crossfit_id: athlete.crossfit_id,
+                }
+              )
               .subscribe({
                 next: () => {
                   this.loadPreferredAthletes();

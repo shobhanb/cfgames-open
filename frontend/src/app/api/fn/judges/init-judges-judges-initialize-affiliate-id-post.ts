@@ -9,14 +9,16 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface InitJudgesJudgesInitializePost$Params {
+export interface InitJudgesJudgesInitializeAffiliateIdPost$Params {
+  affiliate_id: number;
 }
 
-export function initJudgesJudgesInitializePost(http: HttpClient, rootUrl: string, params?: InitJudgesJudgesInitializePost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+export function initJudgesJudgesInitializeAffiliateIdPost(http: HttpClient, rootUrl: string, params: InitJudgesJudgesInitializeAffiliateIdPost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: string;
 }>> {
-  const rb = new RequestBuilder(rootUrl, initJudgesJudgesInitializePost.PATH, 'post');
+  const rb = new RequestBuilder(rootUrl, initJudgesJudgesInitializeAffiliateIdPost.PATH, 'post');
   if (params) {
+    rb.path('affiliate_id', params.affiliate_id, {});
   }
 
   return http.request(
@@ -31,4 +33,4 @@ export function initJudgesJudgesInitializePost(http: HttpClient, rootUrl: string
   );
 }
 
-initJudgesJudgesInitializePost.PATH = '/judges/initialize';
+initJudgesJudgesInitializeAffiliateIdPost.PATH = '/judges/initialize/{affiliate_id}';

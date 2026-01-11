@@ -10,12 +10,14 @@ import { RequestBuilder } from '../../request-builder';
 
 import { apiJudgesModel } from '../../models/api-judges-model';
 
-export interface GetJudgesListJudgesGet$Params {
+export interface GetJudgeByIdJudgesJudgeJudgeIdGet$Params {
+  judge_id: string;
 }
 
-export function getJudgesListJudgesGet(http: HttpClient, rootUrl: string, params?: GetJudgesListJudgesGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiJudgesModel>>> {
-  const rb = new RequestBuilder(rootUrl, getJudgesListJudgesGet.PATH, 'get');
+export function getJudgeByIdJudgesJudgeJudgeIdGet(http: HttpClient, rootUrl: string, params: GetJudgeByIdJudgesJudgeJudgeIdGet$Params, context?: HttpContext): Observable<StrictHttpResponse<apiJudgesModel>> {
+  const rb = new RequestBuilder(rootUrl, getJudgeByIdJudgesJudgeJudgeIdGet.PATH, 'get');
   if (params) {
+    rb.path('judge_id', params.judge_id, {});
   }
 
   return http.request(
@@ -23,9 +25,9 @@ export function getJudgesListJudgesGet(http: HttpClient, rootUrl: string, params
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<apiJudgesModel>>;
+      return r as StrictHttpResponse<apiJudgesModel>;
     })
   );
 }
 
-getJudgesListJudgesGet.PATH = '/judges/';
+getJudgeByIdJudgesJudgeJudgeIdGet.PATH = '/judges/judge/{judge_id}';

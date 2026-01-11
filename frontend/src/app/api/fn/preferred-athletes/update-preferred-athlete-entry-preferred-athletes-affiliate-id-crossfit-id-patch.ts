@@ -11,14 +11,16 @@ import { RequestBuilder } from '../../request-builder';
 import { apiPreferredAthleteModel } from '../../models/api-preferred-athlete-model';
 import { apiPreferredAthleteUpdate } from '../../models/api-preferred-athlete-update';
 
-export interface UpdatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch$Params {
+export interface UpdatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch$Params {
+  affiliate_id: number;
   crossfit_id: number;
       body: apiPreferredAthleteUpdate
 }
 
-export function updatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch(http: HttpClient, rootUrl: string, params: UpdatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch$Params, context?: HttpContext): Observable<StrictHttpResponse<apiPreferredAthleteModel>> {
-  const rb = new RequestBuilder(rootUrl, updatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch.PATH, 'patch');
+export function updatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch(http: HttpClient, rootUrl: string, params: UpdatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch$Params, context?: HttpContext): Observable<StrictHttpResponse<apiPreferredAthleteModel>> {
+  const rb = new RequestBuilder(rootUrl, updatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch.PATH, 'patch');
   if (params) {
+    rb.path('affiliate_id', params.affiliate_id, {});
     rb.path('crossfit_id', params.crossfit_id, {});
     rb.body(params.body, 'application/json');
   }
@@ -33,4 +35,4 @@ export function updatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch(http
   );
 }
 
-updatePreferredAthleteEntryPreferredAthletesCrossfitIdPatch.PATH = '/preferred_athletes/{crossfit_id}';
+updatePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdPatch.PATH = '/preferred_athletes/{affiliate_id}/{crossfit_id}';

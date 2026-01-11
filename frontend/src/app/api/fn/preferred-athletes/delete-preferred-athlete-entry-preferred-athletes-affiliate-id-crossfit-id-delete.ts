@@ -9,13 +9,15 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface DeletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete$Params {
+export interface DeletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete$Params {
+  affiliate_id: number;
   crossfit_id: number;
 }
 
-export function deletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete(http: HttpClient, rootUrl: string, params: DeletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-  const rb = new RequestBuilder(rootUrl, deletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete.PATH, 'delete');
+export function deletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete(http: HttpClient, rootUrl: string, params: DeletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  const rb = new RequestBuilder(rootUrl, deletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete.PATH, 'delete');
   if (params) {
+    rb.path('affiliate_id', params.affiliate_id, {});
     rb.path('crossfit_id', params.crossfit_id, {});
   }
 
@@ -29,4 +31,4 @@ export function deletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete(htt
   );
 }
 
-deletePreferredAthleteEntryPreferredAthletesCrossfitIdDelete.PATH = '/preferred_athletes/{crossfit_id}';
+deletePreferredAthleteEntryPreferredAthletesAffiliateIdCrossfitIdDelete.PATH = '/preferred_athletes/{affiliate_id}/{crossfit_id}';

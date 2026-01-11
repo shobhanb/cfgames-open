@@ -131,22 +131,26 @@ export class JudgesPage implements OnInit {
 
   loadJudges() {
     this.loading.set(true);
-    this.apiJudge.getJudgesListJudgesGet().subscribe({
-      next: (data) => {
-        this.judges.set(data);
-        this.loading.set(false);
-      },
-      error: (error) => {
-        console.error('Error loading judges:', error);
-        this.toastService.showToast(
-          `Error loading judges${
-            error?.error?.detail ? ': ' + error.error.detail : ''
-          }`,
-          'danger'
-        );
-        this.loading.set(false);
-      },
-    });
+    this.apiJudge
+      .getJudgesListJudgesAllGet({
+        affiliate_id: this.config.affiliateId,
+      })
+      .subscribe({
+        next: (data) => {
+          this.judges.set(data);
+          this.loading.set(false);
+        },
+        error: (error) => {
+          console.error('Error loading judges:', error);
+          this.toastService.showToast(
+            `Error loading judges${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
+            'danger'
+          );
+          this.loading.set(false);
+        },
+      });
   }
 
   onSearchChange(event: CustomEvent) {
@@ -188,6 +192,7 @@ export class JudgesPage implements OnInit {
     this.apiJudge
       .createNewJudgeJudgesPost({
         body: {
+          affiliate_id: this.config.affiliateId,
           crossfit_id: athlete.crossfit_id,
           name: athlete.name,
         },
@@ -243,6 +248,7 @@ export class JudgesPage implements OnInit {
             this.apiJudge
               .createNewJudgeJudgesPost({
                 body: {
+                  affiliate_id: this.config.affiliateId,
                   crossfit_id: parseInt(data.crossfit_id),
                   name: data.name,
                 },
