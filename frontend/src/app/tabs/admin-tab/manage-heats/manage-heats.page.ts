@@ -48,6 +48,7 @@ import {
   apiHeatsModel,
   apiHeatAssignmentModel,
   apiAthletePrefsOutputModel,
+  apiAssignAthletesResponse,
 } from 'src/app/api/models';
 import { JudgeSummaryModalComponent } from './judge-summary-modal/judge-summary-modal.component';
 import { UnassignedAthletesModalComponent } from './unassigned-athletes-modal/unassigned-athletes-modal.component';
@@ -378,41 +379,6 @@ export class ManageHeatsPage implements OnInit {
       });
   }
 
-  assignRandom() {
-    if (!this.selectedOrdinal()) {
-      this.toastService.showToast('Select an event first', 'warning');
-      return;
-    }
-
-    this.loading.set(true);
-    this.dataLoaded.set(false);
-
-    const affiliate_id = this.appConfig.affiliateId;
-    const year = this.appConfig.year;
-    const ordinal = this.selectedOrdinal()!;
-
-    this.apiHeatAssignments
-      .assignAthletesAndJudgesHeatAssignmentsAssignRandomPost({
-        body: { affiliate_id, year, ordinal },
-      })
-      .subscribe({
-        next: async (result) => {
-          await this.showAssignmentResults(result);
-          this.loadHeats();
-        },
-        error: (error) => {
-          console.error('Error assigning randomly:', error);
-          this.toastService.showToast(
-            'Failed to assign randomly: ' +
-              (error?.error?.detail ? error.error.detail : 'Unknown error'),
-            'danger'
-          );
-          this.loading.set(false);
-          this.dataLoaded.set(true);
-        },
-      });
-  }
-
   assignAthletes() {
     if (!this.selectedOrdinal()) {
       this.toastService.showToast('Select an event first', 'warning');
@@ -431,7 +397,7 @@ export class ManageHeatsPage implements OnInit {
         body: { affiliate_id, year, ordinal },
       })
       .subscribe({
-        next: async (result) => {
+        next: async (result: apiAssignAthletesResponse) => {
           await this.showAssignmentResults(result);
           this.loadHeats();
         },
@@ -487,18 +453,12 @@ export class ManageHeatsPage implements OnInit {
     const skippedCount = result.skipped_athletes?.length ?? 0;
     let message = `Assignment Complete!
 
-Heats Processed: ${result.heats_processed}
-Athletes Assigned: ${result.athletes_assigned}
-Judges Assigned: ${result.judges_assigned}
-Total Assignments: ${result.assigned_count}`;
+Heats Processed: ${result.heats_processed || 0}
+Athletes Assigned: ${result.athletes_assigned || 0}
+Judges Assigned: ${result.judges_assigned || 0}`;
 
     if (skippedCount > 0) {
-      message += `\n\nSkipped Athletes: ${skippedCount}\n\nSkipped Details:`;
-      result.skipped_athletes.forEach((athlete: any, index: number) => {
-        const name = athlete.name || 'Unknown';
-        const reason = athlete.reason || 'No reason provided';
-        message += `\n${index + 1}. ${name} - ${reason}`;
-      });
+      message += `\n\nSkipped Athletes: ${skippedCount}`;
     }
 
     const alert = await this.alertController.create({
