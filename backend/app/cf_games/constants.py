@@ -13,6 +13,7 @@ DEFAULT_TEAM_NAME = "zz"
 IGNORE_TEAMS = [
     "Short-put Bai-kar",
     "Admin",
+    "Coaches",
     "Other",
     "zz",
 ]
