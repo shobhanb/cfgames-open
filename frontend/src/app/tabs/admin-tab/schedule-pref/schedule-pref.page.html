@@ -40,8 +40,8 @@
       </ion-note>
       <br />
       <ion-label
-        >If the athlete will not be participating this weekend, select NA as their first
-        preference or click on the "Not available" button</ion-label
+        >If the athlete will not be participating this weekend, select NA as
+        their first preference or click on the "Not available" button</ion-label
       >
     </ion-card-content>
   </ion-card>
@@ -54,8 +54,8 @@
     [color]="isNotAvailable() ? 'primary' : 'danger'"
     (click)="onToggleAvailability()"
   >
-    {{ isNotAvailable() ? 'Athlete is available this weekend' : 'Athlete is not available
-    this weekend' }}
+    {{ isNotAvailable() ? 'Athlete is available this weekend' : 'Athlete is not
+    available this weekend' }}
   </ion-button>
 
   <ion-card>
