@@ -8,7 +8,7 @@ export { apiFireauthService } from './services/api-fireauth.service';
 export { apiAthleteService } from './services/api-athlete.service';
 export { apiScoreService } from './services/api-score.service';
 export { apiAttendanceService } from './services/api-attendance.service';
-export { apiAppreciationScoreService } from './services/api-appreciation-score.service';
+export { apiIndividualSideScoreService } from './services/api-individual-side-score.service';
 export { apiAppreciationService } from './services/api-appreciation.service';
 export { apiAppreciationStatusService } from './services/api-appreciation-status.service';
 export { apiSidescoreService } from './services/api-sidescore.service';

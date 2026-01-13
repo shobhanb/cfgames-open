@@ -99,6 +99,7 @@ export class TeamScoresPage implements OnInit {
         existingScore.judge_score += score.judge_score;
         existingScore.attendance_score += score.attendance_score;
         existingScore.appreciation_score += score.appreciation_score;
+        existingScore.rookie_score += score.rookie_score;
         existingScore.side_challenge_score += score.side_challenge_score;
         existingScore.spirit_score += score.spirit_score;
         existingScore.total_team_score += score.total_team_score;

@@ -168,6 +168,7 @@ export class IndividualScoresPage implements OnInit {
         existingScore.judge_score += score.judge_score;
         existingScore.attendance_score += score.attendance_score;
         existingScore.appreciation_score += score.appreciation_score;
+        existingScore.rookie_score += score.rookie_score;
         existingScore.total_individual_score += score.total_individual_score;
       }
     });

@@ -14,10 +14,10 @@ from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.affiliate_config.service import get_config_or_defaults
-from app.appreciation_score.models import AppreciationScore
 from app.athlete.models import Athlete
 from app.athlete_prefs.service import init_assign_db_athlete_prefs
 from app.attendance.models import Attendance
+from app.individual_side_scores.models import IndividualSideScores
 from app.score.models import Score
 from app.sidescore.models import SideScore
 
@@ -270,6 +270,8 @@ async def update_affiliate_scores(
     await apply_ranks(db_session=db_session, affiliate_id=affiliate_id, year=year)
     await apply_top3_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
     await apply_judge_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
+    await apply_individual_side_scores(db_session=db_session, affiliate_id=affiliate_id, year=year)
+    await apply_side_scores(db_session=db_session, affiliate_id=affiliate_id, year=year)
     await apply_total_individual_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
     await apply_total_team_score(db_session=db_session, affiliate_id=affiliate_id, year=year)
 
@@ -482,7 +484,7 @@ async def apply_judge_score(
     await db_session.commit()
 
 
-async def apply_appreciation_score(
+async def apply_individual_side_scores(
     db_session: AsyncSession,
     affiliate_id: int,
     year: int,
@@ -494,30 +496,55 @@ async def apply_appreciation_score(
             (Athlete.year == year) & (Athlete.affiliate_id == affiliate_id),
         )
     )
-    remove_appreciation_stmt = (
-        update(Score).where(Score.id.in_(reset_stmt.scalar_subquery())).values(appreciation_score=0)
+    remove_individual_side_scores_stmt = (
+        update(Score).where(Score.id.in_(reset_stmt.scalar_subquery())).values(appreciation_score=0, rookie_score=0)
     )
-    await db_session.execute(remove_appreciation_stmt)
+    await db_session.execute(remove_individual_side_scores_stmt)
 
-    appreciation_scores_stmt = (
-        select(Score.id, AppreciationScore.score.label("appreciation_score"))
+    # Apply appreciation scores
+    appreciation_stmt = (
+        select(Score.id, IndividualSideScores.score.label("appreciation_score"))
         .join_from(
             Score,
-            AppreciationScore,
-            (Score.crossfit_id == AppreciationScore.crossfit_id) & (Score.ordinal == AppreciationScore.ordinal),
+            IndividualSideScores,
+            (Score.crossfit_id == IndividualSideScores.crossfit_id) & (Score.ordinal == IndividualSideScores.ordinal),
         )
-        .join_from(AppreciationScore, Athlete, AppreciationScore.crossfit_id == Athlete.crossfit_id)
+        .join_from(IndividualSideScores, Athlete, IndividualSideScores.crossfit_id == Athlete.crossfit_id)
         .where(
             (Athlete.year == year)
             & (Athlete.affiliate_id == affiliate_id)
-            & (Score.ordinal == AppreciationScore.ordinal),
+            & (IndividualSideScores.score_type == "appreciation"),
         )
     )
 
-    ret = await db_session.execute(appreciation_scores_stmt)
-    update_values = ret.mappings().all()
+    appreciation_ret = await db_session.execute(appreciation_stmt)
+    appreciation_values = appreciation_ret.mappings().all()
 
-    await db_session.execute(update(Score), [dict(x) for x in update_values])
+    if appreciation_values:
+        await db_session.execute(update(Score), [dict(x) for x in appreciation_values])
+
+    # Apply rookie scores
+    rookie_stmt = (
+        select(Score.id, IndividualSideScores.score.label("rookie_score"))
+        .join_from(
+            Score,
+            IndividualSideScores,
+            (Score.crossfit_id == IndividualSideScores.crossfit_id) & (Score.ordinal == IndividualSideScores.ordinal),
+        )
+        .join_from(IndividualSideScores, Athlete, IndividualSideScores.crossfit_id == Athlete.crossfit_id)
+        .where(
+            (Athlete.year == year)
+            & (Athlete.affiliate_id == affiliate_id)
+            & (IndividualSideScores.score_type == "rookie"),
+        )
+    )
+
+    rookie_ret = await db_session.execute(rookie_stmt)
+    rookie_values = rookie_ret.mappings().all()
+
+    if rookie_values:
+        await db_session.execute(update(Score), [dict(x) for x in rookie_values])
+
     await db_session.commit()
 
 
@@ -587,6 +614,7 @@ async def apply_total_individual_score(
                 + Score.judge_score
                 + Score.attendance_score
                 + Score.appreciation_score
+                + Score.rookie_score
             ).label("total_individual_score"),
         )
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
@@ -613,6 +641,7 @@ async def apply_total_team_score(
                 + Score.judge_score
                 + Score.attendance_score
                 + Score.appreciation_score
+                + Score.rookie_score
                 + Score.side_challenge_score
                 + Score.spirit_score
             ).label("total_team_score"),

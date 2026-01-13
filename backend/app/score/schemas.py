@@ -30,6 +30,7 @@ class IndividualScoreModel(AthleteModel):
     judge_score: int
     attendance_score: int
     appreciation_score: int
+    rookie_score: int
     total_individual_score: int
 
 
@@ -39,6 +40,7 @@ class TeamScoreModel(BaseModel):
     judge_score: int
     attendance_score: int
     appreciation_score: int
+    rookie_score: int
     side_challenge_score: int
     spirit_score: int
     total_team_score: int

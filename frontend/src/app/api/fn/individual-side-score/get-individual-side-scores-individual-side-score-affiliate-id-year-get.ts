@@ -8,15 +8,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { apiAppreciationScoreModel } from '../../models/api-appreciation-score-model';
+import { apiIndividualSideScoreModel } from '../../models/api-individual-side-score-model';
 
-export interface GetAppreciationScoresAppreciationScoreAffiliateIdYearGet$Params {
+export interface GetIndividualSideScoresIndividualSideScoreAffiliateIdYearGet$Params {
   affiliate_id: number;
   year: number;
 }
 
-export function getAppreciationScoresAppreciationScoreAffiliateIdYearGet(http: HttpClient, rootUrl: string, params: GetAppreciationScoresAppreciationScoreAffiliateIdYearGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiAppreciationScoreModel>>> {
-  const rb = new RequestBuilder(rootUrl, getAppreciationScoresAppreciationScoreAffiliateIdYearGet.PATH, 'get');
+export function getIndividualSideScoresIndividualSideScoreAffiliateIdYearGet(http: HttpClient, rootUrl: string, params: GetIndividualSideScoresIndividualSideScoreAffiliateIdYearGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<apiIndividualSideScoreModel>>> {
+  const rb = new RequestBuilder(rootUrl, getIndividualSideScoresIndividualSideScoreAffiliateIdYearGet.PATH, 'get');
   if (params) {
     rb.path('affiliate_id', params.affiliate_id, {});
     rb.path('year', params.year, {});
@@ -27,9 +27,9 @@ export function getAppreciationScoresAppreciationScoreAffiliateIdYearGet(http: H
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<apiAppreciationScoreModel>>;
+      return r as StrictHttpResponse<Array<apiIndividualSideScoreModel>>;
     })
   );
 }
 
-getAppreciationScoresAppreciationScoreAffiliateIdYearGet.PATH = '/appreciation_score/{affiliate_id}/{year}/';
+getIndividualSideScoresIndividualSideScoreAffiliateIdYearGet.PATH = '/individual_side_score/{affiliate_id}/{year}/';

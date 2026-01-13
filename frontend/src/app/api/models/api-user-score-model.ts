@@ -15,6 +15,7 @@ export interface apiUserScoreModel {
   name: string;
   ordinal: number;
   participation_score: number;
+  rookie_score: number;
   score_display: string;
   team_name: string;
   tiebreak_ms?: (string | null);

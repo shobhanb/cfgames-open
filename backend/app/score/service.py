@@ -68,6 +68,7 @@ async def get_db_individual_scores(
             Score.attendance_score,
             Score.judge_score,
             Score.appreciation_score,
+            Score.rookie_score,
             Score.total_individual_score,
         )
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
@@ -100,6 +101,7 @@ async def get_db_team_scores(
             func.sum(Score.attendance_score).label("attendance_score"),
             func.sum(Score.judge_score).label("judge_score"),
             func.sum(Score.appreciation_score).label("appreciation_score"),
+            func.sum(Score.rookie_score).label("rookie_score"),
             func.sum(Score.side_challenge_score).label("side_challenge_score"),
             func.sum(Score.spirit_score).label("spirit_score"),
             func.sum(Score.total_team_score).label("total_team_score"),
@@ -143,6 +145,7 @@ async def get_my_db_scores(db_session: AsyncSession, crossfit_id: int) -> list[d
             Score.attendance_score,
             Score.judge_score,
             Score.appreciation_score,
+            Score.rookie_score,
             Score.total_individual_score,
         )
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))

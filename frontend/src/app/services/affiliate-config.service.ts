@@ -30,12 +30,14 @@ export class AffiliateConfigService {
   );
   judgeScore = computed(() => this.affiliateConfig()?.judge_score ?? 0);
   top3Score = computed(() => this.affiliateConfig()?.top3_score ?? 0);
-  defaultAppreciationScore = computed(
-    () => this.affiliateConfig()?.default_appreciation_score ?? 0
+  appreciationScore = computed(
+    () => this.affiliateConfig()?.appreciation_score ?? 0
   );
-  defaultSideScore = computed(
-    () => this.affiliateConfig()?.default_side_score ?? 0
+  rookieScore = computed(() => this.affiliateConfig()?.rookie_score ?? 0);
+  sideChallengeScore = computed(
+    () => this.affiliateConfig()?.side_challenge_score ?? 0
   );
+  spiritScore = computed(() => this.affiliateConfig()?.spirit_score ?? 0);
 
   constructor() {
     this.loadConfig();

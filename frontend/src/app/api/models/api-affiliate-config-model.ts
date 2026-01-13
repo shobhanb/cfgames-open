@@ -4,11 +4,13 @@
 
 export interface apiAffiliateConfigModel {
   affiliate_id: number;
+  appreciation_score?: number;
   attendance_score?: number;
-  default_appreciation_score?: number;
-  default_side_score?: number;
   judge_score?: number;
   participation_score?: number;
+  rookie_score?: number;
+  side_challenge_score?: number;
+  spirit_score?: number;
   top3_score?: number;
   use_appreciation?: boolean;
   use_scheduling?: boolean;

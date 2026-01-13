@@ -10,7 +10,7 @@ export const configs: { [key: string]: AppConfig } = {
     affiliateId: 31316,
     affiliateName: 'Crossfit Monkey Flag',
     apiBaseUrl: 'https://cfmf.cfgames.site/api',
-    year: 2025,
+    year: 2026,
   },
   enduro: {
     affiliateId: 2539,

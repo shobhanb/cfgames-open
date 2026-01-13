@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/admin"></ion-back-button>
     </ion-buttons>
-    <ion-title>Appreciation Scores</ion-title>
+    <ion-title>Individual Side Scores</ion-title>
     <app-toolbar-buttons slot="end"></app-toolbar-buttons>
   </ion-toolbar>
 </ion-header>
@@ -14,27 +14,30 @@
   </ion-refresher>
 
   @if (dataLoaded()) {
-  <!-- Existing Appreciation Scores -->
-  @if (appreciationScores().length > 0) {
+  <!-- Existing Individual Side Scores -->
+  @if (individualSideScores().length > 0) {
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Existing Appreciation Scores</ion-card-title>
+      <ion-card-title>Existing Individual Side Scores</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        @for (appreciationScore of appreciationScores(); track
-        appreciationScore.ordinal + '-' + appreciationScore.crossfit_id) {
+        @for (individualSideScore of individualSideScores(); track
+        individualSideScore.ordinal + '-' + individualSideScore.crossfit_id) {
         <ion-item>
           <ion-label>
-            <h2>{{ getEventName(appreciationScore.ordinal) }}</h2>
-            <p>{{ getAthleteName(appreciationScore.crossfit_id) }}</p>
-            <p>Score: {{ appreciationScore.score }}</p>
+            <h2>{{ getEventName(individualSideScore.ordinal) }}</h2>
+            <p>
+              {{ getAthleteName(individualSideScore.crossfit_id) }} - {{
+              individualSideScore.score_type }}
+            </p>
+            <p>Score: {{ individualSideScore.score }}</p>
           </ion-label>
           <ion-button
             slot="end"
             fill="outline"
             size="small"
-            (click)="loadScore(appreciationScore)"
+            (click)="loadScore(individualSideScore)"
           >
             Edit
           </ion-button>
@@ -43,7 +46,7 @@
             fill="outline"
             size="small"
             color="danger"
-            (click)="confirmDelete(appreciationScore)"
+            (click)="confirmDelete(individualSideScore)"
           >
             Delete
           </ion-button>
@@ -57,7 +60,7 @@
   <!-- Add/Update Form -->
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Add/Update Appreciation Score</ion-card-title>
+      <ion-card-title>Add/Update Individual Side Score</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list>
@@ -75,6 +78,21 @@
               {{ event.event }}
             </ion-select-option>
             }
+          </ion-select>
+        </ion-item>
+
+        <!-- Score Type -->
+        <ion-item>
+          <ion-select
+            label="Score Type"
+            interface="popover"
+            labelPlacement="stacked"
+            [(ngModel)]="selectedScoreType"
+          >
+            <ion-select-option value="appreciation"
+              >Appreciation</ion-select-option
+            >
+            <ion-select-option value="rookie">Rookie</ion-select-option>
           </ion-select>
         </ion-item>
 
@@ -110,15 +128,15 @@
   <!-- Apply Scores -->
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Apply Appreciation Scores</ion-card-title>
+      <ion-card-title>Apply Individual Side Scores</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <p>
-        Apply all saved appreciation scores to teams. This will update team
+        Apply all saved individual side scores. This will update individual
         totals.
       </p>
       <ion-button expand="block" color="primary" (click)="apply()">
-        Apply Scores to Teams
+        Apply Individual Side Scores
       </ion-button>
     </ion-card-content>
   </ion-card>
@@ -151,7 +169,7 @@
   <ion-alert
     [isOpen]="deleteAlertOpen()"
     header="Confirm Delete"
-    message="Are you sure you want to delete this appreciation score?"
+    message="Are you sure you want to delete this individual side score?"
     [buttons]="deleteAlertButtons"
   ></ion-alert>
 </ion-content>

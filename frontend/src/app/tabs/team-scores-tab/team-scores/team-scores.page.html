@@ -74,6 +74,13 @@
                   <ion-label>{{ score.appreciation_score }}</ion-label>
                 </ion-chip>
               </ion-item>
+              } @if (score.rookie_score) {
+              <ion-item lines="none">
+                <ion-label>Rookie of the Year</ion-label>
+                <ion-chip size="small" color="tertiary">
+                  <ion-label>{{ score.rookie_score }}</ion-label>
+                </ion-chip>
+              </ion-item>
               } @if (score.side_challenge_score) {
               <ion-item lines="none">
                 <ion-label>Side Challenge</ion-label>

@@ -8,17 +8,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { apiIndividualSideScoreModel } from '../../models/api-individual-side-score-model';
 
-export interface ApplyAppreciationAppreciationScoreApplyPost$Params {
-  affiliate_id: number;
-  year: number;
+export interface UpdateIndividualSideScoresIndividualSideScorePost$Params {
+      body: apiIndividualSideScoreModel
 }
 
-export function applyAppreciationAppreciationScoreApplyPost(http: HttpClient, rootUrl: string, params: ApplyAppreciationAppreciationScoreApplyPost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
-  const rb = new RequestBuilder(rootUrl, applyAppreciationAppreciationScoreApplyPost.PATH, 'post');
+export function updateIndividualSideScoresIndividualSideScorePost(http: HttpClient, rootUrl: string, params: UpdateIndividualSideScoresIndividualSideScorePost$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+  const rb = new RequestBuilder(rootUrl, updateIndividualSideScoresIndividualSideScorePost.PATH, 'post');
   if (params) {
-    rb.query('affiliate_id', params.affiliate_id, {});
-    rb.query('year', params.year, {});
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -31,4 +30,4 @@ export function applyAppreciationAppreciationScoreApplyPost(http: HttpClient, ro
   );
 }
 
-applyAppreciationAppreciationScoreApplyPost.PATH = '/appreciation_score/apply';
+updateIndividualSideScoresIndividualSideScorePost.PATH = '/individual_side_score/';

@@ -38,6 +38,7 @@ class Score(Base):
     judge_score: Mapped[int] = mapped_column(Integer, default=0)
     attendance_score: Mapped[int] = mapped_column(Integer, default=0)
     appreciation_score: Mapped[int] = mapped_column(Integer, default=0)
+    rookie_score: Mapped[int] = mapped_column(Integer, default=0)
     side_challenge_score: Mapped[int] = mapped_column(Integer, default=0)
     spirit_score: Mapped[int] = mapped_column(Integer, default=0)
 

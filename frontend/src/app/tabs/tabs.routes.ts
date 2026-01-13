@@ -236,11 +236,11 @@ export const tabsRoutes: Routes = [
         canActivate: [adminGuard],
       },
       {
-        path: 'admin/appreciation-score',
+        path: 'admin/individual-side-scores',
         loadComponent: () =>
-          import('./admin-tab/appreciation-score/appreciation-score.page').then(
-            (c) => c.AppreciationScorePage
-          ),
+          import(
+            './admin-tab/individual-side-score/individual-side-score.page'
+          ).then((c) => c.IndividualSideScorePage),
         canActivate: [adminGuard],
       },
       {

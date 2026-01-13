@@ -116,15 +116,6 @@
       <ion-icon slot="start" name="heart-outline"></ion-icon>
       <ion-label>Appreciation Results</ion-label>
     </ion-item>
-    <ion-item
-      [button]="true"
-      [detail]="true"
-      type="button"
-      routerLink="/admin/appreciation-score"
-    >
-      <ion-icon slot="start" name="golf-outline"></ion-icon>
-      <ion-label>Appreciation Scores</ion-label>
-    </ion-item>
   </ion-list>
   }
 
@@ -143,10 +134,19 @@
       [button]="true"
       [detail]="true"
       type="button"
+      routerLink="/admin/individual-side-scores"
+    >
+      <ion-icon slot="start" name="golf-outline"></ion-icon>
+      <ion-label>Individual Side Scores</ion-label>
+    </ion-item>
+    <ion-item
+      [button]="true"
+      [detail]="true"
+      type="button"
       routerLink="/admin/side-scores"
     >
       <ion-icon slot="start" name="golf-outline"></ion-icon>
-      <ion-label>Side Scores</ion-label>
+      <ion-label>Team Side Scores</ion-label>
     </ion-item>
   </ion-list>
 

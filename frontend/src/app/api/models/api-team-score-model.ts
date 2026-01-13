@@ -9,6 +9,7 @@ export interface apiTeamScoreModel {
   judge_score: number;
   ordinal: number;
   participation_score: number;
+  rookie_score: number;
   side_challenge_score: number;
   spirit_score: number;
   team_name: string;

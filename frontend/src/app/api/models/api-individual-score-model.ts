@@ -13,6 +13,7 @@ export interface apiIndividualScoreModel {
   name: string;
   ordinal: number;
   participation_score: number;
+  rookie_score: number;
   team_name: string;
   top3_score: number;
   total_individual_score: number;

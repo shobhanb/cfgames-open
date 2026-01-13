@@ -12,7 +12,7 @@ import { apiFireauthService } from './services/api-fireauth.service';
 import { apiAthleteService } from './services/api-athlete.service';
 import { apiScoreService } from './services/api-score.service';
 import { apiAttendanceService } from './services/api-attendance.service';
-import { apiAppreciationScoreService } from './services/api-appreciation-score.service';
+import { apiIndividualSideScoreService } from './services/api-individual-side-score.service';
 import { apiAppreciationService } from './services/api-appreciation.service';
 import { apiAppreciationStatusService } from './services/api-appreciation-status.service';
 import { apiSidescoreService } from './services/api-sidescore.service';
@@ -40,7 +40,7 @@ import { apiAffiliateConfigService } from './services/api-affiliate-config.servi
     apiAthleteService,
     apiScoreService,
     apiAttendanceService,
-    apiAppreciationScoreService,
+    apiIndividualSideScoreService,
     apiAppreciationService,
     apiAppreciationStatusService,
     apiSidescoreService,

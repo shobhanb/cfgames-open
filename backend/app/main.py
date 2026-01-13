@@ -11,7 +11,6 @@ from fastapi.middleware.gzip import GZipMiddleware
 
 from app.affiliate_config.views import affiliate_config_router
 from app.appreciation.views import appreciation_router
-from app.appreciation_score.views import appreciation_score_router
 from app.appreciation_status.views import appreciation_open_router
 from app.athlete.views import athlete_router
 from app.athlete_prefs.views import athlete_prefs_router
@@ -25,6 +24,7 @@ from app.heat_assignments.views import heat_assignments_router
 from app.heats.views import heats_router
 from app.heats_setup.views import heats_setup_router
 from app.home_blog.views import home_blog_router
+from app.individual_side_scores.views import individual_side_score_router
 from app.judge_availability.views import judge_availability_router
 from app.judges.views import judges_router
 from app.preferred_athletes.views import preferred_athletes_router
@@ -66,7 +66,7 @@ app.include_router(firebase_auth_router)
 app.include_router(athlete_router)
 app.include_router(score_router)
 app.include_router(attendance_router)
-app.include_router(appreciation_score_router)
+app.include_router(individual_side_score_router)
 app.include_router(appreciation_router)
 app.include_router(appreciation_open_router)
 app.include_router(sidescore_router)

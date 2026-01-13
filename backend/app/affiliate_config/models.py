@@ -6,7 +6,9 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.affiliate_config.constants import (
     ATTENDANCE_SCORE,
     DEFAULT_APPRECIATION_SCORE,
-    DEFAULT_SIDE_SCORE,
+    DEFAULT_ROOKIE_SCORE,
+    DEFAULT_SIDE_CHALLENGE_SCORE,
+    DEFAULT_SPIRIT_SCORE,
     JUDGE_SCORE,
     PARTICIPATION_SCORE,
     TOP3_SCORE,
@@ -25,8 +27,10 @@ class AffiliateConfig(Base):
     top3_score: Mapped[int] = mapped_column(Integer, default=TOP3_SCORE)
     judge_score: Mapped[int] = mapped_column(Integer, default=JUDGE_SCORE)
     attendance_score: Mapped[int] = mapped_column(Integer, default=ATTENDANCE_SCORE)
-    default_appreciation_score: Mapped[int] = mapped_column(Integer, default=DEFAULT_APPRECIATION_SCORE)
-    default_side_score: Mapped[int] = mapped_column(Integer, default=DEFAULT_SIDE_SCORE)
+    appreciation_score: Mapped[int] = mapped_column(Integer, default=DEFAULT_APPRECIATION_SCORE)
+    rookie_score: Mapped[int] = mapped_column(Integer, default=DEFAULT_ROOKIE_SCORE)
+    side_challenge_score: Mapped[int] = mapped_column(Integer, default=DEFAULT_SIDE_CHALLENGE_SCORE)
+    spirit_score: Mapped[int] = mapped_column(Integer, default=DEFAULT_SPIRIT_SCORE)
 
     # App Configuration
     use_scheduling: Mapped[bool] = mapped_column(Boolean, default=True)

@@ -1,43 +1,43 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonButtons,
+  IonAlert,
   IonBackButton,
-  IonRefresher,
-  IonItem,
+  IonButton,
+  IonButtons,
   IonCard,
+  IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonCardContent,
-  IonList,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonItem,
   IonLabel,
+  IonList,
+  IonRefresher,
+  IonRefresherContent,
   IonSelect,
   IonSelectOption,
-  IonInput,
-  IonButton,
-  IonRefresherContent,
-  RefresherCustomEvent,
   IonSkeletonText,
-  IonAlert,
+  IonTitle,
+  IonToolbar,
+  RefresherCustomEvent,
 } from '@ionic/angular/standalone';
-import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
-import { ToastService } from 'src/app/services/toast.service';
-import { apiAppreciationScoreService } from 'src/app/api/services';
 import { AppConfigService } from 'src/app/services/app-config.service';
-import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
+import { apiIndividualSideScoreService } from 'src/app/api/services';
+import { apiIndividualSideScoreModel } from 'src/app/api/models';
 import { EventService } from 'src/app/services/event.service';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
-import { apiAppreciationScoreModel } from 'src/app/api/models';
+import { ToastService } from 'src/app/services/toast.service';
+import { AthleteNameModalService } from 'src/app/services/athlete-name-modal.service';
+import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
 @Component({
-  selector: 'app-appreciation-score',
-  templateUrl: './appreciation-score.page.html',
-  styleUrls: ['./appreciation-score.page.scss'],
+  selector: 'app-individual-side-score',
+  templateUrl: './individual-side-score.page.html',
+  styleUrls: ['./individual-side-score.page.scss'],
   standalone: true,
   imports: [
     IonAlert,
@@ -66,24 +66,25 @@ import { apiAppreciationScoreModel } from 'src/app/api/models';
     ToolbarButtonsComponent,
   ],
 })
-export class AppreciationScorePage implements OnInit {
+export class IndividualSideScorePage implements OnInit {
   private toastService = inject(ToastService);
-  private apiAppreciationScore = inject(apiAppreciationScoreService);
+  private apiIndividualSideScore = inject(apiIndividualSideScoreService);
   private appConfig = inject(AppConfigService);
   private eventService = inject(EventService);
   private athleteDataService = inject(AthleteDataService);
   private athleteNameModalService = inject(AthleteNameModalService);
 
   // State
-  appreciationScores = signal<apiAppreciationScoreModel[]>([]);
+  individualSideScores = signal<apiIndividualSideScoreModel[]>([]);
   dataLoaded = signal(false);
   deleteAlertOpen = signal(false);
-  scoreToDelete = signal<apiAppreciationScoreModel | null>(null);
+  scoreToDelete = signal<apiIndividualSideScoreModel | null>(null);
 
   // Form state
   selectedOrdinal = signal<number | null>(null);
   selectedCrossfitId = signal<number | null>(null);
   selectedAthleteName = signal<string | null>(null);
+  selectedScoreType = signal<'appreciation' | 'rookie'>('appreciation');
   score = signal<number | null>(null);
 
   // Computed
@@ -120,22 +121,24 @@ export class AppreciationScorePage implements OnInit {
     const affiliateId = this.appConfig.affiliateId;
     const year = this.appConfig.year;
 
-    this.apiAppreciationScore
-      .getAppreciationScoresAppreciationScoreAffiliateIdYearGet({
+    this.apiIndividualSideScore
+      .getIndividualSideScoresIndividualSideScoreAffiliateIdYearGet({
         affiliate_id: affiliateId,
         year,
       })
       .subscribe({
         next: (data) => {
-          this.appreciationScores.set(
+          this.individualSideScores.set(
             data.sort((a, b) => a.ordinal - b.ordinal)
           );
           this.dataLoaded.set(true);
         },
         error: (error) => {
-          console.error('Error fetching appreciation scores:', error);
+          console.error('Error fetching individual side scores:', error);
           this.toastService.showToast(
-            'Failed to load appreciation scores: ' + error.error?.detail,
+            `Failed to load individual side scores${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger'
           );
           this.dataLoaded.set(true);
@@ -157,58 +160,54 @@ export class AppreciationScorePage implements OnInit {
     if (selectedName) {
       this.selectedAthleteName.set(selectedName);
 
-      // Find athlete(s) with this name and set the crossfit_id
-      const athletesWithName = this.athletes().filter(
-        (a) => a.name === selectedName
-      );
-
-      // If only one athlete with this name, auto-select their crossfit_id
-      if (athletesWithName.length === 1) {
-        this.selectedCrossfitId.set(athletesWithName[0].crossfit_id);
-      } else if (athletesWithName.length > 0) {
-        // If multiple, just set the first one for now
-        this.selectedCrossfitId.set(athletesWithName[0].crossfit_id);
+      // Find the athlete's crossfit_id
+      const athlete = this.athletes().find((a) => a.name === selectedName);
+      if (athlete) {
+        this.selectedCrossfitId.set(athlete.crossfit_id);
+      } else {
+        this.toastService.showToast('Athlete not found', 'danger');
       }
     }
   }
 
-  loadScore(appreciationScore: apiAppreciationScoreModel) {
-    this.selectedOrdinal.set(appreciationScore.ordinal);
-    this.selectedCrossfitId.set(appreciationScore.crossfit_id);
+  loadScore(individualSideScore: apiIndividualSideScoreModel) {
+    this.selectedOrdinal.set(individualSideScore.ordinal);
+    this.selectedCrossfitId.set(individualSideScore.crossfit_id);
+    this.selectedScoreType.set(
+      individualSideScore.score_type as 'appreciation' | 'rookie'
+    );
 
     // Find and set the athlete name
     const athlete = this.athletes().find(
-      (a) => a.crossfit_id === appreciationScore.crossfit_id
+      (a) => a.crossfit_id === individualSideScore.crossfit_id
     );
     if (athlete) {
       this.selectedAthleteName.set(athlete.name);
     }
 
-    this.score.set(appreciationScore.score);
+    this.score.set(individualSideScore.score);
   }
 
-  confirmDelete(appreciationScore: apiAppreciationScoreModel) {
-    this.scoreToDelete.set(appreciationScore);
+  confirmDelete(individualSideScore: apiIndividualSideScoreModel) {
+    this.scoreToDelete.set(individualSideScore);
     this.deleteAlertOpen.set(true);
   }
 
   deleteScore() {
-    const appreciationScore = this.scoreToDelete();
-    if (!appreciationScore) return;
+    const individualSideScore = this.scoreToDelete();
+    if (!individualSideScore) return;
 
-    this.apiAppreciationScore
-      .deleteAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalDelete(
-        {
-          affiliate_id: this.appConfig.affiliateId,
-          year: this.appConfig.year,
-          crossfit_id: appreciationScore.crossfit_id,
-          ordinal: appreciationScore.ordinal,
-        }
-      )
+    this.apiIndividualSideScore
+      .deleteIndividualSideScoresIndividualSideScoreDelete({
+        affiliate_id: this.appConfig.affiliateId,
+        year: this.appConfig.year,
+        crossfit_id: individualSideScore.crossfit_id,
+        ordinal: individualSideScore.ordinal,
+      })
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            'Appreciation score deleted successfully',
+            'Individual side score deleted successfully',
             'success'
           );
           this.getData();
@@ -216,9 +215,11 @@ export class AppreciationScorePage implements OnInit {
           this.scoreToDelete.set(null);
         },
         error: (error) => {
-          console.error('Error deleting appreciation score:', error);
+          console.error('Error deleting individual side score:', error);
           this.toastService.showToast(
-            'Failed to delete appreciation score: ' + error.error?.detail,
+            `Failed to delete individual side score${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger'
           );
           this.deleteAlertOpen.set(false);
@@ -236,29 +237,32 @@ export class AppreciationScorePage implements OnInit {
       return;
     }
 
-    this.apiAppreciationScore
-      .updateAppreciationScoresAppreciationScoreAffiliateIdYearCrossfitIdOrdinalScorePost(
-        {
+    this.apiIndividualSideScore
+      .updateIndividualSideScoresIndividualSideScorePost({
+        body: {
           affiliate_id: this.appConfig.affiliateId,
           year: this.appConfig.year,
           crossfit_id: this.selectedCrossfitId()!,
           ordinal: this.selectedOrdinal()!,
+          score_type: this.selectedScoreType(),
           score: this.score()!,
-        }
-      )
+        },
+      })
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            'Appreciation score saved successfully',
+            'Individual side score saved successfully',
             'success'
           );
           this.getData();
           this.resetForm();
         },
         error: (error) => {
-          console.error('Error saving appreciation score:', error);
+          console.error('Error saving individual side score:', error);
           this.toastService.showToast(
-            'Failed to save appreciation score: ' + error.error?.detail,
+            `Failed to save individual side score${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger'
           );
         },
@@ -269,23 +273,25 @@ export class AppreciationScorePage implements OnInit {
     const affiliateId = this.appConfig.affiliateId;
     const year = this.appConfig.year;
 
-    this.apiAppreciationScore
-      .applyAppreciationAppreciationScoreApplyPost({
+    this.apiIndividualSideScore
+      .applyIndividualSideScoresEndpointIndividualSideScoreApplyPost({
         affiliate_id: affiliateId,
         year: year,
       })
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            'Appreciation scores applied to teams successfully',
+            'Individual side scores applied successfully',
             'success'
           );
           this.getData();
         },
         error: (error) => {
-          console.error('Error applying appreciation scores:', error);
+          console.error('Error applying individual side scores:', error);
           this.toastService.showToast(
-            'Failed to apply appreciation scores: ' + error.error?.detail,
+            `Failed to apply individual side scores${
+              error?.error?.detail ? ': ' + error.error.detail : ''
+            }`,
             'danger'
           );
         },
@@ -296,6 +302,7 @@ export class AppreciationScorePage implements OnInit {
     this.selectedOrdinal.set(null);
     this.selectedCrossfitId.set(null);
     this.selectedAthleteName.set(null);
+    this.selectedScoreType.set('appreciation');
     this.score.set(null);
   }
 
