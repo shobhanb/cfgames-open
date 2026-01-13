@@ -1,5 +1,5 @@
 export BACKEND_URL="http://localhost:8000"
-export YEAR="2025"
+export YEAR="2026"
 export AFFILIATE_ID="31316" #CFMF
 # export AFFILIATE_ID="13774" #Blackfire
 # export AFFILIATE_ID="22847" #ITCF

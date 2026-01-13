@@ -16,7 +16,7 @@ export const configs: { [key: string]: AppConfig } = {
     affiliateId: 2539,
     affiliateName: 'Crossfit Enduro',
     apiBaseUrl: 'https://enduro.cfgames.site/api',
-    year: 2025,
+    year: 2026,
   },
 };
 
