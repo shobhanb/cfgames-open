@@ -17,6 +17,7 @@ from app.affiliate_config.service import get_config_or_defaults
 from app.athlete.models import Athlete
 from app.athlete_prefs.service import init_assign_db_athlete_prefs
 from app.attendance.models import Attendance
+from app.events.models import Events
 from app.individual_side_scores.models import IndividualSideScores
 from app.score.models import Score
 from app.sidescore.models import SideScore
@@ -299,6 +300,8 @@ async def apply_participation_score(
     )
     await db_session.execute(remove_participation_stmt)
 
+    select_b_ordinals_stmt = select(Events.ordinal).where((Events.year == year) & (Events.event.endswith("b")))
+
     select_stmt = (
         select(Score.id)
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
@@ -306,7 +309,8 @@ async def apply_participation_score(
             (Athlete.year == year)
             & (Athlete.affiliate_id == affiliate_id)
             & (Athlete.team_name.not_in(IGNORE_TEAMS))
-            & (Score.score > 0),
+            & (Score.score > 0)
+            & (Score.ordinal.not_in(select_b_ordinals_stmt.scalar_subquery())),
         )
     )
     update_stmt = (
@@ -452,11 +456,15 @@ async def apply_judge_score(
     remove_judge_stmt = update(Score).where(Score.id.in_(reset_stmt.scalar_subquery())).values(judge_score=0)
     await db_session.execute(remove_judge_stmt)
 
+    select_b_ordinals_stmt = select(Events.ordinal).where((Events.year == year) & (Events.event.endswith("b")))
+
     select_judge_stmt = (
         select(Score.judge_name, Score.ordinal)
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
         .where(
-            (Athlete.year == year) & (Athlete.affiliate_id == affiliate_id),
+            (Athlete.year == year)
+            & (Athlete.affiliate_id == affiliate_id)
+            & (Score.ordinal.not_in(select_b_ordinals_stmt.scalar_subquery())),
         )
         .distinct()
     )
