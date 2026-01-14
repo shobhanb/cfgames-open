@@ -41,7 +41,7 @@ logging.basicConfig(
 
 class Settings(BaseSettings):
     affiliate_code: int = 31316
-    year: int = 2025
+    year: int = 2026
     backend_url: str = "http://localhost:8000"
     endpoint: str = "cfgames/apikey-manual-refresh"
     api_key: str = "secret"
@@ -114,7 +114,9 @@ async def cf_data_api(  # noqa: PLR0913
             leaderboard_list = json_response.get("leaderboardRows", [])
             entrants = [x.get("entrant") for x in leaderboard_list]
             entrant_list.extend(entrants)
-            scores = [x.get("scores") for x in leaderboard_list]
+            scores = [x.get("scores", []) for x in leaderboard_list]
+            # Filter out None values and convert to empty list if needed
+            scores = [s if s is not None else [] for s in scores]
             scores_list.extend(scores)
 
             log.info(
@@ -149,7 +151,7 @@ async def cf_data_api(  # noqa: PLR0913
             raise
 
 
-async def get_cf_data(affiliate_code: int, year: int) -> tuple[list[dict], list[dict]]:
+async def get_cf_data(affiliate_code: int, year: int) -> tuple[list[dict], list[list[dict]]]:
     """Get CF leaderboard data."""
     log.info("Getting CF Leaderboard data for year %s affiliate code %s", year, affiliate_code)
     entrant_list = []
