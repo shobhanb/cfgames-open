@@ -73,7 +73,7 @@
             interface="popover"
             [(ngModel)]="selectedOrdinal"
           >
-            @for (event of currentYearEvents(); track event.ordinal) {
+            @for (event of currentYearAllEvents(); track $index) {
             <ion-select-option [value]="event.ordinal">
               {{ event.event }}
             </ion-select-option>

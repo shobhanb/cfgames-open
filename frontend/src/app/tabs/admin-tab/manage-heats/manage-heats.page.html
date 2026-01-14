@@ -28,7 +28,7 @@
           [ngModel]="selectedOrdinal()"
           (ngModelChange)="selectedOrdinal.set($event); onEventSelect()"
         >
-          @for (event of currentYearEvents(); track event.ordinal) {
+          @for (event of currentYearWeekendAllEvents(); track event.ordinal) {
           <ion-select-option [value]="event.ordinal">
             {{ event.event }}
           </ion-select-option>

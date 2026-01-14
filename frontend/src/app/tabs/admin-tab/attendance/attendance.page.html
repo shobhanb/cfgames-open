@@ -31,7 +31,8 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        @for (event of eventService.currentYearEvents(); track event.ordinal) {
+        @for (event of eventService.currentYearAllEvents(); track event.ordinal)
+        {
         <ion-item
           [button]="true"
           [detail]="true"

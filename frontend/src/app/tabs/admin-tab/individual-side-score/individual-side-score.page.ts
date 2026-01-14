@@ -88,8 +88,8 @@ export class IndividualSideScorePage implements OnInit {
   score = signal<number | null>(null);
 
   // Computed
-  currentYearEvents = computed(() => this.eventService.currentYearEvents());
-  athletes = computed(() => this.athleteDataService.athleteData());
+  currentYearAllEvents = this.eventService.currentYearAllEvents;
+  athletes = this.athleteDataService.athleteData;
   athleteNames = computed(() => {
     const names = this.athletes().map((a) => a.name);
     return [...new Set(names)];
@@ -318,5 +318,9 @@ export class IndividualSideScorePage implements OnInit {
     return athlete
       ? `${athlete.name} (${athlete.team_name})`
       : 'Unknown Athlete';
+  }
+
+  test() {
+    console.log(this.eventService.currentYearAllEvents());
   }
 }

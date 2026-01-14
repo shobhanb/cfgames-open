@@ -85,7 +85,7 @@ export class SideScoresPage implements OnInit {
   score = signal<number | null>(null);
 
   // Computed
-  currentYearEvents = this.eventService.currentYearEvents;
+  currentYearAllEvents = this.eventService.currentYearAllEvents;
   teamNames = computed(() => this.athleteDataService.teamNames());
   deleteAlertButtons = [
     {
