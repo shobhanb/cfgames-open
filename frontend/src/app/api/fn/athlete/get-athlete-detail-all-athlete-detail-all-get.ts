@@ -13,7 +13,7 @@ import { apiAthleteDetail } from '../../models/api-athlete-detail';
 export interface GetAthleteDetailAllAthleteDetailAllGet$Params {
   affiliate_id: number;
   team_name?: (string | null);
-  age_category?: ('Open' | 'Masters' | 'Masters 55+' | null);
+  age_category?: ('U18' | 'Open' | 'Masters' | 'Masters 55+' | null);
   gender?: ('F' | 'M' | null);
 }
 

@@ -2,7 +2,12 @@ import { effect, inject, Injectable, signal } from '@angular/core';
 import { AuthService } from './auth.service';
 
 export const GENDERS = ['M', 'F'] as const;
-export const AGE_CATEGORIES = ['Open', 'Masters', 'Masters 55+'] as const;
+export const AGE_CATEGORIES = [
+  'U18',
+  'Open',
+  'Masters',
+  'Masters 55+',
+] as const;
 export type Gender = (typeof GENDERS)[number];
 export type AgeCategory = (typeof AGE_CATEGORIES)[number];
 

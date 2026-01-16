@@ -50,7 +50,7 @@ async def get_athlete_detail_all(
     db_session: db_dependency,
     affiliate_id: int,
     team_name: str | None = None,
-    age_category: Literal["Open", "Masters", "Masters 55+"] | None = None,
+    age_category: Literal["U18", "Open", "Masters", "Masters 55+"] | None = None,
     gender: Literal["F", "M"] | None = None,
 ) -> list[dict[str, Any]]:
     return await get_db_athlete_detail_all(

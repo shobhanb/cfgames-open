@@ -124,6 +124,9 @@ export class MyTeamPage implements OnInit {
 
   readonly summaryMetrics = computed(() => {
     const athletes = this.filteredAthletes();
+    const maleU18 = athletes.filter(
+      (a) => a.gender === 'M' && a.age_category === 'U18'
+    ).length;
     const maleOpen = athletes.filter(
       (a) => a.gender === 'M' && a.age_category === 'Open'
     ).length;
@@ -132,6 +135,9 @@ export class MyTeamPage implements OnInit {
     ).length;
     const maleMasters55 = athletes.filter(
       (a) => a.gender === 'M' && a.age_category === 'Masters 55+'
+    ).length;
+    const femaleU18 = athletes.filter(
+      (a) => a.gender === 'F' && a.age_category === 'U18'
     ).length;
     const femaleOpen = athletes.filter(
       (a) => a.gender === 'F' && a.age_category === 'Open'
@@ -147,11 +153,13 @@ export class MyTeamPage implements OnInit {
     return {
       total: athletes.length,
       male: {
+        U18: maleU18,
         Open: maleOpen,
         Masters: maleMasters,
         'Masters 55+': maleMasters55,
       },
       female: {
+        U18: femaleU18,
         Open: femaleOpen,
         Masters: femaleMasters,
         'Masters 55+': femaleMasters55,

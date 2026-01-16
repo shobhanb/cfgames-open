@@ -14,7 +14,7 @@ class AthleteDetail(AffiliateAthlete):
     year: int
     team_name: str
     team_role: int
-    age_category: Literal["Open", "Masters", "Masters 55+"]
+    age_category: Literal["U18", "Open", "Masters", "Masters 55+"]
     gender: Literal["F", "M"]
     judge: bool
     nth: int

@@ -6,7 +6,7 @@ export interface apiUserScoreModel {
   affiliate_id: number;
   affiliate_rank: number;
   affiliate_scaled: 'RX' | 'Scaled';
-  age_category: 'Open' | 'Masters' | 'Masters 55+';
+  age_category: 'U18' | 'Open' | 'Masters' | 'Masters 55+';
   appreciation_score: number;
   attendance_score: number;
   crossfit_id: number;

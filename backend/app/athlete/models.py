@@ -6,7 +6,7 @@ from sqlalchemy import Integer, String, UniqueConstraint
 from sqlalchemy.engine.default import DefaultExecutionContext
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.affiliate_config.constants import MASTERS_AGE_CUTOFF, OPEN_AGE_CUTOFF
+from app.affiliate_config.constants import MASTERS_AGE_CUTOFF, OPEN_AGE_CUTOFF, U18_AGE_CUTOFF
 from app.cf_games.constants import CF_DIVISION_MAP, DEFAULT_TEAM_NAME
 from app.database.base import Base
 
@@ -18,6 +18,8 @@ def apply_age_category(context: DefaultExecutionContext) -> str:
     age = context.get_current_parameters()["age"]
     if int(age) >= int(MASTERS_AGE_CUTOFF):
         return "Masters 55+"
+    if int(age) <= U18_AGE_CUTOFF:
+        return "U18"
     if int(age) >= int(OPEN_AGE_CUTOFF):
         return "Masters"
     return "Open"
