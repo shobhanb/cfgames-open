@@ -31,6 +31,8 @@ import {
   womanOutline,
   manOutline,
   checkmarkCircle,
+  ribbonOutline,
+  diamondOutline,
 } from 'ionicons/icons';
 import { apiAthleteDetail } from 'src/app/api/models';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
@@ -81,7 +83,14 @@ export class MyTeamPage implements OnInit {
   private athleteDataService = inject(AthleteDataService);
 
   constructor() {
-    addIcons({ peopleOutline, womanOutline, manOutline, checkmarkCircle });
+    addIcons({
+      manOutline,
+      womanOutline,
+      peopleOutline,
+      ribbonOutline,
+      diamondOutline,
+      checkmarkCircle,
+    });
   }
 
   dataLoaded = computed(() => !this.athleteDataService.loading());

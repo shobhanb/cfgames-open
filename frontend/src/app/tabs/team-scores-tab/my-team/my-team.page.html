@@ -147,7 +147,11 @@
         <div class="athlete-info">
           <div class="athlete-name-section">
             <ion-label class="athlete-name">
-              {{ athlete.name }} @if (athlete.nth === 1) {
+              @if ( athlete.team_role === 2) {
+              <ion-icon name="ribbon-outline"></ion-icon>
+              } @else if ( athlete.team_role === 1) {
+              <ion-icon name="diamond-outline"></ion-icon>
+              } {{ athlete.name }} @if (athlete.nth === 1) {
               <span class="nth-badge new-badge">New</span>
               } @else {
               <span class="nth-badge ordinal-badge"
@@ -194,7 +198,11 @@
         <div class="athlete-info">
           <div class="athlete-name-section">
             <ion-label class="athlete-name">
-              {{ athlete.name }} @if (athlete.nth === 1) {
+              @if ( athlete.team_role === 2) {
+              <ion-icon name="ribbon-outline"></ion-icon>
+              } @else if ( athlete.team_role === 1) {
+              <ion-icon name="diamond-outline"></ion-icon>
+              } {{ athlete.name }} @if (athlete.nth === 1) {
               <span class="nth-badge new-badge">New</span>
               } @else {
               <span class="nth-badge ordinal-badge"
