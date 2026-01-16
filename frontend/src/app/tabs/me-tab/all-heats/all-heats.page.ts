@@ -1,6 +1,7 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   IonBackButton,
   IonButtons,
@@ -14,7 +15,6 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
-  IonLabel,
   IonRefresher,
   IonRefresherContent,
   IonRow,
@@ -69,12 +69,13 @@ import { ToolbarButtonsComponent } from '../../../shared/toolbar-buttons/toolbar
     ToolbarButtonsComponent,
   ],
 })
-export class AllHeatsPage {
+export class AllHeatsPage implements OnInit {
   private apiHeatAssignments = inject(apiHeatAssignmentsService);
   private apiHeats = inject(apiHeatsService);
   athleteDataService = inject(AthleteDataService);
   private appConfig = inject(AppConfigService);
   private eventService = inject(EventService);
+  private route = inject(ActivatedRoute);
 
   // State
   heats = signal<apiHeatsModel[]>([]);
@@ -195,7 +196,20 @@ export class AllHeatsPage {
     });
   }
 
+  ngOnInit() {
+    // Check for ordinal query param
+    const ordinalParam = this.route.snapshot.queryParamMap.get('ordinal');
+    if (ordinalParam) {
+      const ordinal = parseInt(ordinalParam, 10);
+      if (!isNaN(ordinal)) {
+        this.selectedOrdinal.set(ordinal);
+        this.onEventSelect();
+      }
+    }
+  }
+
   onEventSelect() {
+    console.log('Selected Ordinal:', this.selectedOrdinal());
     if (this.selectedOrdinal()) {
       this.shortNameFilter.set('all');
       this.loadHeats();

@@ -40,7 +40,6 @@ heats_router = APIRouter(prefix="/heats", tags=["heats"])
 )
 async def get_heats_by_filter(
     db_session: db_dependency,
-    _: verified_user_dependency,
     affiliate_id: int,
     year: int,
     ordinal: int,

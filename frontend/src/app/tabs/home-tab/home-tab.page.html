@@ -66,6 +66,14 @@
         }
         <p>#StrongerTogether</p>
       </ion-card-content>
+      @if (showHeatEvent()) {
+      <ion-button
+        fill="clear"
+        [routerLink]="['/me/all-heats']"
+        [queryParams]="{ordinal: showHeatEvent()?.ordinal}"
+        >{{ 'All Heats for ' + showHeatEvent()?.event }}</ion-button
+      >
+      }
       <ion-button fill="clear" routerLink="/team-scores/team-info"
         >Check out this year's Teams!</ion-button
       >

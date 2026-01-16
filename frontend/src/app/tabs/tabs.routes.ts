@@ -119,7 +119,6 @@ export const tabsRoutes: Routes = [
           import('./me-tab/all-heats/all-heats.page').then(
             (c) => c.AllHeatsPage
           ),
-        canActivate: [userGuard],
       },
       {
         path: 'me/judge-availability',

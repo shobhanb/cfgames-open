@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -25,7 +25,11 @@ import {
   apiCfgamesService,
   apiHomeBlogService,
 } from 'src/app/api/services';
-import { apiAthleteSummaryCounts, apiHomeBlogModel } from 'src/app/api/models';
+import {
+  apiAthleteSummaryCounts,
+  apiEventsModel,
+  apiHomeBlogModel,
+} from 'src/app/api/models';
 import { RouterLink } from '@angular/router';
 import { AppInstallService } from 'src/app/services/app-install.service';
 import { addIcons } from 'ionicons';
@@ -33,6 +37,7 @@ import { closeOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/services/auth.service';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { LearnComponent } from './learn/learn.component';
+import { EventService } from 'src/app/services/event.service';
 
 @Component({
   selector: 'app-home-tab',
@@ -67,6 +72,7 @@ export class HomeTabPage implements OnInit {
   private modalController = inject(ModalController);
   private apiAthlete = inject(apiAthleteService);
   private cfGamesData = inject(apiCfgamesService);
+  eventService = inject(EventService);
 
   authService = inject(AuthService);
   appInstallService = inject(AppInstallService);
@@ -79,8 +85,18 @@ export class HomeTabPage implements OnInit {
 
   welcomeMessage = `Welcome to ${this.config.affiliateName}'s Community Cup for the CF Open.`;
 
+  showHeatEvent = signal<apiEventsModel | null>(null);
+
   constructor() {
     addIcons({ closeOutline });
+
+    // Reactively calculate showHeatOrdinal when event data loads
+    effect(() => {
+      const allEvents = this.eventService.allEventsData();
+      if (allEvents.length > 0) {
+        this.calculateShowHeatOrdinal();
+      }
+    });
   }
 
   dataLoaded = signal<boolean>(false);
@@ -93,6 +109,34 @@ export class HomeTabPage implements OnInit {
     this.dataLoaded.set(false);
     this.getData();
     (event.target as HTMLIonRefresherElement).complete();
+  }
+
+  private calculateShowHeatOrdinal() {
+    const preDays = 2;
+    const postDays = 5;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to midnight for accurate date comparison
+
+    const currentYearAllEvents = this.eventService.currentYearAllEvents();
+    let matchingEvent: apiEventsModel | null = null;
+
+    for (const event of currentYearAllEvents) {
+      if (event.start_date) {
+        const startDate = new Date(event.start_date);
+        startDate.setHours(0, 0, 0, 0);
+
+        const diffInMs = today.getTime() - startDate.getTime();
+        const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+        // Check if today is between 3 days before and 4 days after
+        if (diffInDays >= -preDays && diffInDays <= postDays) {
+          matchingEvent = event;
+          break;
+        }
+      }
+    }
+
+    this.showHeatEvent.set(matchingEvent);
   }
 
   getData() {
