@@ -28,7 +28,6 @@ import {
   IonRefresherContent,
   IonPopover,
   IonSearchbar,
-  PopoverController,
   AlertController,
   ModalController,
   RefresherCustomEvent,

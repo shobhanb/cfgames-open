@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ModalController } from '@ionic/angular/standalone';
 import { AthleteNameModalComponent } from '../shared/athlete-name-modal/athlete-name-modal.component';
 import { Signal } from '@angular/core';

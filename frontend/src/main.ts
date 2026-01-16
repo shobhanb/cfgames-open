@@ -15,7 +15,6 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
-import { getMessaging, provideMessaging } from '@angular/fire/messaging';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApiModule } from './app/api/api.module';
 import { AppConfigService } from './app/services/app-config.service';
@@ -52,7 +51,6 @@ bootstrapApplication(AppComponent, {
       })
     ),
     provideAuth(() => getAuth()),
-    provideMessaging(() => getMessaging()),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:3000',

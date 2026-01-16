@@ -20,7 +20,6 @@ import {
   IonCardContent,
   ModalController,
 } from '@ionic/angular/standalone';
-import { apiAthleteService } from 'src/app/api/services';
 import { apiAthleteDetail } from 'src/app/api/models';
 import { addIcons } from 'ionicons';
 import {
@@ -31,7 +30,6 @@ import {
 } from 'ionicons/icons';
 import { ToastService } from 'src/app/services/toast.service';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
-import { AlertService } from 'src/app/services/alert.service';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
 import { EditAthleteComponent } from './edit-athlete/edit-athlete.component';
 
@@ -63,9 +61,7 @@ import { EditAthleteComponent } from './edit-athlete/edit-athlete.component';
   ],
 })
 export class EditTeamsPage implements OnInit {
-  private apiAthlete = inject(apiAthleteService);
   private toastService = inject(ToastService);
-  private alertService = inject(AlertService);
   private athleteDataService = inject(AthleteDataService);
   private modalController = inject(ModalController);
 

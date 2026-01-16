@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, computed } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader,
@@ -33,16 +33,9 @@ import {
 } from 'ionicons/icons';
 import {
   apiJudgeAvailabilityService,
-  apiHeatsService,
   apiJudgesService,
 } from 'src/app/api/services';
-import { AthleteDataService } from 'src/app/services/athlete-data.service';
-import {
-  apiJudgeAvailabilityModel,
-  apiHeatsModel,
-  apiJudgesModel,
-} from 'src/app/api/models';
-import { EventService } from 'src/app/services/event.service';
+import { apiJudgeAvailabilityModel, apiJudgesModel } from 'src/app/api/models';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { forkJoin } from 'rxjs';
 

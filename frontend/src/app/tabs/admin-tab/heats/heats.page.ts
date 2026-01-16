@@ -27,11 +27,7 @@ import {
   ModalController,
 } from '@ionic/angular/standalone';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
-import {
-  apiHeatAssignmentsService,
-  apiHeatsService,
-  apiHeatsSetupService,
-} from 'src/app/api/services';
+import { apiHeatsService, apiHeatsSetupService } from 'src/app/api/services';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { EventService } from 'src/app/services/event.service';
 import {

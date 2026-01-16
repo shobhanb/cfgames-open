@@ -21,14 +21,9 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonLabel,
-  IonList,
   IonItem,
-  IonSkeletonText,
   IonSelect,
   IonSelectOption,
-  IonNote,
-  IonCardSubtitle,
   IonIcon,
   IonGrid,
   IonRow,
@@ -41,11 +36,7 @@ import {
 } from 'src/app/api/services';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 import { AuthService } from 'src/app/services/auth.service';
-import {
-  apiEventsModel,
-  apiHeatAssignmentModel,
-  apiHeatsModel,
-} from 'src/app/api/models';
+import { apiHeatAssignmentModel, apiHeatsModel } from 'src/app/api/models';
 import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { AppConfigService } from 'src/app/services/app-config.service';

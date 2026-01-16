@@ -1,4 +1,4 @@
-import { inject, Injectable, signal, linkedSignal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { ModalController } from '@ionic/angular/standalone';
 import { InstallAppModalComponent } from '../shared/install-app-modal/install-app-modal.component';
 import { Platform } from '@ionic/angular/standalone';
