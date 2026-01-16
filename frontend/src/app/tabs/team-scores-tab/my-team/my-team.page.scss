@@ -214,6 +214,12 @@
   width: 100%;
   padding: 4px 0;
 
+  .athlete-name-section {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
   .athlete-name {
     font-size: 1rem;
     font-weight: 600;

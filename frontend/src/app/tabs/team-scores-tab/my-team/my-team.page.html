@@ -135,7 +135,18 @@
       @for (athlete of filtereedAthletesByGender().F; track $index) {
       <ion-item lines="full">
         <div class="athlete-info">
-          <ion-label class="athlete-name">{{ athlete.name }}</ion-label>
+          <div class="athlete-name-section">
+            <ion-label class="athlete-name">{{ athlete.name }}</ion-label>
+            @if (athlete.nth === 1) {
+            <ion-chip size="small" color="danger">
+              <ion-label>New</ion-label>
+            </ion-chip>
+            } @else {
+            <ion-chip size="small" color="medium">
+              <ion-label>{{ getOrdinal(athlete.nth) }}</ion-label>
+            </ion-chip>
+            }
+          </div>
           <div class="athlete-details">
             @if (athlete.judge) {
             <ion-chip size="small" color="tertiary">
@@ -172,7 +183,18 @@
       @for (athlete of filtereedAthletesByGender().M; track $index) {
       <ion-item lines="full">
         <div class="athlete-info">
-          <ion-label class="athlete-name">{{ athlete.name }}</ion-label>
+          <div class="athlete-name-section">
+            <ion-label class="athlete-name">{{ athlete.name }}</ion-label>
+            @if (athlete.nth === 1) {
+            <ion-chip size="small" color="danger">
+              <ion-label>New</ion-label>
+            </ion-chip>
+            } @else {
+            <ion-chip size="small" color="medium">
+              <ion-label>{{ getOrdinal(athlete.nth) }}</ion-label>
+            </ion-chip>
+            }
+          </div>
           <div class="athlete-details">
             @if (athlete.judge) {
             <ion-chip size="small" color="tertiary">

@@ -94,7 +94,7 @@ export class JudgesPage implements OnInit {
   availableAthletes = computed(() => {
     const judgeIds = new Set(this.judges().map((judge) => judge.crossfit_id));
     return this.athleteDataService
-      .athleteData()
+      .athleteDataAllYears()
       .filter((athlete) => !judgeIds.has(athlete.crossfit_id))
       .sort((a, b) => a.name.localeCompare(b.name));
   });

@@ -78,7 +78,7 @@ export class MyTeamPage implements OnInit {
   private helperFunctions = inject(HelperFunctionsService);
   private authService = inject(AuthService);
   scoreFilter = inject(ScoreFilterService);
-  athleteDataService = inject(AthleteDataService);
+  private athleteDataService = inject(AthleteDataService);
 
   constructor() {
     addIcons({ peopleOutline, womanOutline, manOutline, checkmarkCircle });
@@ -176,5 +176,11 @@ export class MyTeamPage implements OnInit {
 
   onSelectionChanged(event: CustomEvent) {
     this.scoreFilter.setFilter({ team: event.detail.value });
+  }
+
+  getOrdinal(n: number): string {
+    const s = ['th', 'st', 'nd', 'rd'];
+    const v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
   }
 }

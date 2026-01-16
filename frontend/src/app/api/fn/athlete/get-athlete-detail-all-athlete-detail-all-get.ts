@@ -12,7 +12,6 @@ import { apiAthleteDetail } from '../../models/api-athlete-detail';
 
 export interface GetAthleteDetailAllAthleteDetailAllGet$Params {
   affiliate_id: number;
-  year: number;
   team_name?: (string | null);
   age_category?: ('Open' | 'Masters' | 'Masters 55+' | null);
   gender?: ('F' | 'M' | null);
@@ -22,7 +21,6 @@ export function getAthleteDetailAllAthleteDetailAllGet(http: HttpClient, rootUrl
   const rb = new RequestBuilder(rootUrl, getAthleteDetailAllAthleteDetailAllGet.PATH, 'get');
   if (params) {
     rb.query('affiliate_id', params.affiliate_id, {});
-    rb.query('year', params.year, {});
     rb.query('team_name', params.team_name, {});
     rb.query('age_category', params.age_category, {});
     rb.query('gender', params.gender, {});

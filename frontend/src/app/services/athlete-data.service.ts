@@ -13,6 +13,7 @@ export class AthleteDataService {
   private config = inject(AppConfigService);
 
   readonly athleteData = signal<apiAthleteDetail[]>([]);
+  readonly athleteDataAllYears = signal<apiAthleteDetail[]>([]);
 
   readonly teamNames = computed(() =>
     this.athleteData()
@@ -39,12 +40,16 @@ export class AthleteDataService {
       this.apiAthlete
         .getAthleteDetailAllAthleteDetailAllGet({
           affiliate_id: this.config.affiliateId,
-          year: this.config.year,
         })
         .subscribe({
           next: (data: apiAthleteDetail[]) => {
-            this.athleteData.set(
+            this.athleteDataAllYears.set(
               data.sort((a, b) => a.name.localeCompare(b.name))
+            );
+            this.athleteData.set(
+              data
+                .filter((athlete) => athlete.year == this.config.year)
+                .sort((a, b) => a.name.localeCompare(b.name))
             );
             this.loading.set(false);
             resolve();

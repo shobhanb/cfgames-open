@@ -21,27 +21,8 @@ async def get_user_data(
     db_session: AsyncSession,
     crossfit_id: int,
 ) -> dict[str, Any]:
-    stmt = (
-        select(
-            Athlete.affiliate_name,
-            Athlete.affiliate_id,
-            Athlete.name,
-            Athlete.crossfit_id,
-            Athlete.year,
-            Athlete.team_name,
-            Athlete.team_role,
-            Athlete.age_category,
-            Athlete.gender,
-            (Judges.crossfit_id.isnot(None)).label("judge"),
-        )
-        .join_from(Athlete, Judges, (Athlete.crossfit_id == Judges.crossfit_id), isouter=True)
-        .where(Athlete.crossfit_id == crossfit_id)
-        .order_by(Athlete.year.desc())
-        .limit(1)
-    )
-    ret = await db_session.execute(stmt)
-    result = ret.mappings().one()
-    return dict(result)
+    """Get the most recent athlete data for a user by crossfit_id."""
+    return await get_db_athlete_detail(db_session=db_session, crossfit_id=crossfit_id, year=None)
 
 
 async def get_affiliate_athletes_list_unassigned(
@@ -69,14 +50,25 @@ async def get_affiliate_athletes_list_unassigned(
     return [dict(x) for x in results]
 
 
-async def get_db_athlete_detail_all(  # noqa: PLR0913
+async def get_db_athlete_detail_all(
     db_session: AsyncSession,
     affiliate_id: int,
-    year: int,
     team_name: str | None = None,
     age_category: str | None = None,
     gender: str | None = None,
 ) -> list[dict[str, Any]]:
+    # Subquery to get max year and count per crossfit_id for this affiliate
+    max_year_subquery = (
+        select(
+            Athlete.crossfit_id,
+            func.max(Athlete.year).label("max_year"),
+            func.count().label("nth"),
+        )
+        .where(Athlete.affiliate_id == affiliate_id)
+        .group_by(Athlete.crossfit_id)
+        .subquery()
+    )
+
     stmt = (
         select(
             Athlete.affiliate_name,
@@ -89,9 +81,14 @@ async def get_db_athlete_detail_all(  # noqa: PLR0913
             Athlete.age_category,
             Athlete.gender,
             (Judges.crossfit_id.isnot(None)).label("judge"),
+            max_year_subquery.c.nth,
         )
         .join_from(Athlete, Judges, (Athlete.crossfit_id == Judges.crossfit_id), isouter=True)
-        .where((Athlete.affiliate_id == affiliate_id) & (Athlete.year == year))
+        .join(
+            max_year_subquery,
+            (Athlete.crossfit_id == max_year_subquery.c.crossfit_id) & (Athlete.year == max_year_subquery.c.max_year),
+        )
+        .where(Athlete.affiliate_id == affiliate_id)
     )
     if team_name:
         stmt = stmt.where(Athlete.team_name == team_name)
@@ -107,8 +104,12 @@ async def get_db_athlete_detail_all(  # noqa: PLR0913
 async def get_db_athlete_detail(
     db_session: AsyncSession,
     crossfit_id: int,
-    year: int,
+    year: int | None = None,
 ) -> dict[str, Any]:
+    """Get athlete detail for a specific crossfit_id and year. If year is None, returns most recent."""
+    # Scalar subquery to count occurrences of this crossfit_id
+    nth_subquery = select(func.count()).select_from(Athlete).where(Athlete.crossfit_id == crossfit_id).scalar_subquery()
+
     stmt = (
         select(
             Athlete.affiliate_name,
@@ -121,10 +122,14 @@ async def get_db_athlete_detail(
             Athlete.age_category,
             Athlete.gender,
             (Judges.crossfit_id.isnot(None)).label("judge"),
+            nth_subquery.label("nth"),
         )
         .join_from(Athlete, Judges, (Athlete.crossfit_id == Judges.crossfit_id), isouter=True)
-        .where((Athlete.crossfit_id == crossfit_id) & (Athlete.year == year))
+        .where(Athlete.crossfit_id == crossfit_id)
     )
+
+    stmt = stmt.where(Athlete.year == year) if year is not None else stmt.order_by(Athlete.year.desc()).limit(1)
+
     ret = await db_session.execute(stmt)
     results = ret.mappings().one()
     return dict(results)

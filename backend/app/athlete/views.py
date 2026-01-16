@@ -46,10 +46,9 @@ async def get_athlete_list(
 
 
 @athlete_router.get("/detail/all", status_code=status.HTTP_200_OK, response_model=list[AthleteDetail])
-async def get_athlete_detail_all(  # noqa: PLR0913
+async def get_athlete_detail_all(
     db_session: db_dependency,
     affiliate_id: int,
-    year: int,
     team_name: str | None = None,
     age_category: Literal["Open", "Masters", "Masters 55+"] | None = None,
     gender: Literal["F", "M"] | None = None,
@@ -57,7 +56,6 @@ async def get_athlete_detail_all(  # noqa: PLR0913
     return await get_db_athlete_detail_all(
         db_session=db_session,
         affiliate_id=affiliate_id,
-        year=year,
         team_name=team_name,
         age_category=age_category,
         gender=gender,

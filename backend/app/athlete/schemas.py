@@ -17,6 +17,7 @@ class AthleteDetail(AffiliateAthlete):
     age_category: Literal["Open", "Masters", "Masters 55+"]
     gender: Literal["F", "M"]
     judge: bool
+    nth: int
 
 
 class TeamName(CustomBaseModel):

@@ -10,6 +10,7 @@ export interface apiAthleteDetail {
   gender: 'F' | 'M';
   judge: boolean;
   name: string;
+  nth: number;
   team_name: string;
   team_role: number;
   year: number;
