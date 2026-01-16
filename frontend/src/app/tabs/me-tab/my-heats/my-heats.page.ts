@@ -40,6 +40,7 @@ import { apiHeatAssignmentModel, apiHeatsModel } from 'src/app/api/models';
 import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { AppConfigService } from 'src/app/services/app-config.service';
+import { AthleteDataService } from 'src/app/services/athlete-data.service';
 import { addIcons } from 'ionicons';
 import { person } from 'ionicons/icons';
 
@@ -79,6 +80,7 @@ export class MyHeatsPage implements OnInit {
   private authService = inject(AuthService);
   private apiHeatAssignments = inject(apiHeatAssignmentsService);
   private apiHeats = inject(apiHeatsService);
+  athleteDataService = inject(AthleteDataService);
   eventService = inject(EventService);
   private toastService = inject(ToastService);
   private config = inject(AppConfigService);

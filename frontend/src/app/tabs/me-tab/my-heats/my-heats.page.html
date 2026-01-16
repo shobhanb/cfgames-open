@@ -72,7 +72,18 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{ athleteAssignment()!.athlete_name || '—' }}</td>
+                      <td>
+                        {{ athleteAssignment()!.athlete_name || '—' }} @if
+                        (athleteAssignment()!.athlete_crossfit_id &&
+                        athleteDataService.getAgeCategory(athleteAssignment()!.athlete_crossfit_id!)
+                        === 'U18') {
+                        <span class="age-indicator">U18</span>
+                        } @else if (athleteAssignment()!.athlete_crossfit_id &&
+                        athleteDataService.getAgeCategory(athleteAssignment()!.athlete_crossfit_id!)
+                        === 'Masters 55+') {
+                        <span class="age-indicator">55+</span>
+                        }
+                      </td>
                       <td>{{ athleteAssignment()!.judge_name || '—' }}</td>
                     </tr>
                   </tbody>
@@ -103,7 +114,6 @@
         <table class="assignments-table">
           <thead>
             <tr>
-              <th>Heat</th>
               <th>Time</th>
               <th>Judging</th>
             </tr>
@@ -111,12 +121,22 @@
           <tbody>
             @for (assignment of judgeAssignments(); track $index) {
             <tr>
-              <td>{{ getHeatDetails(assignment.heat_id)?.short_name }}</td>
               <td>
                 {{ getHeatDetails(assignment.heat_id)?.start_time | date: 'EEE d
                 MMM, h:mm a' }}
               </td>
-              <td>{{ assignment.athlete_name || '—' }}</td>
+              <td>
+                {{ assignment.athlete_name || '—' }} @if
+                (assignment.athlete_crossfit_id) { @if
+                (athleteDataService.getAgeCategory(assignment.athlete_crossfit_id)
+                === 'U18') {
+                <span class="age-indicator">U18</span>
+                } @else if
+                (athleteDataService.getAgeCategory(assignment.athlete_crossfit_id)
+                === 'Masters 55+') {
+                <span class="age-indicator">55+</span>
+                } }
+              </td>
             </tr>
             }
           </tbody>

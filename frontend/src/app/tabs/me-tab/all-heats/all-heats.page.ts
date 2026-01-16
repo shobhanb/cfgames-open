@@ -72,7 +72,7 @@ import { ToolbarButtonsComponent } from '../../../shared/toolbar-buttons/toolbar
 export class AllHeatsPage {
   private apiHeatAssignments = inject(apiHeatAssignmentsService);
   private apiHeats = inject(apiHeatsService);
-  private athleteDataService = inject(AthleteDataService);
+  athleteDataService = inject(AthleteDataService);
   private appConfig = inject(AppConfigService);
   private eventService = inject(EventService);
 

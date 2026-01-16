@@ -132,7 +132,18 @@
                     @for (assignment of getAssignmentsForHeat(heat); track
                     assignment.id) {
                     <tr>
-                      <td>{{ assignment.athlete_name || '—' }}</td>
+                      <td>
+                        {{ assignment.athlete_name || '—' }} @if
+                        (assignment.athlete_crossfit_id) { @if
+                        (athleteDataService.getAgeCategory(assignment.athlete_crossfit_id)
+                        === 'U18') {
+                        <span class="age-indicator">U18</span>
+                        } @else if
+                        (athleteDataService.getAgeCategory(assignment.athlete_crossfit_id)
+                        === 'Masters 55+') {
+                        <span class="age-indicator">55+</span>
+                        } }
+                      </td>
                       <td>{{ assignment.judge_name || '—' }}</td>
                     </tr>
                     } @empty {

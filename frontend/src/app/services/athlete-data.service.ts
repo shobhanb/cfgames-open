@@ -79,6 +79,13 @@ export class AthleteDataService {
     return athlete?.team_name || null;
   }
 
+  getAgeCategory(crossfitId: number): string | null {
+    const athlete = this.athleteData().find(
+      (a) => a.crossfit_id === crossfitId
+    );
+    return athlete?.age_category || null;
+  }
+
   constructor() {
     this.getData();
   }
