@@ -178,7 +178,7 @@ export class MyTeamPage implements OnInit {
     this.scoreFilter.setFilter({ team: event.detail.value });
   }
 
-  getOrdinal(n: number): string {
+  getNth(n: number): string {
     const s = ['th', 'st', 'nd', 'rd'];
     const v = n % 100;
     return n + (s[(v - 20) % 10] || s[v] || s[0]);

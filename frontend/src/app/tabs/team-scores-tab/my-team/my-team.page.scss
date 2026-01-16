@@ -226,6 +226,30 @@
     color: var(--ion-color-dark);
     margin: 0;
     flex-shrink: 0;
+    position: relative;
+    padding-right: 32px;
+  }
+
+  .nth-badge {
+    position: absolute;
+    top: -4px;
+    right: 0;
+    font-size: 0.5rem;
+    font-weight: 700;
+    padding: 1px 4px;
+    border-radius: 4px;
+    line-height: 1.2;
+    text-transform: uppercase;
+
+    &.new-badge {
+      background-color: var(--ion-color-danger);
+      color: white;
+    }
+
+    &.ordinal-badge {
+      background-color: var(--ion-color-medium);
+      color: white;
+    }
   }
 
   .athlete-details {
