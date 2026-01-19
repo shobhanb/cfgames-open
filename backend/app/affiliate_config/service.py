@@ -5,6 +5,7 @@ from .constants import (
     DEFAULT_APPRECIATION_SCORE,
     DEFAULT_ROOKIE_SCORE,
     DEFAULT_SIDE_CHALLENGE_SCORE,
+    DEFAULT_SOCIAL_MEDIA_SCORE,
     DEFAULT_SPIRIT_SCORE,
     JUDGE_SCORE,
     PARTICIPATION_SCORE,
@@ -53,6 +54,7 @@ async def create_db_affiliate_config(
         rookie_score=config_data.rookie_score,
         side_challenge_score=config_data.side_challenge_score,
         spirit_score=config_data.spirit_score,
+        social_media_score=config_data.social_media_score,
         use_scheduling=config_data.use_scheduling,
         use_appreciation=config_data.use_appreciation,
     )
@@ -120,4 +122,5 @@ async def get_config_or_defaults(
         rookie_score=DEFAULT_ROOKIE_SCORE,
         side_challenge_score=DEFAULT_SIDE_CHALLENGE_SCORE,
         spirit_score=DEFAULT_SPIRIT_SCORE,
+        social_media_score=DEFAULT_SOCIAL_MEDIA_SCORE,
     )

@@ -102,6 +102,7 @@ export class TeamScoresPage implements OnInit {
         existingScore.rookie_score += score.rookie_score;
         existingScore.side_challenge_score += score.side_challenge_score;
         existingScore.spirit_score += score.spirit_score;
+        existingScore.social_media_score += score.social_media_score;
         existingScore.total_team_score += score.total_team_score;
       }
     });
@@ -157,7 +158,7 @@ export class TeamScoresPage implements OnInit {
           'Error loading team scores: ' + (err?.error?.detail ?? ''),
           'danger',
           null,
-          3000
+          3000,
         );
       },
     });

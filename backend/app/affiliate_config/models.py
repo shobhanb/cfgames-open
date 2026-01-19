@@ -8,6 +8,7 @@ from app.affiliate_config.constants import (
     DEFAULT_APPRECIATION_SCORE,
     DEFAULT_ROOKIE_SCORE,
     DEFAULT_SIDE_CHALLENGE_SCORE,
+    DEFAULT_SOCIAL_MEDIA_SCORE,
     DEFAULT_SPIRIT_SCORE,
     JUDGE_SCORE,
     PARTICIPATION_SCORE,
@@ -31,6 +32,7 @@ class AffiliateConfig(Base):
     rookie_score: Mapped[int] = mapped_column(Integer, default=DEFAULT_ROOKIE_SCORE)
     side_challenge_score: Mapped[int] = mapped_column(Integer, default=DEFAULT_SIDE_CHALLENGE_SCORE)
     spirit_score: Mapped[int] = mapped_column(Integer, default=DEFAULT_SPIRIT_SCORE)
+    social_media_score: Mapped[int] = mapped_column(Integer, default=DEFAULT_SOCIAL_MEDIA_SCORE)
 
     # App Configuration
     use_scheduling: Mapped[bool] = mapped_column(Boolean, default=True)

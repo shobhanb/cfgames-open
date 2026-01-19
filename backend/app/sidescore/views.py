@@ -33,7 +33,7 @@ async def update_sidescores(  # noqa: PLR0913
     affiliate_id: int,
     year: int,
     ordinal: int,
-    score_type: Literal["side_challenge", "spirit"],
+    score_type: Literal["side_challenge", "spirit", "social_media"],
     team_name: str,
     score: int,
 ) -> SideScore:

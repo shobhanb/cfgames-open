@@ -80,7 +80,9 @@ export class SideScoresPage implements OnInit {
 
   // Form state
   selectedOrdinal = signal<number | null>(null);
-  selectedScoreType = signal<'side_challenge' | 'spirit'>('side_challenge');
+  selectedScoreType = signal<'side_challenge' | 'spirit' | 'social_media'>(
+    'side_challenge',
+  );
   teamName = signal('');
   score = signal<number | null>(null);
 
@@ -130,7 +132,7 @@ export class SideScoresPage implements OnInit {
             `Failed to load sidescores${
               error?.error?.detail ? ': ' + error.error.detail : ''
             }`,
-            'danger'
+            'danger',
           );
           this.dataLoaded.set(true);
         },
@@ -145,7 +147,7 @@ export class SideScoresPage implements OnInit {
   loadScore(sidescore: apiSideScoreModel) {
     this.selectedOrdinal.set(sidescore.ordinal);
     this.selectedScoreType.set(
-      sidescore.score_type as 'side_challenge' | 'spirit'
+      sidescore.score_type as 'side_challenge' | 'spirit' | 'social_media',
     );
     this.teamName.set(sidescore.team_name);
     this.score.set(sidescore.score);
@@ -170,7 +172,7 @@ export class SideScoresPage implements OnInit {
         next: () => {
           this.toastService.showToast(
             'Side score deleted successfully',
-            'success'
+            'success',
           );
           this.getData();
           this.deleteAlertOpen.set(false);
@@ -182,7 +184,7 @@ export class SideScoresPage implements OnInit {
             `Failed to delete side score${
               error?.error?.detail ? ': ' + error.error.detail : ''
             }`,
-            'danger'
+            'danger',
           );
           this.deleteAlertOpen.set(false);
         },
@@ -211,7 +213,7 @@ export class SideScoresPage implements OnInit {
         next: () => {
           this.toastService.showToast(
             'Side score saved successfully',
-            'success'
+            'success',
           );
           this.getData();
           this.resetForm();
@@ -222,7 +224,7 @@ export class SideScoresPage implements OnInit {
             `Failed to save side score${
               error?.error?.detail ? ': ' + error.error.detail : ''
             }`,
-            'danger'
+            'danger',
           );
         },
       });
@@ -241,7 +243,7 @@ export class SideScoresPage implements OnInit {
         next: () => {
           this.toastService.showToast(
             'Side scores applied to teams successfully',
-            'success'
+            'success',
           );
           this.getData();
         },
@@ -251,7 +253,7 @@ export class SideScoresPage implements OnInit {
             `Failed to apply side scores${
               error?.error?.detail ? ': ' + error.error.detail : ''
             }`,
-            'danger'
+            'danger',
           );
         },
       });

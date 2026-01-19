@@ -14,6 +14,7 @@ AFFILIATE_CONFIG_DEFAULTS = [
         "rookie_score": 15,
         "side_challenge_score": 30,
         "spirit_score": 20,
+        "social_media_score": 5,
         "use_scheduling": True,
         "use_appreciation": True,
     },
@@ -28,6 +29,7 @@ AFFILIATE_CONFIG_DEFAULTS = [
         "rookie_score": 0,
         "side_challenge_score": 25,
         "spirit_score": 25,
+        "social_media_score": 0,
         "use_scheduling": True,
         "use_appreciation": True,
     },
@@ -42,3 +44,4 @@ DEFAULT_APPRECIATION_SCORE = AFFILIATE_CONFIG_DEFAULTS[0]["appreciation_score"]
 DEFAULT_ROOKIE_SCORE = AFFILIATE_CONFIG_DEFAULTS[0]["rookie_score"]
 DEFAULT_SIDE_CHALLENGE_SCORE = AFFILIATE_CONFIG_DEFAULTS[0]["side_challenge_score"]
 DEFAULT_SPIRIT_SCORE = AFFILIATE_CONFIG_DEFAULTS[0]["spirit_score"]
+DEFAULT_SOCIAL_MEDIA_SCORE = AFFILIATE_CONFIG_DEFAULTS[0]["social_media_score"]

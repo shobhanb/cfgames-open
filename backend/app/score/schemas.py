@@ -43,6 +43,7 @@ class TeamScoreModel(BaseModel):
     rookie_score: int
     side_challenge_score: int
     spirit_score: int
+    social_media_score: int
     total_team_score: int
 
 

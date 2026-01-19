@@ -71,15 +71,15 @@
           >
         </ion-item>
         @if (affiliateConfig.rookieScore() > 0) {
-        <ion-item>
-          <ion-note slot="start"
-            >{{ affiliateConfig.rookieScore() }} pts</ion-note
-          >
-          <ion-label
-            >Rookie of the year award to be awarded only once, at the end of the
-            open.</ion-label
-          >
-        </ion-item>
+          <ion-item>
+            <ion-note slot="start"
+              >{{ affiliateConfig.rookieScore() }} pts</ion-note
+            >
+            <ion-label
+              >Rookie of the year award to be awarded only once, at the end of
+              the open.</ion-label
+            >
+          </ion-item>
         }
       </ion-list>
     </ion-card-content>
@@ -95,6 +95,17 @@
         discretion.
       </p>
       <ion-list>
+        @if (affiliateConfig.socialMediaScore() > 0) {
+          <ion-item>
+            <ion-note slot="start"
+              >{{ affiliateConfig.socialMediaScore() }} pts</ion-note
+            >
+            <ion-label
+              >Social media points - for making minimum 2 posts or
+              reels</ion-label
+            >
+          </ion-item>
+        }
         <ion-item>
           <ion-note slot="start"
             >{{ affiliateConfig.sideChallengeScore() }} pts</ion-note
@@ -107,7 +118,13 @@
           <ion-note slot="start"
             >{{ affiliateConfig.spiritScore() }} pts</ion-note
           >
-          <ion-label>Spirit of the open (team)</ion-label>
+          @if (affiliateConfig.socialMediaScore() > 0) {
+            <ion-label
+              >Spirit of the open (team) - not for social media!</ion-label
+            >
+          } @else {
+            <ion-label>Spirit of the open (team)</ion-label>
+          }
         </ion-item>
       </ion-list>
     </ion-card-content>

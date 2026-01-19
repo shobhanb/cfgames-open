@@ -10,6 +10,7 @@ export interface apiAffiliateConfigModel {
   participation_score?: number;
   rookie_score?: number;
   side_challenge_score?: number;
+  social_media_score?: number;
   spirit_score?: number;
   top3_score?: number;
   use_appreciation?: boolean;

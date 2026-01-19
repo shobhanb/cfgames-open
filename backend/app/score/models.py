@@ -41,6 +41,7 @@ class Score(Base):
     rookie_score: Mapped[int] = mapped_column(Integer, default=0)
     side_challenge_score: Mapped[int] = mapped_column(Integer, default=0)
     spirit_score: Mapped[int] = mapped_column(Integer, default=0)
+    social_media_score: Mapped[int] = mapped_column(Integer, default=0)
 
     # Calculated columns
     affiliate_scaled: Mapped[str] = mapped_column(String)

@@ -95,6 +95,13 @@
                   <ion-label>{{ score.spirit_score }}</ion-label>
                 </ion-chip>
               </ion-item>
+              } @if (score.social_media_score) {
+              <ion-item lines="none">
+                <ion-label>Social Media</ion-label>
+                <ion-chip size="small" color="tertiary">
+                  <ion-label>{{ score.social_media_score }}</ion-label>
+                </ion-chip>
+              </ion-item>
               }
             </ion-list>
           </div>

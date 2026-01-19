@@ -14,7 +14,7 @@ export interface UpdateSidescoresSidescoreAffiliateIdYearPost$Params {
   affiliate_id: number;
   year: number;
   ordinal: number;
-  score_type: 'side_challenge' | 'spirit';
+  score_type: 'side_challenge' | 'spirit' | 'social_media';
   team_name: string;
   score: number;
 }

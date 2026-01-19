@@ -580,6 +580,7 @@ async def apply_side_scores(
         .values(
             side_challenge_score=0,
             spirit_score=0,
+            social_media_score=0,
         )
     )
     await db_session.execute(remove_side_scores_stmt)
@@ -606,6 +607,10 @@ async def apply_side_scores(
                 await db_session.commit()
             elif side_score.score_type == "spirit":
                 score.spirit_score = side_score.score
+                db_session.add(score)
+                await db_session.commit()
+            elif side_score.score_type == "social_media":
+                score.social_media_score = side_score.score
                 db_session.add(score)
                 await db_session.commit()
 
@@ -654,6 +659,7 @@ async def apply_total_team_score(
                 + Score.rookie_score
                 + Score.side_challenge_score
                 + Score.spirit_score
+                + Score.social_media_score
             ).label("total_team_score"),
         )
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))

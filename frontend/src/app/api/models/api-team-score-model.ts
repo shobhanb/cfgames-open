@@ -11,6 +11,7 @@ export interface apiTeamScoreModel {
   participation_score: number;
   rookie_score: number;
   side_challenge_score: number;
+  social_media_score: number;
   spirit_score: number;
   team_name: string;
   top3_score: number;

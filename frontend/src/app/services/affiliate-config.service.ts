@@ -15,27 +15,30 @@ export class AffiliateConfigService {
 
   // Computed values for easy access
   useAppreciation = computed(
-    () => this.affiliateConfig()?.use_appreciation ?? false
+    () => this.affiliateConfig()?.use_appreciation ?? false,
   );
   useScheduling = computed(
-    () => this.affiliateConfig()?.use_scheduling ?? false
+    () => this.affiliateConfig()?.use_scheduling ?? false,
   );
   attendanceScore = computed(
-    () => this.affiliateConfig()?.attendance_score ?? 0
+    () => this.affiliateConfig()?.attendance_score ?? 0,
   );
   participationScore = computed(
-    () => this.affiliateConfig()?.participation_score ?? 0
+    () => this.affiliateConfig()?.participation_score ?? 0,
   );
   judgeScore = computed(() => this.affiliateConfig()?.judge_score ?? 0);
   top3Score = computed(() => this.affiliateConfig()?.top3_score ?? 0);
   appreciationScore = computed(
-    () => this.affiliateConfig()?.appreciation_score ?? 0
+    () => this.affiliateConfig()?.appreciation_score ?? 0,
   );
   rookieScore = computed(() => this.affiliateConfig()?.rookie_score ?? 0);
   sideChallengeScore = computed(
-    () => this.affiliateConfig()?.side_challenge_score ?? 0
+    () => this.affiliateConfig()?.side_challenge_score ?? 0,
   );
   spiritScore = computed(() => this.affiliateConfig()?.spirit_score ?? 0);
+  socialMediaScore = computed(
+    () => this.affiliateConfig()?.social_media_score ?? 0,
+  );
 
   constructor() {
     this.loadConfig();

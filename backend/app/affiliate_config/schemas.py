@@ -10,6 +10,7 @@ class AffiliateConfigBase(CustomBaseModel):
     rookie_score: int = 5
     side_challenge_score: int = 25
     spirit_score: int = 10
+    social_media_score: int = 0
     use_scheduling: bool = True
     use_appreciation: bool = True
 
@@ -33,5 +34,6 @@ class AffiliateConfigUpdate(CustomBaseModel):
     rookie_score: int | None = None
     side_challenge_score: int | None = None
     spirit_score: int | None = None
+    social_media_score: int | None = None
     use_scheduling: bool | None = None
     use_appreciation: bool | None = None

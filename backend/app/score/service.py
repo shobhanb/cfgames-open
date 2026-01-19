@@ -104,6 +104,7 @@ async def get_db_team_scores(
             func.sum(Score.rookie_score).label("rookie_score"),
             func.sum(Score.side_challenge_score).label("side_challenge_score"),
             func.sum(Score.spirit_score).label("spirit_score"),
+            func.sum(Score.social_media_score).label("social_media_score"),
             func.sum(Score.total_team_score).label("total_team_score"),
         )
         .join_from(Score, Athlete, (Score.crossfit_id == Athlete.crossfit_id) & (Score.year == Athlete.year))
