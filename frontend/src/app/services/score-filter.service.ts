@@ -26,7 +26,7 @@ export class ScoreFilterService {
   private _scoreFilter = signal<ScoreFilter>({
     gender: 'F',
     ageCategory: 'Masters',
-    team: '',
+    team: 'All',
   });
 
   readonly filter = this._scoreFilter.asReadonly();
