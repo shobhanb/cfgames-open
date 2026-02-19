@@ -614,10 +614,7 @@ def _assign_preferred_athlete_to_heat(
 ) -> tuple[HeatAssignments | None, int]:
     """Assign a preferred athlete to a heat matching their start_time preference."""
     # Find heats matching the preferred start_time (within 30 minute buffer)
-    matching_heats = []
-    for heat in heats:
-        if _is_within_time_buffer(heat.start_time, preferred_start_time, buffer_minutes=30):
-            matching_heats.append(heat)
+    matching_heats = [heat for heat in heats if _is_within_time_buffer(heat.start_time, preferred_start_time)]
 
     # Try to assign to a matching heat
     for heat in matching_heats:
