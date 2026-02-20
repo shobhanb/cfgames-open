@@ -6,7 +6,7 @@ export interface apiLeaderboardScoreModel {
   affiliate_id: number;
   affiliate_rank: number;
   affiliate_scaled: 'RX' | 'Scaled';
-  age_category: 'U18' | 'Open' | 'Masters' | 'Masters 55+';
+  age_category: 'U18' | 'Open' | 'Masters' | 'Masters 35-45' | 'Masters 45-55' | 'Masters 55+';
   crossfit_id: number;
   gender: 'M' | 'F';
   name: string;

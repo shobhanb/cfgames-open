@@ -86,13 +86,15 @@ export class IndividualScoresPage implements OnInit {
   private config = inject(AppConfigService);
 
   userCrossfitId = computed(
-    () => this.authService.userCustomClaims()?.crossfit_id
+    () => this.authService.userCustomClaims()?.crossfit_id,
   );
 
   scoreFilter = inject(ScoreFilterService);
 
   @Input({ required: true, transform: numberAttribute }) year!: number;
   @Input({ required: true, transform: numberAttribute }) ordinal!: number;
+
+  ageCategories = computed(() => this.scoreFilter.getAgeCategories(this.year));
 
   private event = computed<string | undefined>(() => {
     if (this.ordinal == 0) {
@@ -109,7 +111,7 @@ export class IndividualScoresPage implements OnInit {
       ' - ' +
       this.scoreFilter.filter().gender +
       ' - ' +
-      this.scoreFilter.filter().ageCategory
+      this.scoreFilter.filter().ageCategory,
   );
 
   readonly teamsList = computed<string[]>(() => [
@@ -122,7 +124,7 @@ export class IndividualScoresPage implements OnInit {
 
   onSelectionChanged(
     event: CustomEvent,
-    type: 'gender' | 'ageCategory' | 'team'
+    type: 'gender' | 'ageCategory' | 'team',
   ) {
     if (type === 'gender') {
       this.scoreFilter.setFilter({ gender: event.detail.value });
@@ -143,7 +145,7 @@ export class IndividualScoresPage implements OnInit {
           value.gender === this.scoreFilter.filter().gender &&
           value.age_category === this.scoreFilter.filter().ageCategory &&
           (this.scoreFilter.filter().team === 'All' ||
-            value.team_name === this.scoreFilter.filter().team)
+            value.team_name === this.scoreFilter.filter().team),
       )
       .sort((a: apiIndividualScoreModel, b: apiIndividualScoreModel) => {
         if (a.total_individual_score === b.total_individual_score) {
@@ -151,7 +153,7 @@ export class IndividualScoresPage implements OnInit {
         } else {
           return b.total_individual_score - a.total_individual_score;
         }
-      })
+      }),
   );
 
   readonly aggregatedScores = computed<apiIndividualScoreModel[]>(() => {
@@ -180,7 +182,7 @@ export class IndividualScoresPage implements OnInit {
         } else {
           return b.total_individual_score - a.total_individual_score;
         }
-      }
+      },
     );
   });
 
@@ -200,7 +202,7 @@ export class IndividualScoresPage implements OnInit {
 
         const userTeam = value.find(
           (value: apiIndividualScoreModel) =>
-            value.crossfit_id === this.userCrossfitId()
+            value.crossfit_id === this.userCrossfitId(),
         )?.team_name;
 
         if (!!userTeam && this.teamsList().includes(userTeam)) {
@@ -215,7 +217,7 @@ export class IndividualScoresPage implements OnInit {
           'Error fetching individual scores: ' + err.error?.detail,
           'danger',
           null,
-          3000
+          3000,
         );
       },
     });
@@ -230,6 +232,14 @@ export class IndividualScoresPage implements OnInit {
   constructor() {}
 
   ngOnInit() {
+    const filter = this.scoreFilter.filter();
+    const validCategory = this.scoreFilter.validateCategory(
+      filter.ageCategory,
+      this.year,
+    );
+    if (validCategory !== filter.ageCategory) {
+      this.scoreFilter.setFilter({ ageCategory: validCategory });
+    }
     this.getData();
   }
 }

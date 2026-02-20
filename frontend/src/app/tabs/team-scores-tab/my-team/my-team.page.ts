@@ -41,6 +41,7 @@ import { ScoreFilterService } from 'src/app/services/score-filter.service';
 import { HelperFunctionsService } from 'src/app/services/helper-functions.service';
 import { AthleteDataService } from 'src/app/services/athlete-data.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-my-team',
@@ -79,6 +80,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class MyTeamPage implements OnInit {
   private helperFunctions = inject(HelperFunctionsService);
   private authService = inject(AuthService);
+  config = inject(AppConfigService);
   scoreFilter = inject(ScoreFilterService);
   private athleteDataService = inject(AthleteDataService);
 
@@ -98,7 +100,7 @@ export class MyTeamPage implements OnInit {
   myCrossfitId = this.authService.userCustomClaims()?.crossfit_id;
 
   teamSectionTitle = computed(() =>
-    this.scoreFilter.filter().team.replace(/^\s*\d+\.?\s*/, '')
+    this.scoreFilter.filter().team.replace(/^\s*\d+\.?\s*/, ''),
   );
 
   teamsList = computed<string[]>(() => [
@@ -115,11 +117,11 @@ export class MyTeamPage implements OnInit {
       .filter(
         (value: apiAthleteDetail) =>
           this.scoreFilter.filter().team === 'All' ||
-          value.team_name === this.scoreFilter.filter().team
+          value.team_name === this.scoreFilter.filter().team,
       )
       .sort((a: apiAthleteDetail, b: apiAthleteDetail) =>
-        a.name > b.name ? 1 : -1
-      )
+        a.name > b.name ? 1 : -1,
+      ),
   );
 
   readonly filtereedAthletesByGender = computed<{
@@ -133,46 +135,28 @@ export class MyTeamPage implements OnInit {
 
   readonly summaryMetrics = computed(() => {
     const athletes = this.filteredAthletes();
-    const maleU18 = athletes.filter(
-      (a) => a.gender === 'M' && a.age_category === 'U18'
-    ).length;
-    const maleOpen = athletes.filter(
-      (a) => a.gender === 'M' && a.age_category === 'Open'
-    ).length;
-    const maleMasters = athletes.filter(
-      (a) => a.gender === 'M' && a.age_category === 'Masters'
-    ).length;
-    const maleMasters55 = athletes.filter(
-      (a) => a.gender === 'M' && a.age_category === 'Masters 55+'
-    ).length;
-    const femaleU18 = athletes.filter(
-      (a) => a.gender === 'F' && a.age_category === 'U18'
-    ).length;
-    const femaleOpen = athletes.filter(
-      (a) => a.gender === 'F' && a.age_category === 'Open'
-    ).length;
-    const femaleMasters = athletes.filter(
-      (a) => a.gender === 'F' && a.age_category === 'Masters'
-    ).length;
-    const femaleMasters55 = athletes.filter(
-      (a) => a.gender === 'F' && a.age_category === 'Masters 55+'
-    ).length;
+    const categories: readonly string[] = this.scoreFilter.getAgeCategories(
+      this.config.year,
+    );
+
+    const male: { [key: string]: number } = {};
+    const female: { [key: string]: number } = {};
+
+    categories.forEach((cat) => {
+      male[cat] = athletes.filter(
+        (a) => a.gender === 'M' && a.age_category === cat,
+      ).length;
+      female[cat] = athletes.filter(
+        (a) => a.gender === 'F' && a.age_category === cat,
+      ).length;
+    });
+
     const totalJudges = athletes.filter((a) => a.judge).length;
 
     return {
       total: athletes.length,
-      male: {
-        U18: maleU18,
-        Open: maleOpen,
-        Masters: maleMasters,
-        'Masters 55+': maleMasters55,
-      },
-      female: {
-        U18: femaleU18,
-        Open: femaleOpen,
-        Masters: femaleMasters,
-        'Masters 55+': femaleMasters55,
-      },
+      male,
+      female,
       judges: totalJudges,
     };
   });

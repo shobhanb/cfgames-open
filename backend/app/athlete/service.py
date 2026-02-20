@@ -158,7 +158,7 @@ async def random_assign_db_athletes(
     assign_to_team_names: list[str],
 ) -> list[AutoTeamAssignmentOutput]:
     genders = ["F", "M"]
-    age_categories = ["U18", "Masters 55+", "Masters", "Open"]
+    age_categories = ["U18", "Masters 55+", "Masters 45-55", "Masters 35-45", "Masters", "Open"]
 
     assignments = []
 

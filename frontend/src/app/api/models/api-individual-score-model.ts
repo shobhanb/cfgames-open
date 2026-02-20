@@ -4,7 +4,7 @@
 
 export interface apiIndividualScoreModel {
   affiliate_id: number;
-  age_category: 'U18' | 'Open' | 'Masters' | 'Masters 55+';
+  age_category: 'U18' | 'Open' | 'Masters' | 'Masters 35-45' | 'Masters 45-55' | 'Masters 55+';
   appreciation_score: number;
   attendance_score: number;
   crossfit_id: number;

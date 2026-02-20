@@ -39,18 +39,11 @@
           [value]="scoreFilter.filter().ageCategory"
           (ionChange)="onSelectionChanged($event, 'ageCategory')"
         >
-          <ion-segment-button value="U18">
-            <ion-label>U18</ion-label>
+          @for (category of ageCategories(); track category) {
+          <ion-segment-button [value]="category">
+            <ion-label>{{ category.replace("Masters ", "") }}</ion-label>
           </ion-segment-button>
-          <ion-segment-button value="Open">
-            <ion-label>Open</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="Masters">
-            <ion-label>Masters</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="Masters 55+">
-            <ion-label>55+</ion-label>
-          </ion-segment-button>
+          }
         </ion-segment>
       </div>
 

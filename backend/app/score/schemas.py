@@ -14,7 +14,7 @@ class AthleteModel(BaseModel):
     name: str
     crossfit_id: int
     gender: Literal["M", "F"]
-    age_category: Literal["U18", "Open", "Masters", "Masters 55+"]
+    age_category: Literal["U18", "Open", "Masters", "Masters 35-45", "Masters 45-55", "Masters 55+"]
 
 
 class LeaderboardScoreModel(AthleteModel):

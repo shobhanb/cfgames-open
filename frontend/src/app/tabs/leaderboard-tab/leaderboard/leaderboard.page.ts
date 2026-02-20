@@ -89,8 +89,10 @@ export class LeaderboardPage implements OnInit {
 
   selectedTop3 = signal<boolean>(true);
 
+  ageCategories = computed(() => this.scoreFilter.getAgeCategories(this.year));
+
   private event = computed<string | undefined>(() =>
-    this.eventService.eventMap().get(`${this.year}-${this.ordinal}`)
+    this.eventService.eventMap().get(`${this.year}-${this.ordinal}`),
   );
   readonly title = computed<string>(() => `${this.event()} Leaderboard`);
 
@@ -104,30 +106,31 @@ export class LeaderboardPage implements OnInit {
       (value: apiLeaderboardScoreModel) =>
         value.gender === this.scoreFilter.filter().gender &&
         value.age_category === this.scoreFilter.filter().ageCategory &&
-        (this.selectedTop3() ? value.affiliate_rank <= 3 : true)
-    )
+        (this.selectedTop3() ? value.affiliate_rank <= 3 : true),
+    ),
   );
 
   leaderboardRX = computed(() =>
     this.filteredLeaderboard()
       .filter(
-        (value: apiLeaderboardScoreModel) => value.affiliate_scaled === 'RX'
+        (value: apiLeaderboardScoreModel) => value.affiliate_scaled === 'RX',
       )
       .sort(
         (a: apiLeaderboardScoreModel, b: apiLeaderboardScoreModel) =>
-          a.affiliate_rank - b.affiliate_rank
-      )
+          a.affiliate_rank - b.affiliate_rank,
+      ),
   );
 
   leaderboardScaled = computed(() =>
     this.filteredLeaderboard()
       .filter(
-        (value: apiLeaderboardScoreModel) => value.affiliate_scaled === 'Scaled'
+        (value: apiLeaderboardScoreModel) =>
+          value.affiliate_scaled === 'Scaled',
       )
       .sort(
         (a: apiLeaderboardScoreModel, b: apiLeaderboardScoreModel) =>
-          a.affiliate_rank - b.affiliate_rank
-      )
+          a.affiliate_rank - b.affiliate_rank,
+      ),
   );
 
   private getData() {
@@ -148,7 +151,7 @@ export class LeaderboardPage implements OnInit {
             'Error fetching leaderboard scores: ' + err.error?.detail,
             'danger',
             null,
-            3000
+            3000,
           );
         },
       });
@@ -162,7 +165,7 @@ export class LeaderboardPage implements OnInit {
 
   onSelectionChanged(
     event: CustomEvent,
-    type: 'gender' | 'ageCategory' | 'top3'
+    type: 'gender' | 'ageCategory' | 'top3',
   ) {
     if (type === 'gender') {
       this.scoreFilter.setFilter({ gender: event.detail.value });
@@ -183,6 +186,15 @@ export class LeaderboardPage implements OnInit {
   }
 
   ngOnInit() {
+    const filter = this.scoreFilter.filter();
+    const validCategory = this.scoreFilter.validateCategory(
+      filter.ageCategory,
+      this.year,
+    );
+    if (validCategory !== filter.ageCategory) {
+      this.scoreFilter.setFilter({ ageCategory: validCategory });
+    }
+
     this.getData();
   }
 }

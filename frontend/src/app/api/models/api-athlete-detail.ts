@@ -5,7 +5,7 @@
 export interface apiAthleteDetail {
   affiliate_id: number;
   affiliate_name: string;
-  age_category: 'U18' | 'Open' | 'Masters' | 'Masters 55+';
+  age_category: 'U18' | 'Open' | 'Masters' | 'Masters 35-45' | 'Masters 45-55' | 'Masters 55+';
   crossfit_id: number;
   gender: 'F' | 'M';
   judge: boolean;

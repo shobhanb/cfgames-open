@@ -58,28 +58,17 @@
                 Male
               </div>
               <div class="age-breakdown">
+                @for (cat of scoreFilter.getAgeCategories(config.year); track
+                $index) {
                 <div class="age-item">
-                  <span class="age-label">U18:</span>
-                  <span class="age-count">{{ summaryMetrics().male.U18 }}</span>
-                </div>
-                <div class="age-item">
-                  <span class="age-label">Open:</span>
+                  <span class="age-label"
+                    >{{ cat.replace("Masters ", "") }}:</span
+                  >
                   <span class="age-count"
-                    >{{ summaryMetrics().male.Open }}</span
+                    >{{ summaryMetrics().male[cat] }}</span
                   >
                 </div>
-                <div class="age-item">
-                  <span class="age-label">Masters:</span>
-                  <span class="age-count"
-                    >{{ summaryMetrics().male.Masters }}</span
-                  >
-                </div>
-                <div class="age-item">
-                  <span class="age-label">55+:</span>
-                  <span class="age-count"
-                    >{{ summaryMetrics().male['Masters 55+'] }}</span
-                  >
-                </div>
+                }
               </div>
             </div>
           </ion-col>
@@ -90,30 +79,17 @@
                 Female
               </div>
               <div class="age-breakdown">
+                @for (cat of scoreFilter.getAgeCategories(config.year); track
+                $index) {
                 <div class="age-item">
-                  <span class="age-label">U18:</span>
+                  <span class="age-label"
+                    >{{ cat.replace("Masters ", "") }}:</span
+                  >
                   <span class="age-count"
-                    >{{ summaryMetrics().female.U18 }}</span
+                    >{{ summaryMetrics().female[cat] }}</span
                   >
                 </div>
-                <div class="age-item">
-                  <span class="age-label">Open:</span>
-                  <span class="age-count"
-                    >{{ summaryMetrics().female.Open }}</span
-                  >
-                </div>
-                <div class="age-item">
-                  <span class="age-label">Masters:</span>
-                  <span class="age-count"
-                    >{{ summaryMetrics().female.Masters }}</span
-                  >
-                </div>
-                <div class="age-item">
-                  <span class="age-label">55+:</span>
-                  <span class="age-count"
-                    >{{ summaryMetrics().female['Masters 55+'] }}</span
-                  >
-                </div>
+                }
               </div>
             </div>
           </ion-col>
@@ -168,7 +144,9 @@
             </ion-chip>
             }
             <ion-chip size="small" outline="true">
-              <ion-label>{{ athlete.age_category }}</ion-label>
+              <ion-label
+                >{{ athlete.age_category.replace('Masters ', '') }}</ion-label
+              >
             </ion-chip>
           </div>
         </div>
@@ -219,7 +197,9 @@
             </ion-chip>
             }
             <ion-chip size="small" outline="true">
-              <ion-label>{{ athlete.age_category }}</ion-label>
+              <ion-label
+                >{{ athlete.age_category.replace('Masters ', '') }}</ion-label
+              >
             </ion-chip>
           </div>
         </div>
