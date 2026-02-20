@@ -108,20 +108,29 @@ export class PreferredAthletesPage implements OnInit {
     this.athleteDataService
       .athleteData()
       .map((a) => a.name)
-      .sort()
+      .sort(),
   );
 
   readonly dayOptions = ['Fri', 'Sat', 'Sun', 'Mon'];
 
   readonly timeOptions = [
-    '6AM',
-    '7AM',
-    '8AM',
-    '9AM',
-    '5PM',
-    '6PM',
-    '7PM',
-    '8PM',
+    '5:45AM',
+    '6:00AM',
+    '6:30AM',
+    '7:00AM',
+    '7:30AM',
+    '8:00AM',
+    '8:30AM',
+    '9:00AM',
+    '9:30AM',
+    '10:00AM',
+    '5:00PM',
+    '5:30PM',
+    '6:00PM',
+    '6:30PM',
+    '7:00PM',
+    '7:30PM',
+    '8:00PM',
   ];
 
   constructor() {
@@ -153,7 +162,7 @@ export class PreferredAthletesPage implements OnInit {
       .subscribe({
         next: (data) => {
           this.preferredAthletes.set(
-            data.sort((a, b) => a.name.localeCompare(b.name))
+            data.sort((a, b) => a.name.localeCompare(b.name)),
           );
           this.loading.set(false);
         },
@@ -163,7 +172,7 @@ export class PreferredAthletesPage implements OnInit {
             `Error loading preferred athletes${
               error?.error?.detail ? ': ' + error.error.detail : ''
             }`,
-            'danger'
+            'danger',
           );
           this.loading.set(false);
         },
@@ -178,7 +187,7 @@ export class PreferredAthletesPage implements OnInit {
   async openAthleteModal(): Promise<void> {
     const selectedName =
       await this.athleteNameModalService.openAthleteSelectModal(
-        this.availableAthletes
+        this.availableAthletes,
       );
     if (selectedName) {
       this.newAthleteName.set(selectedName);
@@ -188,7 +197,7 @@ export class PreferredAthletesPage implements OnInit {
   async openEditAthleteModal(): Promise<void> {
     const selectedName =
       await this.athleteNameModalService.openAthleteSelectModal(
-        this.availableAthletes
+        this.availableAthletes,
       );
     if (selectedName) {
       this.editName.set(selectedName);
@@ -234,7 +243,7 @@ export class PreferredAthletesPage implements OnInit {
             `Error adding athlete${
               error?.error?.detail ? ': ' + error.error.detail : ''
             }`,
-            'danger'
+            'danger',
           );
           this.loading.set(false);
         },
@@ -289,7 +298,7 @@ export class PreferredAthletesPage implements OnInit {
             `Error updating athlete${
               error?.error?.detail ? ': ' + error.error.detail : ''
             }`,
-            'danger'
+            'danger',
           );
           this.loading.set(false);
         },
@@ -315,7 +324,7 @@ export class PreferredAthletesPage implements OnInit {
                 {
                   affiliate_id: this.config.affiliateId,
                   crossfit_id: athlete.crossfit_id,
-                }
+                },
               )
               .subscribe({
                 next: () => {
@@ -327,7 +336,7 @@ export class PreferredAthletesPage implements OnInit {
                     `Error deleting athlete${
                       error?.error?.detail ? ': ' + error.error.detail : ''
                     }`,
-                    'danger'
+                    'danger',
                   );
                   this.loading.set(false);
                 },

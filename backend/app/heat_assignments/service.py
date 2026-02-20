@@ -482,7 +482,7 @@ def _is_within_time_buffer(
 
     Args:
         heat_time: The actual datetime of the heat
-        preferred_time_slot: Time slot string like "Sat 6AM", "Fri 7PM"
+        preferred_time_slot: Time slot string like "Sat 6AM", "Fri 7PM", "Sat 5:30AM", "Fri 6:45PM"
         buffer_minutes: The buffer in minutes (default 30)
 
     Returns:
@@ -507,15 +507,28 @@ def _is_within_time_buffer(
     if preferred_weekday is None:
         return False
 
-    # Parse the time (e.g., "6AM", "7PM", "12PM")
+    # Parse the time (e.g., "6AM", "7PM", "12PM", "5:30AM", "6:45PM")
+    minute = 0  # Default to 0 for backward compatibility
     if time_str.endswith("AM"):
         hour_str = time_str[:-2]
-        hour = int(hour_str)
+        # Check if time includes minutes (e.g., "5:30")
+        if ":" in hour_str:
+            hour_part, minute_part = hour_str.split(":")
+            hour = int(hour_part)
+            minute = int(minute_part)
+        else:
+            hour = int(hour_str)
         if hour == 12:  # noqa: PLR2004
             hour = 0
     elif time_str.endswith("PM"):
         hour_str = time_str[:-2]
-        hour = int(hour_str)
+        # Check if time includes minutes (e.g., "6:45")
+        if ":" in hour_str:
+            hour_part, minute_part = hour_str.split(":")
+            hour = int(hour_part)
+            minute = int(minute_part)
+        else:
+            hour = int(hour_str)
         if hour != 12:  # noqa: PLR2004
             hour += 12
     else:
@@ -531,7 +544,7 @@ def _is_within_time_buffer(
 
     # Convert both to minutes since midnight
     heat_minutes = heat_hour * 60 + heat_minute
-    preferred_minutes = hour * 60
+    preferred_minutes = hour * 60 + minute
 
     # Check if within buffer
     time_diff = abs(heat_minutes - preferred_minutes)
