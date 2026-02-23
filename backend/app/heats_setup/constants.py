@@ -1,14 +1,6 @@
 HEATS_SETUP = [
     {
         "affiliate_id": 31316,
-        "short_name": "Fri AM",
-        "start_time": "08:00",
-        "end_time": "09:00",
-        "interval": 30,
-        "max_athletes": 10,
-    },
-    {
-        "affiliate_id": 31316,
         "short_name": "Fri PM",
         "start_time": "17:30",
         "end_time": "20:00",
