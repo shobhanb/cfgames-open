@@ -210,24 +210,27 @@ async def create_heats_based_on_setup(
 ) -> Sequence[Heats]:
     """Create heats based on the affiliate's setup for a given year."""
 
-    # 0. Check that no heats already exist for this affiliate, year, and ordinal
-    existing_heats = await get_heats_by_criteria(
-        db_session=db_session,
-        affiliate_id=affiliate_id,
-        year=year,
-        ordinal=ordinal,
-    )
-
-    if existing_heats:
-        raise conflict_exception(
-            detail=f"Heats already exist for affiliate_id={affiliate_id}, year={year}, ordinal={ordinal}. Cannot generate heats.",
-        )
-
-    # 1. Pull data from HeatsSetup for this affiliate_id
+    # 0. Pull data from HeatsSetup for this affiliate_id
     heats_setup_list = await HeatsSetup.find_all(async_session=db_session, affiliate_id=affiliate_id)
 
     if not heats_setup_list:
         return []
+
+    # 1. Check that no heats already exist for any of the short_names in the setup
+    short_names = [setup.short_name for setup in heats_setup_list]
+    stmt = select(Heats).where(
+        (Heats.affiliate_id == affiliate_id)
+        & (Heats.year == year)
+        & (Heats.ordinal == ordinal)
+        & (Heats.short_name.in_(short_names)),
+    )
+    result = await db_session.execute(stmt)
+    existing_heats = result.scalars().all()
+
+    if existing_heats:
+        raise conflict_exception(
+            detail=f"Heats already exist for affiliate_id={affiliate_id}, year={year}, ordinal={ordinal} with short_names from setup. Cannot generate heats.",
+        )
 
     # 2. Pull Events for this year and ordinal. This contains the start date for the event
     event = await Events.find_or_raise(async_session=db_session, year=year, ordinal=ordinal)
@@ -255,7 +258,7 @@ async def create_heats_based_on_setup(
 
         if day_name not in day_map:
             raise conflict_exception(
-                detail=f"Invalid day name '{day_name}' in HeatsSetup.short_name '{setup.short_name}'"
+                detail=f"Invalid day name '{day_name}' in HeatsSetup.short_name '{setup.short_name}'",
             )
 
         target_weekday = day_map[day_name]
