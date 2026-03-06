@@ -94,7 +94,7 @@ export class MyAppreciationTextPage implements OnInit {
     });
 
     // Convert to array and sort by ordinal
-    return Array.from(grouped.values()).sort((a, b) => a.ordinal - b.ordinal);
+    return Array.from(grouped.values()).sort((a, b) => b.ordinal - a.ordinal);
   });
 
   ngOnInit() {
@@ -117,7 +117,7 @@ export class MyAppreciationTextPage implements OnInit {
         error: (error) => {
           console.error(
             'Error loading appreciation text:',
-            error.error?.detail
+            error.error?.detail,
           );
           this.dataLoaded.set(true);
         },

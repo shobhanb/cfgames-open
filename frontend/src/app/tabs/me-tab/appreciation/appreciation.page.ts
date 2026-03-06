@@ -93,7 +93,7 @@ export class AppreciationPage implements OnInit {
   dataLoaded = signal<boolean>(false);
   readonly appreciations = signal<apiAppreciationModel[]>([]);
   private readonly appreciationStatus = signal<apiAppreciationStatusModel[]>(
-    []
+    [],
   );
 
   headerContent = computed(() => {
@@ -107,13 +107,13 @@ export class AppreciationPage implements OnInit {
   private readonly teamAthletes = computed<apiAthleteDetail[]>(() =>
     this.athleteDataService
       .athleteData()
-      .filter((a) => a.team_name === this.authService.athlete()?.team_name)
+      .filter((a) => a.team_name === this.authService.athlete()?.team_name),
   );
 
   private readonly nonTeamAthletes = computed<apiAthleteDetail[]>(() =>
     this.athleteDataService
       .athleteData()
-      .filter((a) => a.team_name != this.authService.athlete()?.team_name)
+      .filter((a) => a.team_name != this.authService.athlete()?.team_name),
   );
 
   readonly availableEvents = computed<apiAppreciationStatusModel[]>(() =>
@@ -122,9 +122,9 @@ export class AppreciationPage implements OnInit {
         !this.appreciations().some(
           (appreciation) =>
             appreciation.year === status.year &&
-            appreciation.ordinal === status.ordinal
-        )
-    )
+            appreciation.ordinal === status.ordinal,
+        ),
+    ),
   );
 
   constructor() {
@@ -158,12 +158,12 @@ export class AppreciationPage implements OnInit {
               if (a.year !== b.year) {
                 return b.year - a.year; // Sort by year descending
               }
-              return a.ordinal - b.ordinal; // Sort by ordinal ascending
-            })
+              return b.ordinal - a.ordinal; // Sort by ordinal descending
+            }),
           );
           appreciationDataLoaded = true;
           this.dataLoaded.set(
-            appreciationDataLoaded && appreciationStatusDataLoaded
+            appreciationDataLoaded && appreciationStatusDataLoaded,
           );
         },
         error: (error) => {
@@ -172,7 +172,7 @@ export class AppreciationPage implements OnInit {
             'Failed to load appreciation data: ' + (error?.error?.detail ?? ''),
             'danger',
             null,
-            3000
+            3000,
           );
           this.dataLoaded.set(true);
         },
@@ -188,7 +188,7 @@ export class AppreciationPage implements OnInit {
           this.appreciationStatus.set(data);
           appreciationStatusDataLoaded = true;
           this.dataLoaded.set(
-            appreciationDataLoaded && appreciationStatusDataLoaded
+            appreciationDataLoaded && appreciationStatusDataLoaded,
           );
         },
         error: (error) => {
@@ -199,7 +199,7 @@ export class AppreciationPage implements OnInit {
             }`,
             'danger',
             null,
-            3000
+            3000,
           );
         },
       });
@@ -213,7 +213,7 @@ export class AppreciationPage implements OnInit {
 
   checkIfAppreciationStatusOpen(ordinal: number, year: number): boolean {
     const status = this.appreciationStatus().find(
-      (s) => s.ordinal === ordinal && s.year === year
+      (s) => s.ordinal === ordinal && s.year === year,
     );
     return status ? true : false;
   }
@@ -230,14 +230,14 @@ export class AppreciationPage implements OnInit {
             appreciations.filter(
               (a) =>
                 a.year !== appreciation.year ||
-                a.ordinal !== appreciation.ordinal
-            )
+                a.ordinal !== appreciation.ordinal,
+            ),
           );
           this.toastService.showToast(
             'Appreciation deleted successfully',
             'success',
             null,
-            3000
+            3000,
           );
         },
         error: (error) => {
@@ -248,7 +248,7 @@ export class AppreciationPage implements OnInit {
             }`,
             'danger',
             null,
-            3000
+            3000,
           );
         },
       });
