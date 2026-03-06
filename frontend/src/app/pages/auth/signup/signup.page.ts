@@ -128,13 +128,13 @@ export class SignupPage implements OnInit {
   readonly athleteNames = computed<string[]>(() =>
     this.athleteData()
       .map((value: apiAffiliateAthlete) => value.name)
-      .filter(this.helperFunctions.filterUnique)
+      .filter(this.helperFunctions.filterUnique),
   );
 
   async openAthleteSelectModal() {
     const selectedName =
       await this.athleteNameModalService.openAthleteSelectModal(
-        this.athleteNames
+        this.athleteNames,
       );
 
     if (selectedName) {
@@ -143,7 +143,7 @@ export class SignupPage implements OnInit {
       this.selectedCrossfitId.set(
         this.athleteCrossfitIds().length === 1
           ? this.athleteCrossfitIds()[0]
-          : null
+          : null,
       );
     }
   }
@@ -153,9 +153,9 @@ export class SignupPage implements OnInit {
     this.athleteData()
       .filter(
         (value: apiAffiliateAthlete) =>
-          value.name === this.selectedAthleteName()
+          value.name === this.selectedAthleteName(),
       )
-      .map((value: apiAffiliateAthlete) => value.crossfit_id)
+      .map((value: apiAffiliateAthlete) => value.crossfit_id),
   );
 
   onAthleteCrossfitIdChange(event: CustomEvent) {
@@ -163,7 +163,7 @@ export class SignupPage implements OnInit {
   }
 
   assignAthleteFormValid = computed<boolean>(
-    () => !!this.selectedAthleteName() && !!this.selectedCrossfitId()
+    () => !!this.selectedAthleteName() && !!this.selectedCrossfitId(),
   );
 
   onSubmitAssignAthleteForm() {
@@ -192,6 +192,15 @@ export class SignupPage implements OnInit {
   }
 
   async onSubmitSignupForm() {
+    console.log('Signup form submitted with values:', {
+      affiliate_id: this.selectedAffiliateId,
+      affiliate_name: this.selectedAffiliateName,
+      display_name: this.selectedAthleteName(),
+      crossfit_id: this.selectedCrossfitId(),
+      email: this.signupForm.value.email,
+      valid: this.signupForm.valid,
+      dirty: this.signupForm.dirty,
+    });
     if (this.isSignupFormValid()) {
       this.loadingService.showLoading('Signing up');
 
@@ -213,11 +222,11 @@ export class SignupPage implements OnInit {
           const userCredential = signInWithEmailAndPassword(
             this.fireAuth,
             params.body.email,
-            params.body.password
+            params.body.password,
           )
             .then((value: UserCredential) => {
               this.loadingService.showLoading(
-                `Logged in. Sending verification email to ${value.user.email}`
+                `Logged in. Sending verification email to ${value.user.email}`,
               );
               sendEmailVerification(value.user)
                 .then(() => {
@@ -226,7 +235,7 @@ export class SignupPage implements OnInit {
                     'Check your email for verification link',
                     'success',
                     '/',
-                    3000
+                    3000,
                   );
                 })
                 .catch((err: FirebaseError) => {
@@ -235,7 +244,7 @@ export class SignupPage implements OnInit {
                     'Error sending verification email: ' + err.message,
                     'danger',
                     '/',
-                    3000
+                    3000,
                   );
                 });
             })
@@ -246,7 +255,7 @@ export class SignupPage implements OnInit {
                 'Error logging in: ' + err.message,
                 'danger',
                 '/',
-                3000
+                3000,
               );
             });
         },
@@ -257,7 +266,7 @@ export class SignupPage implements OnInit {
             'Error signing up: ' + err.message,
             'danger',
             '/',
-            3000
+            3000,
           );
         },
       });
@@ -280,7 +289,7 @@ export class SignupPage implements OnInit {
               } else {
                 return a.name > b.name ? 1 : -1;
               }
-            })
+            }),
           );
         },
         error: (err: any) => {
@@ -289,7 +298,7 @@ export class SignupPage implements OnInit {
             `Error getting athlete list: ${err.message}`,
             'danger',
             null,
-            5000
+            5000,
           );
         },
       });

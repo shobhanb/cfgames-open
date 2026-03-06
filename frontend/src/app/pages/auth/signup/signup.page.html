@@ -141,7 +141,11 @@
       </ion-item>
     </ion-list>
 
-    <ion-button expand="block" type="submit" class="ion-margin"
+    <ion-button
+      expand="block"
+      type="submit"
+      class="ion-margin"
+      [disabled]="!isSignupFormValid()"
       >Sign Up</ion-button
     >
 
