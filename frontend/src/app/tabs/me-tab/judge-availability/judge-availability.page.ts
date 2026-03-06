@@ -3,7 +3,7 @@ import {
   Component,
   inject,
   OnInit,
-  signal,
+  computed,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -27,9 +27,8 @@ import {
   IonCardContent,
   IonButton,
 } from '@ionic/angular/standalone';
-import { apiJudgeAvailabilityService } from 'src/app/api/services';
 import { apiJudgeAvailabilityModel } from 'src/app/api/models';
-import { ToastService } from 'src/app/services/toast.service';
+import { JudgeDataService } from 'src/app/services/judge-data.service';
 import { CheckboxCustomEvent } from '@ionic/angular';
 import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-buttons.component';
 
@@ -63,79 +62,33 @@ import { ToolbarButtonsComponent } from 'src/app/shared/toolbar-buttons/toolbar-
   ],
 })
 export class JudgeAvailabilityPage implements OnInit {
-  private apiJudgeAvailability = inject(apiJudgeAvailabilityService);
-  private toastService = inject(ToastService);
+  private judgeDataService = inject(JudgeDataService);
 
-  readonly availabilities = signal<apiJudgeAvailabilityModel[]>([]);
-  readonly dataLoaded = signal<boolean>(false);
+  // Use signals from the service
+  readonly availabilities = this.judgeDataService.myJudgeAvailability;
+  readonly dataLoaded = computed(
+    () => !this.judgeDataService.myAvailabilityLoading(),
+  );
 
   ngOnInit() {
     this.loadAvailabilities();
   }
 
   private loadAvailabilities() {
-    this.dataLoaded.set(false);
-    this.apiJudgeAvailability
-      .getMyJudgeAvailabilityJudgeAvailabilityMeGet()
-      .subscribe({
-        next: (data) => {
-          this.availabilities.set(data);
-          this.dataLoaded.set(true);
-        },
-        error: (err) => {
-          this.toastService.showToast(
-            'Error loading availabilities : ' + (err?.error?.detail ?? ''),
-            'danger',
-            null,
-            3000
-          );
-          this.dataLoaded.set(true);
-        },
-      });
+    this.judgeDataService.loadMyJudgeAvailability();
   }
 
   handleRefresh(event: CustomEvent) {
-    this.dataLoaded.set(false);
     this.loadAvailabilities();
     (event.target as HTMLIonRefresherElement).complete();
   }
 
   onAvailabilityChange(
     event: CheckboxCustomEvent,
-    availability: apiJudgeAvailabilityModel
+    availability: apiJudgeAvailabilityModel,
   ) {
     const isChecked = event.detail.checked;
-
-    this.apiJudgeAvailability
-      .updateMyJudgeAvailabilityJudgeAvailabilityMeAvailabilityIdPatch({
-        availability_id: availability.id,
-        body: {
-          available: isChecked,
-        },
-      })
-      .subscribe({
-        next: (updated) => {
-          this.availabilities.update((avails) =>
-            avails.map((a) => (a.id === updated.id ? updated : a))
-          );
-          this.toastService.showToast(
-            'Availability updated',
-            'success',
-            null,
-            2000
-          );
-        },
-        error: (err) => {
-          // Revert the checkbox state on error
-          this.loadAvailabilities();
-          this.toastService.showToast(
-            'Error updating availability: ' + (err?.error?.detail ?? ''),
-            'danger',
-            null,
-            3000
-          );
-        },
-      });
+    this.judgeDataService.updateMyJudgeAvailability(availability.id, isChecked);
   }
 
   onSelectAll() {
@@ -143,32 +96,9 @@ export class JudgeAvailabilityPage implements OnInit {
 
     avails.forEach((availability) => {
       if (!availability.available) {
-        this.apiJudgeAvailability
-          .updateMyJudgeAvailabilityJudgeAvailabilityMeAvailabilityIdPatch({
-            availability_id: availability.id,
-            body: {
-              available: true,
-            },
-          })
-          .subscribe({
-            next: (updated) => {
-              this.availabilities.update((avails) =>
-                avails.map((a) => (a.id === updated.id ? updated : a))
-              );
-            },
-            error: (err) => {
-              this.toastService.showToast(
-                'Error updating availability: ' + (err?.error?.detail ?? ''),
-                'danger',
-                null,
-                3000
-              );
-            },
-          });
+        this.judgeDataService.updateMyJudgeAvailability(availability.id, true);
       }
     });
-
-    this.toastService.showToast('All slots selected', 'success', null, 2000);
   }
 
   onDeselectAll() {
@@ -176,31 +106,8 @@ export class JudgeAvailabilityPage implements OnInit {
 
     avails.forEach((availability) => {
       if (availability.available) {
-        this.apiJudgeAvailability
-          .updateMyJudgeAvailabilityJudgeAvailabilityMeAvailabilityIdPatch({
-            availability_id: availability.id,
-            body: {
-              available: false,
-            },
-          })
-          .subscribe({
-            next: (updated) => {
-              this.availabilities.update((avails) =>
-                avails.map((a) => (a.id === updated.id ? updated : a))
-              );
-            },
-            error: (err) => {
-              this.toastService.showToast(
-                'Error updating availability: ' + (err?.error?.detail ?? ''),
-                'danger',
-                null,
-                3000
-              );
-            },
-          });
+        this.judgeDataService.updateMyJudgeAvailability(availability.id, false);
       }
     });
-
-    this.toastService.showToast('All slots deselected', 'success', null, 2000);
   }
 }

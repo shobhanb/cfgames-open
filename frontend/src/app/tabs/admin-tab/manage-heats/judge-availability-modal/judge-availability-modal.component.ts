@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader,
@@ -31,13 +31,8 @@ import {
   checkmarkCircle,
   closeCircle,
 } from 'ionicons/icons';
-import {
-  apiJudgeAvailabilityService,
-  apiJudgesService,
-} from 'src/app/api/services';
-import { apiJudgeAvailabilityModel, apiJudgesModel } from 'src/app/api/models';
-import { AppConfigService } from 'src/app/services/app-config.service';
-import { forkJoin } from 'rxjs';
+import { apiJudgesModel } from 'src/app/api/models';
+import { JudgeDataService } from 'src/app/services/judge-data.service';
 
 export interface HeatTime {
   heatId: string;
@@ -77,14 +72,17 @@ export interface JudgeInfo {
   ],
 })
 export class JudgeAvailabilityModalComponent {
-  private apiJudgeAvailability = inject(apiJudgeAvailabilityService);
-  private apiJudges = inject(apiJudgesService);
-  private config = inject(AppConfigService);
+  private judgeDataService = inject(JudgeDataService);
   private modalController = inject(ModalController);
 
-  judgeAvailabilities = signal<apiJudgeAvailabilityModel[]>([]);
-  judges = signal<apiJudgesModel[]>([]);
-  loading = signal(true);
+  // Use signals from the service
+  judgeAvailabilities = this.judgeDataService.judgeAvailabilities;
+  judges = this.judgeDataService.judges;
+  loading = computed(
+    () =>
+      this.judgeDataService.judgesLoading() ||
+      this.judgeDataService.availabilitiesLoading(),
+  );
 
   // Pivot data by time slot
   pivotedByTimeSlot = computed(() => {
@@ -118,10 +116,10 @@ export class JudgeAvailabilityModalComponent {
     return Array.from(grouped.entries()).map(([timeSlot, judges]) => ({
       timeSlot,
       availableJudges: judges.available.sort((a, b) =>
-        a.name.localeCompare(b.name)
+        a.name.localeCompare(b.name),
       ),
       unavailableJudges: judges.unavailable.sort((a, b) =>
-        a.name.localeCompare(b.name)
+        a.name.localeCompare(b.name),
       ),
       totalAvailable: judges.available.length,
       totalUnavailable: judges.unavailable.length,
@@ -156,30 +154,7 @@ export class JudgeAvailabilityModalComponent {
       closeCircle,
       people,
     });
-    this.loadJudgeAvailability();
-  }
-
-  private loadJudgeAvailability() {
-    this.loading.set(true);
-
-    // Fetch both judge availabilities and judges list
-    forkJoin({
-      availabilities:
-        this.apiJudgeAvailability.getJudgeAvailabilitiesListJudgeAvailabilityGet(),
-      judges: this.apiJudges.getJudgesListJudgesAllGet({
-        affiliate_id: this.config.affiliateId,
-      }),
-    }).subscribe({
-      next: (data) => {
-        this.judgeAvailabilities.set(data.availabilities);
-        this.judges.set(data.judges);
-        this.loading.set(false);
-      },
-      error: (error: any) => {
-        console.error('Error loading judge data:', error);
-        this.loading.set(false);
-      },
-    });
+    this.judgeDataService.loadJudgesAndAvailabilities();
   }
 
   dismiss() {

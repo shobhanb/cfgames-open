@@ -94,6 +94,28 @@
       <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
       <ion-label>Manage Heats</ion-label>
     </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-button
+            expand="block"
+            fill="outline"
+            color="medium"
+            (click)="showAllAthletePrefs()"
+            >Show Athlete Prefs</ion-button
+          >
+        </ion-col>
+        <ion-col>
+          <ion-button
+            expand="block"
+            fill="outline"
+            color="medium"
+            (click)="showAllJudgeAvailability()"
+            >Show Judge Availability</ion-button
+          >
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-list>
   } @if (affiliateConfig.useAppreciation()) {
   <div class="section-title">Appreciation Form</div>

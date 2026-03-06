@@ -68,6 +68,7 @@ import {
   statsChartOutline,
   trash,
 } from 'ionicons/icons';
+import { JudgeDataService } from 'src/app/services/judge-data.service';
 
 @Component({
   selector: 'app-manage-heats',
@@ -109,6 +110,7 @@ export class ManageHeatsPage implements OnInit {
   private apiHeatAssignments = inject(apiHeatAssignmentsService);
   private apiHeats = inject(apiHeatsService);
   private athleteDataService = inject(AthleteDataService);
+  private judgeDataService = inject(JudgeDataService);
   private athleteNameModal = inject(AthleteNameModalService);
   private appConfig = inject(AppConfigService);
   private eventService = inject(EventService);
@@ -131,14 +133,9 @@ export class ManageHeatsPage implements OnInit {
   currentYearWeekendAllEvents = this.eventService.currentYearWeekendAllEvents;
 
   athleteNames = computed(() =>
-    this.athleteDataService.athleteData().map((a) => a.name)
+    this.athleteDataService.athleteData().map((a) => a.name),
   );
-  judgeNames = computed(() =>
-    this.athleteDataService
-      .athleteData()
-      .filter((a) => a.judge)
-      .map((a) => a.name)
-  );
+  judgeNames = this.judgeDataService.judgeNames;
 
   // Filter heat assignments based on search term
   filteredHeatAssignments = computed(() => {
@@ -160,7 +157,7 @@ export class ManageHeatsPage implements OnInit {
     if (!search) return new Set<string>();
 
     return new Set(
-      this.filteredHeatAssignments().map((assignment) => assignment.heat_id)
+      this.filteredHeatAssignments().map((assignment) => assignment.heat_id),
     );
   });
 
@@ -212,7 +209,7 @@ export class ManageHeatsPage implements OnInit {
       shortName,
       heats: heats.sort(
         (a, b) =>
-          new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
+          new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
       ),
     }));
   });
@@ -223,9 +220,10 @@ export class ManageHeatsPage implements OnInit {
     const assignedAthleteIds = new Set(
       this.heatAssignments()
         .filter(
-          (a) => currentHeatIds.has(a.heat_id) && a.athlete_crossfit_id !== null
+          (a) =>
+            currentHeatIds.has(a.heat_id) && a.athlete_crossfit_id !== null,
         )
-        .map((a) => a.athlete_crossfit_id)
+        .map((a) => a.athlete_crossfit_id),
     );
 
     return this.athleteDataService
@@ -243,7 +241,7 @@ export class ManageHeatsPage implements OnInit {
     const uniqueAthleteIds = new Set(
       this.heatAssignments()
         .filter((a) => currentHeatIds.has(a.heat_id) && a.athlete_crossfit_id)
-        .map((a) => a.athlete_crossfit_id)
+        .map((a) => a.athlete_crossfit_id),
     );
     return uniqueAthleteIds.size;
   });
@@ -253,7 +251,7 @@ export class ManageHeatsPage implements OnInit {
     const uniqueJudgeIds = new Set(
       this.heatAssignments()
         .filter((a) => currentHeatIds.has(a.heat_id) && a.judge_crossfit_id)
-        .map((a) => a.judge_crossfit_id)
+        .map((a) => a.judge_crossfit_id),
     );
     return uniqueJudgeIds.size;
   });
@@ -261,14 +259,14 @@ export class ManageHeatsPage implements OnInit {
   assignmentsWithoutAthletes = computed(() => {
     const currentHeatIds = new Set(this.heats().map((h) => h.id));
     return this.heatAssignments().filter(
-      (a) => currentHeatIds.has(a.heat_id) && !a.athlete_crossfit_id
+      (a) => currentHeatIds.has(a.heat_id) && !a.athlete_crossfit_id,
     ).length;
   });
 
   assignmentsWithoutJudges = computed(() => {
     const currentHeatIds = new Set(this.heats().map((h) => h.id));
     return this.heatAssignments().filter(
-      (a) => currentHeatIds.has(a.heat_id) && !a.judge_crossfit_id
+      (a) => currentHeatIds.has(a.heat_id) && !a.judge_crossfit_id,
     ).length;
   });
 
@@ -291,7 +289,7 @@ export class ManageHeatsPage implements OnInit {
 
   private heatsWithAssignments(): apiHeatsModel[] {
     return this.heats().filter((heat) =>
-      this.heatAssignments().some((a) => a.heat_id === heat.id)
+      this.heatAssignments().some((a) => a.heat_id === heat.id),
     );
   }
 
@@ -303,7 +301,7 @@ export class ManageHeatsPage implements OnInit {
     const heatsWithAssignments = this.heatsWithAssignments();
     if (heatsWithAssignments.length === 0) return false;
     return heatsWithAssignments.every(
-      (heat) => this.getAssignmentsForHeat(heat)[0]?.is_locked === true
+      (heat) => this.getAssignmentsForHeat(heat)[0]?.is_locked === true,
     );
   }
 
@@ -311,11 +309,13 @@ export class ManageHeatsPage implements OnInit {
     const heatsWithAssignments = this.heatsWithAssignments();
     if (heatsWithAssignments.length === 0) return false;
     return heatsWithAssignments.every(
-      (heat) => this.getAssignmentsForHeat(heat)[0]?.is_published === true
+      (heat) => this.getAssignmentsForHeat(heat)[0]?.is_published === true,
     );
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.judgeDataService.loadJudges();
+  }
 
   onEventSelect() {
     if (this.selectedOrdinal()) {
@@ -349,7 +349,7 @@ export class ManageHeatsPage implements OnInit {
           this.toastService.showToast(
             'Failed to load heats: ' +
               (error?.error?.detail ? error.error.detail : 'Unknown error'),
-            'danger'
+            'danger',
           );
           this.loading.set(false);
           this.dataLoaded.set(true);
@@ -370,7 +370,7 @@ export class ManageHeatsPage implements OnInit {
           this.toastService.showToast(
             'Failed to load heat assignments: ' +
               (error?.error?.detail ? error.error.detail : 'Unknown error'),
-            'danger'
+            'danger',
           );
           this.loading.set(false);
           this.dataLoaded.set(true);
@@ -405,7 +405,7 @@ export class ManageHeatsPage implements OnInit {
           this.toastService.showToast(
             'Failed to assign athletes: ' +
               (error?.error?.detail ? error.error.detail : 'Unknown error'),
-            'danger'
+            'danger',
           );
           this.loading.set(false);
           this.dataLoaded.set(true);
@@ -440,7 +440,7 @@ export class ManageHeatsPage implements OnInit {
           this.toastService.showToast(
             'Failed to assign judges: ' +
               (error?.error?.detail ? error.error.detail : 'Unknown error'),
-            'danger'
+            'danger',
           );
           this.loading.set(false);
           this.dataLoaded.set(true);
@@ -476,7 +476,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
     }
 
     const confirmed = confirm(
-      `Are you sure you want to delete all assignments for this event? This action cannot be undone.`
+      `Are you sure you want to delete all assignments for this event? This action cannot be undone.`,
     );
 
     if (!confirmed) return;
@@ -496,7 +496,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
         next: (result) => {
           this.toastService.showToast(
             `Successfully deleted ${result.deleted_count} assignments from ${result.heats_found} heats`,
-            'success'
+            'success',
           );
           this.loadHeats();
         },
@@ -505,7 +505,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
           this.toastService.showToast(
             'Failed to delete assignments: ' +
               (error?.error?.detail ? error.error.detail : 'Unknown error'),
-            'danger'
+            'danger',
           );
           this.loading.set(false);
           this.dataLoaded.set(true);
@@ -533,7 +533,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
           this.toastService.showToast(
             'Failed to load athlete preferences: ' +
               (error?.error?.detail ? error.error.detail : 'Unknown error'),
-            'danger'
+            'danger',
           );
           this.loading.set(false);
           this.dataLoaded.set(true);
@@ -545,7 +545,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
     const heatId = heat.id;
     const search = this.searchTerm().toLowerCase().trim();
     const assignments = this.heatAssignments().filter(
-      (a) => a.heat_id === heatId
+      (a) => a.heat_id === heatId,
     );
 
     // If searching, only return matching assignments
@@ -566,7 +566,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
 
   getAssignmentsForHeatShortName(shortName: string): apiHeatAssignmentModel[] {
     const heatsForShortName = this.heats().filter(
-      (h) => h.short_name === shortName
+      (h) => h.short_name === shortName,
     );
     const heatIds = new Set(heatsForShortName.map((h) => h.id));
     return this.heatAssignments().filter((a) => heatIds.has(a.heat_id));
@@ -604,9 +604,9 @@ Judges Assigned: ${result.judges_assigned || 0}`;
           (a) =>
             a.id !== excludeAssignmentId &&
             currentHeatIds.has(a.heat_id) &&
-            a.athlete_crossfit_id !== null
+            a.athlete_crossfit_id !== null,
         )
-        .map((a) => a.athlete_crossfit_id)
+        .map((a) => a.athlete_crossfit_id),
     );
 
     return computed(() => {
@@ -621,7 +621,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
 
   private async handleNonGymAthleteInput(
     assignmentId: string,
-    heatId: string
+    heatId: string,
   ): Promise<void> {
     const alert = await this.alertController.create({
       header: 'Add Non-Gym Athlete',
@@ -654,7 +654,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
               assignmentId,
               heatId,
               parseInt(data.crossfit_id),
-              data.name
+              data.name,
             );
 
             return true;
@@ -670,7 +670,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
     assignmentId: string | null,
     heatId: string,
     crossfitId: number,
-    athleteName: string
+    athleteName: string,
   ): void {
     if (assignmentId) {
       // Update existing assignment
@@ -686,7 +686,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
           next: () => {
             this.toastService.showToast(
               `${athleteName} assigned to heat`,
-              'success'
+              'success',
             );
             this.loadHeatAssignments();
           },
@@ -695,7 +695,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
             this.toastService.showToast(
               'Error assigning athlete: ' +
                 (error?.error?.detail ? error.error.detail : 'Unknown error'),
-              'danger'
+              'danger',
             );
           },
         });
@@ -713,7 +713,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
           next: () => {
             this.toastService.showToast(
               `${athleteName} added successfully`,
-              'success'
+              'success',
             );
             this.loadHeatAssignments();
           },
@@ -722,7 +722,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
             this.toastService.showToast(
               'Failed to add athlete: ' +
                 (error?.error?.detail ? error.error.detail : 'Unknown error'),
-              'danger'
+              'danger',
             );
           },
         });
@@ -736,9 +736,8 @@ Judges Assigned: ${result.judges_assigned || 0}`;
     }
 
     const availableAthletes = this.getAvailableAthletes();
-    const selectedName = await this.athleteNameModal.openAthleteSelectModal(
-      availableAthletes
-    );
+    const selectedName =
+      await this.athleteNameModal.openAthleteSelectModal(availableAthletes);
     if (!selectedName) return;
 
     // Handle "None" selection - cancel
@@ -781,7 +780,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
           this.toastService.showToast(
             'Failed to remove assignment: ' +
               (error?.error?.detail ? error.error.detail : 'Unknown error'),
-            'danger'
+            'danger',
           );
         },
       });
@@ -821,9 +820,8 @@ Judges Assigned: ${result.judges_assigned || 0}`;
     }
 
     const availableAthletes = this.getAvailableAthletes(assignment.id);
-    const selectedName = await this.athleteNameModal.openAthleteSelectModal(
-      availableAthletes
-    );
+    const selectedName =
+      await this.athleteNameModal.openAthleteSelectModal(availableAthletes);
     if (!selectedName) return;
 
     // Handle "None" selection - remove athlete
@@ -842,7 +840,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
             this.toastService.showToast(
               'Failed to remove athlete: ' +
                 (error?.error?.detail ? error.error.detail : 'Unknown error'),
-              'danger'
+              'danger',
             );
           },
         });
@@ -874,20 +872,21 @@ Judges Assigned: ${result.judges_assigned || 0}`;
       this.getAssignmentsForHeat(heat)
         .filter((a) => a.id !== assignment.id && a.judge_crossfit_id)
         .map((a) => a.judge_crossfit_id)
-        .filter((id): id is number => id !== null)
+        .filter((id): id is number => id !== null),
     );
 
     const availableJudges = computed(() => [
       'None',
-      ...this.athleteDataService
-        .athleteData()
-        .filter((a) => a.judge && !assignedJudgeIds.has(a.crossfit_id))
-        .map((a) => a.name),
+      ...this.judgeDataService
+        .judges()
+        .filter((j) => !assignedJudgeIds.has(j.crossfit_id))
+        .map((j) => j.name),
     ]);
 
-    const selectedName = await this.athleteNameModal.openAthleteSelectModal(
-      availableJudges
-    );
+    console.log('Available judges for assignment:', availableJudges());
+
+    const selectedName =
+      await this.athleteNameModal.openAthleteSelectModal(availableJudges);
     if (!selectedName) return;
 
     // Handle "None" selection - remove judge
@@ -906,7 +905,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
             this.toastService.showToast(
               'Failed to remove judge: ' +
                 (error?.error?.detail ? error.error.detail : 'Unknown error'),
-              'danger'
+              'danger',
             );
           },
         });
@@ -937,7 +936,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
           this.toastService.showToast(
             'Failed to update judge: ' +
               (error?.error?.detail ? error.error.detail : 'Unknown error'),
-            'danger'
+            'danger',
           );
         },
       });
@@ -951,7 +950,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
       if (assignment.judge_name) {
         judgeCounts.set(
           assignment.judge_name,
-          (judgeCounts.get(assignment.judge_name) || 0) + 1
+          (judgeCounts.get(assignment.judge_name) || 0) + 1,
         );
       }
     });
@@ -1090,7 +1089,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
             `${response.updated_count} assignments ${
               newValue ? 'locked' : 'unlocked'
             }`,
-            'success'
+            'success',
           );
           this.loadHeatAssignments();
         },
@@ -1099,7 +1098,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
           this.toastService.showToast(
             'Failed to update lock status: ' +
               (error?.error?.detail ? error.error.detail : 'Unknown error'),
-            'danger'
+            'danger',
           );
         },
       });
@@ -1119,14 +1118,14 @@ Judges Assigned: ${result.judges_assigned || 0}`;
           heat_id: heat.id,
           locked: newValue,
         },
-      })
+      }),
     );
 
     forkJoin(toggleCalls).subscribe({
       next: () => {
         this.toastService.showToast(
           newValue ? 'All heats locked' : 'All heats unlocked',
-          'success'
+          'success',
         );
         this.loadHeats();
       },
@@ -1135,7 +1134,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
         this.toastService.showToast(
           'Failed to lock heats: ' +
             (error?.error?.detail ? error.error.detail : 'Unknown error'),
-          'danger'
+          'danger',
         );
       },
     });
@@ -1159,7 +1158,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
             `${response.updated_count} assignments ${
               newValue ? 'published' : 'unpublished'
             }`,
-            'success'
+            'success',
           );
           this.loadHeatAssignments();
         },
@@ -1168,7 +1167,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
           this.toastService.showToast(
             'Failed to update publish status: ' +
               (error?.error?.detail ? error.error.detail : 'Unknown error'),
-            'danger'
+            'danger',
           );
         },
       });
@@ -1188,14 +1187,14 @@ Judges Assigned: ${result.judges_assigned || 0}`;
           heat_id: heat.id,
           published: newValue,
         },
-      })
+      }),
     );
 
     forkJoin(toggleCalls).subscribe({
       next: () => {
         this.toastService.showToast(
           newValue ? 'All heats published' : 'All heats unpublished',
-          'success'
+          'success',
         );
         this.loadHeats();
       },
@@ -1204,7 +1203,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
         this.toastService.showToast(
           'Failed to publish heats: ' +
             (error?.error?.detail ? error.error.detail : 'Unknown error'),
-          'danger'
+          'danger',
         );
       },
     });
@@ -1230,7 +1229,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
           heat_id: heat.id,
           locked: newValue,
         },
-      })
+      }),
     );
 
     // Execute all calls in parallel
@@ -1238,13 +1237,13 @@ Judges Assigned: ${result.judges_assigned || 0}`;
       next: (responses) => {
         const totalUpdated = responses.reduce(
           (sum, r) => sum + r.updated_count,
-          0
+          0,
         );
         this.toastService.showToast(
           `${totalUpdated} assignments ${
             newValue ? 'locked' : 'unlocked'
           } across ${heatsInGroup.length} heats`,
-          'success'
+          'success',
         );
         this.loadHeatAssignments();
       },
@@ -1253,7 +1252,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
         this.toastService.showToast(
           'Failed to update lock status: ' +
             (error?.error?.detail ? error.error.detail : 'Unknown error'),
-          'danger'
+          'danger',
         );
       },
     });
@@ -1279,7 +1278,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
           heat_id: heat.id,
           published: newValue,
         },
-      })
+      }),
     );
 
     // Execute all calls in parallel
@@ -1287,13 +1286,13 @@ Judges Assigned: ${result.judges_assigned || 0}`;
       next: (responses) => {
         const totalUpdated = responses.reduce(
           (sum, r) => sum + r.updated_count,
-          0
+          0,
         );
         this.toastService.showToast(
           `${totalUpdated} assignments ${
             newValue ? 'published' : 'unpublished'
           } across ${heatsInGroup.length} heats`,
-          'success'
+          'success',
         );
         this.loadHeatAssignments();
       },
@@ -1302,7 +1301,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
         this.toastService.showToast(
           'Failed to update publish status: ' +
             (error?.error?.detail ? error.error.detail : 'Unknown error'),
-          'danger'
+          'danger',
         );
       },
     });
@@ -1371,7 +1370,7 @@ Judges Assigned: ${result.judges_assigned || 0}`;
                       (error?.error?.detail
                         ? error.error.detail
                         : 'Unknown error'),
-                    'danger'
+                    'danger',
                   );
                 },
               });
