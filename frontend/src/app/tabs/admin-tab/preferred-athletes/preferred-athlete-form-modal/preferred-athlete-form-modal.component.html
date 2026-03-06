@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>{{ athlete ? "Edit" : "Add" }} Preferred Athlete</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="save()" [disabled]="!athleteName() || loading()">
+        Save
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list [inset]="true">
+    <ion-item button (click)="openAthleteSelect()" detail="false">
+      <ion-input
+        label="Athlete"
+        labelPlacement="stacked"
+        [value]="athleteName()"
+        readonly
+        placeholder="Select Athlete"
+      ></ion-input>
+      <ion-icon name="search" slot="end" color="medium"></ion-icon>
+    </ion-item>
+
+    <ion-item>
+      <ion-select
+        label="Day"
+        labelPlacement="stacked"
+        [value]="day()"
+        interface="popover"
+        (ionChange)="day.set($event.detail.value)"
+      >
+        @for (d of dayOptions; track d) {
+          <ion-select-option [value]="d">{{ d }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-select
+        label="Time"
+        labelPlacement="stacked"
+        [value]="time()"
+        interface="popover"
+        (ionChange)="time.set($event.detail.value)"
+      >
+        @for (t of timeOptions; track t) {
+          <ion-select-option [value]="t">{{ t }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+  </ion-list>
+</ion-content>

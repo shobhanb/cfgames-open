@@ -17,118 +17,16 @@
   <div class="loading-container">
     <ion-spinner></ion-spinner>
   </div>
-  } @if (showAddForm()) {
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Add Preferred Athlete</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-item>
-        <ion-input
-          label="Athlete"
-          label-placement="stacked"
-          [value]="newAthleteName()"
-          readonly
-          (click)="openAthleteModal()"
-        ></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-select
-          label="Day"
-          label-placement="stacked"
-          [value]="newDay()"
-          interface="popover"
-          (ionChange)="newDay.set($event.detail.value)"
-        >
-          @for (day of dayOptions; track day) {
-          <ion-select-option [value]="day">{{ day }}</ion-select-option>
-          }
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-select
-          label="Time"
-          label-placement="stacked"
-          [value]="newTime()"
-          interface="popover"
-          (ionChange)="newTime.set($event.detail.value)"
-        >
-          @for (time of timeOptions; track time) {
-          <ion-select-option [value]="time">{{ time }}</ion-select-option>
-          }
-        </ion-select>
-      </ion-item>
-
-      <div class="button-group">
-        <ion-button (click)="toggleAddForm()" fill="outline" color="medium">
-          Cancel
-        </ion-button>
-        <ion-button (click)="addAthlete()" [disabled]="!newAthleteName()">
-          <ion-icon name="save" slot="start"></ion-icon>
-          Add Athlete
-        </ion-button>
-      </div>
-    </ion-card-content>
-  </ion-card>
   }
 
   <ion-list [inset]="true">
     @for (athlete of preferredAthletes(); track athlete.id) {
     <ion-item>
-      @if (editingId() === athlete.id) {
-      <div class="edit-container">
-        <ion-input
-          label="Athlete"
-          label-placement="stacked"
-          [value]="editName()"
-          readonly
-          (click)="openEditAthleteModal()"
-        ></ion-input>
-
-        <ion-select
-          label="Day"
-          label-placement="stacked"
-          [value]="editDay()"
-          (ionChange)="editDay.set($event.detail.value)"
-        >
-          @for (day of dayOptions; track day) {
-          <ion-select-option [value]="day">{{ day }}</ion-select-option>
-          }
-        </ion-select>
-
-        <ion-select
-          label="Time"
-          label-placement="stacked"
-          [value]="editTime()"
-          (ionChange)="editTime.set($event.detail.value)"
-        >
-          @for (time of timeOptions; track time) {
-          <ion-select-option [value]="time">{{ time }}</ion-select-option>
-          }
-        </ion-select>
-
-        <div class="button-group">
-          <ion-button
-            (click)="cancelEdit()"
-            fill="outline"
-            size="small"
-            color="medium"
-          >
-            <ion-icon name="close" slot="icon-only"></ion-icon>
-          </ion-button>
-          <ion-button (click)="saveEdit(athlete)" size="small">
-            <ion-icon name="save" slot="icon-only"></ion-icon>
-          </ion-button>
-        </div>
-      </div>
-      } @else {
       <ion-label>
         <h2>{{ athlete.name }}</h2>
         <p>{{ athlete.start_time }}</p>
       </ion-label>
-      <ion-button (click)="startEdit(athlete)" slot="end" fill="clear">
+      <ion-button (click)="openAthleteForm(athlete)" slot="end" fill="clear">
         <ion-icon name="pencil" slot="icon-only"></ion-icon>
       </ion-button>
       <ion-button
@@ -139,7 +37,6 @@
       >
         <ion-icon name="trash" slot="icon-only"></ion-icon>
       </ion-button>
-      }
     </ion-item>
     } @empty { @if (!loading()) {
     <ion-item>
@@ -150,9 +47,11 @@
     } }
   </ion-list>
 
+  <div style="height: 80px"></div>
+
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button (click)="toggleAddForm()">
-      <ion-icon [name]="showAddForm() ? 'close' : 'add'"></ion-icon>
+    <ion-fab-button (click)="openAthleteForm()">
+      <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>
