@@ -86,6 +86,7 @@ export class HomeTabPage implements OnInit {
   welcomeMessage = `Welcome to ${this.config.affiliateName}'s Community Cup for the CF Open.`;
 
   showHeatEvent = signal<apiEventsModel | null>(null);
+  randomStickerSrc = signal<string | null>(null);
 
   constructor() {
     addIcons({ closeOutline });
@@ -97,6 +98,8 @@ export class HomeTabPage implements OnInit {
         this.calculateShowHeatOrdinal();
       }
     });
+
+    this.setRandomSticker();
   }
 
   dataLoaded = signal<boolean>(false);
@@ -105,9 +108,74 @@ export class HomeTabPage implements OnInit {
     this.getData();
   }
 
+  private setRandomSticker() {
+    const stickers = [
+      'acting.jpeg',
+      'ajay.jpeg',
+      'ankit2.jpeg',
+      'ankitsmile.jpeg',
+      'ankitspread.jpeg',
+      'arman.jpeg',
+      'arman2.jpeg',
+      'arman3.jpeg',
+      'arman4.jpeg',
+      'arman5.jpeg',
+      'bhaktifood.jpeg',
+      'bhaktisun.jpeg',
+      'bhargav.jpeg',
+      'bsb.gif',
+      'dashy.gif',
+      'detaali.jpeg',
+      'euu.jpeg',
+      'hands.gif',
+      'kt.jpeg',
+      'kt1.jpeg',
+      'kt2.jpeg',
+      'ktdance.gif',
+      'ktdevil.jpeg',
+      'ktrecovering.jpeg',
+      'nikhil.jpeg',
+      'nonono.gif',
+      'norepgirls.jpeg',
+      'pawale.jpeg',
+      'revnono.gif',
+      'revshh.jpeg',
+      'revwtf.jpeg',
+      'saee.gif',
+      'shobdj.gif',
+      'shobjudge.jpeg',
+      'shoblight.gif',
+      'shobpaan.jpeg',
+      'shobrevbeard.jpeg',
+      'shobrevpink.jpeg',
+      'shobsun1.jpeg',
+      'shobsun2.jpeg',
+      'tanaya.jpeg',
+      'tchai.jpeg',
+      'tfood.jpeg',
+      'viren1.jpeg',
+      'viren2.jpeg',
+      'woahrow.jpeg',
+      'tbhakti.jpeg',
+      'shobnikhil.jpeg',
+      'akshat.jpeg',
+      'shobvein.jpeg',
+      'shobsticker.jpeg',
+      'ankiteyes.jpeg',
+    ];
+    const randomSticker = stickers[Math.floor(Math.random() * stickers.length)];
+    const probabilityToShow = 0.75; //  chance to show a sticker
+    if (Math.random() < probabilityToShow) {
+      this.randomStickerSrc.set(`images/stickers/${randomSticker}`);
+    } else {
+      this.randomStickerSrc.set(null);
+    }
+  }
+
   handleRefresh(event: CustomEvent) {
     this.dataLoaded.set(false);
     this.getData();
+    this.setRandomSticker();
     (event.target as HTMLIonRefresherElement).complete();
   }
 
@@ -151,8 +219,8 @@ export class HomeTabPage implements OnInit {
             data.sort(
               (a: apiHomeBlogModel, b: apiHomeBlogModel) =>
                 new Date(b.created_at).getTime() -
-                new Date(a.created_at).getTime()
-            )
+                new Date(a.created_at).getTime(),
+            ),
           );
           this.dataLoaded.set(true);
         },
@@ -169,7 +237,7 @@ export class HomeTabPage implements OnInit {
         error: (error) => {
           console.error(
             'Error fetching athlete summary counts:',
-            error.error?.detail
+            error.error?.detail,
           );
           this.athleteCountsData.set(null);
         },
@@ -190,7 +258,7 @@ export class HomeTabPage implements OnInit {
         error: (error) => {
           console.error(
             'Error fetching CF Games data timestamp:',
-            error.error?.detail
+            error.error?.detail,
           );
           this.cfGamesDataTimestamp.set(null);
         },

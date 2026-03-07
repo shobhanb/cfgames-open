@@ -66,7 +66,9 @@
         }
         <p>#StrongerTogether</p>
       </ion-card-content>
-      @if (showHeatEvent()) {
+      @if (authService.user() && randomStickerSrc()) {
+      <img [src]="randomStickerSrc()" alt="Sticker" class="euu-sticker" />
+      } @if (showHeatEvent()) {
       <ion-button
         fill="clear"
         [routerLink]="['/me/all-heats']"
@@ -74,8 +76,6 @@
         >{{ 'All Heats for ' + showHeatEvent()?.event }}</ion-button
       >
       }
-
-      <img src="images/euu.jpeg" alt="Euu" class="euu-sticker" />
 
       <ion-button fill="clear" routerLink="/team-scores/team-info"
         >Check out this year's Teams!</ion-button
